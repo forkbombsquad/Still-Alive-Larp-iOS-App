@@ -10,10 +10,8 @@ import SwiftUI
 class DataManager: ObservableObject {
 
     enum DataManagerType {
-        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook
+        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage
     }
-
-    // TODO add feature flagging
 
     @ObservedObject static var shared = DataManager()
 
@@ -79,6 +77,12 @@ class DataManager: ObservableObject {
 
             shared.intrigueForSelectedEvent = nil
             shared.loadingIntrigueForSelectedEvent = true
+
+            shared.featureFlags = nil
+            shared.loadingFeatureFlags = true
+
+            shared.profileImage = nil
+            shared.loadingProfileImage = true
         }
     }
 
@@ -163,6 +167,12 @@ class DataManager: ObservableObject {
 
     @Published var rulebook: Rulebook? = nil
     @Published var loadingRulebook: Bool = true
+
+    @Published var featureFlags: [FeatureFlagModel]? = nil
+    @Published var loadingFeatureFlags: Bool = true
+
+    @Published var profileImage: ProfileImageModel? = nil
+    @Published var loadingProfileImage: Bool = true
 
     func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, incrementalIndex: Int = IncrementalIndexManager.shared.getNextIndex(), finished: @escaping () -> Void = {}) {
         runOnMainThread {
@@ -557,6 +567,41 @@ class DataManager: ObservableObject {
                         self.loadingRulebook = false
                         self.finishedRequest(incrementalIndex, "Rulebook From Memory")
                     }
+                case .featureFlags:
+                    self.loadingFeatureFlags = true
+                    if self.featureFlags == nil || forceDownloadIfApplicable {
+                        FeatureFlagService.getAllFeatureFlags { featureFlags in
+                            self.featureFlags = featureFlags.results
+                            self.loadingFeatureFlags = false
+                            self.finishedRequest(incrementalIndex, "Feature Flag Success")
+                        } failureCase: { error in
+                            self.featureFlags = nil
+                            self.loadingFeatureFlags = false
+                            self.finishedRequest(incrementalIndex, "Feature Flag Failure")
+                        }
+
+                    } else {
+                        self.loadingFeatureFlags = false
+                        self.finishedRequest(incrementalIndex, "Feature Flags From Memory")
+                    }
+                case .profileImage:
+                    self.loadingProfileImage = true
+                    if self.profileImage == nil || forceDownloadIfApplicable || self.selectedPlayer?.id != self.profileImage?.id {
+                        self.profileImage = nil
+                        ProfileImageService.getProfileImage(self.selectedPlayer?.id ?? -1) { profileImage in
+                            self.profileImage = profileImage
+                            self.loadingProfileImage = false
+                            self.finishedRequest(incrementalIndex, "Profile Image Success")
+                        } failureCase: { error in
+                            self.profileImage = nil
+                            self.loadingProfileImage = false
+                            self.finishedRequest(incrementalIndex, "Profile Image Failure")
+                        }
+
+                    } else {
+                        self.loadingProfileImage = false
+                        self.finishedRequest(incrementalIndex, "Profile Image From Memory")
+                    }
                 }
             }
         }
@@ -591,16 +636,18 @@ class DataManager: ObservableObject {
     }
 
     private func finishedRequest(_ incrementalIndex: Int, _ source: String) {
-        countReturned[incrementalIndex] = (countReturned[incrementalIndex] ?? 0) + 1
-        if ServiceUtils.printServices {
-            print("DataManager - finished \(source) request \(countReturned[incrementalIndex] ?? 0) of \(targetCount[incrementalIndex] ?? 0)")
-        }
-        if targetCount[incrementalIndex] ?? 0 == countReturned[incrementalIndex] ?? 0 {
-            callbacks[incrementalIndex]?()
-            // Reset values to save memory
-            countReturned[incrementalIndex] = 0
-            targetCount[incrementalIndex] = 0
-            callbacks[incrementalIndex] = {}
+        runOnMainThread {
+            self.countReturned[incrementalIndex] = (self.countReturned[incrementalIndex] ?? 0) + 1
+            if ServiceUtils.printServices {
+                print("DataManager - finished \(source) request \(self.countReturned[incrementalIndex] ?? 0) of \(self.targetCount[incrementalIndex] ?? 0)")
+            }
+            if self.targetCount[incrementalIndex] ?? 0 == self.countReturned[incrementalIndex] ?? 0 {
+                self.callbacks[incrementalIndex]?()
+                // Reset values to save memory
+                self.countReturned[incrementalIndex] = 0
+                self.targetCount[incrementalIndex] = 0
+                self.callbacks[incrementalIndex] = {}
+            }
         }
     }
 

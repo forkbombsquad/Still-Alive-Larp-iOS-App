@@ -108,10 +108,20 @@ struct ManageAccountView: View {
     private func deleteCharacters() {
         self.loadingText = "Deleting Characters"
         CharacterService.deleteCharacters { _ in
+            self.deleteProfileImages()
+        } failureCase: { error in
+            self.deleteProfileImages()
+        }
+    }
+
+    private func deleteProfileImages() {
+        self.loadingText = "Deleting Profile Images"
+        ProfileImageService.deleteProfileImage(DataManager.shared.player?.id ?? -1) { profileImage in
             self.deletePlayer()
         } failureCase: { error in
             self.deletePlayer()
         }
+
     }
 
     private func deletePlayer() {

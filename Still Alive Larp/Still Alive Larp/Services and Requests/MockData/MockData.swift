@@ -37,6 +37,9 @@ protocol MockData {
     static var version: AppVersionModel { get }
     static var gear: GearModel { get }
     static var gearList: GearListModel { get }
+    static var featureFlag: FeatureFlagModel { get }
+    static var featureFlagList: FeatureFlagListModel { get }
+    static var profileImageModel: ProfileImageModel { get }
 }
 
 extension MockData {
@@ -102,11 +105,23 @@ extension MockData {
                 return gearList
             case .createGear, .updateGear, .deleteGear:
                 return gear
+            case .getFeatureFlag, .createFeatureFlag, .updateFeatureFlag, .deleteFeatureFlag:
+                return featureFlag
+            case .getAllFeatureFlags:
+                return featureFlagList
+            case .getProfileImage, .createProfileImage, .updateProfileImage, .deleteProfileImage:
+                return profileImageModel
         }
     }
 }
 
 struct MockData1: MockData {
+    static var featureFlag = FeatureFlagModel(id: 0, name: "Test FF", description: "FF Testing", activeAndroid: "TRUE", activeIos: "TRUE")
+
+    static var featureFlagList = FeatureFlagListModel(results: [featureFlag])
+
+    static var profileImageModel = ProfileImageModel(id: 0, playerId: 1, image: "TEST")
+
 
     static var oauthToken = OAuthTokenResponse(access_token: "TestAccessToken")
 

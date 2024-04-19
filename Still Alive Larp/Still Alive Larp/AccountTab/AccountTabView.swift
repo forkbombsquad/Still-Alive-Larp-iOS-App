@@ -12,6 +12,7 @@ struct AccountTabView: View {
     @ObservedObject private var _dm = DataManager.shared
 
     @State private var loading: Bool = false
+    @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -29,6 +30,25 @@ struct AccountTabView: View {
                             Text("My Account")
                                 .font(.system(size: 32, weight: .bold))
                                 .frame(alignment: .center)
+                            ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 200, height: 200)
+                                if DataManager.shared.loadingProfileImage {
+                                    ProgressView()
+                                    .tint(.red)
+                                    .controlSize(.large)
+                                    .padding(.top, 80)
+                                }
+                                Text("EDIT")
+                                    .bold()
+                                    .font(.system(size: 24))
+                                    .underline(color: .blue)
+                                    .foregroundStyle(.blue)
+                                    .shadow(color: .black, radius: 1)
+                                    .padding(.top, 8)
+                            }
                             Text(DataManager.shared.player?.fullName ?? "")
                                 .font(.system(size: 20))
                                 .underline()
@@ -73,8 +93,17 @@ struct AccountTabView: View {
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
+                DataManager.shared.loadingProfileImage = true
                 DataManager.shared.load([.player, .character]) {
                     DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
+                    runOnMainThread {
+                        DataManager.shared.profileImage = nil
+                        DataManager.shared.load([.profileImage]) {
+                            runOnMainThread {
+                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                            }
+                        }
+                    }
                 }
             }
         }

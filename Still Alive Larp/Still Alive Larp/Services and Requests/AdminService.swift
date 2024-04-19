@@ -149,4 +149,23 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
+    static func createFeatureFlag(_ featureFlagCreateModel: FeatureFlagCreateModel, onSuccess: @escaping (_ featureFlagModel: FeatureFlagModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.createFeatureFlag, bodyJson: featureFlagCreateModel, responseObject: FeatureFlagModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+
+    static func updateFeatureFlag(featureFlagModel: FeatureFlagModel, onSuccess: @escaping (_ featureFlagModel: FeatureFlagModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.updateFeatureFlag, bodyJson: featureFlagModel, responseObject: FeatureFlagModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+
+    static func deleteFeatureFlag(featureFlagId: Int, onSuccess: @escaping (_ featureFlagModel: FeatureFlagModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.deleteFeatureFlag, addToEndOfUrl: "\(featureFlagId)", responseObject: FeatureFlagModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+
+    }
+
 }

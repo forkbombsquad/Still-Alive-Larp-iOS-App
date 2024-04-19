@@ -11,6 +11,7 @@ struct ViewPlayerStuffView: View {
     @ObservedObject private var _dm = DataManager.shared
 
     private let playerModel: PlayerModel
+    @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
 
     init(player: PlayerModel) {
         self.playerModel = player
@@ -24,6 +25,19 @@ struct ViewPlayerStuffView: View {
                         Text(DataManager.shared.selectedPlayer?.fullName ?? playerModel.fullName)
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
+                        ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 200)
+                                .padding(.bottom, 8)
+                            if DataManager.shared.loadingProfileImage {
+                                ProgressView()
+                                .tint(.red)
+                                .controlSize(.large)
+                                .padding(.top, 80)
+                            }
+                        }
                         NavArrowView(title: "Player Stats") { _ in
                             PlayerStatsView(player: DataManager.shared.selectedPlayer ?? playerModel)
                         }
@@ -53,7 +67,15 @@ struct ViewPlayerStuffView: View {
         .onAppear {
             runOnMainThread {
                 DataManager.shared.selectedPlayer = self.playerModel
-                DataManager.shared.load([.charForSelectedPlayer])
+                runOnMainThread {
+                    DataManager.shared.profileImage = nil
+                    DataManager.shared.load([.charForSelectedPlayer])
+                    DataManager.shared.load([.profileImage]) {
+                        runOnMainThread {
+                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                        }
+                    }
+                }
             }
         }
     }

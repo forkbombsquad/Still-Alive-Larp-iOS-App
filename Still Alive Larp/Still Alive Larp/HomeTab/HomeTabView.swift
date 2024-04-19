@@ -78,7 +78,7 @@ struct HomeTabView: View {
     }
 
     func refreshEverything() {
-        DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills], forceDownloadIfApplicable: true) {
+        DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .featureFlags], forceDownloadIfApplicable: true) {
             DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {}
             runOnMainThread {
                 DataManager.shared.selectedChar = DataManager.shared.character?.baseModel

@@ -54,6 +54,10 @@ struct AdminView: View {
                         NavArrowView(title: "Contact Requests", loading: $loadingContacts, notificationBubbleText: $unreadContactsText) { _ in
                             ContactListView(contactRequests: $contactRequests)
                         }
+                        NavArrowView(title: "Manage Feature Flags", loading: DataManager.$shared.loadingFeatureFlags) { _ in
+//                            ManageFeatureFlagsView()
+                            // TODO manage feature flags view
+                        }
                         NavArrowView(title: "Update Player Password", loading: $loadingPlayers) { _ in
                             ChangePasswordListView(players: allPlayers)
                         }
@@ -93,6 +97,7 @@ struct AdminView: View {
             } failureCase: { error in
                 self.loadingContacts = false
             }
+            DataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true)
         }
     }
 

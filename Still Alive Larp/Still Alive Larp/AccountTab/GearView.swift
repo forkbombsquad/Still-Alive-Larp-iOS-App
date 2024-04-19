@@ -32,7 +32,7 @@ struct GearView: View {
                             Spacer()
                         }
                     } else if let char = DataManager.shared.charForSelectedPlayer, let gear = DataManager.shared.selectedCharacterGear {
-                        Text("\(char.fullName)\nGear\(offline ? " (Offline)" : "")")
+                        Text("\(char.fullName)'s\nGear\(offline ? " (Offline)" : "")")
                             .font(.system(size: 32, weight: .bold))
                             .multilineTextAlignment(.center)
                             .frame(alignment: .center)
