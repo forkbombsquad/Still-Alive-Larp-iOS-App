@@ -303,6 +303,17 @@ struct CharacterModel: CustomCodeable, Identifiable {
         }, failureCase: failureCase)
 
     }
+
+    func getAllSpentPrestige(onSuccess: @escaping (_ pp: Int) -> Void, failureCase: @escaping FailureCase) {
+        CharacterSkillService.getAllSkillsForChar(self.id, onSuccess: { charSkills in
+            var cost = 0
+            for skill in charSkills.charSkills {
+                cost += skill.ppSpent
+            }
+            onSuccess(cost)
+        }, failureCase: failureCase)
+
+    }
 }
 
 struct CreateCharacterModel: CustomCodeable {

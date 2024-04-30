@@ -25,7 +25,7 @@ struct CommunityTabView: View {
                         }
                     } else {
                         ForEach(DataManager.shared.allPlayers?.alphabetized ?? []) { player in
-                            NavArrowView(title: player.fullName) { _ in
+                            NavArrowView(title: "\(player.fullName)\((player.isAdmin.uppercased() == "TRUE") ? " (Staff)" : "")") { _ in
                                 ViewPlayerStuffView(player: player)
                             }.navigationViewStyle(.stack)
                         }

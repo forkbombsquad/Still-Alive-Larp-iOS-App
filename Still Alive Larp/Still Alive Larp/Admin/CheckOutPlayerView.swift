@@ -229,10 +229,36 @@ struct CheckOutPlayerView: View {
 
                         adjustedXp = min(max, adjustedXp)
 
-                        self.loadingText = "Awarding Player"
+                        self.loadingText = "Refunding Death Xp"
                         let award = AwardCreateModel(playerId: model.player.id, characterId: nil, awardType: AdminService.PlayerAwardType.xp.rawValue, reason: "Death of character: \(model.character?.fullName ?? "")", date: Date().yyyyMMddFormatted, amount: "\(adjustedXp)")
 
                         AdminService.awardPlayer(award) { _ in
+
+                            characterModel.getAllSpentPrestige { pp in
+
+                                if pp > 0 {
+                                    self.loadingText = "Refunding Death Pp"
+                                    let awd = AwardCreateModel(playerId: model.player.id, characterId: nil, awardType: AdminService.PlayerAwardType.prestigePoints.rawValue, reason: "Death of character: \(model.character?.fullName ?? "")", date: Date().yyyyMMddFormatted, amount: "\(pp)")
+
+                                    AdminService.awardPlayer(awd) { updatedPlayer in
+                                        self.loading = false
+                                        showSuccessAlertAllowingRescan("Successfully Checked Out!")
+                                    } failureCase: { error in
+                                        self.loading = false
+                                        showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death pp!")
+                                    }
+
+                                } else {
+                                    self.loading = false
+                                    showSuccessAlertAllowingRescan("Successfully Checked Out!")
+                                }
+
+
+                            } failureCase: { error in
+                                self.loading = false
+                                showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death xp!")
+                            }
+
                             self.loading = false
                             showSuccessAlertAllowingRescan("Successfully Checked Out!")
                         } failureCase: { error in
