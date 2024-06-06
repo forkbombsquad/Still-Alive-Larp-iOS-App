@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class LocalDataHandler {
 
@@ -15,6 +16,7 @@ class LocalDataHandler {
         static let gearKey = "gear_ud_key"
         static let rulebookKey = "rulebook_ud_key"
         static let rulebookVersionKey = "rulebook_version_ud_key"
+        static let skillsKey = "skills_ud_key"
     }
 
     static func forceReset() {
@@ -71,6 +73,26 @@ class LocalDataHandler {
 
     func storeRulebook(_ rulebook: String) {
         UserDefaults.standard.set(rulebook, forKey: Keys.rulebookKey)
+    }
+
+    func storeImageData(_ data: Data, key: String) {
+        UserDefaults.standard.set(data, forKey: key)
+    }
+
+    func getImage(_ key: ImageDownloader.ImageKey) -> UIImage? {
+        guard let data = UserDefaults.standard.data(forKey: key.rawValue) else { return nil }
+        return UIImage(data: data)
+    }
+
+    func storeSkills(_ skills: [FullSkillModel]) {
+        let fslm = FullSkillListModel(skills: skills)
+        guard let json = fslm.toData() else { return }
+        UserDefaults.standard.set(json, forKey: Keys.skillsKey)
+    }
+
+    func getSkills() -> [FullSkillModel]? {
+        guard let json = UserDefaults.standard.data(forKey: Keys.skillsKey), let skillM: FullSkillListModel = json.toJsonObject() else { return nil }
+        return skillM.skills
     }
 
 }

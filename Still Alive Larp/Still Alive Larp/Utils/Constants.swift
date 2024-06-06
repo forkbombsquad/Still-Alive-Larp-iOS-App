@@ -19,8 +19,9 @@ struct Constants {
 
     struct urls {
         static let skillTreeImage = "https://stillalivelarp.com/skilltree"
+        static let skillTreeImageDark = "https://stillalivelarp.com/skilltree/dark"
         static let treatingWoundsImage = "https://stillalivelarp.com/healing"
-        static let rulebook = "https://stillalivelarp.com/rulebook"
+        static let rulebook = "https://stillalivelarp.com/rulebook-app"
     }
 
     struct SkillTypes {

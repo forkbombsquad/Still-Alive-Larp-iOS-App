@@ -128,6 +128,9 @@
 		B2E5F2D92AD07FBB004D61F5 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = B2E5F2D82AD07FBB004D61F5 /* SwiftSoup */; };
 		B2E5F2DB2AD0807C004D61F5 /* RulebookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */; };
 		B2E5F2DD2AD09634004D61F5 /* ViewRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */; };
+		B2F292D52C120A7700B5BE85 /* DownloadedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */; };
+		B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */; };
+		B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F292E82C121BC100B5BE85 /* ZoomableScrollView.swift */; };
 		B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FAD2A420AD900E07108 /* GearService.swift */; };
 		B2F29FB02A420D0F00E07108 /* GearModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FAF2A420D0F00E07108 /* GearModel.swift */; };
 		B2F29FB22A4214A700E07108 /* GearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FB12A4214A700E07108 /* GearView.swift */; };
@@ -290,6 +293,9 @@
 		B2E135BF29FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialClassXpReductionsView.swift; sourceTree = "<group>"; };
 		B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulebookManager.swift; sourceTree = "<group>"; };
 		B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRulesView.swift; sourceTree = "<group>"; };
+		B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedImageView.swift; sourceTree = "<group>"; };
+		B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
+		B2F292E82C121BC100B5BE85 /* ZoomableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableScrollView.swift; sourceTree = "<group>"; };
 		B2F29FAD2A420AD900E07108 /* GearService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearService.swift; sourceTree = "<group>"; };
 		B2F29FAF2A420D0F00E07108 /* GearModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearModel.swift; sourceTree = "<group>"; };
 		B2F29FB12A4214A700E07108 /* GearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearView.swift; sourceTree = "<group>"; };
@@ -424,6 +430,8 @@
 				B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */,
 				B20FF4652A27D4BB00B13F1D /* IncrementalIndexManager.swift */,
 				B205F4732A44988400C45B1A /* ArrayExtensions.swift */,
+				B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */,
+				B2F292E82C121BC100B5BE85 /* ZoomableScrollView.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -505,6 +513,7 @@
 				B21691EF28FF2184006AA921 /* PasswordField.swift */,
 				B222249A291E9806003BCA0A /* CardView.swift */,
 				B2F9836B29F040FE00512839 /* PullToRefresh.swift */,
+				B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -862,7 +871,9 @@
 				B2E0A04D2A4DD0F60089FF2E /* SelectCharacterForPrimaryWeaponView.swift in Sources */,
 				B2222494291DBB47003BCA0A /* CustomCodeable.swift in Sources */,
 				B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */,
+				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B23552D829ED8A8500183748 /* NativeWebImageView.swift in Sources */,
+				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,
 				B2A0D4E729E5B47300A235B4 /* SkillService.swift in Sources */,
 				B2A0D4EE29E7174B00A235B4 /* SkillPrereqService.swift in Sources */,
 				B2E135BA29FD7F330038DE31 /* SpecialClassXpReductionService.swift in Sources */,
@@ -872,6 +883,7 @@
 				B20FF4662A27D4BB00B13F1D /* IncrementalIndexManager.swift in Sources */,
 				B2A6A7EB2914632B0025040B /* ServiceUtils.swift in Sources */,
 				B2D68235296880DC005FDCCE /* CharacterManager.swift in Sources */,
+				B2F292D52C120A7700B5BE85 /* DownloadedImageView.swift in Sources */,
 				B2F9836F29F0441E00512839 /* CreateAnnouncementView.swift in Sources */,
 				B2750B4F29F9B4D600AA5F5B /* IntrigueService.swift in Sources */,
 				B25D45C62A15223C00C3048C /* ViewPreregForEventView.swift in Sources */,

@@ -13,8 +13,13 @@ struct RulesTabView: View {
     @State var loadingSkills: Bool = true
     @State var allSkills = [FullSkillModel]()
     let skillTreeUrl = URL(string: Constants.urls.skillTreeImage)!
+    let skillTreeUrlDark = URL(string: Constants.urls.skillTreeImageDark)!
     let treatingWoundsUrl = URL(string: Constants.urls.treatingWoundsImage)!
     let rulebookUrl = URL(string: Constants.urls.rulebook)!
+
+    @State var loadingSkillTreeDiagram: Bool = true
+    @State var loadingSkillTreeDiagramDark: Bool = true
+    @State var loadingTreatingWoundsDiagram: Bool = true
 
     var body: some View {
         NavigationView {
@@ -28,14 +33,23 @@ struct RulesTabView: View {
                             NavArrowView(title: "Skill List", loading: $loadingSkills) { _ in
                                 SkillListView(skills: allSkills)
                             }
-                            NavArrowView(title: "Skill Tree Diagram") { _ in
-                                NativeWebImageView(request: URLRequest(url: skillTreeUrl))
+                            NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkillTreeDiagram) { _ in
+                                if let image = LocalDataHandler.shared.getImage(.skillTree) {
+                                    DownloadedImageView(image: image)
+                                }
+                            }
+                            NavArrowView(title: "Skill Tree Diagram (Dark)", loading: $loadingSkillTreeDiagramDark) { _ in
+                                if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                    DownloadedImageView(image: image)
+                                }
                             }
                             NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in
                                 ViewRulesView(rulebook: DataManager.shared.rulebook)
                             }
-                            NavArrowView(title: "Treating Wounds Flowchart") { _ in
-                                NativeWebImageView(request: URLRequest(url: treatingWoundsUrl))
+                            NavArrowView(title: "Treating Wounds Flowchart", loading: $loadingTreatingWoundsDiagram) { _ in
+                                if let image = LocalDataHandler.shared.getImage(.treatingWounds) {
+                                    DownloadedImageView(image: image)
+                                }
                             }
                         }
                     }
@@ -49,6 +63,23 @@ struct RulesTabView: View {
                     self.loadingSkills = false
                 }
                 DataManager.shared.load([.rulebook])
+
+                let imageDownloader = ImageDownloader()
+                imageDownloader.download(key: .skillTree) { success in
+                    runOnMainThread {
+                        self.loadingSkillTreeDiagram = false
+                    }
+                }
+                imageDownloader.download(key: .skillTreeDark) { success in
+                    runOnMainThread {
+                        self.loadingSkillTreeDiagramDark = false
+                    }
+                }
+                imageDownloader.download(key: .treatingWounds) { success in
+                    runOnMainThread {
+                        self.loadingTreatingWoundsDiagram = false
+                    }
+                }
             }
         }
     }

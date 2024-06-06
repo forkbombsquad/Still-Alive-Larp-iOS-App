@@ -35,29 +35,49 @@ struct OfflineAccountView: View {
                                 PlayerStatsView(offline: true, player: DataManager.shared.selectedPlayer)
                             }
                             if DataManager.shared.charForSelectedPlayer != nil {
-                                NavArrowView(title: "Character Status and Gear") { _ in
+                                NavArrowView(title: "Character Stats") { _ in
                                     CharacterStatusAndGearView(offline: true)
                                 }
-                                NavArrowView(title: "View Skills") { _ in
+                                NavArrowView(title: "Character Skills") { _ in
                                     SkillManagementView(offline: true)
                                 }
-                                NavArrowView(title: "View Bio") { _ in
+                                NavArrowView(title: "Character Bio") { _ in
                                     BioView(allowEdit: false, offline: true)
                                 }
-                                NavArrowView(title: "View Gear") { _ in
+                                NavArrowView(title: "Character Gear") { _ in
                                     GearView(offline: true)
                                 }
                             }
-                            if DataManager.shared.rulebook != nil {
-                                NavArrowView(title: "View Rules") { _ in
-                                    ViewRulesView(rulebook: DataManager.shared.rulebook)
-                                }
+
+                        }
+                        Divider().background(Color.black).padding( 8)
+                        NavArrowView(title: "All Skills") { _ in
+                            SkillListView(skills: SkillManager.shared.getSkillsOffline())
+                        }
+                        if DataManager.shared.rulebook != nil {
+                            NavArrowView(title: "View Rules") { _ in
+                                ViewRulesView(rulebook: DataManager.shared.rulebook)
+                            }
+                        }
+                        NavArrowView(title: "Skill Tree Diagram") { _ in
+                            if let image = LocalDataHandler.shared.getImage(.skillTree) {
+                                DownloadedImageView(image: image)
+                            }
+                        }
+                        NavArrowView(title: "Skill Tree Diagram (Dark)") { _ in
+                            if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                DownloadedImageView(image: image)
+                            }
+                        }
+                        NavArrowView(title: "Treating Wounds Diagram") { _ in
+                            if let image = LocalDataHandler.shared.getImage(.treatingWounds) {
+                                DownloadedImageView(image: image)
                             }
                         }
                     }
                 }
             }
-        }.padding(16)
+        }
         .background(Color.lightGray)
         .onAppear {
             loading = true
@@ -67,6 +87,7 @@ struct OfflineAccountView: View {
                 DataManager.shared.loadingCharForSelectedPlayer = false
                 DataManager.shared.loadingRulebook = false
                 self.loading = false
+                DataManager.shared.loadingSkills = false
             }
         }
     }

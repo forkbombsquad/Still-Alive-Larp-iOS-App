@@ -174,6 +174,8 @@ class DataManager: ObservableObject {
     @Published var profileImage: ProfileImageModel? = nil
     @Published var loadingProfileImage: Bool = true
 
+    @Published var downloadedImage: UIImage?
+
     func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, incrementalIndex: Int = IncrementalIndexManager.shared.getNextIndex(), finished: @escaping () -> Void = {}) {
         runOnMainThread {
             self.targetCount[incrementalIndex] = types.count

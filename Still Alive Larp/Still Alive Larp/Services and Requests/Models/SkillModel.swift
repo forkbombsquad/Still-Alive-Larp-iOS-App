@@ -158,6 +158,10 @@ struct SkillListModel: CustomCodeable {
     let results: [SkillModel]
 }
 
+struct FullSkillListModel: CustomCodeable {
+    let skills: [FullSkillModel]
+}
+
 struct CharacterModifiedSkillModel: SkillModelProtocol {
 
     var id: Int
