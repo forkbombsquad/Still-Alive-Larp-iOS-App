@@ -61,7 +61,7 @@ struct GenerateCheckoutBarcodeView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             self.loading = true
-            DataManager.shared.load([.eventAttendees], forceDownloadIfApplicable: true) {
+            DataManager.shared.load([.eventAttendees]) {
                 if let ea = DataManager.shared.eventAttendeesForPlayer?.first(where: { $0.isCheckedIn.boolValueDefaultFalse }) {
                     var charBarcode: CharacterBarcodeModel?
                     var relevantSkills = [SkillBarcodeModel]()

@@ -28,7 +28,7 @@ struct HomeTabView: View {
                             }
                             if showCheckoutSection() {
                                 CardWithTitleView(title: "Checkout") {
-                                    NavArrowViewRed(title: "Checkout \(DataManager.shared.player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (DataManager.shared.character?.fullName ?? ""))", loading: DataManager.$shared.loadingEventAttendees, content: {
+                                    NavArrowViewRed(title: "Checkout", loading: DataManager.$shared.loadingEventAttendees, content: {
                                         GenerateCheckoutBarcodeView()
                                     })
                                 }
@@ -78,7 +78,7 @@ struct HomeTabView: View {
     }
 
     func refreshEverything() {
-        DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .featureFlags], forceDownloadIfApplicable: true) {
+        DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
             DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {}
             runOnMainThread {
                 DataManager.shared.selectedChar = DataManager.shared.character?.baseModel
