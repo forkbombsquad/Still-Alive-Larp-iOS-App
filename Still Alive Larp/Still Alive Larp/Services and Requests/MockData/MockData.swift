@@ -40,6 +40,8 @@ protocol MockData {
     static var featureFlag: FeatureFlagModel { get }
     static var featureFlagList: FeatureFlagListModel { get }
     static var profileImageModel: ProfileImageModel { get }
+    static var researchProject: ResearchProjectModel { get }
+    static var researchProjects: ResearchProjectListModel { get }
 }
 
 extension MockData {
@@ -111,11 +113,16 @@ extension MockData {
                 return featureFlagList
             case .getProfileImage, .createProfileImage, .updateProfileImage, .deleteProfileImage:
                 return profileImageModel
+        case .getResearchProject, .createResearchProject, .updateResearchProject:
+                return researchProject
+            case .getAllResearchProjects:
+                return researchProjects
         }
     }
 }
 
 struct MockData1: MockData {
+    
     static var featureFlag = FeatureFlagModel(id: 0, name: "Test FF", description: "FF Testing", activeAndroid: "TRUE", activeIos: "TRUE")
 
     static var featureFlagList = FeatureFlagListModel(results: [featureFlag])
@@ -176,8 +183,12 @@ struct MockData1: MockData {
 
     static var version = AppVersionModel(androidVersion: 1, iosVersion: 1, rulebookVersion: "2.0")
 
-    static var gear = GearModel(id: 1, characterId: 1, type: "Registered Firearm", name: "Zombie Strike Hammershot", description: "5 regular bullets")
+    static var gear = GearModel(id: 1, characterId: 1, gearJson: GearJsonListModel(gearJson: [GearJsonModel(name: "Hammerstrike", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.lightFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Revolver")]).toJsonString()!)
 
     static var gearList = GearListModel(charGear: [gear])
+    
+    static var researchProject = ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE")
+    
+    static var researchProjects = ResearchProjectListModel(researchProjects: [researchProject])
 
 }

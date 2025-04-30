@@ -7,29 +7,6 @@
 
 import Foundation
 
-extension Array where Element == GearModel {
-
-    var primaryWeapon: GearModel? {
-        for gear in self {
-            if gear.type == Constants.Gear.primaryWeapon {
-                return gear
-            }
-        }
-        return nil
-    }
-
-    var removingPrimaryWeapon: [GearModel] {
-        var array = [GearModel]()
-        for gear in self {
-            if gear.type != Constants.Gear.primaryWeapon {
-                array.append(gear)
-            }
-        }
-        return array
-    }
-
-}
-
 extension Array where Element == PlayerModel {
 
     var alphabetized: [PlayerModel] {

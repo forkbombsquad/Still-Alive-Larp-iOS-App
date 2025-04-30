@@ -12,13 +12,13 @@ struct MockRequest {
     let url: URL
     let urlString: String
     let requestType: ServiceController.RequestType
-    let endpoint: ServiceUtils.Endpoint
+    let endpoint: ServiceEndpoints.Endpoint
 
     let headers: [String : String]
     let body: Data?
     private(set) var params: [String : String]
 
-    init(url: URL, requestType: ServiceController.RequestType, endpoint: ServiceUtils.Endpoint, headers: [String : String], body: Data?) {
+    init(url: URL, requestType: ServiceController.RequestType, endpoint: ServiceEndpoints.Endpoint, headers: [String : String], body: Data?) {
         self.url = url
         self.requestType = requestType
         self.headers = headers

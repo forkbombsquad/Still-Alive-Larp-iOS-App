@@ -290,11 +290,12 @@ struct RelevantSkillsView: View {
 
                 // Fully Loaded
                 if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.fullyLoaded}) {
-                    if let weapon = primaryWeapon {
-                        KeyValueView(key: "FULLY LOADED (<=25)", value: "\(weapon.description) - \(weapon.name)")
-                    } else {
-                        KeyValueView(key: "FULLY LOADED", value: "MISSING PRIMARY WEAPON REGISTRATION")
-                    }
+                    // TODO fix
+//                    if let weapon = primaryWeapon {
+//                        KeyValueView(key: "FULLY LOADED (<=25)", value: "\(weapon.description) - \(weapon.name)")
+//                    } else {
+//                        KeyValueView(key: "FULLY LOADED", value: "MISSING PRIMARY WEAPON REGISTRATION")
+//                    }
                 }
             }
         }

@@ -11,12 +11,12 @@ class RequestBuilder {
 
     private(set) var url: URL
     private(set) var requestType: ServiceController.RequestType
-    private(set) var endpoint: ServiceUtils.Endpoint
+    private(set) var endpoint: ServiceEndpoints.Endpoint
 
     private(set) var headers = [String : String]()
     private(set) var body: Data?
 
-    init(_ url: URL, endpoint: ServiceUtils.Endpoint, requestType: ServiceController.RequestType, contentType: ServiceController.ContentType) {
+    init(_ url: URL, endpoint: ServiceEndpoints.Endpoint, requestType: ServiceController.RequestType, contentType: ServiceController.ContentType) {
         self.url = url
         self.requestType = requestType
         self.endpoint = endpoint

@@ -640,7 +640,7 @@ class DataManager: ObservableObject {
     private func finishedRequest(_ incrementalIndex: Int, _ source: String) {
         runOnMainThread {
             self.countReturned[incrementalIndex] = (self.countReturned[incrementalIndex] ?? 0) + 1
-            if ServiceUtils.printServices {
+            if ServiceEndpoints.printServices {
                 print("DataManager - finished \(source) request \(self.countReturned[incrementalIndex] ?? 0) of \(self.targetCount[incrementalIndex] ?? 0)")
             }
             if self.targetCount[incrementalIndex] ?? 0 == self.countReturned[incrementalIndex] ?? 0 {

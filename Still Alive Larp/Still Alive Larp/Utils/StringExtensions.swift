@@ -9,6 +9,10 @@ import Foundation
 import SwiftUI
 
 extension String {
+    
+    var jsonData: Data? {
+        return self.data(using: .utf8)
+    }
 
     var boolValue: Bool? {
         return Bool(self.lowercased())

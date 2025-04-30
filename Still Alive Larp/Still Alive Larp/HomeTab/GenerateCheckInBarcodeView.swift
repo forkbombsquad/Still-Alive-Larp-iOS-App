@@ -64,11 +64,12 @@ struct GenerateCheckInBarcodeView: View {
         .onAppear {
             self.loading = true
             if let events = DataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
-                DataManager.shared.checkinBarcodeModel = PlayerCheckInBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: useChar ? DataManager.shared.character?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: useChar ? DataManager.shared.character?.getRelevantBarcodeSkills() ?? [] : [], primaryWeapon: DataManager.shared.selectedCharacterGear?.primaryWeapon)
-                if let barcode = DataManager.shared.checkinBarcodeModel {
-                    self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
-                }
-                self.loading = false
+                // TODO fix
+//                DataManager.shared.checkinBarcodeModel = PlayerCheckInBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: useChar ? DataManager.shared.character?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: useChar ? DataManager.shared.character?.getRelevantBarcodeSkills() ?? [] : [], primaryWeapon: DataManager.shared.selectedCharacterGear?.primaryWeapon)
+//                if let barcode = DataManager.shared.checkinBarcodeModel {
+//                    self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
+//                }
+//                self.loading = false
             }
         }
     }

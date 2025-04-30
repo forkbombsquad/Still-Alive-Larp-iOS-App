@@ -23,10 +23,11 @@ struct RegisterPrimaryWeaponView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("\((DataManager.shared.loadingSelectedCharacterGear || DataManager.shared.selectedCharacterGear?.primaryWeapon == nil) ? "Register" : "Edit") Primary Weapon\(DataManager.shared.loadingSelectedCharacterGear ? "" : "\nFor \(character.fullName)")")
-                            .font(Font.system(size: 36, weight: .bold))
-                            .multilineTextAlignment(.center)
-                            .padding(.trailing, 0)
+                        // TODO fix
+//                        Text("\((DataManager.shared.loadingSelectedCharacterGear || DataManager.shared.selectedCharacterGear?.primaryWeapon == nil) ? "Register" : "Edit") Primary Weapon\(DataManager.shared.loadingSelectedCharacterGear ? "" : "\nFor \(character.fullName)")")
+//                            .font(Font.system(size: 36, weight: .bold))
+//                            .multilineTextAlignment(.center)
+//                            .padding(.trailing, 0)
                         if DataManager.shared.loadingSelectedCharacterGear {
                             HStack {
                                 Spacer()
@@ -50,30 +51,32 @@ struct RegisterPrimaryWeaponView: View {
                                 if !valResult.hasError {
                                     self.loading = true
                                     if !self.isEditing() {
-                                        let gearModel = GearCreateModel(characterId: self.character.id, type: Constants.Gear.primaryWeapon, name: self.name, description: self.ammo)
-                                        AdminService.createGear(gearModel) { _ in
-                                            self.loading = false
-                                            AlertManager.shared.showSuccessAlert("\(self.name) registered as Primary Weapon for \(self.character.fullName)") {
-                                                runOnMainThread {
-                                                    self.mode.wrappedValue.dismiss()
-                                                }
-                                            }
-                                        } failureCase: { _ in
-                                            self.loading = false
-                                        }
+                                        // TODO fix
+//                                        let gearModel = GearCreateModel(characterId: self.character.id, type: Constants.Gear.primaryWeapon, name: self.name, description: self.ammo)
+//                                        AdminService.createGear(gearModel) { _ in
+//                                            self.loading = false
+//                                            AlertManager.shared.showSuccessAlert("\(self.name) registered as Primary Weapon for \(self.character.fullName)") {
+//                                                runOnMainThread {
+//                                                    self.mode.wrappedValue.dismiss()
+//                                                }
+//                                            }
+//                                        } failureCase: { _ in
+//                                            self.loading = false
+//                                        }
 
                                     } else {
-                                        let gearModel = GearModel(id: DataManager.shared.selectedCharacterGear?.primaryWeapon?.id ?? -1, characterId: self.character.id, type: Constants.Gear.primaryWeapon, name: self.name, description: self.ammo)
-                                        AdminService.updateGear(gearModel: gearModel) { _ in
-                                            self.loading = false
-                                            AlertManager.shared.showSuccessAlert("\(self.name) registered as Primary Weapon for \(self.character.fullName)") {
-                                                runOnMainThread {
-                                                    self.mode.wrappedValue.dismiss()
-                                                }
-                                            }
-                                        } failureCase: { _ in
-                                            self.loading = false
-                                        }
+                                        // TODO fix
+//                                        let gearModel = GearModel(id: DataManager.shared.selectedCharacterGear?.primaryWeapon?.id ?? -1, characterId: self.character.id, type: Constants.Gear.primaryWeapon, name: self.name, description: self.ammo)
+//                                        AdminService.updateGear(gearModel: gearModel) { _ in
+//                                            self.loading = false
+//                                            AlertManager.shared.showSuccessAlert("\(self.name) registered as Primary Weapon for \(self.character.fullName)") {
+//                                                runOnMainThread {
+//                                                    self.mode.wrappedValue.dismiss()
+//                                                }
+//                                            }
+//                                        } failureCase: { _ in
+//                                            self.loading = false
+//                                        }
                                     }
                                 } else {
                                     AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
@@ -91,18 +94,21 @@ struct RegisterPrimaryWeaponView: View {
             .onAppear {
                 runOnMainThread {
                     DataManager.shared.selectedChar = character
-                    DataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
-                        if let primaryWeapon = DataManager.shared.selectedCharacterGear?.primaryWeapon {
-                            self.name = primaryWeapon.name
-                            self.ammo = primaryWeapon.description
-                        }
-                    }
+                        // TODO fix
+//                    DataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
+//                        if let primaryWeapon = DataManager.shared.selectedCharacterGear?.primaryWeapon {
+//                            self.name = primaryWeapon.name
+//                            self.ammo = primaryWeapon.description
+//                        }
+//                    }
                 }
             }
     }
 
     func isEditing() -> Bool {
-        return DataManager.shared.selectedCharacterGear?.primaryWeapon != nil
+        // TODO fix
+//        return DataManager.shared.selectedCharacterGear?.primaryWeapon != nil
+        return false
     }
 
     private func validateFields() -> ValidationResult {

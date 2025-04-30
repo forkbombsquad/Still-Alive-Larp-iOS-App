@@ -56,7 +56,7 @@ struct ServiceController {
         case delete = "DELETE"
     }
 
-    static func makeRequest<T>(_ endpoint: ServiceUtils.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
+    static func makeRequest<T>(_ endpoint: ServiceEndpoints.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
         if sendToken {
             AuthManager.shared.getAuthToken { token in
                 var newHeaders = headers ?? [:]
@@ -74,7 +74,7 @@ struct ServiceController {
                 }
             }
 
-            var urlString = ServiceUtils.getUrl(endpoint)
+            var urlString = ServiceEndpoints.getUrl(endpoint)
             if let aeu = addToEndOfUrl {
                 urlString = "\(urlString)\(aeu)"
             }
@@ -111,10 +111,10 @@ struct ServiceController {
                 requestBuilder.setJsonBody(bodyJson, failure: failure)
             }
 
-            switch ServiceUtils.serviceMode {
+            switch ServiceEndpoints.serviceMode {
             case .prod:
                 let request = requestBuilder.getUrlRequest()
-                if ServiceUtils.printServices {
+                if ServiceEndpoints.printServices {
                     print("SERVICE CONTROLLER: Request:\n\(request)")
                     if let body = request.httpBody {
                         print("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
@@ -127,7 +127,7 @@ struct ServiceController {
                         failure(error)
                     } else if let rsp = response as? HTTPURLResponse {
                         let d = data ?? Data()
-                        if ServiceUtils.printServices {
+                        if ServiceEndpoints.printServices {
                             print("SERVICE CONTROLLER: Response\n\(String(data: d, encoding: .utf8) ?? "")")
                         }
 
@@ -146,7 +146,7 @@ struct ServiceController {
                 task.resume()
             case .test:
                 let mockRequest = requestBuilder.getMockRequest()
-                if ServiceUtils.printServices {
+                if ServiceEndpoints.printServices {
                     print("SERVICE CONTROLLER: Mock Request:\n\(mockRequest)")
                 }
 

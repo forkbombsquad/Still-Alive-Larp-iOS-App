@@ -23,27 +23,28 @@ struct SelectGearToManageView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("Manage Gear\nFor \(character.fullName)")
-                            .font(Font.system(size: 36, weight: .bold))
-                            .multilineTextAlignment(.center)
-                            .padding(.trailing, 0)
+                        // TODO fix this view
+//                        Text("Manage Gear\nFor \(character.fullName)")
+//                            .font(Font.system(size: 36, weight: .bold))
+//                            .multilineTextAlignment(.center)
+//                            .padding(.trailing, 0)
                         Text("*Note, primary weapons are not shown in this list.")
-                        if DataManager.shared.loadingSelectedCharacterGear {
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                        } else {
-                            NavArrowViewGreen(title: "Add New") {
-                                ManageGearView(gear: nil)
-                            }
-                            ForEach(DataManager.shared.selectedCharacterGear?.removingPrimaryWeapon ?? []) { gear in
-                                NavArrowView(title: "\(gear.name) - \(gear.type)") { _ in
-                                    ManageGearView(gear: gear)
-                                }.navigationViewStyle(.stack)
-                            }
-                        }
+//                        if DataManager.shared.loadingSelectedCharacterGear {
+//                            HStack {
+//                                Spacer()
+//                                ProgressView()
+//                                Spacer()
+//                            }
+//                        } else {
+//                            NavArrowViewGreen(title: "Add New") {
+//                                ManageGearView(gear: nil)
+//                            }
+//                            ForEach(DataManager.shared.selectedCharacterGear?.removingPrimaryWeapon ?? []) { gear in
+//                                NavArrowView(title: "\(gear.name) - \(gear.type)") { _ in
+//                                    ManageGearView(gear: gear)
+//                                }.navigationViewStyle(.stack)
+//                            }
+//                        }
                     }
                 }
             }

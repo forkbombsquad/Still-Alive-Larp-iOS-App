@@ -63,6 +63,8 @@
 		B23552CF29EB267000183748 /* LoadingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552CE29EB267000183748 /* LoadingButtonView.swift */; };
 		B23552D829ED8A8500183748 /* NativeWebImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552D729ED8A8500183748 /* NativeWebImageView.swift */; };
 		B23728AC2DC1BBCC00495777 /* ServiceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */; };
+		B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B12DC1C10600495777 /* ServiceEndpoints.swift */; };
+		B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B32DC1CCBC00495777 /* ReserachProject.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -230,6 +232,8 @@
 		B23552D729ED8A8500183748 /* NativeWebImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeWebImageView.swift; sourceTree = "<group>"; };
 		B23552F429ED9B8D00183748 /* Still-Alive-Larp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Still-Alive-Larp-Info.plist"; sourceTree = SOURCE_ROOT; };
 		B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUtils.swift; sourceTree = "<group>"; };
+		B23728B12DC1C10600495777 /* ServiceEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoints.swift; sourceTree = "<group>"; };
+		B23728B32DC1CCBC00495777 /* ReserachProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserachProject.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -547,6 +551,7 @@
 				B2E135B729FD7DA80038DE31 /* SpecialClassXpReduction.swift */,
 				B25D45B42A12B5D500C3048C /* EventPreregModel.swift */,
 				B233D76D2A1D4E1C002B9BBA /* AppVersionModel.swift */,
+				B23728B32DC1CCBC00495777 /* ReserachProject.swift */,
 				B2F29FAF2A420D0F00E07108 /* GearModel.swift */,
 				B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */,
 				B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */,
@@ -592,6 +597,7 @@
 				B2F29FAD2A420AD900E07108 /* GearService.swift */,
 				B251B0662BD1A25800915F01 /* FeatureFlagService.swift */,
 				B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */,
+				B23728B12DC1C10600495777 /* ServiceEndpoints.swift */,
 			);
 			path = "Services and Requests";
 			sourceTree = "<group>";
@@ -872,6 +878,8 @@
 				B2E0A04D2A4DD0F60089FF2E /* SelectCharacterForPrimaryWeaponView.swift in Sources */,
 				B2222494291DBB47003BCA0A /* CustomCodeable.swift in Sources */,
 				B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */,
+				B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */,
+				B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */,
 				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B23552D829ED8A8500183748 /* NativeWebImageView.swift in Sources */,
 				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,

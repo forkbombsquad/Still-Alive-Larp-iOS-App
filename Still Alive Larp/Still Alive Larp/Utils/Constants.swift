@@ -126,5 +126,55 @@ struct Constants {
         static let checkInRelevantSkillsOnly = deepPocketTypeSkills + toughSkinTypeSkills + walkLikeAZombieTypeSkills + investigatorTypeSkills + gamblerTypeSkills + fortuneSkills + [fullyLoaded]
 
     }
+    
+    struct GearTypes {
+        static let meleeWeapon = "Melee Weapon"
+        static let firearm = "Firearm"
+        static let clothing = "Clothing"
+        static let accessory = "Accessory"
+        static let bag = "Bag"
+        static let other = "Other"
+
+        static let allTypes = [meleeWeapon, firearm, clothing, accessory, bag, other]
+    }
+
+    struct GearPrimarySubtype {
+        static let superLightMeleeWeapon = "Super Light Melee Weapon"
+        static let lightMeleeWeapon = "Light Melee Weapon"
+        static let mediumMeleeWeapon = "Medium Melee Weapon"
+        static let heavyMeleeWeapon = "Heavy Melee Weapon"
+
+        static let lightFirearm = "Light Firearm"
+        static let mediumFirearm = "Medium Firearm"
+        static let heavyFirearm = "Heavy Firearm"
+        static let advancedFirearm = "Advanced Firearm"
+        static let militaryGradeFirearm = "Military Grade Firearm"
+
+        static let blacklightFlashlight = "Blacklight Flashlight"
+        static let flashlight = "Regular Flashlight"
+
+        static let smallBag = "Small Bag"
+        static let mediumBag = "Medium Bag"
+        static let largeBag = "Large Bag"
+        static let extraLargeBag = "Extra Large Bag"
+
+        static let other = "Other"
+        static let none = "None"
+
+        static let allMeleeTypes = [superLightMeleeWeapon, lightMeleeWeapon, mediumMeleeWeapon, heavyMeleeWeapon]
+        static let allFirearmTypes = [lightFirearm, mediumFirearm, heavyFirearm, advancedFirearm, militaryGradeFirearm]
+        var allClothingTypes = [none]
+        var allAccessoryTypes = [blacklightFlashlight, flashlight, other]
+        var allBagTypes = [smallBag, mediumBag, largeBag, extraLargeBag]
+        var allOtherTypes = [other]
+    }
+
+    struct GearSecondarySubtype {
+        static let none = "None"
+        static let primaryFirearm = "Primary Firearm"
+
+        static let allFirearmTypes = [none, primaryFirearm]
+        static let allNonFirearmTypes = [none]
+    }
 
 }

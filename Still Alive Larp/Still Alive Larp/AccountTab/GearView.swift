@@ -38,19 +38,20 @@ struct GearView: View {
                             .frame(alignment: .center)
                             .padding([.bottom], 16)
                         Divider().background(Color.darkGray)
-                        if let primaryWeapon = gear.primaryWeapon {
-                            KeyValueView(key: "Primary Weapon", value: primaryWeapon.name, showDivider: false)
-                            Text(primaryWeapon.description).padding([.top], 4)
-                            Divider().background(Color.darkGray)
-                        } else {
-                            KeyValueView(key: "Primary Weapon", value: "None", showDivider: true)
-                        }
-                        let modGearList = gear.removingPrimaryWeapon
-                        ForEach(modGearList) { gear in
-                            KeyValueView(key: gear.type, value: gear.name, showDivider: false)
-                            Text(gear.description).padding([.top], 4)
-                            Divider().background(Color.darkGray)
-                        }
+                        // TODO fix
+//                        if let primaryWeapon = gear.primaryWeapon {
+//                            KeyValueView(key: "Primary Weapon", value: primaryWeapon.name, showDivider: false)
+//                            Text(primaryWeapon.description).padding([.top], 4)
+//                            Divider().background(Color.darkGray)
+//                        } else {
+//                            KeyValueView(key: "Primary Weapon", value: "None", showDivider: true)
+//                        }
+//                        let modGearList = gear.removingPrimaryWeapon
+//                        ForEach(modGearList) { gear in
+//                            KeyValueView(key: gear.type, value: gear.name, showDivider: false)
+//                            Text(gear.description).padding([.top], 4)
+//                            Divider().background(Color.darkGray)
+//                        }
                     } else {
                         Text("Something went wrong!")
                             .font(.system(size: 32, weight: .bold))
