@@ -29,9 +29,7 @@ class AuthManager {
 
     func getAuthToken(_ callback: @escaping (_ token: String?) -> Void) {
         if tokenIsExpired() {
-            if ServiceEndpoints.printServices {
-                print("Token Expired, fetching token")
-            }
+            globalPrintServiceLogs("Token Expired, Fetching New Token")
             ServiceController.makeRequest(.authToken, contentType: .urlEncoded, headers: ["accept": ServiceController.ContentType.json.rawValue], bodyParams: ServiceUtils.OAuth.oauthBodyParams, responseObject: OAuthTokenResponse.self, sendToken: false, sendUserAndPass: false) { success in
                 self.token = success.jsonObject.access_token
                 self.tokenExpireDate = self.getTokenExpireDate()
@@ -48,10 +46,7 @@ class AuthManager {
             }
 
         } else {
-            if ServiceEndpoints.printServices {
-                print("Reusing token")
-            }
-
+            globalPrintServiceLogs("Reusing Token")
             callback(token)
         }
     }

@@ -8,9 +8,17 @@
 import Foundation
 
 struct Constants {
-
-    struct Gear {
-        static let primaryWeapon = "Primary Weapon"
+    
+    struct Logging {
+//        TODO ALWAYS - set these to false before release
+        static let showServiceLogging = true
+        static let showTestLogging = true
+        static let showDebugButtonInAccountView = true
+    }
+    
+    struct ServiceOperationMode {
+        // TODO ALWAYS - set this to prod before release
+        static let serviceMode: ServiceEndpoints.ServiceMode = .prod
     }
 
     struct Notifications {

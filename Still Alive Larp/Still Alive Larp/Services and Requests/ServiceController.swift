@@ -69,7 +69,7 @@ struct ServiceController {
                 // Default failure behavior does some basic stuff before loading. Only override if necessary
                 failure = { error in
                     AlertManager.shared.showOkAlert("Server Error", message: error.localizedDescription, onOkAction: {})
-                    print("SERVICE ERROR: \(error)")
+                    globalPrintServiceLogs("SERVICE ERROR: \(error)")
                     failureCase(error)
                 }
             }
@@ -111,25 +111,22 @@ struct ServiceController {
                 requestBuilder.setJsonBody(bodyJson, failure: failure)
             }
 
-            switch ServiceEndpoints.serviceMode {
+            switch Constants.ServiceOperationMode.serviceMode {
             case .prod:
                 let request = requestBuilder.getUrlRequest()
-                if ServiceEndpoints.printServices {
-                    print("SERVICE CONTROLLER: Request:\n\(request)")
-                    if let body = request.httpBody {
-                        print("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
-                    }
+                
+                globalPrintServiceLogs("SERVICE CONTROLLER: Request:\n\(request)")
+                if let body = request.httpBody {
+                    globalPrintServiceLogs("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
                 }
-
 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
                         failure(error)
                     } else if let rsp = response as? HTTPURLResponse {
                         let d = data ?? Data()
-                        if ServiceEndpoints.printServices {
-                            print("SERVICE CONTROLLER: Response\n\(String(data: d, encoding: .utf8) ?? "")")
-                        }
+                        
+                        globalPrintServiceLogs("SERVICE CONTROLLER: Response\n\(String(data: d, encoding: .utf8) ?? "")")
 
                         if let jsonObject: T = d.toJsonObject() {
                             success(ServiceSuccess(data: d, response: rsp, jsonObject: jsonObject))
@@ -146,9 +143,7 @@ struct ServiceController {
                 task.resume()
             case .test:
                 let mockRequest = requestBuilder.getMockRequest()
-                if ServiceEndpoints.printServices {
-                    print("SERVICE CONTROLLER: Mock Request:\n\(mockRequest)")
-                }
+                globalPrintServiceLogs("SERVICE CONTROLLER: Mock Request:\n\(mockRequest)")
 
                 if let responseObject: T = mockRequest.getResponse() {
                     success(ServiceSuccess(data: Data(), response: HTTPURLResponse(), jsonObject: responseObject))

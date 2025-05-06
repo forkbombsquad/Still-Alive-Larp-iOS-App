@@ -103,6 +103,9 @@ class DataManager: ObservableObject {
             self.actionState = 0
         }
     }
+    
+    // TODO ALWAYS set this to false before release
+    var debugMode = false
 
     @Published var actionState: Int? = 0
 
@@ -177,6 +180,10 @@ class DataManager: ObservableObject {
     @Published var downloadedImage: UIImage?
 
     func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, incrementalIndex: Int = IncrementalIndexManager.shared.getNextIndex(), finished: @escaping () -> Void = {}) {
+        guard !debugMode else {
+            finished()
+            return
+        }
         runOnMainThread {
             self.targetCount[incrementalIndex] = types.count
             self.countReturned[incrementalIndex] = 0
@@ -617,6 +624,7 @@ class DataManager: ObservableObject {
     }
 
     func loadLocalData() {
+        guard !debugMode else { return }
         runOnMainThread {
             self.selectedPlayer = LocalDataHandler.shared.getPlayer()
             self.charForSelectedPlayer = LocalDataHandler.shared.getCharacter()
@@ -640,9 +648,7 @@ class DataManager: ObservableObject {
     private func finishedRequest(_ incrementalIndex: Int, _ source: String) {
         runOnMainThread {
             self.countReturned[incrementalIndex] = (self.countReturned[incrementalIndex] ?? 0) + 1
-            if ServiceEndpoints.printServices {
-                print("DataManager - finished \(source) request \(self.countReturned[incrementalIndex] ?? 0) of \(self.targetCount[incrementalIndex] ?? 0)")
-            }
+            globalPrintServiceLogs("DataManager - finished \(source) request \(self.countReturned[incrementalIndex] ?? 0) of \(self.targetCount[incrementalIndex] ?? 0)")
             if self.targetCount[incrementalIndex] ?? 0 == self.countReturned[incrementalIndex] ?? 0 {
                 self.callbacks[incrementalIndex]?()
                 // Reset values to save memory
@@ -651,6 +657,35 @@ class DataManager: ObservableObject {
                 self.callbacks[incrementalIndex] = {}
             }
         }
+    }
+    
+    func loadMockData() {
+        typealias md = MockData1
+
+        selectedEvent = md.event
+        selectedChar = md.character
+        selectedContactRequest = md.contact
+        announcements = md.announcementsList.announcements
+        currentAnnouncement = md.announcement
+        player = md.player
+        character = FullCharacterModel(md.character)
+        events = md.events.events
+        currentEvent = md.event
+        awards = md.awards.awards
+        intrigue = md.intrigue
+        skills = [FullSkillModel(md.skill)]
+        allPlayers = md.playerList.players
+        allCharacters = md.characterListFullModel.characters
+        charForSelectedPlayer = FullCharacterModel(md.character)
+        contactRequests = md.contacts.contactRequests
+        xpReductions = md.xpReductions.specialClassXpReductions
+        eventPreregs = [1: md.preregs.eventPreregs]
+        selectedCharacterXpReductions = md.xpReductions.specialClassXpReductions
+        intrigueForSelectedEvent = md.intrigue
+        selectedCharacterGear = md.gearList.charGear
+        featureFlags = md.featureFlagList.results
+        
+        selectedPlayer = md.player
     }
 
 }

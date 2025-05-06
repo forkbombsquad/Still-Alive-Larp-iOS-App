@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var username: String = ""
     @State private var password: String = ""
@@ -16,6 +16,7 @@ struct MainView: View {
     @State private var navigateToCreateAccount = false
 
     @State var loading = false
+    @State var loadingText = ""
 
     @State var player: PlayerModel?
     @State var character: FullCharacterModel?
@@ -52,9 +53,9 @@ struct MainView: View {
                                 Text("Remember Me")
                                 Spacer()
 
-                                LoadingButtonView($loading, width: gr.size.width * 0.35, height: 60, buttonText: "Log In", progressViewOffset: 0) {
+                                LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.35, height: 60, buttonText: "Log In", progressViewOffset: 0) {
                                     self.loading = true
-
+                                    self.loadingText = "Checking Credentials..."
                                     VersionService.getVersions { versions in
                                         let currentVersion = getBuildNumber()
                                         if (currentVersion < versions.iosVersion) {
@@ -68,6 +69,7 @@ struct MainView: View {
                                                     }
                                                 })
                                         } else {
+                                            loadingText = "Fetching Player Info..."
                                             UserAndPassManager.shared.setUAndP(username, p: password, remember: rememberMe)
                                             PlayerService.signInPlayer { player in
                                                 runOnMainThread {
@@ -153,6 +155,9 @@ struct MainView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return MainView(_dm: dm)
     }
 }

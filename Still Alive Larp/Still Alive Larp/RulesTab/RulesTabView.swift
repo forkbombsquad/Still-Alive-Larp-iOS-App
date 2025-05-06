@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RulesTabView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var loadingSkills: Bool = true
     @State var allSkills = [FullSkillModel]()
@@ -33,15 +33,8 @@ struct RulesTabView: View {
                             NavArrowView(title: "Skill List", loading: $loadingSkills) { _ in
                                 SkillListView(skills: allSkills)
                             }
-                            NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkillTreeDiagram) { _ in
-                                if let image = LocalDataHandler.shared.getImage(.skillTree) {
-                                    DownloadedImageView(image: image)
-                                }
-                            }
-                            NavArrowView(title: "Skill Tree Diagram (Dark)", loading: $loadingSkillTreeDiagramDark) { _ in
-                                if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
-                                    DownloadedImageView(image: image)
-                                }
+                            NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkills) { _ in
+                                // TODO
                             }
                             NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in
                                 ViewRulesView(rulebook: DataManager.shared.rulebook)
@@ -49,6 +42,18 @@ struct RulesTabView: View {
                             NavArrowView(title: "Treating Wounds Flowchart", loading: $loadingTreatingWoundsDiagram) { _ in
                                 if let image = LocalDataHandler.shared.getImage(.treatingWounds) {
                                     DownloadedImageView(image: image)
+                                }
+                            }
+                            if (FeatureFlag.oldSkillTreeImage.isActive()) {
+                                NavArrowView(title: "Skill Tree Diagram Image (Legacy)", loading: $loadingSkillTreeDiagramDark) { _ in
+                                    if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                        DownloadedImageView(image: image)
+                                    }
+                                }
+                                NavArrowView(title: "Dark Skill Tree Diagram Image (Legacy)", loading: $loadingSkillTreeDiagramDark) { _ in
+                                    if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                        DownloadedImageView(image: image)
+                                    }
                                 }
                             }
                         }
@@ -87,6 +92,9 @@ struct RulesTabView: View {
 
 struct RulesTabView_Previews: PreviewProvider {
     static var previews: some View {
-        RulesTabView()
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return RulesTabView(_dm: dm)
     }
 }

@@ -26,3 +26,15 @@ func forceResetAllPlayerData() {
         CharacterManager.forceReset()
     }
 }
+
+func globalPrintServiceLogs(_ message: String) {
+    if Constants.Logging.showServiceLogging {
+        print(message)
+    }
+}
+
+func globalTestPrint(_ message: String) {
+    if Constants.Logging.showTestLogging {
+        print(message)
+    }
+}

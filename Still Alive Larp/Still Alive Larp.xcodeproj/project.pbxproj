@@ -65,6 +65,7 @@
 		B23728AC2DC1BBCC00495777 /* ServiceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */; };
 		B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B12DC1C10600495777 /* ServiceEndpoints.swift */; };
 		B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B32DC1CCBC00495777 /* ReserachProject.swift */; };
+		B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B52DCA735200495777 /* FeatureFlag.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -234,6 +235,7 @@
 		B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUtils.swift; sourceTree = "<group>"; };
 		B23728B12DC1C10600495777 /* ServiceEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoints.swift; sourceTree = "<group>"; };
 		B23728B32DC1CCBC00495777 /* ReserachProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserachProject.swift; sourceTree = "<group>"; };
+		B23728B52DCA735200495777 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 		B21691E628FDE449006AA921 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B23728B52DCA735200495777 /* FeatureFlag.swift */,
 				B23552D029EB268A00183748 /* Views */,
 				B23552C729EB02AC00183748 /* Alerts */,
 				B21691E928FDE6DB006AA921 /* ColorExtensions.swift */,
@@ -898,6 +901,7 @@
 				B2E0A04F2A4DD1F60089FF2E /* RegisterPrimaryWeaponView.swift in Sources */,
 				B228C29429F848630064686D /* ViewPlayerStuffView.swift in Sources */,
 				B222248F291DAA01003BCA0A /* AnnouncementModel.swift in Sources */,
+				B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */,
 				B25D45B52A12B5D600C3048C /* EventPreregModel.swift in Sources */,
 				B23552C629EAFE5C00183748 /* AnnouncementService.swift in Sources */,
 				B235529E29E8810A00183748 /* AwardCharacterFormView.swift in Sources */,

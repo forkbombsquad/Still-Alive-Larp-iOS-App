@@ -6,9 +6,6 @@
 //
 
 class ServiceEndpoints {
-    static let serviceMode: ServiceMode = .prod
-    static let printServices = false
-    // TODO make sure this is false before release
 
     private typealias urls = ServiceEndpoints.URL
 
@@ -110,7 +107,7 @@ class ServiceEndpoints {
 
     struct URL {
         static var base: String {
-            return ServiceEndpoints.serviceMode == .prod ? baseProd : baseTest
+            return Constants.ServiceOperationMode.serviceMode == .prod ? baseProd : baseTest
         }
         private static let baseProd = "https://stillalivelarp.com/"
         private static let baseTest = "stillalivetest/"
