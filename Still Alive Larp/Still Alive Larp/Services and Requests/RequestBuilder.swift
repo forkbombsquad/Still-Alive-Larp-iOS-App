@@ -42,19 +42,13 @@ class RequestBuilder {
         body = map.data(using: .utf8)
     }
 
-    func setJsonBody(_ jsonBody: Encodable, useGzip: Bool, failure: @escaping (_ error: Error) -> Void) {
+    func setJsonBody(_ jsonBody: Encodable, failure: @escaping (_ error: Error) -> Void) {
         guard let jsonData = try? JSONEncoder().encode(jsonBody) else {
             failure(ServiceErrors.malformedJsonBody)
             return
         }
         
-        if useGzip, let gzippedData = try? jsonData.gzipped() {
-            body = gzippedData
-        } else if useGzip {
-            failure(ServiceErrors.failedToCompressObject)
-        } else {
-            body = jsonData
-        }
+        body = jsonData
     }
 
     func getUrlRequest() -> URLRequest {
