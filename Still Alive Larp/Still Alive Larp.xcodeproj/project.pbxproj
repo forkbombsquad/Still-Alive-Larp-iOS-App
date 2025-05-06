@@ -66,6 +66,7 @@
 		B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B12DC1C10600495777 /* ServiceEndpoints.swift */; };
 		B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B32DC1CCBC00495777 /* ReserachProject.swift */; };
 		B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B52DCA735200495777 /* FeatureFlag.swift */; };
+		B23728B92DCA828B00495777 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B23728B82DCA828B00495777 /* Gzip */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -329,6 +330,7 @@
 			files = (
 				B2F9838429F1728C00512839 /* CodeScanner in Frameworks */,
 				B2E5F2D92AD07FBB004D61F5 /* SwiftSoup in Frameworks */,
+				B23728B92DCA828B00495777 /* Gzip in Frameworks */,
 				B2C6CE8D2AD6EC960088DA6D /* OrderedCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -675,6 +677,7 @@
 				B2F9838329F1728C00512839 /* CodeScanner */,
 				B2E5F2D82AD07FBB004D61F5 /* SwiftSoup */,
 				B2C6CE8C2AD6EC960088DA6D /* OrderedCollections */,
+				B23728B82DCA828B00495777 /* Gzip */,
 			);
 			productName = "Still Alive Larp";
 			productReference = B21691B928FDDC5D006AA921 /* Still Alive Larp.app */;
@@ -752,6 +755,7 @@
 				B2F9838229F1728C00512839 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				B2E5F2D72AD07FBB004D61F5 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				B2C6CE8B2AD6EC960088DA6D /* XCRemoteSwiftPackageReference "swift-collections" */,
+				B23728B72DCA828B00495777 /* XCRemoteSwiftPackageReference "GzipSwift" */,
 			);
 			productRefGroup = B21691BA28FDDC5D006AA921 /* Products */;
 			projectDirPath = "";
@@ -1279,6 +1283,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		B23728B72DCA828B00495777 /* XCRemoteSwiftPackageReference "GzipSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://www.github.com/1024jp/GzipSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.1.0;
+			};
+		};
 		B2C6CE8B2AD6EC960088DA6D /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -1306,6 +1318,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B23728B82DCA828B00495777 /* Gzip */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B23728B72DCA828B00495777 /* XCRemoteSwiftPackageReference "GzipSwift" */;
+			productName = Gzip;
+		};
 		B2C6CE8C2AD6EC960088DA6D /* OrderedCollections */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B2C6CE8B2AD6EC960088DA6D /* XCRemoteSwiftPackageReference "swift-collections" */;

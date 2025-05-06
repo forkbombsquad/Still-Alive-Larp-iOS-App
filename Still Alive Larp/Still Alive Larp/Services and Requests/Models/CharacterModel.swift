@@ -30,9 +30,10 @@ struct FullCharacterModel: CustomCodeable {
     let unshakableResolveUses: String
     let mysteriousStrangerUses: String
     let playerId: Int
+    let characterTypeId: Int
     var skills: [FullSkillModel]
 
-    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, skills: [FullSkillModel]) {
+    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, characterTypeId: Int, skills: [FullSkillModel]) {
         self.id = id
         self.fullName = fullName
         self.startDate = startDate
@@ -55,6 +56,7 @@ struct FullCharacterModel: CustomCodeable {
         self.unshakableResolveUses = unshakableResolveUses
         self.mysteriousStrangerUses = mysteriousStrangerUses
         self.playerId = playerId
+        self.characterTypeId = characterTypeId
         self.skills = skills
     }
 
@@ -81,6 +83,7 @@ struct FullCharacterModel: CustomCodeable {
         self.armor = charModel.armor
         self.unshakableResolveUses = charModel.unshakableResolveUses
         self.mysteriousStrangerUses = charModel.mysteriousStrangerUses
+        self.characterTypeId = charModel.characterTypeId
         self.skills = []
     }
 
@@ -190,6 +193,7 @@ struct CharacterBarcodeModel: CustomCodeable {
     let unshakableResolveUses: String
     let mysteriousStrangerUses: String
     let playerId: Int
+    let characterTypeId: Int
 
     init(_ characterModel: FullCharacterModel) {
         self.id = characterModel.id
@@ -209,6 +213,7 @@ struct CharacterBarcodeModel: CustomCodeable {
         self.unshakableResolveUses = characterModel.mysteriousStrangerUses
         self.mysteriousStrangerUses = characterModel.mysteriousStrangerUses
         self.playerId = characterModel.playerId
+        self.characterTypeId = characterModel.characterTypeId
     }
 }
 
@@ -235,6 +240,7 @@ struct CharacterModel: CustomCodeable, Identifiable {
     let unshakableResolveUses: String
     let mysteriousStrangerUses: String
     let playerId: Int
+    let characterTypeId: Int
 
     enum ArmorType: String {
         case none = "None"
@@ -265,10 +271,11 @@ struct CharacterModel: CustomCodeable, Identifiable {
         self.unshakableResolveUses = char.unshakableResolveUses
         self.mysteriousStrangerUses = char.mysteriousStrangerUses
         self.playerId = char.playerId
+        self.characterTypeId = char.characterTypeId
     }
 
 
-    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int) {
+    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, characterTypeId: Int) {
         self.id = id
         self.fullName = fullName
         self.startDate = startDate
@@ -291,6 +298,7 @@ struct CharacterModel: CustomCodeable, Identifiable {
         self.unshakableResolveUses = unshakableResolveUses
         self.mysteriousStrangerUses = mysteriousStrangerUses
         self.playerId = playerId
+        self.characterTypeId = characterTypeId
     }
 
     func getAllXpSpent(onSuccess: @escaping (_ xp: Int) -> Void, failureCase: @escaping FailureCase) {
@@ -338,6 +346,7 @@ struct CreateCharacterModel: CustomCodeable {
     let unshakableResolveUses: String
     let mysteriousStrangerUses: String
     let playerId: Int
+    let characterTypeId: Int
 }
 
 struct CharacterSubModel: CustomCodeable {

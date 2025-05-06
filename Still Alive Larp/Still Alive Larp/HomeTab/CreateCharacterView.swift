@@ -45,7 +45,7 @@ struct CreateCharacterView: View {
                         let valResult = validateFields()
                         if !valResult.hasError {
                             self.loading = true
-                            let char = CreateCharacterModel(fullName: fullName, startDate: Date().yyyyMMddFormatted, isAlive: "TRUE", deathDate: "", infection: "0", bio: bio, approvedBio: "FALSE", bullets: "20", megas: "0", rivals: "0", rockets: "0", bulletCasings: "0", clothSupplies: "0", woodSupplies: "0", metalSupplies: "0", techSupplies: "0", medicalSupplies: "0", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: DataManager.shared.player?.id ?? -1)
+                            let char = CreateCharacterModel(fullName: fullName, startDate: Date().yyyyMMddFormatted, isAlive: "TRUE", deathDate: "", infection: "0", bio: bio, approvedBio: "FALSE", bullets: "20", megas: "0", rivals: "0", rockets: "0", bulletCasings: "0", clothSupplies: "0", woodSupplies: "0", metalSupplies: "0", techSupplies: "0", medicalSupplies: "0", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: DataManager.shared.player?.id ?? -1, characterTypeId: Constants.CharacterTypes.standard)
 
                             CharacterService.createCharacter(char) { characterModel in
                                 DataManager.shared.load([.player, .character], forceDownloadIfApplicable: true)

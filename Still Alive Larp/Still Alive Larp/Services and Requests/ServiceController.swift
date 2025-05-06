@@ -16,6 +16,7 @@ enum ServiceErrors: Error {
     case malformedJsonBody
     case failedToParseResponse
     case failedToMapToObject
+    case failedToCompressObject
     case serverError(String)
 }
 
@@ -30,6 +31,8 @@ extension ServiceErrors: LocalizedError {
                 return NSLocalizedString("Failed to parse response", comment: "")
             case .failedToMapToObject:
                 return NSLocalizedString("Failed to map response", comment: "")
+            case .failedToCompressObject:
+                return NSLocalizedString("Failed to compress object", comment: "")
             case .serverError(let detail):
                 return NSLocalizedString(detail, comment: "")
         }
@@ -56,12 +59,12 @@ struct ServiceController {
         case delete = "DELETE"
     }
 
-    static func makeRequest<T>(_ endpoint: ServiceEndpoints.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
+    static func makeRequest<T>(_ endpoint: ServiceEndpoints.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = true, useGzip: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
         if sendToken {
             AuthManager.shared.getAuthToken { token in
                 var newHeaders = headers ?? [:]
                 newHeaders["Authorization"] = "Bearer \(token ?? "")"
-                ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
+                ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, useGzip: useGzip, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
             }
         } else {
             var failure: FailureCase = failureCase
@@ -102,13 +105,19 @@ struct ServiceController {
                 newHeaders["em"] = u
                 newHeaders["pp"] = p
             }
+            if useGzip {
+                if bodyJson != nil {
+                    newHeaders["Content-Encoding"] = "gzip"
+                }
+                newHeaders["Accept-Encoding"] = "gzip"
+            }
 
             requestBuilder.addHeaders(newHeaders)
 
             if let bodyParams = bodyParams {
                 requestBuilder.setBodyParams(bodyParams)
             } else if let bodyJson = bodyJson {
-                requestBuilder.setJsonBody(bodyJson, failure: failure)
+                requestBuilder.setJsonBody(bodyJson, useGzip: useGzip, failure: failure)
             }
 
             switch Constants.ServiceOperationMode.serviceMode {
@@ -116,7 +125,14 @@ struct ServiceController {
                 let request = requestBuilder.getUrlRequest()
                 
                 globalPrintServiceLogs("SERVICE CONTROLLER: Request:\n\(request)")
-                if let body = request.httpBody {
+                globalPrintServiceLogs("SERVICE CONTROLLER: Headers")
+                for (key, value) in request.allHTTPHeaderFields ?? [:] {
+                    globalPrintServiceLogs("SERVICE CONTROLLER: Header - \(key): \(value)")
+                }
+                if var body = request.httpBody {
+                    if useGzip {
+                        body = (try? body.gunzipped()) ?? body
+                    }
                     globalPrintServiceLogs("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
                 }
 

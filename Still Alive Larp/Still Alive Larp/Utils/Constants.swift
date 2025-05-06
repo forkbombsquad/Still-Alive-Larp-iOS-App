@@ -20,6 +20,13 @@ struct Constants {
         // TODO ALWAYS - set this to prod before release
         static let serviceMode: ServiceEndpoints.ServiceMode = .prod
     }
+    
+    struct CharacterTypes {
+        static let standard = 1
+        static let NPC = 2
+        static let planner = 3
+        static let hidden = 4
+    }
 
     struct Notifications {
         static let refreshHomescreen = NSNotification.Name("Refresh Homescreen")
