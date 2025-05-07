@@ -27,10 +27,11 @@ struct AccountTabView: View {
                                 DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
                             }
                         }
-                            VStack {
-                                Text("My Account")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .frame(alignment: .center)
+                        VStack {
+                            Text("My Account")
+                                .font(.system(size: 32, weight: .bold))
+                                .frame(alignment: .center)
+                            NavigationLink(destination: EditProfileImageView()) {
                                 ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
                                     Image(uiImage: image)
                                         .resizable()
@@ -42,69 +43,69 @@ struct AccountTabView: View {
                                         .controlSize(.large)
                                         .padding(.top, 80)
                                     }
-                                    LoadingButtonView($loading, width: 44, height: 44, buttonText: "Edit") {
-                                        // TODO EDIT profile image
-                                    }
-                                }
-                                Text(DataManager.shared.player?.fullName ?? "")
-                                    .font(.system(size: 20))
-                                    .underline()
-                                    .frame(alignment: .center)
-                                Text("Character")
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .padding(.top, 8)
-                                if DataManager.shared.character != nil {
-                                    NavArrowView(title: "Character Stats") { _ in
-                                        CharacterStatusAndGearView()
-                                    }
-                                    NavArrowView(title: "Skill Management") { _ in
-                                        SkillManagementView()
-                                    }
-                                    NavArrowView(title: "Personal Skill Tree Diagram") { _ in
-                                        // TODO
-                                    }
-                                    NavArrowView(title: "Bio") { _ in
-                                        BioView(allowEdit: true)
-                                    }
-                                    NavArrowView(title: "Gear") { _ in
-                                        GearView()
-                                    }
-                                    NavArrowView(title: "Special Class Xp Reductions") { _ in
-                                        SpecialClassXpReductionsView()
-                                    }
-                                }
-                                NavArrowViewBlue(title: "Character Planner") {
-                                    // TODO
-                                }
-                                
-                                Text("Account")
-                                    .font(.system(size: 24, weight: .bold))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                NavArrowView(title: "Player Stats") { _ in
-                                    PlayerStatsView(player: DataManager.shared.player)
-                                }
-                                
-                                NavArrowView(title: "Manage Account") { _ in
-                                    ManageAccountView()
-                                }
-                                if DataManager.shared.player?.isAdmin.boolValue ?? false {
-                                    NavArrowViewRed(title: "Admin Tools") {
-                                        AdminView()
-                                    }
-                                }
-                                if Constants.Logging.showDebugButtonInAccountView {
-                                    NavArrowViewRed(title: "Debug Button") {
-                                        // TODO ALWAYS - remove all code here before launch
-                                    }
-                                }
-                                LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Sign Out") {
-                                    runOnMainThread {
-                                        DataManager.forceReset()
-                                        DataManager.shared.popToRoot()
-                                    }
+                                    FakeLoadingButtonView($loading, width: 44, height: 44, buttonText: "Edit")
+                                    
                                 }
                             }
+                            Text(DataManager.shared.player?.fullName ?? "")
+                                .font(.system(size: 20))
+                                .underline()
+                                .frame(alignment: .center)
+                            Text("Character")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, 8)
+                            if DataManager.shared.character != nil {
+                                NavArrowView(title: "Character Stats") { _ in
+                                    CharacterStatusAndGearView()
+                                }
+                                NavArrowView(title: "Skill Management") { _ in
+                                    SkillManagementView()
+                                }
+                                NavArrowView(title: "Personal Skill Tree Diagram") { _ in
+                                    // TODO
+                                }
+                                NavArrowView(title: "Bio") { _ in
+                                    BioView(allowEdit: true)
+                                }
+                                NavArrowView(title: "Gear") { _ in
+                                    GearView()
+                                }
+                                NavArrowView(title: "Special Class Xp Reductions") { _ in
+                                    SpecialClassXpReductionsView()
+                                }
+                            }
+                            NavArrowViewBlue(title: "Character Planner") {
+                                // TODO
+                            }
+                            
+                            Text("Account")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            NavArrowView(title: "Player Stats") { _ in
+                                PlayerStatsView(player: DataManager.shared.player)
+                            }
+                            
+                            NavArrowView(title: "Manage Account") { _ in
+                                ManageAccountView()
+                            }
+                            if DataManager.shared.player?.isAdmin.boolValue ?? false {
+                                NavArrowViewRed(title: "Admin Tools") {
+                                    AdminView()
+                                }
+                            }
+                            if Constants.Logging.showDebugButtonInAccountView {
+                                NavArrowViewRed(title: "Debug Button") {
+                                    // TODO ALWAYS - remove all code here before launch
+                                }
+                            }
+                            LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Sign Out") {
+                                runOnMainThread {
+                                    DataManager.forceReset()
+                                    DataManager.shared.popToRoot()
+                                }
+                            }
+                        }
                     }
                 }
             }.padding(16)

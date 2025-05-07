@@ -67,6 +67,7 @@
 		B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B32DC1CCBC00495777 /* ReserachProject.swift */; };
 		B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B52DCA735200495777 /* FeatureFlag.swift */; };
 		B23728B92DCA828B00495777 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B23728B82DCA828B00495777 /* Gzip */; };
+		B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -109,6 +110,7 @@
 		B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4EF29E7177300A235B4 /* SkillPrereqModel.swift */; };
 		B2A6A7ED291464D90025040B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A6A7EC291464D90025040B /* AuthManager.swift */; };
 		B2C6CE8D2AD6EC960088DA6D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B2C6CE8C2AD6EC960088DA6D /* OrderedCollections */; };
+		B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */; };
 		B2D68235296880DC005FDCCE /* CharacterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D68234296880DC005FDCCE /* CharacterManager.swift */; };
 		B2D682372968879C005FDCCE /* PlayerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D682362968879C005FDCCE /* PlayerStatsView.swift */; };
 		B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823829688A46005FDCCE /* KeyValueView.swift */; };
@@ -138,6 +140,8 @@
 		B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FAD2A420AD900E07108 /* GearService.swift */; };
 		B2F29FB02A420D0F00E07108 /* GearModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FAF2A420D0F00E07108 /* GearModel.swift */; };
 		B2F29FB22A4214A700E07108 /* GearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FB12A4214A700E07108 /* GearView.swift */; };
+		B2F472A42DCBDEAB00F37FA5 /* BoolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F472A32DCBDEAB00F37FA5 /* BoolExtensions.swift */; };
+		B2F472A62DCBE4F300F37FA5 /* EditProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */; };
 		B2F9836829F033D800512839 /* CharacterBioListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9836729F033D800512839 /* CharacterBioListView.swift */; };
 		B2F9836A29F0366900512839 /* ApproveBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9836929F0366900512839 /* ApproveBioView.swift */; };
 		B2F9836C29F040FE00512839 /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9836B29F040FE00512839 /* PullToRefresh.swift */; };
@@ -237,6 +241,7 @@
 		B23728B12DC1C10600495777 /* ServiceEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoints.swift; sourceTree = "<group>"; };
 		B23728B32DC1CCBC00495777 /* ReserachProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserachProject.swift; sourceTree = "<group>"; };
 		B23728B52DCA735200495777 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
+		B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagCell.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -278,6 +283,7 @@
 		B2A0D4ED29E7174B00A235B4 /* SkillPrereqService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPrereqService.swift; sourceTree = "<group>"; };
 		B2A0D4EF29E7177300A235B4 /* SkillPrereqModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPrereqModel.swift; sourceTree = "<group>"; };
 		B2A6A7EC291464D90025040B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagManagementView.swift; sourceTree = "<group>"; };
 		B2D68234296880DC005FDCCE /* CharacterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterManager.swift; sourceTree = "<group>"; };
 		B2D682362968879C005FDCCE /* PlayerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsView.swift; sourceTree = "<group>"; };
 		B2D6823829688A46005FDCCE /* KeyValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueView.swift; sourceTree = "<group>"; };
@@ -306,6 +312,8 @@
 		B2F29FAD2A420AD900E07108 /* GearService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearService.swift; sourceTree = "<group>"; };
 		B2F29FAF2A420D0F00E07108 /* GearModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearModel.swift; sourceTree = "<group>"; };
 		B2F29FB12A4214A700E07108 /* GearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearView.swift; sourceTree = "<group>"; };
+		B2F472A32DCBDEAB00F37FA5 /* BoolExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolExtensions.swift; sourceTree = "<group>"; };
+		B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileImageView.swift; sourceTree = "<group>"; };
 		B2F9836729F033D800512839 /* CharacterBioListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterBioListView.swift; sourceTree = "<group>"; };
 		B2F9836929F0366900512839 /* ApproveBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApproveBioView.swift; sourceTree = "<group>"; };
 		B2F9836B29F040FE00512839 /* PullToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
@@ -375,6 +383,7 @@
 		B21691BB28FDDC5D006AA921 /* Still Alive Larp */ = {
 			isa = PBXGroup;
 			children = (
+				B23728BA2DCB998E00495777 /* CellsAndPartialViews */,
 				B228C29029F846F20064686D /* CommunityTab */,
 				B258D9AD29F31D18003BE368 /* OfflineMode */,
 				B2F9836D29F043F200512839 /* PreTabViews */,
@@ -441,6 +450,7 @@
 				B205F4732A44988400C45B1A /* ArrayExtensions.swift */,
 				B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */,
 				B2F292E82C121BC100B5BE85 /* ZoomableScrollView.swift */,
+				B2F472A32DCBDEAB00F37FA5 /* BoolExtensions.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -501,6 +511,7 @@
 				B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */,
 				B2568EB72A4F159500AF666C /* SelectGearToManageView.swift */,
 				B2568EB92A4F17EE00AF666C /* ManageGearView.swift */,
+				B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -525,6 +536,14 @@
 				B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B23728BA2DCB998E00495777 /* CellsAndPartialViews */ = {
+			isa = PBXGroup;
+			children = (
+				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
+			);
+			path = CellsAndPartialViews;
 			sourceTree = "<group>";
 		};
 		B258D9AD29F31D18003BE368 /* OfflineMode */ = {
@@ -642,6 +661,7 @@
 				B2750B4629F98D2E00AA5F5B /* ChangePasswordView.swift */,
 				B2E135BF29FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift */,
 				B2F29FB12A4214A700E07108 /* GearView.swift */,
+				B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */,
 			);
 			path = AccountTab;
 			sourceTree = "<group>";
@@ -805,6 +825,7 @@
 				B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */,
 				B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */,
 				B2222496291DBB95003BCA0A /* DataExtensions.swift in Sources */,
+				B2F472A42DCBDEAB00F37FA5 /* BoolExtensions.swift in Sources */,
 				B25D45B92A12BA4100C3048C /* PreregView.swift in Sources */,
 				B2A6A7ED291464D90025040B /* AuthManager.swift in Sources */,
 				B23552BA29E9CBAE00183748 /* CharacterSkillService.swift in Sources */,
@@ -894,6 +915,7 @@
 				B2A0D4EE29E7174B00A235B4 /* SkillPrereqService.swift in Sources */,
 				B2E135BA29FD7F330038DE31 /* SpecialClassXpReductionService.swift in Sources */,
 				B2F9837B29F0833800512839 /* ManageEventView.swift in Sources */,
+				B2F472A62DCBE4F300F37FA5 /* EditProfileImageView.swift in Sources */,
 				B2F9836829F033D800512839 /* CharacterBioListView.swift in Sources */,
 				B2F9838829F1747D00512839 /* CheckInPlayerView.swift in Sources */,
 				B20FF4662A27D4BB00B13F1D /* IncrementalIndexManager.swift in Sources */,
@@ -915,6 +937,7 @@
 				B22224A1291EA70F003BCA0A /* CharacterModel.swift in Sources */,
 				B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */,
 				B23552BE29E9DB8E00183748 /* ViewExtensions.swift in Sources */,
+				B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */,
 				B2E135C029FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift in Sources */,
 				B2DFB0C929564D2700132B08 /* NavArrowView.swift in Sources */,
 				B235529429E85BBB00183748 /* AwardModel.swift in Sources */,
@@ -930,6 +953,7 @@
 				B235529629E85D3200183748 /* AwardService.swift in Sources */,
 				B2F9836C29F040FE00512839 /* PullToRefresh.swift in Sources */,
 				B2750B5529FAD48300AA5F5B /* GenerateCheckoutBarcodeView.swift in Sources */,
+				B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */,
 				B2568EB82A4F159500AF666C /* SelectGearToManageView.swift in Sources */,
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* PlayerCheckInBarcodeModel.swift in Sources */,

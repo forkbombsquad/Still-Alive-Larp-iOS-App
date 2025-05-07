@@ -16,13 +16,13 @@ struct ProfileImageService {
     }
 
     static func createProfileImage(_ profileImageCreateModel: ProfileImageCreateModel, onSuccess: @escaping (_ profileImage: ProfileImageModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.createFeatureFlag, bodyJson: profileImageCreateModel, responseObject: ProfileImageModel.self, success: { success in
+        ServiceController.makeRequest(.createProfileImage, bodyJson: profileImageCreateModel, responseObject: ProfileImageModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
 
     static func updateProfileImage(_ profileImageModel: ProfileImageModel, onSuccess: @escaping (_ profileImage: ProfileImageModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.updateFeatureFlag, bodyJson: profileImageModel, responseObject: ProfileImageModel.self, success: { success in
+        ServiceController.makeRequest(.updateProfileImage, bodyJson: profileImageModel, responseObject: ProfileImageModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

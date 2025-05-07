@@ -123,7 +123,7 @@ extension MockData {
 
 struct MockData1: MockData {
     
-    static var featureFlag = FeatureFlagModel(id: 0, name: "oldskilltreeimage", description: "Old skill tree baybee", activeAndroid: "TRUE", activeIos: "TRUE")
+    static var featureFlag = FeatureFlagModel(id: 0, name: "oldskilltreeimage", description: "Old skill tree baybee. But this description goes beyond that for test data so we can see multilines work", activeAndroid: "FALSE", activeIos: "TRUE")
 
     static var featureFlagList = FeatureFlagListModel(results: [featureFlag])
 

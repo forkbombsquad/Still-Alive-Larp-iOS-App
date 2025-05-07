@@ -78,7 +78,7 @@ class DataManager: ObservableObject {
             shared.intrigueForSelectedEvent = nil
             shared.loadingIntrigueForSelectedEvent = true
 
-            shared.featureFlags = nil
+            shared.featureFlags = []
             shared.loadingFeatureFlags = true
 
             shared.profileImage = nil
@@ -171,7 +171,7 @@ class DataManager: ObservableObject {
     @Published var rulebook: Rulebook? = nil
     @Published var loadingRulebook: Bool = true
 
-    @Published var featureFlags: [FeatureFlagModel]? = nil
+    @Published var featureFlags: [FeatureFlagModel] = []
     @Published var loadingFeatureFlags: Bool = true
 
     @Published var profileImage: ProfileImageModel? = nil
@@ -568,9 +568,11 @@ class DataManager: ObservableObject {
                     self.loadingRulebook = true
                     if self.rulebook == nil || forceDownloadIfApplicable {
                         RulebookManager.shared.getOnlineVersion { rulebook in
-                            self.rulebook = rulebook
-                            self.loadingRulebook = false
-                            self.finishedRequest(incrementalIndex, "Rulebook Success and/or Fail")
+                            runOnMainThread {
+                                self.rulebook = rulebook
+                                self.loadingRulebook = false
+                                self.finishedRequest(incrementalIndex, "Rulebook Success and/or Fail")
+                            }
                         }
                     } else {
                         self.loadingRulebook = false
@@ -578,15 +580,19 @@ class DataManager: ObservableObject {
                     }
                 case .featureFlags:
                     self.loadingFeatureFlags = true
-                    if self.featureFlags == nil || forceDownloadIfApplicable {
+                    if self.featureFlags.isEmpty || forceDownloadIfApplicable {
                         FeatureFlagService.getAllFeatureFlags { featureFlags in
-                            self.featureFlags = featureFlags.results
-                            self.loadingFeatureFlags = false
-                            self.finishedRequest(incrementalIndex, "Feature Flag Success")
+                            runOnMainThread {
+                                self.featureFlags = featureFlags.results
+                                self.loadingFeatureFlags = false
+                                self.finishedRequest(incrementalIndex, "Feature Flag Success")
+                            }
                         } failureCase: { error in
-                            self.featureFlags = nil
-                            self.loadingFeatureFlags = false
-                            self.finishedRequest(incrementalIndex, "Feature Flag Failure")
+                            runOnMainThread {
+                                self.featureFlags = []
+                                self.loadingFeatureFlags = false
+                                self.finishedRequest(incrementalIndex, "Feature Flag Failure")
+                            }
                         }
 
                     } else {
@@ -598,13 +604,18 @@ class DataManager: ObservableObject {
                     if self.profileImage == nil || forceDownloadIfApplicable || self.selectedPlayer?.id != self.profileImage?.id {
                         self.profileImage = nil
                         ProfileImageService.getProfileImage(self.selectedPlayer?.id ?? -1) { profileImage in
-                            self.profileImage = profileImage
-                            self.loadingProfileImage = false
-                            self.finishedRequest(incrementalIndex, "Profile Image Success")
+                            runOnMainThread {
+                                self.profileImage = profileImage
+                                self.loadingProfileImage = false
+                                self.finishedRequest(incrementalIndex, "Profile Image Success")
+                            }
+                            
                         } failureCase: { error in
-                            self.profileImage = nil
-                            self.loadingProfileImage = false
-                            self.finishedRequest(incrementalIndex, "Profile Image Failure")
+                            runOnMainThread {
+                                self.profileImage = nil
+                                self.loadingProfileImage = false
+                                self.finishedRequest(incrementalIndex, "Profile Image Failure")
+                            }
                         }
 
                     } else {

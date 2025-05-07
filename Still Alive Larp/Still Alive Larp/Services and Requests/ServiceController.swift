@@ -124,7 +124,7 @@ struct ServiceController {
                 for (key, value) in request.allHTTPHeaderFields ?? [:] {
                     globalPrintServiceLogs("SERVICE CONTROLLER: Header - \(key): \(value)")
                 }
-                if var body = request.httpBody {
+                if let body = request.httpBody {
                     globalPrintServiceLogs("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
                 }
 

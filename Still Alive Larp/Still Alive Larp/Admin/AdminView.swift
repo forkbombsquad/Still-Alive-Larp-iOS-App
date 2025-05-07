@@ -206,8 +206,7 @@ struct MiscAdminView: View {
                 ContactListView(contactRequests: $contactRequests)
             }
             NavArrowView(title: "Feature Flag Management", loading: DataManager.$shared.loadingFeatureFlags) { _ in
-//                            ManageFeatureFlagsView()
-                // TODO manage feature flags view
+                FeatureFlagManagementView(featureFlags: DataManager.$shared.featureFlags)
             }
         }
     }

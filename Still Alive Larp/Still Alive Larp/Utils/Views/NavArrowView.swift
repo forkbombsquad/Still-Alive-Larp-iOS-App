@@ -278,3 +278,39 @@ struct ArrowViewButton: View {
     }
 }
 
+struct ArrowViewButtonGreen: View {
+    @ObservedObject private var _dm = DataManager.shared
+
+    var title: String
+    @Binding var loading: Bool
+    let onButtonPress: () -> Void
+
+    init(title: String, loading: Binding<Bool> = Binding(get: { false }, set: { _ in }), onButtonPress: @escaping () -> Void) {
+        self.title = title
+        self._loading = loading
+        self.onButtonPress = onButtonPress
+    }
+
+    var body: some View {
+        if loading {
+            GreenCardView {
+                HStack {
+                    Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    Spacer()
+                    ProgressView()
+                }
+            }
+        } else {
+            GreenCardView {
+                HStack {
+                    Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    Spacer()
+                    Image(systemName: "arrow.right").foregroundColor(Color.black)
+                }
+            }.onTapGesture {
+                self.onButtonPress()
+            }
+        }
+    }
+}
+

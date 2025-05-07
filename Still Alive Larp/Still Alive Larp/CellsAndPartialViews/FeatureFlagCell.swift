@@ -1,0 +1,67 @@
+//
+//  FeatureFlagCell.swift
+//  Still Alive Larp
+//
+//  Created by Rydge Craker on 5/7/25.
+//
+
+import SwiftUI
+
+struct FeatureFlagCell: View {
+    @ObservedObject var _dm = DataManager.shared
+
+    let flag: FeatureFlagModel
+    
+    @Binding var loading: Bool
+    @State private var containerWidth: CGFloat = 0
+    let onEditPress: () -> Void
+    
+    var body: some View {
+        CardView {
+            VStack {
+                HStack {
+                    VStack {
+                        Text(flag.name)
+                            .font(.system(size: 24, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text(flag.description)
+                            .font(.system(size: 20, weight: .regular))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        HStack {
+                            Text("iOS: \(flag.isActiveIos ? "ON" : "OFF")")
+                                .font(.system(size: 16, weight: .bold))
+                                .frame(width: containerWidth * 0.33, alignment: .center)
+                                .foregroundColor(flag.isActiveIos ? Color.darkGreen : Color.midRed)
+                            Text("ANDROID: \(flag.isActiveAndroid ? "ON" : "OFF")")
+                                .font(.system(size: 16, weight: .bold))
+                                .frame(width: containerWidth * 0.33, alignment: .center)
+                                .foregroundColor(flag.isActiveAndroid ? Color.darkGreen : Color.midRed)
+                        }
+                    }
+                    LoadingButtonView($loading, width: containerWidth * 0.2, height: 44, buttonText: "Edit", onButtonPress: onEditPress)
+                }
+            }
+            .padding(8)
+            .background(GeometryReader { geo in
+                        Color.clear
+                            .onAppear {
+                                containerWidth = geo.size.width
+                            }
+                            .onChange(of: geo.size.width) { newWidth in
+                                containerWidth = newWidth
+                            }
+                    }
+                )
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return FeatureFlagCell(_dm: dm, flag: dm.featureFlags.first ?? MockData1.featureFlag, loading: .constant(false), onEditPress: {
+        
+    })
+}

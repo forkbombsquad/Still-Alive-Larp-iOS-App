@@ -13,10 +13,11 @@ struct CardView<Content: View>: ContainerView {
 
     var body: some View {
         VStack(content: content)
-        .padding(16)
-        .overlay(
-            RoundedRectangle(cornerRadius: 20).strokeBorder(Color.gray, lineWidth: 2)
-        )
+            .frame(maxWidth: .infinity)
+            .padding(16)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20).strokeBorder(Color.gray, lineWidth: 2)
+            )
     }
 }
 

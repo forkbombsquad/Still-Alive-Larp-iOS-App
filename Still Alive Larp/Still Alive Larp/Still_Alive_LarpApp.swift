@@ -15,11 +15,13 @@ struct Still_Alive_LarpApp: App {
 
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .environmentObject(alertManager)
-                .alert(isPresented: $alertManager.isShowingAlert) {
-                    alertManager.alert ?? Alert(title: Text(""))
-                }
+            CustomAlertContainerView {
+                MainView()
+                    .environmentObject(alertManager)
+                    .alert(isPresented: $alertManager.isShowingAlert) {
+                        alertManager.alert ?? Alert(title: Text(""))
+                    }
+            }
         }
     }
 }

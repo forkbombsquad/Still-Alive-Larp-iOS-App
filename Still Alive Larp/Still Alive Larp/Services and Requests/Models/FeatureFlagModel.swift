@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FeatureFlagModel: CustomCodeable {
+struct FeatureFlagModel: CustomCodeable, Identifiable {
     let id: Int
     let name: String
     let description: String
