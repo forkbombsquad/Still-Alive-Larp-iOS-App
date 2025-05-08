@@ -47,6 +47,8 @@ protocol MockData {
     var researchProject: ResearchProjectModel { get }
     var researchProjects: ResearchProjectListModel { get }
     var rulebook: Rulebook { get }
+    var playerCheckInBarcodeModel: PlayerCheckInBarcodeModel { get }
+    var playerCheckOutBarcodeModel: PlayerCheckOutBarcodeModel { get }
 }
 
 extension MockData {
@@ -149,7 +151,7 @@ fileprivate struct MockData1: MockData {
 
     var characterList = CharacterListModel(characters: [CharacterSubModel(id: 1, isAlive: "TRUE")])
 
-    var character = CharacterModel(id: 1, fullName: "John Doe", startDate: "2022/12/23", isAlive: "TRUE", deathDate: "", infection: "10", bio: "", approvedBio: "FALSE", bullets: "10", megas: "1", rivals: "5", rockets: "2", bulletCasings: "54", clothSupplies: "6", woodSupplies: "4", metalSupplies: "2", techSupplies: "8", medicalSupplies: "11", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 1, characterTypeId: Constants.CharacterTypes.standard)
+    var character = CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard)
     
     var characterListFullModel = CharacterListFullModel(characters: [
         CharacterModel(id: 1, fullName: "John Doe", startDate: "2022/12/23", isAlive: "TRUE", deathDate: "", infection: "10", bio: "", approvedBio: "FALSE", bullets: "10", megas: "1", rivals: "5", rockets: "2", bulletCasings: "54", clothSupplies: "6", woodSupplies: "4", metalSupplies: "2", techSupplies: "8", medicalSupplies: "11", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 1, characterTypeId: Constants.CharacterTypes.standard),
@@ -347,5 +349,9 @@ fileprivate struct MockData1: MockData {
             ])
         ])
     ])
+    
+    var playerCheckInBarcodeModel = PlayerCheckInBarcodeModel(player: PlayerBarcodeModel(PlayerModel(id: 1, username: "test@test.test", fullName: "Test Testerson", startDate: "2022/12/23", experience: "10", freeTier1Skills: "1", prestigePoints: "1", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "2", numNpcEventsAttended: "0", isAdmin: "FALSE")), character: CharacterBarcodeModel(FullCharacterModel(CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard))), event: EventBarcodeModel(EventModel(id: 1, title: "Example Event", description: "Descrption of Event", date: "2023/01/01", startTime: "4:00pm", endTime: "Midnight", isStarted: "FALSE", isFinished: "FALSE")), relevantSkills: [])
+    
+    var playerCheckOutBarcodeModel = PlayerCheckOutBarcodeModel(player: PlayerBarcodeModel(PlayerModel(id: 1, username: "test@test.test", fullName: "Test Testerson", startDate: "2022/12/23", experience: "10", freeTier1Skills: "1", prestigePoints: "1", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "2", numNpcEventsAttended: "0", isAdmin: "FALSE")), character: CharacterBarcodeModel(FullCharacterModel(CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard))), eventAttendeeId: 1, eventId: 1, relevantSkills: [])
 
 }

@@ -41,3 +41,10 @@ struct CharacterBioListView: View {
         }
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return CharacterBioListView(_dm: dm, charactersWhoNeedBiosApproved: .constant(DataManager.shared.allCharacters!))
+}

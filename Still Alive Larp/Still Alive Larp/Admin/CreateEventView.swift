@@ -163,3 +163,12 @@ struct CreateEventView: View {
         ])
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    var cev = CreateEventView(events: .constant(DataManager.shared.events!), event: DataManager.shared.events!.first!)
+    cev._dm = dm
+    return cev
+}

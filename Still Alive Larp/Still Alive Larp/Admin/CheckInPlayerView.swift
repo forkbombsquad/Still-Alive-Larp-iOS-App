@@ -460,3 +460,10 @@ struct CharacterBarcodeSecondSubView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return CheckInPlayerView(_dm: dm, playerCheckInModel: getMockData().playerCheckInBarcodeModel)
+}

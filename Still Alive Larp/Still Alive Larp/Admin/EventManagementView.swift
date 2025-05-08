@@ -45,3 +45,10 @@ struct EventManagementView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return EventManagementView(_dm: dm, events: .constant(DataManager.shared.events!))
+}
