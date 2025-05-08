@@ -27,8 +27,8 @@ struct ProfileImageService {
         }, failureCase: failureCase)
     }
 
-    static func deleteProfileImage(_ playerId: Int, onSuccess: @escaping (_ profileImage: ProfileImageModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.deleteProfileImage, addToEndOfUrl: "\(playerId)", responseObject: ProfileImageModel.self, success: { success in
+    static func deleteProfileImage(_ playerId: Int, onSuccess: @escaping (_ profileImage: ProfileImageListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.deleteProfileImage, addToEndOfUrl: "\(playerId)", responseObject: ProfileImageListModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

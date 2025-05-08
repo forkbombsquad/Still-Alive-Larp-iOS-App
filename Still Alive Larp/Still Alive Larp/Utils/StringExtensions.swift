@@ -75,5 +75,9 @@ extension String {
     func containsIgnoreCase(_ text: String) -> Bool {
         return self.lowercased().contains(text.lowercased())
     }
+    
+    func equalsIgnoreCase(_ text: String) -> Bool {
+        return self.lowercased() == text.lowercased()
+    }
 
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillListView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     enum FilterType: String, CaseIterable {
         case none = "No Filter"
@@ -165,6 +165,9 @@ struct SkillCellView: View {
 
 struct SkillListView_Previews: PreviewProvider {
     static var previews: some View {
-        SkillListView(skills: [])
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return SkillListView(_dm: dm, skills: dm.skills ?? [])
     }
 }

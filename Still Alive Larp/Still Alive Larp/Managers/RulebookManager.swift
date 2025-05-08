@@ -240,6 +240,30 @@ class Rulebook {
     init(version: String) {
         self.version = version
     }
+    
+    init(version: String, headings: [Heading]) {
+        self.version = version
+        self.headings = headings
+    }
+    
+    func getAllFilterableHeadingNames() -> [String] {
+        var names = [String]()
+        for heading in headings {
+            names.append(heading.title)
+            
+            for subsub in heading.subSubHeadings {
+                names.append("            \(subsub.title)")
+            }
+            
+            for sub in heading.subHeadings {
+                names.append("      \(sub.title)")
+                for subsub in sub.subSubHeadings {
+                    names.append("            \(subsub.title)")
+                }
+            }
+        }
+        return names
+    }
 }
 
 class Heading: Identifiable {
@@ -279,6 +303,69 @@ class Heading: Identifiable {
             }
         }
         return false
+    }
+    
+    func filterTextCallContainsFirst(_ searchText: String) -> Heading {
+        var newTextsAndTables = [Any]()
+        var newSubSubHeadings = [SubSubHeading]()
+        var newSubHeadings = [SubHeading]()
+        
+        for tot in textsAndTables {
+            if let table = tot as? Table, table.contains(searchText) {
+                newTextsAndTables.append(tot)
+            } else if let str = tot as? String, str.containsIgnoreCase(searchText) {
+                newTextsAndTables.append(str)
+            }
+        }
+        for subsub in subSubHeadings {
+            if subsub.contains(searchText) {
+                newSubSubHeadings.append(subsub)
+            }
+        }
+        for sub in subHeadings {
+            if sub.contains(searchText) {
+                newSubHeadings.append(sub)
+            }
+        }
+        
+        return Heading(title: title, textsAndTables: newTextsAndTables, subSubHeadings: newSubSubHeadings, subHeadings: newSubHeadings)
+    }
+    
+    func titlesContain(_ title: String) -> Bool {
+        if self.title.equalsIgnoreCase(title) {
+            return true
+        } else if self.subSubHeadings.first(where: { $0.title.equalsIgnoreCase(title) }) != nil {
+            return true
+        } else if self.subHeadings.first(where: { $0.title.equalsIgnoreCase(title) || ($0.subSubHeadings.first(where: { ssh in ssh.title.equalsIgnoreCase(title)}) != nil) }) != nil {
+            return true
+        }
+        return false
+    }
+    
+    func filterForHeadingsWithTitle(_ title: String) -> Heading {
+        var newTextsAndTables = [Any]()
+        var newSubSubHeadings = [SubSubHeading]()
+        var newSubHeadings = [SubHeading]()
+        
+        if self.title.equalsIgnoreCase(title) {
+            newTextsAndTables = textsAndTables
+            newSubHeadings = subHeadings
+            newSubSubHeadings = subSubHeadings
+        }
+        for subsub in subSubHeadings {
+            if subsub.title.equalsIgnoreCase(title) {
+                newSubSubHeadings.append(subsub)
+            }
+        }
+        for sub in subHeadings {
+            if sub.title.equalsIgnoreCase(title) {
+                newSubHeadings.append(sub)
+            } else if let subsub = sub.subSubHeadings.first(where: { $0.title.equalsIgnoreCase(title) }) {
+                newSubHeadings.append(SubHeading(sub.title, textsAndTables: [], subSubHeadings: [subsub]))
+            }
+        }
+        
+        return Heading(title: self.title, textsAndTables: newTextsAndTables, subSubHeadings: newSubSubHeadings, subHeadings: newSubHeadings)
     }
 
     func clone() -> Heading {
@@ -357,6 +444,11 @@ class SubSubHeading: Identifiable {
 }
 
 class Table: Identifiable {
+    
+    convenience init(contents: OrderedDictionary<String, [String]>) {
+        self.init()
+        self.contents = contents
+    }
 
     var contents: OrderedDictionary<String, [String]> = [:]
 

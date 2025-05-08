@@ -22,6 +22,11 @@ struct ProfileImageModel: CustomCodeable {
 struct ProfileImageCreateModel: CustomCodeable {
     let playerId: Int
     let image: String
+    
+    var uiImage: UIImage? {
+        guard let data = Data(base64Encoded: image.replacingOccurrences(of: "\n", with: "")) else { return nil }
+        return UIImage(data: data)
+    }
 }
 
 struct ProfileImageListModel: CustomCodeable {

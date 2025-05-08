@@ -601,7 +601,7 @@ class DataManager: ObservableObject {
                     }
                 case .profileImage:
                     self.loadingProfileImage = true
-                    if self.profileImage == nil || forceDownloadIfApplicable || self.selectedPlayer?.id != self.profileImage?.id {
+                    if self.profileImage == nil || forceDownloadIfApplicable || self.selectedPlayer?.id != self.profileImage?.playerId {
                         self.profileImage = nil
                         ProfileImageService.getProfileImage(self.selectedPlayer?.id ?? -1) { profileImage in
                             runOnMainThread {

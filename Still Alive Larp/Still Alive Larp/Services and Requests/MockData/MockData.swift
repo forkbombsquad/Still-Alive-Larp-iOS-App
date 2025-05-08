@@ -42,6 +42,7 @@ protocol MockData {
     static var profileImageModel: ProfileImageModel { get }
     static var researchProject: ResearchProjectModel { get }
     static var researchProjects: ResearchProjectListModel { get }
+    static var rulebook: Rulebook { get }
 }
 
 extension MockData {
@@ -190,5 +191,66 @@ struct MockData1: MockData {
     static var researchProject = ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE")
     
     static var researchProjects = ResearchProjectListModel(researchProjects: [researchProject])
+    
+    static var rulebook = Rulebook(version: "2.1.0", headings: [
+        Heading(title: "Section 1", textsAndTables: [
+            "This is a sentence that will appear before the first table. See the table below for more information:",
+            Table(contents: [
+                "Cost" : ["20 Bullets", "50 Bullets"],
+                "Item" : ["Commander's Love", "New Ideas"]
+            ]),
+            "This sentence appears after the first table. Neat."
+        ], subSubHeadings: [
+            SubSubHeading("SubSubSection 1.0.1", textsAndTables: [
+                "Generally this type of section will never happen. We try to keep Sub Sub headings within Sub Headings but it is techincally possible. See the table below for more info.",
+                Table(contents: [
+                    "Times this should happen" : ["0"],
+                    "Times this might happen?" : ["1"],
+                    "Is this table weirdly formatted?" : ["Yeah"],
+                    "This column is extra long" : ["Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra Extra extra extra long. So so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so so much longer than you expected."]
+                ])
+            ])
+        ], subHeadings: [
+            SubHeading("Subsection 1.1", textsAndTables: [
+                "This is a standard subsection. The majority of the rulebook is written into things like this.",
+                "It's often done in multiple strings, like so.",
+                "We might even have a relevant table with a lot of columns like the following color mixing chart:",
+                Table(contents: [
+                    "-" : ["<b>Red</b>", "<b>Yellow</b>", "<b>Blue</b>", "<b>All</b>", "<b>Red (additive)</b>", "<b>Green (additive)</b>", "<b>Blue (additive)</b>", "<b>All (additive)</b>"],
+                    "Red" : ["Red", "Orange", "Purple", "Black", "-", "-", "-", "-"],
+                    "Yellow" : ["Orange", "Yellow", "Green", "Black", "-", "-", "-", "-"],
+                    "Blue" : ["Purple", "Green", "Blue", "Black", "-", "-", "-", "-"],
+                    "All" : ["Black", "Black", "Black", "Black", "-", "-", "-", "-"],
+                    "Red (additive)" : ["-", "-", "-", "-", "Red", "Yellow", "Magenta", "White"],
+                    "Green (additive)" : ["-", "-", "-", "-", "Yellow", "Green", "Cyan", "White"],
+                    "Blue (additive)" : ["-", "-", "-", "-", "Magenta", "Cyan", "Blue", "White"],
+                    "All (additive)" : ["-", "-", "-", "-", "White", "White", "White", "White"]
+                ]),
+                "After a big table like that, you might need to specify a little extra information. Such as: this does not include sutractive colors for things like printer ink. See the section below for more info."
+            ], subSubHeadings: [
+                SubSubHeading("SubSubsection 1.1.1 - Printer/Paint Color", textsAndTables: [
+                    "This is where you can see what alternate subtractive color mixing looks like.",
+                    Table(contents: [
+                        "-" : ["<b>Yellow</b>", "<b>Magenta</b>", "<b>Cyan</b>", "<b>All</b>"],
+                        "Yellow" : ["Yellow", "Red", "Green", "Gray"],
+                        "Magenta" : ["Red", "Magenta", "Blue", "Gray"],
+                        "Cyan" : ["Green", "Blue", "Cyan", "Gray"],
+                        "All" : ["Gray", "Gray", "Gray", "Gray"]
+                    ])
+                ]),
+                SubSubHeading("SubSubsection 1.1.2", textsAndTables: [
+                    "Colors are weird. Just though I'd put that in an extra section lol"
+                ])
+            ]),
+            SubHeading("Subsection 1.2", textsAndTables: [
+                "Here is another section with stuff"
+            ], subSubHeadings: [
+                SubSubHeading("SubSubsection 1.2.1", textsAndTables: [
+                    "Here's some relevant information.",
+                    "Here's some more on another line."
+                ])
+            ])
+        ])
+    ])
 
 }

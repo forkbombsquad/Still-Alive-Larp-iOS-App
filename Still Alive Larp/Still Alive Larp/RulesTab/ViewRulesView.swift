@@ -9,7 +9,7 @@ import SwiftUI
 
 @ViewBuilder
 fileprivate func createTextView(_ text: String) -> some View {
-    Text(text).font(.system(size: 16)).padding([.bottom], 16).padding([.leading, .trailing], 8)
+    Text("    " + text).font(.system(size: 16)).padding(.bottom, 16).padding(.horizontal, 8).multilineTextAlignment(.leading).frame(maxWidth: .infinity, alignment: .leading)
 }
 
 struct ViewRulesView: View {
@@ -17,15 +17,35 @@ struct ViewRulesView: View {
 
     @State var searchText: String = ""
     let rulebook: Rulebook?
+    
+    @State var filter: String = "No Filter"
+    var allFilters: [String]
+    
+    init(_dm: DataManager = DataManager.shared, rulebook: Rulebook?) {
+        self._dm = _dm
+        self.rulebook = rulebook
+        allFilters = ["No Filter"]
+        allFilters.append(contentsOf: rulebook?.getAllFilterableHeadingNames() ?? [])
+        filter = "No Filter"
+    }
 
     var body: some View {
         GeometryReader { gr in
             VStack {
                 Text("Rulebook v\(rulebook?.version ?? "unknown version")")
-                    .font(.system(size: 32, weight: .bold))
+                    .font(.system(size: 36, weight: .bold))
                     .frame(alignment: .center)
+                Menu("Filter\n(\(sanitizeFilter()))") {
+                    ForEach(allFilters, id: \.self) { filter in
+                        Button(filter) {
+                            self.filter = filter
+                        }
+                    }
+                }
+                .font(.system(size: 16, weight: .bold))
+                .padding(.top, -16)
                 TextField("Search", text: $searchText)
-                    .padding([.leading, .trailing], 16)
+                    .padding([.horizontal, .bottom], 16)
                     .textFieldStyle(.roundedBorder)
                     .textInputAutocapitalization(.never)
                 ScrollView(.vertical) {
@@ -41,8 +61,39 @@ struct ViewRulesView: View {
     }
 
     private func filterHeadings() -> [Heading] {
+        var headings = rulebook?.headings ?? []
+        if !filter.equalsIgnoreCase("No Filter") {
+            headings = headings.filter({ $0.titlesContain(sanitizeFilter())
+            })
+            headings = getFilteredHeadings(headings)
+        }
         let st = searchText.trimmed
-        return (st.isEmpty ? rulebook?.headings : rulebook?.headings.filter({ $0.contains(st) })) ?? []
+        if (!st.isEmpty) {
+            let filteredHeadings = headings.filter({ $0.contains(st) })
+            return furtherFilterHeadings(filteredHeadings, searchText: st)
+        } else {
+            return headings
+        }
+    }
+    
+    private func furtherFilterHeadings(_ headings: [Heading], searchText: String) -> [Heading] {
+        var newHeadings = [Heading]()
+        for heading in headings {
+            newHeadings.append(heading.filterTextCallContainsFirst(searchText))
+        }
+        return newHeadings
+    }
+    
+    private func getFilteredHeadings(_ headings: [Heading]) -> [Heading] {
+        var newHeadings = [Heading]()
+        for heading in headings {
+            newHeadings.append(heading.filterForHeadingsWithTitle(sanitizeFilter()))
+        }
+        return newHeadings
+    }
+    
+    private func sanitizeFilter() -> String {
+        return filter.trim()
     }
 
 }
@@ -58,12 +109,14 @@ struct HeadingView: View {
             VStack {
                 Text(heading.title)
                     .multilineTextAlignment(.center)
-                    .font(.system(size: 32))
+                    .font(.system(size: 36))
+                    .underline()
                     .fontWeight(.bold)
+                    .padding(8)
                 ForEach(0 ..< heading.textsAndTables.count, id: \.self) { index in
                     if let table = heading.textsAndTables[index] as? Table {
-                        TableView(table: table, width: width)
-                            .padding(.leading, 2)
+                        CustomTableView(table: table)
+                            .padding(16)
                     } else if let text = heading.textsAndTables[index] as? String {
                         createTextView(text)
                     }
@@ -89,13 +142,15 @@ struct SubHeadingView: View {
         VStack {
             Text(subHeading.title)
                 .multilineTextAlignment(.leading)
-                .font(.system(size: 28))
+                .font(.system(size: 32))
                 .italic()
                 .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(8)
             ForEach(0 ..< subHeading.textsAndTables.count, id: \.self) { index in
                 if let table = subHeading.textsAndTables[index] as? Table {
-                    TableView(table: table, width: width)
-                        .padding(.leading, 2)
+                    CustomTableView(table: table)
+                        .padding(16)
                 } else if let text = subHeading.textsAndTables[index] as? String {
                     createTextView(text)
                 }
@@ -117,14 +172,15 @@ struct SubSubHeadingView: View {
         VStack {
             Text(subSubHeading.title)
                 .multilineTextAlignment(.leading)
-                .font(.system(size: 24))
-                .italic()
+                .font(.system(size: 22))
                 .underline()
                 .fontWeight(.bold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(8)
             ForEach(0 ..< subSubHeading.textsAndTables.count, id: \.self) { index in
                 if let table = subSubHeading.textsAndTables[index] as? Table {
-                    TableView(table: table, width: width)
-                        .padding([.leading, .bottom], 4)
+                    CustomTableView(table: table)
+                        .padding(16)
                 } else if let text = subSubHeading.textsAndTables[index] as? String {
                     createTextView(text)
                 }
@@ -133,38 +189,87 @@ struct SubSubHeadingView: View {
     }
 }
 
-struct TableView: View {
+struct CustomTableView: View {
+    
     @ObservedObject private var _dm = DataManager.shared
-
-    let table: Table
-    let width: CGFloat
+    
+    let cols: [[String]]
+    let rows: [[String]]
+    var minWidths: [Int] = []
+    var minHeights: [Int] = []
+    
+    init(_dm: DataManager = DataManager.shared, table: Table) {
+        self._dm = _dm
+        self.cols = table.convertToColumns()
+        self.rows = table.convertToRows()
+        for col in cols {
+            minWidths.append(getMinWidth(col: col))
+        }
+        for row in rows {
+            minHeights.append(getMinHeight(row: row))
+        }
+    }
+    
+    func getMinWidth(col: [String]) -> Int {
+        return min(max((col.map { $0.count }.max() ?? 0) * 8, 100), 400)
+    }
+    
+    func getMinHeight(row: [String]) -> Int {
+        var mx = 0
+        for (index, cell) in row.enumerated() {
+            let font = UIFont.systemFont(ofSize: UIFont.systemFontSize + 4)
+            let constraintRect = CGSize(width: CGFloat(minWidths[index]), height: CGFloat.greatestFiniteMagnitude)
+            let boundingBox = cell.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+            mx = max(mx, Int(ceil(boundingBox.height)) + 16)
+        }
+        return max(mx, 44)
+    }
 
     var body: some View {
         ScrollView(.horizontal) {
-            ForEach(table.convertToRows(), id:\.self) { column in
-                BlackBorder {
-                    HStack {
-                        ForEach(0 ..< column.count, id:\.self) { index in
-                            HStack {
-                                Spacer()
-                                if index == 0 {
-                                    Text(column[index]).font(.system(size: 16)).bold().frame(width: width * 0.4).fixedSize(horizontal: false, vertical: true)
-                                    .multilineTextAlignment(.center)
-                                } else {
-                                    Text(column[index]).font(.system(size: 16)).frame(width: width * 0.4).fixedSize(horizontal: false, vertical: true)
-                                }
-                                Spacer()
-                            }
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(0..<rows.count, id: \.self) { rowIndex in
+                    HStack(spacing: 0) {
+                        ForEach(0..<rows[rowIndex].count, id: \.self) { colIndex in
+                            let uneditedText = rows[rowIndex][colIndex]
+                            let text = uneditedText.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+                            TableCell(
+                                text: text,
+                                isHeader: rowIndex == 0,
+                                width: minWidths[colIndex],
+                                height: minHeights[rowIndex]
+                            )
                         }
-                    }.padding([.top, .bottom], 8)
+                    }
                 }
             }
         }
     }
+    
+    struct TableCell: View {
+        let text: String
+        let isHeader: Bool
+        let width: Int
+        let height: Int
+
+        var body: some View {
+            let cleanedText = text.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+            
+            Text(cleanedText)
+                .fontWeight(isHeader || text.contains("<b>") ? .bold : .regular)
+                .multilineTextAlignment(.center)
+                .frame(height: CGFloat(height))
+                .frame(width: CGFloat(width))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .background(Color.lightGray)
+                .border(Color.black, width: 0.5)
+        }
+    }
+
 }
 
 
-
 #Preview {
-    ViewRulesView(rulebook: Rulebook(version: "1.0.0"))
+    ViewRulesView(rulebook: MockData1.rulebook)
 }

@@ -46,7 +46,7 @@ struct AccountTabView: View {
                                     FakeLoadingButtonView($loading, width: 44, height: 44, buttonText: "Edit")
                                     
                                 }
-                            }
+                            }.disabled(DataManager.shared.loadingProfileImage)
                             Text(DataManager.shared.player?.fullName ?? "")
                                 .font(.system(size: 20))
                                 .underline()

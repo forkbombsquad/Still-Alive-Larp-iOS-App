@@ -248,18 +248,35 @@ struct ArrowViewButton: View {
     var title: String
     @Binding var loading: Bool
     let onButtonPress: () -> Void
+    @Binding var bindingTitle: String?
+    private var useBindingTitle: Bool
 
     init(title: String, loading: Binding<Bool> = Binding(get: { false }, set: { _ in }), onButtonPress: @escaping () -> Void) {
         self.title = title
         self._loading = loading
+        self._bindingTitle = .constant(nil)
+        self.useBindingTitle = false
         self.onButtonPress = onButtonPress
+        
+    }
+    
+    init(bindingTitle: Binding<String?>, loading: Binding<Bool> = Binding(get: { false }, set: { _ in }), onButtonPress: @escaping () -> Void) {
+        self._bindingTitle = bindingTitle
+        self._loading = loading
+        self.onButtonPress = onButtonPress
+        self.title = ""
+        self.useBindingTitle = true
     }
 
     var body: some View {
         if loading {
             BlackCardView {
                 HStack {
-                    Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    if useBindingTitle {
+                        Text(bindingTitle ?? "").font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    } else {
+                        Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    }
                     Spacer()
                     ProgressView()
                 }
@@ -267,7 +284,11 @@ struct ArrowViewButton: View {
         } else {
             BlackCardView {
                 HStack {
-                    Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    if useBindingTitle {
+                        Text(bindingTitle ?? "").font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    } else {
+                        Text(title).font(.system(size: 18)).fontWeight(.bold).foregroundColor(.black)
+                    }
                     Spacer()
                     Image(systemName: "arrow.right").foregroundColor(Color.black)
                 }
