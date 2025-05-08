@@ -14,8 +14,8 @@ struct CharacterBioListView: View {
 
     var body: some View {
         VStack {
-            ScrollView {
-                GeometryReader { gr in
+            GeometryReader { gr in
+                ScrollView {
                     VStack {
                         Text("Select Character Bio")
                             .font(.system(size: 32, weight: .bold))

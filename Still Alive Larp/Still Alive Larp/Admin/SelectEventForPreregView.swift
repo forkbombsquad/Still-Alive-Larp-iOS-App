@@ -18,8 +18,8 @@ struct SelectEventForPreregView: View {
 
     var body: some View {
         VStack {
-            ScrollView {
-                GeometryReader { gr in
+            GeometryReader { gr in
+                ScrollView {
                     VStack {
                         Text("Select Event For Preregistration")
                             .font(.system(size: 32, weight: .bold))

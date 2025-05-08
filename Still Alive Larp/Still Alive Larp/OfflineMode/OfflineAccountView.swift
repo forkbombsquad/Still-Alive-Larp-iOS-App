@@ -14,8 +14,8 @@ struct OfflineAccountView: View {
 
     var body: some View {
         VStack {
-            ScrollView {
-                GeometryReader { gr in
+            GeometryReader { gr in
+                ScrollView {
                     VStack {
                         Text("Offline Mode")
                             .font(.system(size: 32, weight: .bold))

@@ -19,8 +19,8 @@ struct ViewPlayerStuffView: View {
 
     var body: some View {
         VStack {
-            ScrollView {
-                GeometryReader { gr in
+            GeometryReader { gr in
+                ScrollView {
                     VStack {
                         Text(DataManager.shared.selectedPlayer?.fullName ?? playerModel.fullName)
                             .font(.system(size: 32, weight: .bold))

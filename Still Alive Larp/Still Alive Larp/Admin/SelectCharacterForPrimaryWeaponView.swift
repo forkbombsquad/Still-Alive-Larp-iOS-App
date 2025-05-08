@@ -14,8 +14,8 @@ struct SelectCharacterForPrimaryWeaponView: View {
 
     var body: some View {
         VStack {
-            ScrollView {
-                GeometryReader { gr in
+            GeometryReader { gr in
+                ScrollView {
                     VStack {
                         Text("Select Character For\nPrimary Weapon Registration")
                             .font(.system(size: 32, weight: .bold))
