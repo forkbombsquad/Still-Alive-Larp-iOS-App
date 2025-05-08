@@ -61,7 +61,5 @@ struct FeatureFlagCell: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return FeatureFlagCell(_dm: dm, flag: dm.featureFlags.first ?? MockData1.featureFlag, loading: .constant(false), onEditPress: {
-        
-    })
+    return FeatureFlagCell(_dm: dm, flag: dm.featureFlags.first!, loading: .constant(false), onEditPress: {})
 }

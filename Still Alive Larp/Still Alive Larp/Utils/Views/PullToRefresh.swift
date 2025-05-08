@@ -18,7 +18,7 @@ import SwiftUI
 // .coordinateSpace(name: "pullToRefresh")
 
 struct PullToRefresh: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     //The coordinate space for the Geometry Reader to operate in
     var coordinateSpaceName: String

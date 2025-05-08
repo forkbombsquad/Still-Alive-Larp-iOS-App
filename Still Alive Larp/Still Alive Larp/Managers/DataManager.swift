@@ -671,7 +671,7 @@ class DataManager: ObservableObject {
     }
     
     func loadMockData() {
-        typealias md = MockData1
+        let md = getMockData()
 
         selectedEvent = md.event
         selectedChar = md.character
@@ -690,11 +690,12 @@ class DataManager: ObservableObject {
         charForSelectedPlayer = FullCharacterModel(md.character)
         contactRequests = md.contacts.contactRequests
         xpReductions = md.xpReductions.specialClassXpReductions
-        eventPreregs = [1: md.preregs.eventPreregs]
+        eventPreregs = md.preregs.getAsDict()
         selectedCharacterXpReductions = md.xpReductions.specialClassXpReductions
         intrigueForSelectedEvent = md.intrigue
         selectedCharacterGear = md.gearList.charGear
         featureFlags = md.featureFlagList.results
+        rulebook = md.rulebook
         
         selectedPlayer = md.player
     }

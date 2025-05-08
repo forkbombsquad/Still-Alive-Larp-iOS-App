@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GearView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     init(offline: Bool = false) {
         self.offline = offline

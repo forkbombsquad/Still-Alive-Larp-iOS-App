@@ -17,7 +17,7 @@ import SwiftUI
 import SwiftUI
 
 struct ChangePlayerPasswordView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let player: PlayerModel
 

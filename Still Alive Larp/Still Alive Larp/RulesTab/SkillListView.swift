@@ -122,7 +122,7 @@ struct SkillListView: View {
 }
 
 struct SkillCellView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var skill: FullSkillModel
 

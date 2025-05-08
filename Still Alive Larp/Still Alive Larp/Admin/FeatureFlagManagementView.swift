@@ -127,6 +127,5 @@ struct FeatureFlagManagementView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    let ff = FeatureFlagModel(id: 2, name: "Test", description: "OPE", activeAndroid: "TRUE", activeIos: "FALSE")
-    return FeatureFlagManagementView(_dm: dm, featureFlags: .constant([MockData1.featureFlag, ff]))
+    return FeatureFlagManagementView(_dm: dm, featureFlags: DataManager.$shared.featureFlags)
 }

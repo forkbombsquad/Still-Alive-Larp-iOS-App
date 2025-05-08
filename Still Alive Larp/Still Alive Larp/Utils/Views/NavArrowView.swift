@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NavArrowView<Content: View>: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var attachedObject: Any?
 
@@ -69,7 +69,7 @@ struct NavArrowView<Content: View>: View {
 }
 
 struct NavArrowViewGreen<Content: View>: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var title: String
     var destinationView: Content
@@ -127,7 +127,7 @@ struct NavArrowViewGreen<Content: View>: View {
 }
 
 struct NavArrowViewBlue<Content: View>: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var title: String
     var destinationView: Content
@@ -185,7 +185,7 @@ struct NavArrowViewBlue<Content: View>: View {
 }
 
 struct NavArrowViewRed<Content: View>: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var title: String
     var destinationView: Content
@@ -243,7 +243,7 @@ struct NavArrowViewRed<Content: View>: View {
 }
 
 struct ArrowViewButton: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var title: String
     @Binding var loading: Bool
@@ -300,7 +300,7 @@ struct ArrowViewButton: View {
 }
 
 struct ArrowViewButtonGreen: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     var title: String
     @Binding var loading: Bool

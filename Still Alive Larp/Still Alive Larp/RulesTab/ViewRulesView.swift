@@ -13,7 +13,7 @@ fileprivate func createTextView(_ text: String) -> some View {
 }
 
 struct ViewRulesView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var searchText: String = ""
     let rulebook: Rulebook?
@@ -99,7 +99,7 @@ struct ViewRulesView: View {
 }
 
 struct HeadingView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let heading: Heading
     let width: CGFloat
@@ -133,7 +133,7 @@ struct HeadingView: View {
 }
 
 struct SubHeadingView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let subHeading: SubHeading
     let width: CGFloat
@@ -163,7 +163,7 @@ struct SubHeadingView: View {
 }
 
 struct SubSubHeadingView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let subSubHeading: SubSubHeading
     let width: CGFloat
@@ -191,7 +191,7 @@ struct SubSubHeadingView: View {
 
 struct CustomTableView: View {
     
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let cols: [[String]]
     let rows: [[String]]
@@ -271,5 +271,8 @@ struct CustomTableView: View {
 
 
 #Preview {
-    ViewRulesView(rulebook: MockData1.rulebook)
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return ViewRulesView(_dm: dm, rulebook: DataManager.shared.rulebook)
 }

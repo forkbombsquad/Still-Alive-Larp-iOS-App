@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AwardCharacterView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     @State var characters: [CharacterModel]
 
     var body: some View {
@@ -34,6 +34,9 @@ struct AwardCharacterView: View {
 
 struct AwardCharacterView_Previews: PreviewProvider {
     static var previews: some View {
-        AwardCharacterView(characters: MockData1.characterListFullModel.characters)
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return AwardCharacterView(_dm: dm, characters: DataManager.shared.allCharacters!)
     }
 }

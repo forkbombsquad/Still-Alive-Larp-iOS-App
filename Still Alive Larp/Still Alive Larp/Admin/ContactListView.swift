@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactListView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var contactRequests: [ContactRequestModel]
 

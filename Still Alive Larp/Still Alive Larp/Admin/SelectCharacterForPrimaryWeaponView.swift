@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SelectCharacterForPrimaryWeaponView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let characters: [CharacterModel]
 

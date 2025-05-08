@@ -117,7 +117,7 @@ struct AdminView: View {
 }
 
 struct EventToolsView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var events: [EventModel]
     @Binding var loadingEvents: Bool
@@ -144,7 +144,7 @@ struct EventToolsView: View {
 }
 
 struct PlayerCharacterManagementView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var loadingCharacters: Bool
@@ -180,7 +180,7 @@ struct PlayerCharacterManagementView: View {
 }
 
 struct MiscAdminView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var loadingCharacters: Bool

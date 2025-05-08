@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateCharacterView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var fullName: String = ""
     @State private var bio: String = ""

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct AwardCharacterFormView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     typealias stat = AwardCharacterFormView
 
@@ -130,6 +130,9 @@ struct AwardCharacterFormView: View {
 
 struct AwardCharacterFormView_Previews: PreviewProvider {
     static var previews: some View {
-        AwardCharacterFormView(character: MockData1.character)
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return AwardCharacterFormView(_dm: dm, character: DataManager.shared.selectedChar!)
     }
 }

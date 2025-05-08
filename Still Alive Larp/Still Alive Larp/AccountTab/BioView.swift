@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BioView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     init(allowEdit: Bool, offline: Bool = false) {
         self.allowEdit = allowEdit

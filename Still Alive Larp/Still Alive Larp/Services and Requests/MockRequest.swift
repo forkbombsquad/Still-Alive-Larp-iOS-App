@@ -47,7 +47,7 @@ struct MockRequest {
     }
 
     func getResponse<T>() -> T? {
-        return MockData1.getResponse(self) as? T
+        return getMockData().getResponse(self) as? T
     }
 
 }

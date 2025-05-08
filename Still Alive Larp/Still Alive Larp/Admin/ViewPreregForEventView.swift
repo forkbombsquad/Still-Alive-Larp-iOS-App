@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ViewPreregForEventView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let event: EventModel
 

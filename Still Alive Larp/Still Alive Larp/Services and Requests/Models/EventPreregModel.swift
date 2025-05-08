@@ -56,6 +56,18 @@ struct EventPreregModel: CustomCodeable, Identifiable {
 
 struct EventPreregListModel: CustomCodeable {
     let eventPreregs: [EventPreregModel]
+    
+    func getAsDict() -> [Int : [EventPreregModel]] {
+        var dict = [Int : [EventPreregModel]]()
+        for prereg in eventPreregs {
+            if dict[prereg.eventId] == nil {
+                dict[prereg.eventId] = [prereg]
+            } else {
+                dict[prereg.eventId]?.append(prereg)
+            }
+        }
+        return dict
+    }
 }
 
 struct EventPreregCreateModel: CustomCodeable {

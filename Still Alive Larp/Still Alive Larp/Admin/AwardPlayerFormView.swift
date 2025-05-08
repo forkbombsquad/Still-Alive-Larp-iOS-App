@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct AwardPlayerFormView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     private static let xp = "XP"
     private static let pp = "Prestige Points"
@@ -99,6 +99,9 @@ struct AwardPlayerFormView: View {
 
 struct AwardPlayerFormView_Previews: PreviewProvider {
     static var previews: some View {
-        AwardPlayerFormView(player: MockData1.player)
+        let dm = DataManager.shared
+        dm.debugMode = true
+        dm.loadMockData()
+        return AwardPlayerFormView(_dm: dm, player: DataManager.shared.player!)
     }
 }

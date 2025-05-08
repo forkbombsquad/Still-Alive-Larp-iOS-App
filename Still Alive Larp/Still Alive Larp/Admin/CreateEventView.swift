@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateEventView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     init(events: Binding<[EventModel]>) {
         self._events = events

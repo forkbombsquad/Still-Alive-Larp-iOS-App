@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateAnnouncementView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var title: String = ""
     @State private var message: String = ""

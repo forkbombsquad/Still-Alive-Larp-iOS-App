@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PasswordField: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let hintText: String
     @State private var isSecured: Bool = true

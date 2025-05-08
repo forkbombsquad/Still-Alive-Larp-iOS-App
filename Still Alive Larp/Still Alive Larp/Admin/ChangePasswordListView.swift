@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChangePasswordListView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     @State var players: [PlayerModel]
 
     var body: some View {

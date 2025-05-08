@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CharacterStatusAndGearView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let offline: Bool
 
@@ -48,7 +48,7 @@ struct CharacterStatusAndGearView: View {
 }
 
 struct CharacterBulletsSubView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: FullCharacterModel
 
@@ -65,7 +65,7 @@ struct CharacterBulletsSubView: View {
 }
 
 struct CharacterMaterialsSubView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: FullCharacterModel
 
@@ -84,7 +84,7 @@ struct CharacterMaterialsSubView: View {
 }
 
 struct CharacterSkillAndArmorSubView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: FullCharacterModel
 

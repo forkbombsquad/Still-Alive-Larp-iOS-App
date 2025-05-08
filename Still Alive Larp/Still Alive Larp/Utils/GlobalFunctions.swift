@@ -38,3 +38,7 @@ func globalTestPrint(_ message: String) {
         print(message)
     }
 }
+
+func getMockData(_ index: Int = 0) -> MockData {
+    return MockDataManagement.allMockData[index]
+}

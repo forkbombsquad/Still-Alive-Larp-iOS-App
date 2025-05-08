@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RegisterPrimaryWeaponView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterModel
     @State private var name: String = ""

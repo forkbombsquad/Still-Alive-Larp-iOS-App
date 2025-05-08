@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddSkillView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     typealias slk = SkillListView
 
@@ -252,7 +252,7 @@ struct AddSkillView: View {
 }
 
 struct AddSkillCellView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let skill: CharacterModifiedSkillModel
     @Binding var purchasingSkill: Bool

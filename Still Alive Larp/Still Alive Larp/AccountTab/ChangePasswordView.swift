@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChangePasswordView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var existingPassword: String = ""
     @State private var password: String = ""

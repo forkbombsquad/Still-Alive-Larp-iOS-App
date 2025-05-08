@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ManageAccountView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var loading = false
     @State var loadingText = ""

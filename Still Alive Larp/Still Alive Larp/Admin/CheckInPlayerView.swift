@@ -9,7 +9,7 @@ import SwiftUI
 import CodeScanner
 
 struct CheckInPlayerView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var isScanning: Bool = true
     @State var playerCheckInModel: PlayerCheckInBarcodeModel?
@@ -175,7 +175,7 @@ struct CheckInPlayerView: View {
 }
 
 struct RelevantSkillsView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let relevantSkills: [SkillBarcodeModel]
     let primaryWeapon: GearModel?
@@ -368,7 +368,7 @@ struct RelevantSkillsView: View {
 }
 
 struct PlayerBarcodeView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let player: PlayerBarcodeModel
     let isCheckout: Bool
@@ -387,7 +387,7 @@ struct PlayerBarcodeView: View {
 }
 
 struct CharacterBarcodeView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -409,7 +409,7 @@ struct CharacterBarcodeView: View {
 }
 
 struct CharacterBarcodeFirstSubView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -444,7 +444,7 @@ struct CharacterBarcodeFirstSubView: View {
 }
 
 struct CharacterBarcodeSecondSubView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterBarcodeModel
 

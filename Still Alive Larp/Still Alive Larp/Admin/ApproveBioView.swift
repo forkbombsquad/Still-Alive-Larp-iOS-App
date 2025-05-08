@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ApproveBioView: View {
-    @ObservedObject private var _dm = DataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var character: CharacterModel
     @State var loading = false
