@@ -328,9 +328,3 @@ struct ArrowViewButtonGreen: View {
         }
     }
 }
-
-#Preview {
-    ArrowViewButton(bindingTitle: .constant("Ope"), loading: .constant(false)) {
-        //
-    }
-}
