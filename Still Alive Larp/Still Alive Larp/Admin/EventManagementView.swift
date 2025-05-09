@@ -21,7 +21,7 @@ struct EventManagementView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         NavArrowViewRed(title: "Add New Event") {
-                            CreateEventView(events: $events)
+                            CreateEditEventView(events: $events)
                         }
                         ForEach($events) { $event in
                             if event.isFinished.boolValueDefaultFalse {
@@ -50,5 +50,6 @@ struct EventManagementView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return EventManagementView(_dm: dm, events: .constant(DataManager.shared.events!))
+    let md = getMockData()
+    return EventManagementView(_dm: dm, events: .constant(md.events.events))
 }

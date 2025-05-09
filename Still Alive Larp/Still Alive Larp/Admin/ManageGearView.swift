@@ -117,3 +117,13 @@ struct ManageGearView: View {
         ValidationResult(hasError: false, errorMessages: nil)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    var mgv = ManageGearView(gear: md.gear())
+    mgv._dm = dm
+    return mgv
+}

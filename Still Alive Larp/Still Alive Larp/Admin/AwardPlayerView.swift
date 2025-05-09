@@ -33,11 +33,10 @@ struct AwardPlayerView: View {
     }
 }
 
-struct AwardPlayerView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return AwardPlayerView(_dm: dm, players: DataManager.shared.allPlayers!)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return AwardPlayerView(_dm: dm, players: md.playerList.players)
 }

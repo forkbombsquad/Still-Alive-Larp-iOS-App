@@ -9,7 +9,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct KeyValueView: View {
-    @ObservedObject var _dm = DataManager.shared
 
     var key: String
     var value: String
@@ -56,8 +55,6 @@ struct KeyValueView: View {
     }
 }
 
-struct KeyValueView_Previews: PreviewProvider {
-    static var previews: some View {
-        KeyValueView(key: "Key Example", value: "Value Example")
-    }
+#Preview {
+    KeyValueView(key: "Key Example", value: "Value Example")
 }

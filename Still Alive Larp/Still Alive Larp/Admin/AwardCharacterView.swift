@@ -32,11 +32,10 @@ struct AwardCharacterView: View {
     }
 }
 
-struct AwardCharacterView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return AwardCharacterView(_dm: dm, characters: DataManager.shared.allCharacters!)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return AwardCharacterView(_dm: dm, characters: md.characterListFullModel.characters)
 }

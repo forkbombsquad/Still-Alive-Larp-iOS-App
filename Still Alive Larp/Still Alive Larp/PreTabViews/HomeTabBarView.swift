@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HomeTabBarView: View {
     @ObservedObject var _dm = DataManager.shared
+    
     var body: some View {
         TabView {
             HomeTabView().tabItem {
@@ -33,8 +34,9 @@ struct HomeTabBarView: View {
     }
 }
 
-struct HomeTabBarView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeTabBarView()
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return HomeTabBarView(_dm: dm)
 }

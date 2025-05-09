@@ -37,7 +37,7 @@ struct ManageEventView: View {
                         KeyValueView(key: "Description", value: event.description)
                     }
                     NavArrowViewRed(title: "Edit Event Details") {
-                        CreateEventView(events: $events, event: event)
+                        CreateEditEventView(events: $events, event: event)
                     }.padding(.top, 16)
                     if !event.isFinished.boolValueDefaultFalse {
                         LoadingButtonView($loading, width: gr.size.width - 32, buttonText: event.isStarted.boolValueDefaultFalse ? "Finish Event" : "Start Event") {
@@ -77,5 +77,6 @@ struct ManageEventView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return ManageEventView(_dm: dm, events: .constant(DataManager.shared.events!), event: .constant(DataManager.shared.events!.first!))
+    let md = getMockData()
+    return ManageEventView(_dm: dm, events: .constant(md.events.events), event: .constant(md.event(2)))
 }

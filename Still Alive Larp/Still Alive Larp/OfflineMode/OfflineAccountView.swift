@@ -108,11 +108,9 @@ struct OfflineAccountView: View {
     }
 }
 
-struct OfflineAccountView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return OfflineAccountView(_dm: dm)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return OfflineAccountView(_dm: dm)
 }

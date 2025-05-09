@@ -16,7 +16,6 @@ struct AddEditEventIntrigueView: View {
 
     @State var investigatorMessage = ""
     @State var interrogatorMessage = ""
-    @State var webOfInformantsMessage = ""
 
     @State var intrigue: IntrigueModel? = nil
 
@@ -38,7 +37,7 @@ struct AddEditEventIntrigueView: View {
                             .frame(minHeight: 100)
                             .fixedSize(horizontal: false, vertical: true)
                             .placeholder(when: investigatorMessage.isEmpty) {
-                                Text("Investigator - Rumor").foregroundColor(.gray).padding().multilineTextAlignment(.center)
+                                Text("Investigator - Fact 1").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                             }
                         TextEditor(text: $interrogatorMessage)
                             .padding(.top, 8)
@@ -47,16 +46,7 @@ struct AddEditEventIntrigueView: View {
                             .frame(minHeight: 100)
                             .fixedSize(horizontal: false, vertical: true)
                             .placeholder(when: interrogatorMessage.isEmpty) {
-                                Text("Interrogator - Fact").foregroundColor(.gray).padding().multilineTextAlignment(.center)
-                            }
-                        TextEditor(text: $webOfInformantsMessage)
-                            .padding(.top, 8)
-                            .padding(.trailing, 0)
-                            .textFieldStyle(.roundedBorder)
-                            .frame(minHeight: 100)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .placeholder(when: webOfInformantsMessage.isEmpty) {
-                                Text("Web of Informants - Additional Fact").foregroundColor(.gray).padding().multilineTextAlignment(.center)
+                                Text("Interrogator - Fact 2").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                             }
 
                         LoadingButtonView($loadingSubmit, width: gr.size.width - 32, buttonText: "Submit") {
@@ -66,7 +56,7 @@ struct AddEditEventIntrigueView: View {
                                 if var editIntrigue = self.intrigue {
                                     editIntrigue.interrogatorMessage = self.interrogatorMessage
                                     editIntrigue.investigatorMessage = self.investigatorMessage
-                                    editIntrigue.webOfInformantsMessage = self.webOfInformantsMessage
+                                    editIntrigue.webOfInformantsMessage = ""
 
                                     AdminService.updateIntrigue(editIntrigue) { _ in
                                         runOnMainThread {
@@ -81,7 +71,7 @@ struct AddEditEventIntrigueView: View {
                                         self.loadingSubmit = false
                                     }
                                 } else {
-                                    let intrigue = IntrigueCreateModel(eventId: event.id, investigatorMessage: investigatorMessage, interrogatorMessage: interrogatorMessage, webOfInformantsMessage: webOfInformantsMessage)
+                                    let intrigue = IntrigueCreateModel(eventId: event.id, investigatorMessage: investigatorMessage, interrogatorMessage: interrogatorMessage, webOfInformantsMessage: "")
                                     AdminService.createIntrigue(intrigue) { intrigue in
                                         runOnMainThread {
                                             AlertManager.shared.showOkAlert("Intrigue Created") {
@@ -117,11 +107,12 @@ struct AddEditEventIntrigueView: View {
         .frame(maxWidth: .infinity)
         .background(Color.lightGray)
         .onAppear {
+            self.investigatorMessage = intrigue?.investigatorMessage ?? ""
+            self.interrogatorMessage = intrigue?.interrogatorMessage ?? ""
             IntrigueService.getIntrigue(event.id, onSuccess: { intrigue in
                 self.intrigue = intrigue
                 self.investigatorMessage = intrigue.investigatorMessage
                 self.interrogatorMessage = intrigue.interrogatorMessage
-                self.webOfInformantsMessage = intrigue.webOfInformantsMessage
                 self.loadingIntrigue = false
             }, failureCase: { _ in
                 self.loadingIntrigue = false
@@ -132,8 +123,7 @@ struct AddEditEventIntrigueView: View {
     private func validateFields() -> ValidationResult {
         return Validator.validateMultiple([
             ValidationGroup(text: investigatorMessage, validationType: .intrigue),
-            ValidationGroup(text: interrogatorMessage, validationType: .intrigue),
-            ValidationGroup(text: webOfInformantsMessage, validationType: .intrigue)
+            ValidationGroup(text: interrogatorMessage, validationType: .intrigue)
         ])
     }
 
@@ -142,4 +132,12 @@ struct AddEditEventIntrigueView: View {
         return intrigue == nil ? "Create Intrigue" : "Edit Intrigue"
     }
 
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return AddEditEventIntrigueView(_dm: dm, event: md.event(), intrigue: md.intrigue())
 }

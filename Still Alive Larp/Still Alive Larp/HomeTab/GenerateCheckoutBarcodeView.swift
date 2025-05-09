@@ -21,8 +21,12 @@ struct GenerateCheckoutBarcodeView: View {
                 ScrollView {
                     VStack {
                         if loading {
-                            ProgressView().padding(.bottom, 8)
-                            Text("Loading...")
+                            HStack {
+                                Spacer()
+                                ProgressView().padding(.bottom, 8)
+                                Text("Loading...")
+                                Spacer()
+                            }
                         } else {
                             if let image = uiImage, let barcodeModel = DataManager.shared.checkoutBarcodeModel {
                                 Text("Check Out\n\(barcodeModel.player.fullName)")
@@ -80,4 +84,15 @@ struct GenerateCheckoutBarcodeView: View {
             }
         }
     }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.character = md.fullCharacters()[1]
+    dm.player = md.player(id: 2)
+    dm.checkoutBarcodeModel = md.playerCheckOutBarcodeModel(playerId: 2, characterId: 2, eventAttendeeId: 2, eventId: 2)
+    return GenerateCheckoutBarcodeView(_dm: dm, loading: false)
 }

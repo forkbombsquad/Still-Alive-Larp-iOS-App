@@ -31,3 +31,11 @@ struct ChangePasswordListView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return ChangePasswordListView(_dm: dm, players: md.playerList.players)
+}

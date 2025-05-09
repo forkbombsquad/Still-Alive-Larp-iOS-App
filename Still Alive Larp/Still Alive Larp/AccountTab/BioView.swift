@@ -43,3 +43,14 @@ struct BioView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.charForSelectedPlayer = md.fullCharacters()[1]
+    var bv = BioView(allowEdit: true, offline: false)
+    bv._dm = dm
+    return bv
+}

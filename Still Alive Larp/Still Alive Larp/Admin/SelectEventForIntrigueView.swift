@@ -34,3 +34,11 @@ struct SelectEventForIntrigueView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return SelectEventForIntrigueView(_dm: dm, events: md.events.events)
+}

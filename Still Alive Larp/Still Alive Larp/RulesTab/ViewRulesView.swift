@@ -274,5 +274,6 @@ struct CustomTableView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return ViewRulesView(_dm: dm, rulebook: DataManager.shared.rulebook)
+    let md = getMockData()
+    return ViewRulesView(_dm: dm, rulebook: md.rulebook)
 }

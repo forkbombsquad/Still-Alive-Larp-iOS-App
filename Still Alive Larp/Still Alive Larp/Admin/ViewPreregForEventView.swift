@@ -14,35 +14,35 @@ struct ViewPreregForEventView: View {
 
     var body: some View {
         VStack {
-            VStack {
-                Text("Preregistration for\n\(event.title)")
-                    .font(.system(size: 32, weight: .bold))
-                    .multilineTextAlignment(.center)
-                    .lineLimit(nil)
-                    .frame(alignment: .center)
-                    .fixedSize(horizontal: false, vertical: true)
-                if DataManager.shared.loadingAllPlayers || DataManager.shared.loadingAllCharacters || DataManager.shared.loadingEventPreregs {
+            Text("Preregistration for\n\(event.title)")
+                .font(.system(size: 32, weight: .bold))
+                .multilineTextAlignment(.center)
+                .lineLimit(nil)
+                .frame(alignment: .center)
+                .fixedSize(horizontal: false, vertical: true)
+            if DataManager.shared.loadingAllPlayers || DataManager.shared.loadingAllCharacters || DataManager.shared.loadingEventPreregs {
+                ScrollView {
                     HStack {
                         Spacer()
                         ProgressView()
                         Spacer()
                     }
-                } else {
-                    List() {
-                        ForEach(sortedPreregs()) { prereg in
-                            CardView {
-                                VStack {
-                                    KeyValueView(key: "Name", value: getPlayerName(prereg.playerId))
-                                    if prereg.eventRegType != .notPrereged {
-                                        KeyValueView(key: "Character", value: getCharName(prereg.getCharId() ?? -1))
-                                    }
-                                    KeyValueView(key: "Reg Type", value: prereg.eventRegType.getAttendingText(), showDivider: false)
-                                }
-                            }.listRowSeparator(.hidden)
-                            .listRowBackground(Color.lightGray)
-                        }
-                    }.scrollContentBackground(.hidden)
                 }
+            } else {
+                List() {
+                    ForEach(sortedPreregs()) { prereg in
+                        CardView {
+                            VStack {
+                                KeyValueView(key: "Name", value: getPlayerName(prereg.playerId))
+                                if prereg.eventRegType != .notPrereged {
+                                    KeyValueView(key: "Character", value: getCharName(prereg.getCharId() ?? -1))
+                                }
+                                KeyValueView(key: "Reg Type", value: prereg.eventRegType.getAttendingText(), showDivider: false)
+                            }
+                        }.listRowSeparator(.hidden)
+                        .listRowBackground(Color.lightGray)
+                    }
+                }.scrollContentBackground(.hidden)
             }
         }.padding(16)
         .background(Color.lightGray)
@@ -66,4 +66,15 @@ struct ViewPreregForEventView: View {
     func getCharName(_ id: Int) -> String {
         return (DataManager.shared.allCharacters ?? []).first(where: { $0.id == id })?.fullName ?? "NPC"
     }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    dm.loadingAllPlayers = false
+    dm.loadingAllCharacters = false
+    dm.loadingEventPreregs = false
+    let md = getMockData()
+    return ViewPreregForEventView(_dm: dm, event: md.event())
 }

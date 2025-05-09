@@ -150,11 +150,9 @@ struct BlueCardView<Content: View>: ContainerView {
     }
 }
 
-struct CardView_Previews: PreviewProvider {
-    static var previews: some View {
-        CardView {
-            EmptyView()
-        }
+#Preview {
+    CardView {
+        EmptyView()
     }
 }
 

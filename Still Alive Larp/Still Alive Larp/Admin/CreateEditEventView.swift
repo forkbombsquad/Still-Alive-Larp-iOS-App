@@ -1,5 +1,5 @@
 //
-//  CreateEventView.swift
+//  CreateEditEventView.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 4/19/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CreateEventView: View {
+struct CreateEditEventView: View {
     @ObservedObject var _dm = DataManager.shared
 
     init(events: Binding<[EventModel]>) {
@@ -48,7 +48,7 @@ struct CreateEventView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    Text("Create Event")
+                    Text(editingEvent == nil ? "Create Event" : "Edit Event")
                         .font(Font.system(size: 36, weight: .bold))
                         .multilineTextAlignment(.center)
                         .padding(.trailing, 0)
@@ -89,7 +89,7 @@ struct CreateEventView: View {
                         .placeholder(when: description.isEmpty) {
                             Text("Description").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                         }
-                    LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Submit") {
+                    LoadingButtonView($loading, width: gr.size.width - 32, buttonText: editingEvent == nil ? "Submit" : "Update") {
                         let valResult = validateFields()
                         if !valResult.hasError {
                             self.loading = true
@@ -168,7 +168,8 @@ struct CreateEventView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    var cev = CreateEventView(events: .constant(DataManager.shared.events!), event: DataManager.shared.events!.first!)
+    let md = getMockData()
+    var cev = CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
     cev._dm = dm
     return cev
 }

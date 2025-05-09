@@ -58,3 +58,12 @@ struct SpecialClassXpReductionsView: View {
         return DataManager.shared.skills?.first(where: { $0.id == xpRed.skillId })
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.charForSelectedPlayer = md.fullCharacters()[0]
+    return SpecialClassXpReductionsView(_dm: dm, loading: false)
+}

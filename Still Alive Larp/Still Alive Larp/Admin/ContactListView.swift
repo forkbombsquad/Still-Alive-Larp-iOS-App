@@ -33,3 +33,11 @@ struct ContactListView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return ContactListView(_dm: dm, contactRequests: .constant(md.contacts.contactRequests))
+}

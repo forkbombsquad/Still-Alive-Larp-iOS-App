@@ -37,3 +37,13 @@ struct SelectEventForPreregView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    var sev = SelectEventForPreregView(events: md.events.events)
+    sev._dm = dm
+    return sev
+}

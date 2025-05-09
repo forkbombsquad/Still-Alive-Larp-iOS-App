@@ -13,50 +13,210 @@ struct MockDataManagement {
 
 protocol MockData {
     var oauthToken: OAuthTokenResponse { get }
-    var player: PlayerModel { get }
     var playerList: PlayerListModel { get }
     var announcementsList: AnnouncementsListModel { get }
     var announcement: AnnouncementModel { get }
     var characterListFullModel: CharacterListFullModel { get }
-    var characterList: CharacterListModel { get }
-    var character: CharacterModel { get }
-    var skill: SkillModel { get }
     var skills: SkillListModel { get }
     var prereqs: SkillPrereqListModel { get }
     var awards: AwardListModel { get }
-    var characterSkill: CharacterSkillModel { get }
     var characterSkillList: CharacterSkillListModel { get }
-    var event: EventModel { get }
     var events: EventListModel { get }
-    var eventAttendee: EventAttendeeModel { get }
     var eventAttendees: EventAttendeeListModel { get }
-    var contact: ContactRequestModel { get }
     var contacts: ContactRequestListModel { get }
-    var intrigue: IntrigueModel { get }
     var intrigues: IntrigueListModel { get }
-    var xpReduction: SpecialClassXpReductionModel { get }
     var xpReductions: SpecialClassXpReductionListModel { get }
-    var prereg: EventPreregModel { get }
     var preregs: EventPreregListModel { get }
     var version: AppVersionModel { get }
-    var gear: GearModel { get }
     var gearList: GearListModel { get }
-    var featureFlag: FeatureFlagModel { get }
     var featureFlagList: FeatureFlagListModel { get }
     var profileImageModel: ProfileImageModel { get }
-    var researchProject: ResearchProjectModel { get }
     var researchProjects: ResearchProjectListModel { get }
     var rulebook: Rulebook { get }
-    var playerCheckInBarcodeModel: PlayerCheckInBarcodeModel { get }
-    var playerCheckOutBarcodeModel: PlayerCheckOutBarcodeModel { get }
 }
 
 extension MockData {
     
+    func player(_ index: Int = 0) -> PlayerModel {
+        return playerList.players[index]
+    }
+    
+    func player(id: Int) -> PlayerModel {
+        return playerList.players.first(where: { $0.id == id } )!
+    }
+    
+    func characterList() -> [CharacterSubModel] {
+        return characterListFullModel.characters.map { $0.subModel }
+    }
+    
+    func character(_ index: Int = 0) -> CharacterModel {
+        return characterListFullModel.characters[index]
+    }
+    
+    func character(id: Int) -> CharacterModel {
+        return characterListFullModel.characters.first(where: { $0.id == id } )!
+    }
+    
+    func character(playerId: Int) -> CharacterModel {
+        return characterListFullModel.characters.first(where: { $0.playerId == playerId } )!
+    }
+    
+    func fullCharacters() -> [FullCharacterModel] {
+        var fcs = [FullCharacterModel]()
+        let fs = fullSkills()
+        for character in characterListFullModel.characters {
+            var fc = FullCharacterModel(character)
+            let csl = characterSkillList.charSkills
+            for charSkill in csl.filter({ $0.characterId == character.id }) {
+                guard let skill = fs.first(where: { $0.id == charSkill.skillId }) else { continue }
+                fc.skills.append(skill)
+            }
+            fcs.append(fc)
+        }
+        return fcs
+    }
+    
+    func skill(_ index: Int = 0) -> SkillModel {
+        return skills.results[index]
+    }
+    
+    func skill(id: Int) -> SkillModel {
+        return skills.results.first(where: { $0.id == id} )!
+    }
+    
+    func fullSkills() -> [FullSkillModel] {
+        var fs = [FullSkillModel]()
+        for skill in skills.results {
+            fs.append(FullSkillModel(skill))
+        }
+        for (index, skill) in fs.enumerated() {
+            for prereq in prereqs.skillPrereqs.filter({ $0.baseSkillId == skill.id }) {
+                guard let pskill = fs.first(where: { $0.id == prereq.prereqSkillId }) else { continue }
+                fs[index].prereqs.append(pskill)
+            }
+        }
+        return fs
+    }
+    
+    func characterSkill(_ index: Int = 0) -> CharacterSkillModel {
+        return characterSkillList.charSkills[index]
+    }
+    
+    func characterSkill(id: Int) -> CharacterSkillModel {
+        return characterSkillList.charSkills.first(where: { $0.id == id} )!
+    }
+    
+    func characterSkill(skillId: Int, characterId: Int) -> CharacterSkillModel {
+        return characterSkillList.charSkills.first(where: { $0.skillId == skillId && $0.characterId == characterId } )!
+    }
+    
+    func event(_ index: Int = 0) -> EventModel {
+        return events.events[index]
+    }
+    
+    func event(id: Int) -> EventModel {
+        return events.events.first(where: { $0.id == id })!
+    }
+    
+    func eventAttendee(_ index: Int = 0) -> EventAttendeeModel {
+        return eventAttendees.eventAttendees[index]
+    }
+    
+    func eventAttendee(id: Int) -> EventAttendeeModel {
+        return eventAttendees.eventAttendees.first(where: { $0.id == id })!
+    }
+    
+    func eventAttendee(playerId: Int, characterId: Int? = nil, eventId: Int) -> EventAttendeeModel {
+        return eventAttendees.eventAttendees.first(where: { $0.playerId == playerId && $0.characterId == characterId && $0.eventId == eventId })!
+    }
+    
+    func contact(_ index: Int = 0) -> ContactRequestModel {
+        return contacts.contactRequests[index]
+    }
+    
+    func contact(id: Int) -> ContactRequestModel {
+        return contacts.contactRequests.first(where: { $0.id == id })!
+    }
+    
+    func intrigue(_ index: Int = 0) -> IntrigueModel {
+        return intrigues.intrigues[index]
+    }
+    
+    func intrigue(id: Int) -> IntrigueModel {
+        return intrigues.intrigues.first(where: { $0.id == id })!
+    }
+    
+    func xpReduction(_ index: Int = 0) -> SpecialClassXpReductionModel {
+        return xpReductions.specialClassXpReductions[index]
+    }
+    
+    func xpReduction(id: Int) -> SpecialClassXpReductionModel {
+        return xpReductions.specialClassXpReductions.first(where: { $0.id == id })!
+    }
+    
+    func xpReduction(characterId: Int, skillId: Int) -> SpecialClassXpReductionModel {
+        return xpReductions.specialClassXpReductions.first(where: { $0.characterId == characterId && $0.skillId == skillId })!
+    }
+    
+    func prereg(_ index: Int = 0) -> EventPreregModel {
+        return preregs.eventPreregs[index]
+    }
+    
+    func prereg(id: Int) -> EventPreregModel {
+        return preregs.eventPreregs.first(where: { $0.id == id })!
+    }
+    
+    func prereg(eventId: Int, playerId: Int) -> EventPreregModel {
+        return preregs.eventPreregs.first(where: { $0.eventId == eventId && $0.playerId == playerId })!
+    }
+    
+    func gear(_ index: Int = 0) -> GearModel {
+        return gearList.charGear[index]
+    }
+    
+    func gear(id: Int) -> GearModel {
+        return gearList.charGear.first(where: { $0.id == id })!
+    }
+    
+    func gear(characterId: Int) -> GearModel {
+        return gearList.charGear.first(where: { $0.characterId == characterId })!
+    }
+    
+    func featureFlag(_ index: Int = 0) -> FeatureFlagModel {
+        return featureFlagList.results[index]
+    }
+    
+    func featureFlag(id: Int) -> FeatureFlagModel {
+        return featureFlagList.results.first(where: { $0.id == id })!
+    }
+    
+    func researchProject(_ index: Int = 0) -> ResearchProjectModel {
+        return researchProjects.researchProjects[index]
+    }
+    
+    func researchProject(id: Int) -> ResearchProjectModel {
+        return researchProjects.researchProjects.first(where: { $0.id == id })!
+    }
+    
+    func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> PlayerCheckInBarcodeModel {
+        let player = playerList.players.first(where: { $0.id == playerId })!
+        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
+        let event = events.events.first(where: { $0.id == eventId })!
+        let gear = gearList.charGear.first(where: { $0.characterId == characterId })
+        
+        return PlayerCheckInBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+    }
+    
+    func playerCheckOutBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventAttendeeId: Int = 1, eventId: Int = 1) -> PlayerCheckOutBarcodeModel {
+        let player = playerList.players.first(where: { $0.id == playerId })!
+        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
+        return PlayerCheckOutBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, eventAttendeeId: eventAttendeeId, eventId: eventId, relevantSkills: char?.getRelevantBarcodeSkills() ?? [])
+    }
+    
     func getResponse(_ request: MockRequest) -> Codable {
         switch request.endpoint {
             case .playerSignIn, .player, .playerCreate, .awardPlayer, .updateP, .updatePAdmin, .updatePlayer, .deletePlayer:
-                return player
+                return player()
             case .authToken:
                 return oauthToken
             case .announcementsAll:
@@ -64,11 +224,11 @@ extension MockData {
             case .announcement:
                 return announcement
             case .charactersForPlayer:
-                return characterList
+                return characterList()
             case .characterCreate, .awardChar, .updateCharacter, .updateBio, .character, .giveCharCheckInRewards:
-                return character
+                return character()
             case .skill:
-                return skill
+                return skill()
             case .allSkills:
                 return skills
             case .skillPrereqsForId, .allSkillPrereqs:
@@ -80,7 +240,7 @@ extension MockData {
             case .allCharacters, .deleteCharacters:
                 return characterListFullModel
             case .takeSkill:
-                return characterSkill
+                return characterSkill()
             case .getAllSkillsForChar, .deleteSkills:
                 return characterSkillList
             case .announcementCreate:
@@ -88,25 +248,25 @@ extension MockData {
             case .allEvents:
                 return events
             case .createEvent, .eventUpdate:
-                return event
+                return event()
             case .checkInPlayer, .checkInCharacter, .eventAttendeeUpdate:
-                return eventAttendee
+                return eventAttendee()
             case .createContact, .updateContact:
-                return contact
+                return contact()
             case .allContactRequests:
                 return contacts
             case .getIntrigue, .createIntrigue, .updateIntrigue:
-                return intrigue
+                return intrigue()
             case .getAllIntrigue:
                 return intrigues
             case .eventAttendeesForPlayer, .deleteEventAttendee:
                 return eventAttendees
             case .giveXpReduction:
-                return xpReduction
+                return xpReduction()
             case .getXpReductionsForChar, .deleteXpRedsForChar:
                 return xpReductions
             case .prereg, .updatePrereg:
-                return prereg
+                return prereg()
             case .allPreregsForEvent, .deleteEventPreregs:
                 return preregs
             case .version:
@@ -114,25 +274,24 @@ extension MockData {
             case .allGear, .allGearForChar:
                 return gearList
             case .createGear, .updateGear, .deleteGear:
-                return gear
+                return gear()
             case .getFeatureFlag, .createFeatureFlag, .updateFeatureFlag, .deleteFeatureFlag:
-                return featureFlag
+                return featureFlag()
             case .getAllFeatureFlags:
                 return featureFlagList
             case .getProfileImage, .createProfileImage, .updateProfileImage, .deleteProfileImage:
                 return profileImageModel
         case .getResearchProject, .createResearchProject, .updateResearchProject:
-                return researchProject
+                return researchProject()
             case .getAllResearchProjects:
                 return researchProjects
         }
     }
+    
 }
 
 fileprivate struct MockData1: MockData {
     
-    var featureFlag = FeatureFlagModel(id: 0, name: "oldskilltreeimage", description: "Old skill tree baybee. But this description goes beyond that for test data so we can see multilines work", activeAndroid: "FALSE", activeIos: "TRUE")
-
     var featureFlagList = FeatureFlagListModel(results: [
         FeatureFlagModel(id: 0, name: "oldskilltreeimage", description: "Old skill tree baybee. But this description goes beyond that for test data so we can see multilines work", activeAndroid: "FALSE", activeIos: "TRUE"),
         FeatureFlagModel(id: 1, name: "campStatus", description: "This is the camp status feature flag", activeAndroid: "FALSE", activeIos: "TRUE"),
@@ -144,34 +303,86 @@ fileprivate struct MockData1: MockData {
 
     var oauthToken = OAuthTokenResponse(access_token: "TestAccessToken")
 
-    var player = PlayerModel(id: 1, username: "test@test.test", fullName: "Test Testerson", startDate: "2022/12/23", experience: "10", freeTier1Skills: "1", prestigePoints: "1", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "2", numNpcEventsAttended: "0", isAdmin: "FALSE")
-
     var announcementsList = AnnouncementsListModel(announcements: [AnnouncementSubModel(id: 1)])
     var announcement = AnnouncementModel(id: 1, title: "Test Announcement", text: "This is a test announcment with mock data yo.", date: "2022/12/23")
-
-    var characterList = CharacterListModel(characters: [CharacterSubModel(id: 1, isAlive: "TRUE")])
-
-    var character = CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard)
     
     var characterListFullModel = CharacterListFullModel(characters: [
         CharacterModel(id: 1, fullName: "John Doe", startDate: "2022/12/23", isAlive: "TRUE", deathDate: "", infection: "10", bio: "", approvedBio: "FALSE", bullets: "10", megas: "1", rivals: "5", rockets: "2", bulletCasings: "54", clothSupplies: "6", woodSupplies: "4", metalSupplies: "2", techSupplies: "8", medicalSupplies: "11", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 1, characterTypeId: Constants.CharacterTypes.standard),
         CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard),
-        CharacterModel(id: 3, fullName: "Dead Guy", startDate: "2025/05/07", isAlive: "FALSE", deathDate: "2025/04/04", infection: "78", bio: "I died :(", approvedBio: "TRUE", bullets: "1", megas: "2", rivals: "3", rockets: "4", bulletCasings: "5", clothSupplies: "6", woodSupplies: "7", metalSupplies: "8", techSupplies: "9", medicalSupplies: "10", armor: CharacterModel.ArmorType.bulletProof.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 3, characterTypeId: Constants.CharacterTypes.standard)
+        CharacterModel(id: 3, fullName: "Just Some Guy", startDate: "2025/05/08", isAlive: "TRUE", deathDate: "", infection: "69", bio: "I'm not dead yet. My bio isn't approved yet though :(", approvedBio: "FALSE", bullets: "5", megas: "3", rivals: "6", rockets: "8", bulletCasings: "2", clothSupplies: "4", woodSupplies: "8", metalSupplies: "0", techSupplies: "2", medicalSupplies: "0", armor: CharacterModel.ArmorType.bulletProof.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 3, characterTypeId: Constants.CharacterTypes.standard),
+        CharacterModel(id: 4, fullName: "Dead Guy", startDate: "2025/05/07", isAlive: "FALSE", deathDate: "2025/04/04", infection: "78", bio: "I died :(", approvedBio: "TRUE", bullets: "1", megas: "2", rivals: "3", rockets: "4", bulletCasings: "5", clothSupplies: "6", woodSupplies: "7", metalSupplies: "8", techSupplies: "9", medicalSupplies: "10", armor: CharacterModel.ArmorType.bulletProof.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 4, characterTypeId: Constants.CharacterTypes.standard)
     ])
-
-    var skill = SkillModel(id: 1, xpCost: "2", prestigeCost: "1", name: "Adaptable", description: "Your body adapts to the infection more easily than others. Your infection threshold for tier-2 'the infected' skills is lowered from 50% to 25%\n\n*This is a prestige skill It requires 1 prestige point in addition to its xp cost.", minInfection: "0", skillTypeId: 3, skillCategoryId: 14)
-
+    
     var skills = SkillListModel(results: [
-        SkillModel(id: 1, xpCost: "2", prestigeCost: "1", name: "Adaptable", description: "Your body adapts to the infection more easily than others. Your infection threshold for tier-2 'the infected' skills is lowered from 50% to 25%\n\n*This is a prestige skill It requires 1 prestige point in addition to its xp cost.", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
-        SkillModel(id: 2, xpCost: "3", prestigeCost: "0", name: "Advanced Firearm Proficiency", description: "As Light Firearm Proficiency, but you can wield Advanced Firearms", minInfection: "0", skillTypeId: 1, skillCategoryId: 2),
-        SkillModel(id: 20, xpCost: "3", prestigeCost: "0", name: "Expert: Profession", description: "From now on, all Profession type skills cost 1 less to take (minimum 1).\n\n*You may only take two specializatino type skills, one in tier 3 and one in tier 4", minInfection: "0", skillTypeId: 2, skillCategoryId: 15),
+        SkillModel(id: 6, xpCost: "0", prestigeCost: "0", name: "Bash", description: "Break Stuff", minInfection: "0", skillTypeId: 1, skillCategoryId: 1),
+        SkillModel(id: 25, xpCost: "0", prestigeCost: "0", name: "Follow the Leader", description: "Do tasks you aren't trained for", minInfection: "0", skillTypeId: 3, skillCategoryId: 1),
+        SkillModel(id: 41, xpCost: "0", prestigeCost: "0", name: "Light Firearm Proficiency", description: "Light Firearm Wielding", minInfection: "0", skillTypeId: 1, skillCategoryId: 1),
+        SkillModel(id: 72, xpCost: "0", prestigeCost: "0", name: "Super Light Melee Weapon Proficiency", description: "Super Light Melee Weapon Wielding", minInfection: "0", skillTypeId: 1, skillCategoryId: 1),
+        SkillModel(id: 76, xpCost: "0", prestigeCost: "0", name: "Tap", description: "Tap them zomboids", minInfection: "0", skillTypeId: 1, skillCategoryId: 1),
+        SkillModel(id: 108, xpCost: "0", prestigeCost: "0", name: "Weapon Finesse", description: "Wield smol boiz", minInfection: "0", skillTypeId: 1, skillCategoryId: 1),
+        SkillModel(id: 1, xpCost: "2", prestigeCost: "1", name: "Adaptable", description: "Tier 3 infection at 25%", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 23, xpCost: "4", prestigeCost: "1", name: "Extremely Adaptable", description: "Tier 5 infection at 50%", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 5, xpCost: "4", prestigeCost: "0", name: "Bandoliers", description: "+2 event bullets", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 15, xpCost: "1", prestigeCost: "0", name: "Deep Pockets", description: "+2 event bullets", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 16, xpCost: "2", prestigeCost: "0", name: "Deeper Pockets", description: "+2 event bullets", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 61, xpCost: "3", prestigeCost: "0", name: "Parachute Pants", description: "+2 event bullets", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 37, xpCost: "2", prestigeCost: "0", name: "Interrogator", description: "+1 true fact", minInfection: "0", skillTypeId: 2, skillCategoryId: 10),
+        SkillModel(id: 38, xpCost: "1", prestigeCost: "0", name: "Investigator", description: "1 true fact", minInfection: "0", skillTypeId: 2, skillCategoryId: 10),
+        SkillModel(id: 55, xpCost: "4", prestigeCost: "0", name: "Natural Armor", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
+        SkillModel(id: 60, xpCost: "2", prestigeCost: "0", name: "Pain Tolerance", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
+        SkillModel(id: 70, xpCost: "2", prestigeCost: "0", name: "Scaled Skin", description: "+1 red beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 13),
+        SkillModel(id: 80, xpCost: "1", prestigeCost: "0", name: "Tough Skin", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
+        SkillModel(id: 96, xpCost: "2", prestigeCost: "1", name: "Plot Armor", description: "+1 black beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 13, xpCost: "2", prestigeCost: "0", name: "Dead Man Walking", description: "Pretend to be a zombie.", minInfection: "50", skillTypeId: 3, skillCategoryId: 13),
         SkillModel(id: 14, xpCost: "4", prestigeCost: "0", name: "Dead Man Sprinting", description: "As Dead Man Walking, but you may more more quickly, mimicing the movements and sounds of a Zoombie.", minInfection: "75", skillTypeId: 3, skillCategoryId: 13),
-        SkillModel(id: 6, xpCost: "0", prestigeCost: "0", name: "Bash", description: "Allows you to Deconstruct Armor, Firearms, Gear and Melee Weapons. Also allows you to deal damage to Fortifications using a Melee Weapon, though doing so is loud and should be roleplayed as such.", minInfection: "0", skillTypeId: 1, skillCategoryId: 1)
+        SkillModel(id: 27, xpCost: "4", prestigeCost: "0", name: "Gambler's Eye", description: "Double Advantage on coins and dice.", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 29, xpCost: "2", prestigeCost: "0", name: "Gambler's Luck", description: "Advantage on coins and dice.", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 68, xpCost: "3", prestigeCost: "1", name: "Regression", description: "-1 Infection per event", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 69, xpCost: "4", prestigeCost: "1", name: "Remission", description: "-1d4 Infection per event", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 93, xpCost: "2", prestigeCost: "0", name: "Will to Live", description: "Flip coin instead of rolling infection dice.", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
+        SkillModel(id: 89, xpCost: "4", prestigeCost: "0", name: "Unshakable Resolve", description: "Get out of death free card.", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
+        SkillModel(id: 4, xpCost: "4", prestigeCost: "0", name: "Anonymous Ally", description: "+1 Mysterious Stranger", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 54, xpCost: "1", prestigeCost: "0", name: "Mysterious Stranger", description: "+1 Mysterious Stranger", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 88, xpCost: "3", prestigeCost: "0", name: "Unknown Assailant", description: "+1 Mysterious Stranger", minInfection: "0", skillTypeId: 3, skillCategoryId: 8),
+        SkillModel(id: 97, xpCost: "2", prestigeCost: "1", name: "Fortunate Find", description: "+items at checkin", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 98, xpCost: "4", prestigeCost: "1", name: "Prosperous Discovery", description: "+more items at checkin", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
+        SkillModel(id: 11, xpCost: "4", prestigeCost: "0", name: "Combat Aficionado", description: "Combat -1, Talent +1", minInfection: "0", skillTypeId: 1, skillCategoryId: 15),
+        SkillModel(id: 12, xpCost: "4", prestigeCost: "0", name: "Combat Specialist", description: "Combat -1, Profession +1", minInfection: "0", skillTypeId: 1, skillCategoryId: 15),
+        SkillModel(id: 19, xpCost: "3", prestigeCost: "0", name: "Expert: Combat", description: "Combat -1", minInfection: "0", skillTypeId: 1, skillCategoryId: 15),
+        SkillModel(id: 20, xpCost: "3", prestigeCost: "0", name: "Expert: Profession", description: "Profession -1", minInfection: "0", skillTypeId: 2, skillCategoryId: 15),
+        SkillModel(id: 21, xpCost: "3", prestigeCost: "0", name: "Expert: Talent", description: "Talent -1", minInfection: "0", skillTypeId: 3, skillCategoryId: 15),
+        SkillModel(id: 63, xpCost: "4", prestigeCost: "0", name: "Profession: Aficionado", description: "Profession -1, Talent +1", minInfection: "0", skillTypeId: 2, skillCategoryId: 15),
+        SkillModel(id: 64, xpCost: "4", prestigeCost: "0", name: "Profession: Specialist", description: "Profession -1, Combat +1", minInfection: "0", skillTypeId: 2, skillCategoryId: 15),
+        SkillModel(id: 74, xpCost: "4", prestigeCost: "0", name: "Talent: Aficionado", description: "Talent -1, Combat +1", minInfection: "0", skillTypeId: 3, skillCategoryId: 15),
+        SkillModel(id: 75, xpCost: "4", prestigeCost: "0", name: "Talent: Specialist", description: "Talent -1, Profession +1", minInfection: "0", skillTypeId: 3, skillCategoryId: 15),
+        SkillModel(id: 48, xpCost: "1", prestigeCost: "0", name: "Medium Firearm Proficiency", description: "Medium Firearm Wielding", minInfection: "0", skillTypeId: 1, skillCategoryId: 2),
+        SkillModel(id: 40, xpCost: "1", prestigeCost: "0", name: "Light Firearm Dual Wielding", description: "Two light firearms at once", minInfection: "0", skillTypeId: 1, skillCategoryId: 3),
+        SkillModel(id: 47, xpCost: "2", prestigeCost: "0", name: "Medium Firearm Dual Wielding", description: "Two medium firearms at once", minInfection: "0", skillTypeId: 1, skillCategoryId: 3)
     ])
 
     var prereqs = SkillPrereqListModel(skillPrereqs: [
-        SkillPrereqModel(id: 1, baseSkillId: 2, prereqSkillId: 1),
-        SkillPrereqModel(id: 1, baseSkillId: 14, prereqSkillId: 6)
+        SkillPrereqModel(id: 1, baseSkillId: 11, prereqSkillId: 20),
+        SkillPrereqModel(id: 2, baseSkillId: 12, prereqSkillId: 21),
+        SkillPrereqModel(id: 3, baseSkillId: 63, prereqSkillId: 19),
+        SkillPrereqModel(id: 4, baseSkillId: 64, prereqSkillId: 21),
+        SkillPrereqModel(id: 5, baseSkillId: 74, prereqSkillId: 20),
+        SkillPrereqModel(id: 6, baseSkillId: 75, prereqSkillId: 19),
+        SkillPrereqModel(id: 7, baseSkillId: 23, prereqSkillId: 1),
+        SkillPrereqModel(id: 8, baseSkillId: 5, prereqSkillId: 61),
+        SkillPrereqModel(id: 9, baseSkillId: 61, prereqSkillId: 16),
+        SkillPrereqModel(id: 10, baseSkillId: 16, prereqSkillId: 15),
+        SkillPrereqModel(id: 11, baseSkillId: 37, prereqSkillId: 38),
+        SkillPrereqModel(id: 12, baseSkillId: 60, prereqSkillId: 80),
+        SkillPrereqModel(id: 13, baseSkillId: 55, prereqSkillId: 60),
+        SkillPrereqModel(id: 14, baseSkillId: 14, prereqSkillId: 13),
+        SkillPrereqModel(id: 15, baseSkillId: 27, prereqSkillId: 29),
+        SkillPrereqModel(id: 16, baseSkillId: 69, prereqSkillId: 68),
+        SkillPrereqModel(id: 17, baseSkillId: 89, prereqSkillId: 93),
+        SkillPrereqModel(id: 18, baseSkillId: 88, prereqSkillId: 54),
+        SkillPrereqModel(id: 19, baseSkillId: 4, prereqSkillId: 88),
+        SkillPrereqModel(id: 20, baseSkillId: 98, prereqSkillId: 97),
+        SkillPrereqModel(id: 21, baseSkillId: 47, prereqSkillId: 40),
+        SkillPrereqModel(id: 22, baseSkillId: 47, prereqSkillId: 48)
     ])
 
     var playerList = PlayerListModel(players: [
@@ -197,21 +408,62 @@ fileprivate struct MockData1: MockData {
         AwardModel(id: 13, playerId: 3, characterId: 3, awardType: AdminService.CharAwardType.ammoRival.rawValue, reason: "Getting all the bullet types. 77 of each", date: "2023/01/06", amount: "77"),
         AwardModel(id: 14, playerId: 3, characterId: 3, awardType: AdminService.CharAwardType.ammoRocket.rawValue, reason: "Getting all the bullet types. 77 of each", date: "2023/01/06", amount: "77"),
     ])
-
-    var characterSkill = CharacterSkillModel(id: 1, characterId: 1, skillId: 6, xpSpent: 0, fsSpent: 0, ppSpent: 0)
-
-    var characterSkillList = CharacterSkillListModel(charSkills: [
-        CharacterSkillModel(id: 1, characterId: 1, skillId: 6, xpSpent: 0, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 2, characterId: 1, skillId: 1, xpSpent: 1, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 3, characterId: 1, skillId: 2, xpSpent: 3, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 4, characterId: 2, skillId: 6, xpSpent: 0, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 5, characterId: 2, skillId: 20, xpSpent: 3, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 6, characterId: 2, skillId: 14, xpSpent: 2, fsSpent: 0, ppSpent: 0),
-        CharacterSkillModel(id: 7, characterId: 3, skillId: 6, xpSpent: 0, fsSpent: 0, ppSpent: 0)
-        
+    
+    var xpReductions = SpecialClassXpReductionListModel(specialClassXpReductions: [
+        SpecialClassXpReductionModel(id: 1, characterId: 1, skillId: 23, xpReduction: "1"),
+        SpecialClassXpReductionModel(id: 2, characterId: 1, skillId: 5, xpReduction: "2"),
+        SpecialClassXpReductionModel(id: 2, characterId: 2, skillId: 55, xpReduction: "1"),
+        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 14, xpReduction: "1"),
+        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 89, xpReduction: "1")
     ])
-
-    var event = EventModel(id: 1, title: "Example Event", description: "Descrption of Event", date: "2023/01/01", startTime: "4:00pm", endTime: "Midnight", isStarted: "FALSE", isFinished: "FALSE")
+                                                        
+    var characterSkillList: CharacterSkillListModel {
+        var cs = [CharacterSkillModel]()
+        var incrementingId = 1
+        for char in characterListFullModel.characters {
+            cs.append(contentsOf: freeSkillsForCharacter(incrementingId: &incrementingId, characterId: char.id))
+        }
+        
+        // Char 1
+        cs.append(contentsOf: [
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: Constants.SpecificSkillIds.expertTalent),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 5, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 15, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 16, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 61, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 1, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 23, relevantSpecialization: -1)
+        ])
+        
+        // Char 2
+        cs.append(contentsOf: [
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: Constants.SpecificSkillIds.expertCombat),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: Constants.SpecificSkillIds.professionAficionado_T),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 37, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 38, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 55, relevantSpecialization: 1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 60, relevantSpecialization: 1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 80, relevantSpecialization: 1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 48, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 40, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 47, relevantSpecialization: -1)
+        ])
+        
+        // Char 3
+        cs.append(contentsOf: [
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 96),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 13),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 14),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 27),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 29),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 68),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 69),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 93),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 54)
+        ])
+        
+        return CharacterSkillListModel(charSkills: cs)
+    }
 
     var events = EventListModel(events: [
         EventModel(id: 1, title: "Finished Event", description: "This event was finished", date: "2023/01/01", startTime: "4:00pm", endTime: "Midnight", isStarted: "TRUE", isFinished: "TRUE"),
@@ -219,42 +471,27 @@ fileprivate struct MockData1: MockData {
         EventModel(id: 3, title: "Unstarted Event", description: "This event has not started yet", date: "2023/01/03", startTime: "4:00pm", endTime: "Midnight", isStarted: "FALSE", isFinished: "FALSE"),
     ])
 
-    var eventAttendee = EventAttendeeModel(id: 1, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE")
-
     var eventAttendees = EventAttendeeListModel(eventAttendees: [
-        EventAttendeeModel(id: 1, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
+        EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
         EventAttendeeModel(id: 2, playerId: 2, characterId: 2, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
         EventAttendeeModel(id: 3, playerId: 3, characterId: 3, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 4, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 5, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 6, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 7, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE")
+        EventAttendeeModel(id: 4, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
+        EventAttendeeModel(id: 5, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
+        EventAttendeeModel(id: 6, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
+        EventAttendeeModel(id: 7, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
+        EventAttendeeModel(id: 8, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE")
     ])
-
-    var contact = ContactRequestModel(id: 1, fullName: "John Doe", emailAddress: "test@test.test", postalCode: "54703", message: "This is a test contact message", read: "FALSE")
 
     var contacts = ContactRequestListModel(contactRequests: [
         ContactRequestModel(id: 1, fullName: "John Doe", emailAddress: "test@test.test", postalCode: "54703", message: "This is a test contact message", read: "FALSE"),
         ContactRequestModel(id: 2, fullName: "Jane Dee", emailAddress: "jane@jane.jane", postalCode: "53959", message: "Please let me play still alive!", read: "TRUE")
     ])
 
-    var intrigue = IntrigueModel(id: 1, eventId: 1, investigatorMessage: "Message for investigator", interrogatorMessage: "Message for interrogator", webOfInformantsMessage: "Message for web of informants")
-
     var intrigues = IntrigueListModel(intrigues: [
         IntrigueModel(id: 1, eventId: 1, investigatorMessage: "You will find something cool", interrogatorMessage: "You'll probably need a scavenger", webOfInformantsMessage: "This isn't used"),
         IntrigueModel(id: 2, eventId: 2, investigatorMessage: "Make sure you have Bash ready!", interrogatorMessage: "Gushers be afoot!", webOfInformantsMessage: "This isn't used"),
         IntrigueModel(id: 3, eventId: 3, investigatorMessage: "The Juggernaut is coming", interrogatorMessage: "Beware!", webOfInformantsMessage: "This isn't used")
     ])
-
-    var xpReduction = SpecialClassXpReductionModel(id: 1, characterId: 1, skillId: 1, xpReduction: "1")
-
-    var xpReductions = SpecialClassXpReductionListModel(specialClassXpReductions: [
-        SpecialClassXpReductionModel(id: 1, characterId: 1, skillId: 1, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 2, characterId: 2, skillId: 1, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 3, characterId: 2, skillId: 14, xpReduction: "2")
-    ])
-
-    var prereg = EventPreregModel(id: 1, playerId: 1, characterId: 1, eventId: 1, regType: "NONE")
 
     var preregs = EventPreregListModel(eventPreregs: [
         EventPreregModel(id: 1, playerId: 1, characterId: nil, eventId: 1, regType: EventRegType.notPrereged.rawValue),
@@ -271,18 +508,19 @@ fileprivate struct MockData1: MockData {
 
     var version = AppVersionModel(androidVersion: 1, iosVersion: 1, rulebookVersion: "2.0")
 
-    var gear = GearModel(id: 1, characterId: 1, gearJson: GearJsonListModel(gearJson: [GearJsonModel(name: "Hammerstrike", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.lightFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Revolver")]).toJsonString()!)
-
     var gearList = GearListModel(charGear: [
-        GearModel(id: 1, characterId: 1, gearJson: GearJsonListModel(gearJson: [GearJsonModel(name: "Hammerstrike", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.lightFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Revolver")]).toJsonString()!),
-        GearModel(id: 2, characterId: 2, gearJson: GearJsonListModel(gearJson: [GearJsonModel(name: "Fireaxe", gearType: Constants.GearTypes.meleeWeapon, primarySubtype: Constants.GearPrimarySubtype.heavyMeleeWeapon, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "Big fireaxe")]).toJsonString()!),
+        GearModel(id: 1, characterId: 1, gearJson: GearJsonListModel(gearJson: [
+            GearJsonModel(name: "Hammerstrike", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.lightFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Revolver")
+        ]).toJsonString()!),
+        GearModel(id: 2, characterId: 2, gearJson: GearJsonListModel(gearJson: [
+            GearJsonModel(name: "Fireaxe", gearType: Constants.GearTypes.meleeWeapon, primarySubtype: Constants.GearPrimarySubtype.heavyMeleeWeapon, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "Big fireaxe"),
+            GearJsonModel(name: "Thunderbow", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.mediumFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Mega Bow")
+        ]).toJsonString()!),
         GearModel(id: 3, characterId: 3, gearJson: GearJsonListModel(gearJson: [
             GearJsonModel(name: "Rhino", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.advancedFirearm, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "Big ol boi"),
             GearJsonModel(name: "My Cool Bag", gearType: Constants.GearTypes.bag, primarySubtype: Constants.GearPrimarySubtype.largeBag, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "A big ol bag")
         ]).toJsonString()!)
     ])
-    
-    var researchProject = ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE")
     
     var researchProjects = ResearchProjectListModel(researchProjects: [
         ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE"),
@@ -349,9 +587,38 @@ fileprivate struct MockData1: MockData {
             ])
         ])
     ])
-    
-    var playerCheckInBarcodeModel = PlayerCheckInBarcodeModel(player: PlayerBarcodeModel(PlayerModel(id: 1, username: "test@test.test", fullName: "Test Testerson", startDate: "2022/12/23", experience: "10", freeTier1Skills: "1", prestigePoints: "1", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "2", numNpcEventsAttended: "0", isAdmin: "FALSE")), character: CharacterBarcodeModel(FullCharacterModel(CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard))), event: EventBarcodeModel(EventModel(id: 1, title: "Example Event", description: "Descrption of Event", date: "2023/01/01", startTime: "4:00pm", endTime: "Midnight", isStarted: "FALSE", isFinished: "FALSE")), relevantSkills: [])
-    
-    var playerCheckOutBarcodeModel = PlayerCheckOutBarcodeModel(player: PlayerBarcodeModel(PlayerModel(id: 1, username: "test@test.test", fullName: "Test Testerson", startDate: "2022/12/23", experience: "10", freeTier1Skills: "1", prestigePoints: "1", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "2", numNpcEventsAttended: "0", isAdmin: "FALSE")), character: CharacterBarcodeModel(FullCharacterModel(CharacterModel(id: 2, fullName: "Jane Dee", startDate: "2025/05/07", isAlive: "TRUE", deathDate: "", infection: "28", bio: "I have an appproved bio becuase I'm neat!", approvedBio: "TRUE", bullets: "20", megas: "12", rivals: "50", rockets: "23", bulletCasings: "0", clothSupplies: "1", woodSupplies: "2", metalSupplies: "0", techSupplies: "0", medicalSupplies: "14", armor: CharacterModel.ArmorType.metal.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: 2, characterTypeId: Constants.CharacterTypes.standard))), eventAttendeeId: 1, eventId: 1, relevantSkills: [])
 
+    private func freeSkillsForCharacter(incrementingId: inout Int, characterId: Int) -> [CharacterSkillModel] {
+        var cs = [CharacterSkillModel]()
+        for skill in skills.results.filter({ $0.xpCost == "0" }) {
+            cs.append(CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skill.id, xpSpent: 0, fsSpent: 0, ppSpent: 0))
+            incrementingId += 1
+        }
+        return cs
+    }
+    
+    private func addSkillForCharacter(incrementingId: inout Int, characterId: Int, skillId: Int, useFreeT1SkillsIfPossible: Bool = true, relevantSpecialization: Int = 0) -> CharacterSkillModel {
+        let skill = skills.results.first(where: { $0.id == skillId })!
+        var xpCost = skill.xpCost.intValueDefaultZero
+        let ppCost = skill.prestigeCost.intValueDefaultZero
+        var fsCost = 0
+        
+        if skill.xpCost.intValueDefaultZero == 0 && useFreeT1SkillsIfPossible {
+            fsCost = 1
+            xpCost = 0
+        } else {
+            for xpRed in xpReductions.specialClassXpReductions.filter({ $0.characterId == characterId && $0.skillId == skillId }) {
+                xpCost = max(xpCost - xpRed.xpReduction.intValueDefaultZero, 1)
+            }
+            
+            xpCost = max(xpCost + relevantSpecialization, 1)
+        }
+        
+        let csm = CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skillId, xpSpent: xpCost, fsSpent: fsCost, ppSpent: ppCost)
+        
+        incrementingId += 1
+        
+        return csm
+    }
+    
 }

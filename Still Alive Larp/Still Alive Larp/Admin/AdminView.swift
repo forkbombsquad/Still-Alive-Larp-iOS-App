@@ -213,11 +213,9 @@ struct MiscAdminView: View {
 }
 
 
-struct AdminView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return AdminView(_dm: dm)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return AdminView(_dm: dm)
 }

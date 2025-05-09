@@ -128,11 +128,10 @@ struct AwardCharacterFormView: View {
     }
 }
 
-struct AwardCharacterFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return AwardCharacterFormView(_dm: dm, character: DataManager.shared.selectedChar!)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return AwardCharacterFormView(_dm: dm, character: md.character())
 }

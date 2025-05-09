@@ -84,3 +84,10 @@ struct ChangePlayerPasswordView: View {
 
 }
 
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return ChangePlayerPasswordView(_dm: dm, player: md.player())
+}

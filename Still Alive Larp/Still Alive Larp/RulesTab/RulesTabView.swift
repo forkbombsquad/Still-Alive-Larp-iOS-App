@@ -90,11 +90,10 @@ struct RulesTabView: View {
     }
 }
 
-struct RulesTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return RulesTabView(_dm: dm)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    dm.loadingRulebook = false
+    return RulesTabView(_dm: dm)
 }

@@ -55,3 +55,13 @@ struct PlayerStatsView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    var psv = PlayerStatsView(offline: false, player: md.player(2))
+    psv._dm = dm
+    return psv
+}

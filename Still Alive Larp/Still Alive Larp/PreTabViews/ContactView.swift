@@ -97,8 +97,9 @@ struct ContactView: View {
 
 }
 
-struct ContactView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContactView()
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return ContactView(_dm: dm)
 }

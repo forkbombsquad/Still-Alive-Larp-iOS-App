@@ -143,3 +143,10 @@ struct ManageAccountView: View {
         }
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return ManageAccountView(_dm: dm, loading: false)
+}

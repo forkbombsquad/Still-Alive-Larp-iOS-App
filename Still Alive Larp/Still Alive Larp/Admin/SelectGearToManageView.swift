@@ -63,3 +63,11 @@ struct SelectGearToManageView: View {
     }
 }
 
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return SelectGearToManageView(_dm: dm, character: md.character())
+}
+

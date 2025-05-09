@@ -64,3 +64,14 @@ struct EditBioView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.character = md.fullCharacters()[1]
+    var ebv = EditBioView()
+    ebv._dm = dm
+    return ebv
+}

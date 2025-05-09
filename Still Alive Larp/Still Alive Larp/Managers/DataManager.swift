@@ -105,7 +105,11 @@ class DataManager: ObservableObject {
     }
     
     // TODO ALWAYS set this to false before release
-    var debugMode = false
+    var debugMode = false {
+        didSet {
+            Constants.ServiceOperationMode.updateServiceMode(debugMode ? .test : .prod)
+        }
+    }
 
     @Published var actionState: Int? = 0
 
@@ -673,31 +677,32 @@ class DataManager: ObservableObject {
     func loadMockData() {
         let md = getMockData()
 
-        selectedEvent = md.event
-        selectedChar = md.character
-        selectedContactRequest = md.contact
+        selectedEvent = md.event()
+        selectedChar = md.character()
+        selectedContactRequest = md.contact()
         announcements = md.announcementsList.announcements
         currentAnnouncement = md.announcement
-        player = md.player
-        character = FullCharacterModel(md.character)
+        player = md.player()
+        character = md.fullCharacters().first
         events = md.events.events
-        currentEvent = md.event
+        currentEvent = md.event()
         awards = md.awards.awards
-        intrigue = md.intrigue
-        skills = [FullSkillModel(md.skill)]
+        intrigue = md.intrigue()
+        skills = md.fullSkills()
         allPlayers = md.playerList.players
         allCharacters = md.characterListFullModel.characters
-        charForSelectedPlayer = FullCharacterModel(md.character)
+        charForSelectedPlayer = md.fullCharacters().first
         contactRequests = md.contacts.contactRequests
         xpReductions = md.xpReductions.specialClassXpReductions
         eventPreregs = md.preregs.getAsDict()
         selectedCharacterXpReductions = md.xpReductions.specialClassXpReductions
-        intrigueForSelectedEvent = md.intrigue
+        intrigueForSelectedEvent = md.intrigue()
         selectedCharacterGear = md.gearList.charGear
         featureFlags = md.featureFlagList.results
         rulebook = md.rulebook
+        eventAttendeesForPlayer = md.eventAttendees.eventAttendees
         
-        selectedPlayer = md.player
+        selectedPlayer = md.player()
     }
 
 }

@@ -97,11 +97,10 @@ struct AwardPlayerFormView: View {
 
 }
 
-struct AwardPlayerFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return AwardPlayerFormView(_dm: dm, player: DataManager.shared.player!)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return AwardPlayerFormView(_dm: dm, player: md.player())
 }

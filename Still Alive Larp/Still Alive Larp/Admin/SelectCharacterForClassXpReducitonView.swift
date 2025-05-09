@@ -19,10 +19,9 @@ struct SelectCharacterForClassXpReducitonView: View {
                     VStack {
                         Text("Select Character For\nXp Reduciton")
                             .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)
-                            .padding(.leading, 32)
+                            .padding(.horizontal, 32)
                         ForEach(characters.alphabetized) { character in
                             NavArrowView(title: character.fullName) { _ in
                                 SelectSkillForClassXpReducitonView(character: character)
@@ -34,4 +33,12 @@ struct SelectCharacterForClassXpReducitonView: View {
         }.padding(16)
         .background(Color.lightGray)
     }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return SelectCharacterForClassXpReducitonView(_dm: dm, characters: md.characterListFullModel.characters)
 }

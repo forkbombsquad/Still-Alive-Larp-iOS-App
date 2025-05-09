@@ -83,3 +83,10 @@ struct ChangePasswordView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return ChangePasswordView(_dm: dm)
+}

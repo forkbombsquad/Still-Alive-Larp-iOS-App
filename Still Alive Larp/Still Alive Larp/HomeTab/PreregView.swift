@@ -146,3 +146,13 @@ struct PreregView: View {
         }
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.player = md.player(id: 2)
+    dm.character = md.fullCharacters()[1]
+    return PreregView(_dm: dm)
+}

@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct LoadingButtonView: View {
-    @ObservedObject var _dm = DataManager.shared
 
     init(_ loading: Binding<Bool>, loadingText: Binding<String> = .init(get: {return ""}, set: {_ in}), width: CGFloat, height: CGFloat = 90, buttonText: String, progressViewOffset: CGFloat = 0, onButtonPress: @escaping () -> Void) {
         self._loading = loading
@@ -63,7 +62,6 @@ struct LoadingButtonView: View {
 }
 
 struct FakeLoadingButtonView: View {
-    @ObservedObject var _dm = DataManager.shared
 
     init(_ loading: Binding<Bool>, loadingText: Binding<String> = .init(get: {return ""}, set: {_ in}), width: CGFloat, height: CGFloat = 90, buttonText: String, progressViewOffset: CGFloat = 0) {
         self._loading = loading

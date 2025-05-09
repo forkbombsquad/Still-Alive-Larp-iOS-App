@@ -326,3 +326,12 @@ struct AddSkillCellView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    var asv = AddSkillView(_dm: dm)
+    asv._dm = dm
+    return asv
+}

@@ -61,3 +61,11 @@ struct ContactDetailsView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return ContactDetailsView(_dm: dm, contactRequest: .constant(md.contact()))
+}

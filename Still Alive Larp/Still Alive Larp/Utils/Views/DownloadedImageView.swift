@@ -18,3 +18,7 @@ struct DownloadedImageView: View {
         .background(Color.lightGray)
     }
 }
+
+#Preview {
+    DownloadedImageView(image: UIImage(imageLiteralResourceName: "blank-profile"))
+}

@@ -71,7 +71,7 @@ struct CheckInPlayerView: View {
                             }
 
                             // Skills Section
-                            RelevantSkillsView(relevantSkills: model.relevantSkills, primaryWeapon: model.primaryWeapon)
+                            RelevantSkillsView(relevantSkills: model.relevantSkills, primaryWeapon: model.gear)
 
                             // Event Section
                             Spacer().frame(height: 48)
@@ -465,5 +465,7 @@ struct CharacterBarcodeSecondSubView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return CheckInPlayerView(_dm: dm, playerCheckInModel: getMockData().playerCheckInBarcodeModel)
+    let md = getMockData()
+    
+    return CheckInPlayerView(_dm: dm, isScanning: false, playerCheckInModel: md.playerCheckInBarcodeModel(playerId: 3, characterId: 3, eventId: 2))
 }

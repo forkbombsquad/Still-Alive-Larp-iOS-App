@@ -117,3 +117,12 @@ struct RegisterPrimaryWeaponView: View {
             ValidationGroup(text: ammo, validationType: .primaryWeaponAmmo)])
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.loadingSelectedCharacterGear = false
+    return RegisterPrimaryWeaponView(_dm: dm, character: md.character())
+}

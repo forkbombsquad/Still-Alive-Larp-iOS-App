@@ -163,11 +163,10 @@ struct SkillCellView: View {
 
 }
 
-struct SkillListView_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        return SkillListView(_dm: dm, skills: dm.skills ?? [])
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return SkillListView(_dm: dm, skills: md.fullSkills())
 }

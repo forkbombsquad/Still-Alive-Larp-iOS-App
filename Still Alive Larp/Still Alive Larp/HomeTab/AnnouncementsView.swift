@@ -82,8 +82,10 @@ struct AnnouncementsView: View {
 
 }
 
-struct AnnouncementsView_Previews: PreviewProvider {
-    static var previews: some View {
-        AnnouncementsView()
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    dm.loadingAnnouncements = false
+    return AnnouncementsView(_dm: dm)
 }

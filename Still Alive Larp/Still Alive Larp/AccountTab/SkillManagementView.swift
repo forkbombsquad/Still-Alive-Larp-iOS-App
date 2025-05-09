@@ -108,3 +108,14 @@ struct SkillManagementView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    dm.loadingCharForSelectedPlayer = false
+    dm.loadingSkills = false
+    var smv = SkillManagementView(offline: false)
+    smv._dm = dm
+    return smv
+}

@@ -46,12 +46,10 @@ struct CommunityTabView: View {
     }
 }
 
-struct CommunityTabPreview_Previews: PreviewProvider {
-    static var previews: some View {
-        let dm = DataManager.shared
-        dm.debugMode = true
-        dm.loadMockData()
-        dm.loadingAllPlayers = false
-        return CommunityTabView(_dm: dm)
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    dm.loadingAllPlayers = false
+    return CommunityTabView(_dm: dm)
 }

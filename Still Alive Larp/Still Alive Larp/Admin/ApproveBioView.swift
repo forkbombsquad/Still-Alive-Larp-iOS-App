@@ -94,5 +94,6 @@ struct ApproveBioView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return ApproveBioView(_dm: dm, character: .constant(DataManager.shared.selectedChar!))
+    let md = getMockData()
+    return ApproveBioView(_dm: dm, character: .constant(md.character(2)))
 }

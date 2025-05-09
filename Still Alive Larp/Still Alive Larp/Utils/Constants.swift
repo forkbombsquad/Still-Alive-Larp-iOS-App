@@ -14,11 +14,18 @@ struct Constants {
         static let showServiceLogging = true
         static let showTestLogging = true
         static let showDebugButtonInAccountView = true
+        static let allowChangingServiceOperationMode = true
     }
     
     struct ServiceOperationMode {
         // TODO ALWAYS - set this to prod before release
-        static let serviceMode: ServiceEndpoints.ServiceMode = .prod
+        static private(set) var serviceMode: ServiceEndpoints.ServiceMode = .prod
+        
+        static func updateServiceMode(_ newMode: ServiceEndpoints.ServiceMode) {
+            if Logging.allowChangingServiceOperationMode {
+                serviceMode = newMode
+            }
+        }
     }
     
     struct CharacterTypes {

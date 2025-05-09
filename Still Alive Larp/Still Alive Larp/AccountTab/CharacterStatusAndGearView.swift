@@ -133,3 +133,13 @@ struct CharacterSkillAndArmorSubView: View {
 
 }
 
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    var csv = CharacterStatusAndGearView(offline: false)
+    csv._dm = dm
+    return csv
+}
+

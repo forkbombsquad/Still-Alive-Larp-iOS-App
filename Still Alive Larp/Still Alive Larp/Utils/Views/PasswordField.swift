@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct PasswordField: View {
-    @ObservedObject var _dm = DataManager.shared
 
     let hintText: String
     @State private var isSecured: Bool = true
@@ -40,11 +39,6 @@ struct PasswordField: View {
     }
 }
 
-struct PasswordField_Previews: PreviewProvider {
-
-    @State static private var password: String = ""
-
-    static var previews: some View {
-       PasswordField(hintText: "Password", password: $password)
-    }
+#Preview {
+    PasswordField(hintText: "Password", password: .constant(""))
 }

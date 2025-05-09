@@ -300,6 +300,10 @@ struct CharacterModel: CustomCodeable, Identifiable {
         self.playerId = playerId
         self.characterTypeId = characterTypeId
     }
+    
+    var subModel: CharacterSubModel {
+        return CharacterSubModel(id: self.id, isAlive: self.isAlive)
+    }
 
     func getAllXpSpent(onSuccess: @escaping (_ xp: Int) -> Void, failureCase: @escaping FailureCase) {
         CharacterSkillService.getAllSkillsForChar(self.id, onSuccess: { charSkills in

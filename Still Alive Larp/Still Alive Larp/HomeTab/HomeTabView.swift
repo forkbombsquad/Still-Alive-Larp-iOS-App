@@ -311,8 +311,20 @@ struct AwardsView: View {
 
 }
 
-struct HomeTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeTabView()
-    }
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.loadingPlayer = false
+    dm.loadingCharacter = false
+    dm.loadingIntrigue = false
+    dm.loadingEvents = false
+    dm.loadingAwards = false
+    dm.loadingAnnouncements = false
+    dm.player = md.player(id: 2)
+    dm.character = md.fullCharacters()[1]
+    var htv = HomeTabView()
+    htv._dm = dm
+    return htv
 }

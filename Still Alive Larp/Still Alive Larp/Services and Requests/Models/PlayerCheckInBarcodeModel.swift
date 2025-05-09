@@ -14,7 +14,7 @@ struct PlayerCheckInBarcodeModel: CustomCodeable {
     var character: CharacterBarcodeModel?
     var event: EventBarcodeModel
     var relevantSkills: [SkillBarcodeModel]
-    var primaryWeapon: GearModel?
+    var gear: GearModel?
 
 }
 

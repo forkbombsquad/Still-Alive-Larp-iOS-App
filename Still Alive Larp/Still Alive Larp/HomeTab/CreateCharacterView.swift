@@ -78,3 +78,10 @@ struct CreateCharacterView: View {
     }
 
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    return CreateCharacterView(_dm: dm)
+}

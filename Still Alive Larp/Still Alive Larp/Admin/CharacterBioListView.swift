@@ -46,5 +46,6 @@ struct CharacterBioListView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    return CharacterBioListView(_dm: dm, charactersWhoNeedBiosApproved: .constant(DataManager.shared.allCharacters!))
+    let md = getMockData()
+    return CharacterBioListView(_dm: dm, charactersWhoNeedBiosApproved: .constant(md.characterListFullModel.characters))
 }

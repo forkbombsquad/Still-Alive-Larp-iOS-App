@@ -35,7 +35,7 @@ struct CheckOutPlayerView: View {
     @State private var isAlive: String = "Alive"
     @State private var aliveOptions = ["Alive", "Dead"]
 
-    @State private var armorType: String = CharacterModel.ArmorType.none.rawValue
+    @State var armorType: String = CharacterModel.ArmorType.none.rawValue
     @State private var armorOptions = [CharacterModel.ArmorType.none.rawValue, CharacterModel.ArmorType.metal.rawValue, CharacterModel.ArmorType.bulletProof.rawValue]
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
@@ -61,25 +61,7 @@ struct CheckOutPlayerView: View {
                             return
                         }
                         self.playerCheckOutModel = model
-                        if let c = model.character {
-                            self.infection = c.infection
-                            self.bullets = c.bullets
-                            self.megas = c.megas
-                            self.rivals = c.rivals
-                            self.rockets = c.rockets
-                            self.bulletCasings = c.bulletCasings
-                            self.clothSupplies = c.clothSupplies
-                            self.woodSupplies = c.woodSupplies
-                            self.metalSupplies = c.metalSupplies
-                            self.techSupplies = c.techSupplies
-                            self.medicalSupplies = c.medicalSupplies
-                            if let a = CharacterModel.ArmorType(rawValue: c.armor) {
-                                self.armorType = a.rawValue
-                            }
-                            self.isAlive = "Alive"
-                            self.unshakableResolveUses = c.unshakableResolveUses
-                            self.mysteriousStrangerUses = c.mysteriousStrangerUses
-                        }
+                        self.updateFields()
                         self.isScanning = false
                     case .failure(let error):
                         self.scannerFailed(error.localizedDescription)
@@ -131,8 +113,12 @@ struct CheckOutPlayerView: View {
                         }
                     }
                 }
-            }.padding(16)
+            }
+            .padding(16)
             .background(Color.lightGray)
+            .onAppear {
+                self.updateFields()
+            }
         } else {
             VStack(alignment: .center) {
                 Text("Something Went Wrong")
@@ -144,6 +130,28 @@ struct CheckOutPlayerView: View {
         }
     }
 
+    fileprivate func updateFields() {
+        if let c = self.playerCheckOutModel?.character {
+            self.infection = c.infection
+            self.bullets = c.bullets
+            self.megas = c.megas
+            self.rivals = c.rivals
+            self.rockets = c.rockets
+            self.bulletCasings = c.bulletCasings
+            self.clothSupplies = c.clothSupplies
+            self.woodSupplies = c.woodSupplies
+            self.metalSupplies = c.metalSupplies
+            self.techSupplies = c.techSupplies
+            self.medicalSupplies = c.medicalSupplies
+            if let a = CharacterModel.ArmorType(rawValue: c.armor) {
+                self.armorType = a.rawValue
+            }
+            self.isAlive = "Alive"
+            self.unshakableResolveUses = c.unshakableResolveUses
+            self.mysteriousStrangerUses = c.mysteriousStrangerUses
+        }
+    }
+    
     private func checkoutStepOne(_ model: PlayerCheckOutBarcodeModel) {
         if let char = model.character, isAlive.lowercased() == "dead" {
             runOnMainThread {
@@ -591,4 +599,12 @@ struct PickerViewWithKey: View {
         Divider()
     }
 
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return CheckOutPlayerView(_dm: dm, isScanning: false, playerCheckOutModel: md.playerCheckOutBarcodeModel(playerId: 3, characterId: 3, eventAttendeeId: 3, eventId: 1))
 }

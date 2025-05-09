@@ -23,8 +23,13 @@ struct GenerateCheckInBarcodeView: View {
                 ScrollView {
                     VStack {
                         if loading {
-                            ProgressView().padding(.bottom, 8)
-                            Text("Loading...")
+                            HStack {
+                                Spacer()
+                                ProgressView().padding(.bottom, 8)
+                                Text("Loading...")
+                                Spacer()
+                            }
+                            
                         } else {
                             if let image = uiImage, let barcodeModel = DataManager.shared.checkinBarcodeModel {
                                 Text("Check In\n\(barcodeModel.player.fullName)")
@@ -66,12 +71,23 @@ struct GenerateCheckInBarcodeView: View {
             if let events = DataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
                 // TODO fix
 //                DataManager.shared.checkinBarcodeModel = PlayerCheckInBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: useChar ? DataManager.shared.character?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: useChar ? DataManager.shared.character?.getRelevantBarcodeSkills() ?? [] : [], primaryWeapon: DataManager.shared.selectedCharacterGear?.primaryWeapon)
-//                if let barcode = DataManager.shared.checkinBarcodeModel {
-//                    self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
-//                }
-//                self.loading = false
+                if let barcode = DataManager.shared.checkinBarcodeModel {
+                    self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
+                }
+                self.loading = false
             }
         }
     }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.character = md.fullCharacters()[1]
+    dm.player = md.player(id: 2)
+    dm.checkinBarcodeModel = md.playerCheckInBarcodeModel(playerId: 2, characterId: 2, eventId: 2)
+    return GenerateCheckInBarcodeView(_dm: dm, useChar: true, loading: false)
 }
 

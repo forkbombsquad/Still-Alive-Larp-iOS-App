@@ -78,3 +78,16 @@ struct GearView: View {
         }
     }
 }
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.loadingSelectedCharacterGear = false
+    dm.loadingCharForSelectedPlayer = false
+    dm.charForSelectedPlayer = md.fullCharacters()[1]
+    var gv = GearView(offline: false)
+    gv._dm = dm
+    return gv
+}

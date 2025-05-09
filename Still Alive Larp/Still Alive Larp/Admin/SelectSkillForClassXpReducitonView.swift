@@ -139,3 +139,11 @@ struct XpReductionSkillCellView: View {
 
 }
 
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    return SelectSkillForClassXpReducitonView(_dm: dm, character: md.character())
+}
+
