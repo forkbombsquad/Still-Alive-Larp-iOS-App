@@ -47,7 +47,7 @@ struct ViewPlayerStuffView: View {
                             NavArrowView(title: "Bio", loading: DataManager.$shared.loadingCharForSelectedPlayer) { _ in }
                         } else if DataManager.shared.charForSelectedPlayer != nil {
                             NavArrowView(title: "Character Stats") { _ in
-                                CharacterStatusAndGearView()
+                                CharacterStatusView()
                             }
                             NavArrowView(title: "Skills") { _ in
                                 SkillManagementView()
@@ -56,7 +56,7 @@ struct ViewPlayerStuffView: View {
                                 BioView(allowEdit: false)
                             }
                             NavArrowView(title: "Gear") { _ in
-                                GearView()
+                                GearView(character: DataManager.shared.charForSelectedPlayer!.baseModel, offline: false, allowEdit: false)
                             }
                         }
                     }

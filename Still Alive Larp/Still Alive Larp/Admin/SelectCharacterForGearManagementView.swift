@@ -25,7 +25,7 @@ struct SelectCharacterForGearManagementView: View {
                             .padding(.horizontal, 32)
                         ForEach(characters.alphabetized) { character in
                             NavArrowView(title: character.fullName) { _ in
-                                SelectGearToManageView(character: character)
+                                GearView(character: character, offline: false, allowEdit: true)
                             }.navigationViewStyle(.stack)
                         }
                     }

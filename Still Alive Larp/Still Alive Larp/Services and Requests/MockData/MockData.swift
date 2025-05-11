@@ -294,9 +294,9 @@ fileprivate struct MockData1: MockData {
     
     var featureFlagList = FeatureFlagListModel(results: [
         FeatureFlagModel(id: 0, name: "oldskilltreeimage", description: "Old skill tree baybee. But this description goes beyond that for test data so we can see multilines work", activeAndroid: "FALSE", activeIos: "TRUE"),
-        FeatureFlagModel(id: 1, name: "campStatus", description: "This is the camp status feature flag", activeAndroid: "FALSE", activeIos: "TRUE"),
+        FeatureFlagModel(id: 1, name: "campStatus", description: "This is the camp status feature flag", activeAndroid: "FALSE", activeIos: "FALSE"),
         FeatureFlagModel(id: 2, name: "someotherflag", description: "This is some other flag", activeAndroid: "TRUE", activeIos: "TRUE"),
-        FeatureFlagModel(id: 3, name: "afinalflag", description: "The fourth flag to test all states", activeAndroid: "FALSE", activeIos: "FALSE")
+        FeatureFlagModel(id: 3, name: "afinalflag", description: "The fourth flag to test all states", activeAndroid: "FALSE", activeIos: "TRUE")
     ])
 
     var profileImageModel = ProfileImageModel(id: 0, playerId: 1, image: "TEST")
@@ -514,6 +514,10 @@ fileprivate struct MockData1: MockData {
         ]).toJsonString()!),
         GearModel(id: 2, characterId: 2, gearJson: GearJsonListModel(gearJson: [
             GearJsonModel(name: "Fireaxe", gearType: Constants.GearTypes.meleeWeapon, primarySubtype: Constants.GearPrimarySubtype.heavyMeleeWeapon, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "Big fireaxe"),
+            GearJsonModel(name: "Hammerstrike", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.lightFirearm, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "5 Shot Revolver"),
+            GearJsonModel(name: "Some Medium Gun", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.mediumFirearm, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "A medium gun boi"),
+            GearJsonModel(name: "Rattatat Boi", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.heavyFirearm, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "A big rattatat boi with a lot of bullets"),
+            GearJsonModel(name: "Alabaster Boi", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.heavyFirearm, secondarySubtype: Constants.GearSecondarySubtype.none, desc: "A big thicc boi with a lot of bullets"),
             GearJsonModel(name: "Thunderbow", gearType: Constants.GearTypes.firearm, primarySubtype: Constants.GearPrimarySubtype.mediumFirearm, secondarySubtype: Constants.GearSecondarySubtype.primaryFirearm, desc: "5 Shot Mega Bow")
         ]).toJsonString()!),
         GearModel(id: 3, characterId: 3, gearJson: GearJsonListModel(gearJson: [

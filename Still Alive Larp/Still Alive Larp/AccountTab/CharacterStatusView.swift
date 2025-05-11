@@ -1,5 +1,5 @@
 //
-//  CharacterStatusAndGearView.swift
+//  CharacterStatusView.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 1/6/23.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CharacterStatusAndGearView: View {
+struct CharacterStatusView: View {
     @ObservedObject var _dm = DataManager.shared
 
     let offline: Bool
@@ -138,7 +138,7 @@ struct CharacterSkillAndArmorSubView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    var csv = CharacterStatusAndGearView(offline: false)
+    var csv = CharacterStatusView(offline: false)
     csv._dm = dm
     return csv
 }

@@ -57,7 +57,7 @@ struct AccountTabView: View {
                                 .padding(.top, 8)
                             if DataManager.shared.character != nil {
                                 NavArrowView(title: "Character Stats") { _ in
-                                    CharacterStatusAndGearView()
+                                    CharacterStatusView()
                                 }
                                 NavArrowView(title: "Skill Management") { _ in
                                     SkillManagementView()
@@ -69,7 +69,7 @@ struct AccountTabView: View {
                                     BioView(allowEdit: true)
                                 }
                                 NavArrowView(title: "Gear") { _ in
-                                    GearView()
+                                    GearView(character: DataManager.shared.character!.baseModel)
                                 }
                                 NavArrowView(title: "Special Class Xp Reductions") { _ in
                                     SpecialClassXpReductionsView()

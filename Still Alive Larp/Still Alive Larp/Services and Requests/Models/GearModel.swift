@@ -33,12 +33,24 @@ struct GearCreateModel: CustomCodeable {
     let gearJson: String
 }
 
-struct GearJsonModel: CustomCodeable {
+struct GearJsonModel: CustomCodeable, Identifiable {
+    let id: String
+    
     let name: String
     let gearType: String
     let primarySubtype: String
     let secondarySubtype: String
     let desc: String
+    
+    init(name: String, gearType: String, primarySubtype: String, secondarySubtype: String, desc: String) {
+        self.name = name
+        self.gearType = gearType
+        self.primarySubtype = primarySubtype
+        self.secondarySubtype = secondarySubtype
+        self.desc = desc
+        
+        self.id = name + gearType + primarySubtype + secondarySubtype + desc
+    }
     
     func isPrimaryFirearm() -> Bool {
         return secondarySubtype == Constants.GearSecondarySubtype.primaryFirearm

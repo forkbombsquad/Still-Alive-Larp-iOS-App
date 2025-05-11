@@ -36,7 +36,7 @@ struct OfflineAccountView: View {
                             }
                             if DataManager.shared.charForSelectedPlayer != nil {
                                 NavArrowView(title: "Character Stats") { _ in
-                                    CharacterStatusAndGearView(offline: true)
+                                    CharacterStatusView(offline: true)
                                 }
                                 NavArrowView(title: "Character Skills") { _ in
                                     SkillManagementView(offline: true)
@@ -48,7 +48,7 @@ struct OfflineAccountView: View {
                                     BioView(allowEdit: false, offline: true)
                                 }
                                 NavArrowView(title: "Character Gear") { _ in
-                                    GearView(offline: true)
+                                    GearView(character: DataManager.shared.charForSelectedPlayer!.baseModel, offline: true, allowEdit: false)
                                 }
                             }
 

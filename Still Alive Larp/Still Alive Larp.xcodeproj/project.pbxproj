@@ -72,8 +72,6 @@
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
 		B251B06B2BD1A5ED00915F01 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */; };
 		B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */; };
-		B2568EB82A4F159500AF666C /* SelectGearToManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2568EB72A4F159500AF666C /* SelectGearToManageView.swift */; };
-		B2568EBA2A4F17EE00AF666C /* ManageGearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2568EB92A4F17EE00AF666C /* ManageGearView.swift */; };
 		B258D9AB29F3197C003BE368 /* LocalDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */; };
 		B258D9AF29F31D32003BE368 /* OfflineAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AE29F31D31003BE368 /* OfflineAccountView.swift */; };
 		B25D45B52A12B5D600C3048C /* EventPreregModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B42A12B5D500C3048C /* EventPreregModel.swift */; };
@@ -100,6 +98,8 @@
 		B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293AEF9291569B200D2447C /* UserAndPassManager.swift */; };
 		B293AEFC29156B9200D2447C /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293AEFB29156B9200D2447C /* PlayerModel.swift */; };
 		B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293AEFD291588EE00D2447C /* HomeTabBarView.swift */; };
+		B294A41C2DD02EAB002877B9 /* GearCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B294A41B2DD02EAB002877B9 /* GearCell.swift */; };
+		B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */; };
 		B2A0D4E329E5B29F00A235B4 /* SkillManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */; };
 		B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E429E5B3B400A235B4 /* SkillModel.swift */; };
 		B2A0D4E729E5B47300A235B4 /* SkillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E629E5B47300A235B4 /* SkillService.swift */; };
@@ -113,7 +113,7 @@
 		B2D68235296880DC005FDCCE /* CharacterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D68234296880DC005FDCCE /* CharacterManager.swift */; };
 		B2D682372968879C005FDCCE /* PlayerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D682362968879C005FDCCE /* PlayerStatsView.swift */; };
 		B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823829688A46005FDCCE /* KeyValueView.swift */; };
-		B2D6823B29688D2D005FDCCE /* CharacterStatusAndGearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823A29688D2D005FDCCE /* CharacterStatusAndGearView.swift */; };
+		B2D6823B29688D2D005FDCCE /* CharacterStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */; };
 		B2DFB0B82955FB4600132B08 /* MockRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0B72955FB4600132B08 /* MockRequest.swift */; };
 		B2DFB0BA2955FCEB00132B08 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0B92955FCEB00132B08 /* RequestBuilder.swift */; };
 		B2DFB0BC2955FDE800132B08 /* DictionaryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0BB2955FDE800132B08 /* DictionaryExtensions.swift */; };
@@ -245,8 +245,6 @@
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
 		B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCharacterForGearManagementView.swift; sourceTree = "<group>"; };
-		B2568EB72A4F159500AF666C /* SelectGearToManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectGearToManageView.swift; sourceTree = "<group>"; };
-		B2568EB92A4F17EE00AF666C /* ManageGearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageGearView.swift; sourceTree = "<group>"; };
 		B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataHandler.swift; sourceTree = "<group>"; };
 		B258D9AE29F31D31003BE368 /* OfflineAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAccountView.swift; sourceTree = "<group>"; };
 		B25D45B42A12B5D500C3048C /* EventPreregModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPreregModel.swift; sourceTree = "<group>"; };
@@ -273,6 +271,8 @@
 		B293AEF9291569B200D2447C /* UserAndPassManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAndPassManager.swift; sourceTree = "<group>"; };
 		B293AEFB29156B9200D2447C /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
 		B293AEFD291588EE00D2447C /* HomeTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarView.swift; sourceTree = "<group>"; };
+		B294A41B2DD02EAB002877B9 /* GearCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearCell.swift; sourceTree = "<group>"; };
+		B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditGearView.swift; sourceTree = "<group>"; };
 		B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManager.swift; sourceTree = "<group>"; };
 		B2A0D4E429E5B3B400A235B4 /* SkillModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillModel.swift; sourceTree = "<group>"; };
 		B2A0D4E629E5B47300A235B4 /* SkillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillService.swift; sourceTree = "<group>"; };
@@ -285,7 +285,7 @@
 		B2D68234296880DC005FDCCE /* CharacterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterManager.swift; sourceTree = "<group>"; };
 		B2D682362968879C005FDCCE /* PlayerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsView.swift; sourceTree = "<group>"; };
 		B2D6823829688A46005FDCCE /* KeyValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueView.swift; sourceTree = "<group>"; };
-		B2D6823A29688D2D005FDCCE /* CharacterStatusAndGearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStatusAndGearView.swift; sourceTree = "<group>"; };
+		B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStatusView.swift; sourceTree = "<group>"; };
 		B2DFB0B72955FB4600132B08 /* MockRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequest.swift; sourceTree = "<group>"; };
 		B2DFB0B92955FCEB00132B08 /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		B2DFB0BB2955FDE800132B08 /* DictionaryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensions.swift; sourceTree = "<group>"; };
@@ -381,7 +381,6 @@
 		B21691BB28FDDC5D006AA921 /* Still Alive Larp */ = {
 			isa = PBXGroup;
 			children = (
-				B23728BA2DCB998E00495777 /* CellsAndPartialViews */,
 				B228C29029F846F20064686D /* CommunityTab */,
 				B258D9AD29F31D18003BE368 /* OfflineMode */,
 				B2F9836D29F043F200512839 /* PreTabViews */,
@@ -428,10 +427,10 @@
 		B21691E628FDE449006AA921 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				B23728B52DCA735200495777 /* FeatureFlag.swift */,
 				B23552D029EB268A00183748 /* Views */,
 				B23552C729EB02AC00183748 /* Alerts */,
 				B21691E928FDE6DB006AA921 /* ColorExtensions.swift */,
+				B23728B52DCA735200495777 /* FeatureFlag.swift */,
 				B2222495291DBB95003BCA0A /* DataExtensions.swift */,
 				B21691F128FF2859006AA921 /* Validator.swift */,
 				B22224A2291EADFD003BCA0A /* StringExtensions.swift */,
@@ -507,9 +506,8 @@
 				B2E0A04C2A4DD0F60089FF2E /* SelectCharacterForPrimaryWeaponView.swift */,
 				B2E0A04E2A4DD1F60089FF2E /* RegisterPrimaryWeaponView.swift */,
 				B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */,
-				B2568EB72A4F159500AF666C /* SelectGearToManageView.swift */,
-				B2568EB92A4F17EE00AF666C /* ManageGearView.swift */,
 				B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */,
+				B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */,
 			);
 			path = Admin;
 			sourceTree = "<group>";
@@ -525,6 +523,7 @@
 		B23552D029EB268A00183748 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
 				B23552CE29EB267000183748 /* LoadingButtonView.swift */,
 				B2D6823829688A46005FDCCE /* KeyValueView.swift */,
 				B2DFB0C829564D2700132B08 /* NavArrowView.swift */,
@@ -532,16 +531,9 @@
 				B222249A291E9806003BCA0A /* CardView.swift */,
 				B2F9836B29F040FE00512839 /* PullToRefresh.swift */,
 				B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */,
+				B294A41B2DD02EAB002877B9 /* GearCell.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		B23728BA2DCB998E00495777 /* CellsAndPartialViews */ = {
-			isa = PBXGroup;
-			children = (
-				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
-			);
-			path = CellsAndPartialViews;
 			sourceTree = "<group>";
 		};
 		B258D9AD29F31D18003BE368 /* OfflineMode */ = {
@@ -649,7 +641,7 @@
 			children = (
 				B2DFB0C6295649D500132B08 /* AccountTabView.swift */,
 				B2D682362968879C005FDCCE /* PlayerStatsView.swift */,
-				B2D6823A29688D2D005FDCCE /* CharacterStatusAndGearView.swift */,
+				B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */,
 				B23552B529E9C49400183748 /* SkillManagementView.swift */,
 				B23552BF29E9EA0E00183748 /* AddSkillView.swift */,
 				B228C27A29F83B470064686D /* BioView.swift */,
@@ -834,7 +826,6 @@
 				B2750B4329F97E3000AA5F5B /* ContactDetailsView.swift in Sources */,
 				B21691F028FF2184006AA921 /* PasswordField.swift in Sources */,
 				B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */,
-				B2568EBA2A4F17EE00AF666C /* ManageGearView.swift in Sources */,
 				B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */,
 				B2E135B429FAFB8E0038DE31 /* GlobalFunctions.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
@@ -866,7 +857,7 @@
 				B21691F228FF2859006AA921 /* Validator.swift in Sources */,
 				B21691EE28FDEF06006AA921 /* ContactView.swift in Sources */,
 				B2DFB0BC2955FDE800132B08 /* DictionaryExtensions.swift in Sources */,
-				B2D6823B29688D2D005FDCCE /* CharacterStatusAndGearView.swift in Sources */,
+				B2D6823B29688D2D005FDCCE /* CharacterStatusView.swift in Sources */,
 				B2E5F2DD2AD09634004D61F5 /* ViewRulesView.swift in Sources */,
 				B2F29FB22A4214A700E07108 /* GearView.swift in Sources */,
 				B258D9AF29F31D32003BE368 /* OfflineAccountView.swift in Sources */,
@@ -884,6 +875,7 @@
 				B21691EA28FDE6DB006AA921 /* ColorExtensions.swift in Sources */,
 				B235528C29E83A0E00183748 /* AdminView.swift in Sources */,
 				B23552C229E9ECAC00183748 /* IntExtensions.swift in Sources */,
+				B294A41C2DD02EAB002877B9 /* GearCell.swift in Sources */,
 				B228C28F29F840770064686D /* EditBioView.swift in Sources */,
 				B2E135BC29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift in Sources */,
 				B2E135BE29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift in Sources */,
@@ -907,6 +899,7 @@
 				B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */,
 				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,
+				B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */,
 				B2A0D4E729E5B47300A235B4 /* SkillService.swift in Sources */,
 				B2A0D4EE29E7174B00A235B4 /* SkillPrereqService.swift in Sources */,
 				B2E135BA29FD7F330038DE31 /* SpecialClassXpReductionService.swift in Sources */,
@@ -950,7 +943,6 @@
 				B2F9836C29F040FE00512839 /* PullToRefresh.swift in Sources */,
 				B2750B5529FAD48300AA5F5B /* GenerateCheckoutBarcodeView.swift in Sources */,
 				B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */,
-				B2568EB82A4F159500AF666C /* SelectGearToManageView.swift in Sources */,
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* PlayerCheckInBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
