@@ -100,6 +100,7 @@
 		B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B293AEFD291588EE00D2447C /* HomeTabBarView.swift */; };
 		B294A41C2DD02EAB002877B9 /* GearCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B294A41B2DD02EAB002877B9 /* GearCell.swift */; };
 		B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */; };
+		B294A4202DD24AE4002877B9 /* StyledPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */; };
 		B2A0D4E329E5B29F00A235B4 /* SkillManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */; };
 		B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E429E5B3B400A235B4 /* SkillModel.swift */; };
 		B2A0D4E729E5B47300A235B4 /* SkillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4E629E5B47300A235B4 /* SkillService.swift */; };
@@ -273,6 +274,7 @@
 		B293AEFD291588EE00D2447C /* HomeTabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabBarView.swift; sourceTree = "<group>"; };
 		B294A41B2DD02EAB002877B9 /* GearCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearCell.swift; sourceTree = "<group>"; };
 		B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditGearView.swift; sourceTree = "<group>"; };
+		B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledPickerView.swift; sourceTree = "<group>"; };
 		B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManager.swift; sourceTree = "<group>"; };
 		B2A0D4E429E5B3B400A235B4 /* SkillModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillModel.swift; sourceTree = "<group>"; };
 		B2A0D4E629E5B47300A235B4 /* SkillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillService.swift; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 				B2F9836B29F040FE00512839 /* PullToRefresh.swift */,
 				B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */,
 				B294A41B2DD02EAB002877B9 /* GearCell.swift */,
+				B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -830,6 +833,7 @@
 				B2E135B429FAFB8E0038DE31 /* GlobalFunctions.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
 				B235529229E8480600183748 /* AwardPlayerView.swift in Sources */,
+				B294A4202DD24AE4002877B9 /* StyledPickerView.swift in Sources */,
 				B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */,
 				B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */,
 				B222249D291E9B4C003BCA0A /* PlayerManager.swift in Sources */,

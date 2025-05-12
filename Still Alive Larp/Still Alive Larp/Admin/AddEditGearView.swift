@@ -8,19 +8,26 @@
 import SwiftUI
 
 struct AddEditGearView: View {
-    
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     @ObservedObject var _dm = DataManager.shared
     
-    @Binding var gearToEdit: GearJsonModel?
+    let gearToEdit: GearJsonModel?
     let character: CharacterModel
     
     @State var gearName = ""
     @State var type = Constants.GearTypes.firearm
     @State var primarySubtype = Constants.GearPrimarySubtype.lightFirearm
     @State var secondarySubtype = Constants.GearSecondarySubtype.none
+    
+    @State var types = Constants.GearTypes.allTypes
+    @State var primarySubtypes = Constants.GearPrimarySubtype.allFirearmTypes
+    @State var secondarySubtypes = Constants.GearSecondarySubtype.allFirearmTypes
+    
     @State var desc = ""
     
     @State var loading = false
+    
+    let onCompletion: (_ gear: GearJsonModel?) -> Void
     
     var body: some View {
         VStack {
@@ -38,20 +45,15 @@ struct AddEditGearView: View {
                                 Text("Gear Name")
                                     .foregroundColor(.gray).padding().padding(.top, 4)
                             }
-                        // TODO add the rest of these
-                        HStack {
-                            Text("Type: ")
-                                .font(.system(size: 24, weight: .bold))
-                                .padding(.horizontal, 8)
-                                .multilineTextAlignment(.leading)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                            Picker(selection: $type, label: Text("Gear Type").font(.system(size: 28, weight: .bold))) {
-                                ForEach(Constants.GearTypes.allTypes, id: \.self) { type in
-                                    Text(type).font(.system(size: 28, weight: .bold))
-                                }
-                            }
+                        StyledPickerView(title: .constant("Type"), selection: $type, options: $types) { _ in
+                            calculatePrimarySubtypes()
+                            calculateSecondarySubtypes()
                         }
-                        .pickerStyle(.menu)
+                        StyledPickerView(title: .constant("Primary Subtype"), selection: $primarySubtype, options: $primarySubtypes) { _ in
+                            calculateSecondarySubtypes()
+                        }
+                        StyledPickerView(title: .constant("Secondary Subtype"), selection: $secondarySubtype, options: $secondarySubtypes) { _ in }
+                        
                         TextEditor(text: $desc)
                             .padding(.top, 8)
                             .padding(.trailing, 0)
@@ -62,11 +64,13 @@ struct AddEditGearView: View {
                                 Text("Description").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                             }
                         LoadingButtonView($loading, width: gr.size.width - 16, buttonText: "\(gearToEdit == nil ? "Create" : "Update")") {
-                            // TODO create/update gear
+                            onCompletion(GearJsonModel(name: gearName, gearType: type, primarySubtype: primarySubtype, secondarySubtype: secondarySubtype, desc: desc))
+                            self.mode.wrappedValue.dismiss()
                         }
                         if gearToEdit != nil {
                             LoadingButtonView($loading, width: gr.size.width - 16, buttonText: "Delete") {
-                                // TODO delete gear
+                                onCompletion(nil)
+                                self.mode.wrappedValue.dismiss()
                             }
                         }
                     }
@@ -87,6 +91,44 @@ struct AddEditGearView: View {
             }
         }
     }
+    
+    private func calculatePrimarySubtypes() {
+        runOnMainThread {
+            typealias gt = Constants.GearTypes
+            typealias ps = Constants.GearPrimarySubtype
+            switch type {
+                case gt.meleeWeapon:
+                    primarySubtypes = ps.allMeleeTypes
+                case gt.firearm:
+                    primarySubtypes = ps.allFirearmTypes
+                case gt.clothing:
+                    primarySubtypes = ps.allClothingTypes
+                case gt.accessory:
+                    primarySubtypes = ps.allAccessoryTypes
+                case gt.bag:
+                    primarySubtypes = ps.allBagTypes
+                case gt.other:
+                    primarySubtypes = ps.allOtherTypes
+                default:
+                    primarySubtypes = ps.allFirearmTypes
+            }
+            primarySubtype = primarySubtypes[0]
+        }
+    }
+    
+    private func calculateSecondarySubtypes() {
+        runOnMainThread {
+            typealias gt = Constants.GearTypes
+            typealias ss = Constants.GearSecondarySubtype
+            switch type {
+                case gt.firearm:
+                    secondarySubtypes = ss.allFirearmTypes
+                default:
+                    secondarySubtypes = ss.allNonFirearmTypes
+            }
+            secondarySubtype = secondarySubtypes[0]
+        }
+    }
 }
 
 #Preview {
@@ -94,5 +136,5 @@ struct AddEditGearView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    return AddEditGearView(_dm: dm, gearToEdit: .constant(nil), character: md.character(id: 2))
+    return AddEditGearView(_dm: dm, gearToEdit: nil, character: md.character(id: 2)) { _ in }
 }

@@ -69,7 +69,7 @@ struct AccountTabView: View {
                                     BioView(allowEdit: true)
                                 }
                                 NavArrowView(title: "Gear") { _ in
-                                    GearView(character: DataManager.shared.character!.baseModel)
+                                    GearView(character: DataManager.shared.character!.baseModel, offline: false, allowEdit: false)
                                 }
                                 NavArrowView(title: "Special Class Xp Reductions") { _ in
                                     SpecialClassXpReductionsView()

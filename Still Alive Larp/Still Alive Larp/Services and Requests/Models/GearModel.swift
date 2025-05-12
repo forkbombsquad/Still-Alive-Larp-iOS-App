@@ -34,12 +34,15 @@ struct GearCreateModel: CustomCodeable {
 }
 
 struct GearJsonModel: CustomCodeable, Identifiable {
-    let id: String
+    
+    var id: String {
+        name + gearType + primarySubtype + secondarySubtype + desc
+    }
     
     let name: String
     let gearType: String
     let primarySubtype: String
-    let secondarySubtype: String
+    var secondarySubtype: String
     let desc: String
     
     init(name: String, gearType: String, primarySubtype: String, secondarySubtype: String, desc: String) {
@@ -48,8 +51,6 @@ struct GearJsonModel: CustomCodeable, Identifiable {
         self.primarySubtype = primarySubtype
         self.secondarySubtype = secondarySubtype
         self.desc = desc
-        
-        self.id = name + gearType + primarySubtype + secondarySubtype + desc
     }
     
     func isPrimaryFirearm() -> Bool {
@@ -64,7 +65,7 @@ struct GearJsonModel: CustomCodeable, Identifiable {
         desc == other.desc
     }
     
-    func duplicateWithEdit(name: String, gearType: String, primarySubtype: String, secondarySubtype: String, desc: String) -> GearJsonModel {
+    func clone() -> GearJsonModel {
         return GearJsonModel(name: name, gearType: gearType, primarySubtype: primarySubtype, secondarySubtype: secondarySubtype, desc: desc)
     }
 }

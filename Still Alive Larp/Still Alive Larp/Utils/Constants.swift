@@ -185,10 +185,10 @@ struct Constants {
 
         static let allMeleeTypes = [superLightMeleeWeapon, lightMeleeWeapon, mediumMeleeWeapon, heavyMeleeWeapon]
         static let allFirearmTypes = [lightFirearm, mediumFirearm, heavyFirearm, advancedFirearm, militaryGradeFirearm]
-        var allClothingTypes = [none]
-        var allAccessoryTypes = [blacklightFlashlight, flashlight, other]
-        var allBagTypes = [smallBag, mediumBag, largeBag, extraLargeBag]
-        var allOtherTypes = [other]
+        static let allClothingTypes = [none]
+        static let allAccessoryTypes = [blacklightFlashlight, flashlight, other]
+        static let allBagTypes = [smallBag, mediumBag, largeBag, extraLargeBag]
+        static let allOtherTypes = [other]
     }
 
     struct GearSecondarySubtype {
