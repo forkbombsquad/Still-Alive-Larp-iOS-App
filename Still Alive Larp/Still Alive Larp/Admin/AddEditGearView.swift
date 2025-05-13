@@ -12,7 +12,7 @@ struct AddEditGearView: View {
     @ObservedObject var _dm = DataManager.shared
     
     let gearToEdit: GearJsonModel?
-    let character: CharacterModel
+    let characterName: String
     
     @State var gearName = ""
     @State var type = Constants.GearTypes.firearm
@@ -34,7 +34,7 @@ struct AddEditGearView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("\(gearToEdit == nil ? "Add" : "Edit") Gear For\n\(character.fullName)")
+                        Text("\(gearToEdit == nil ? "Add" : "Edit") Gear For\n\(characterName)")
                             .font(.system(size: 32, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                         TextField("", text: $gearName)
@@ -136,5 +136,5 @@ struct AddEditGearView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    return AddEditGearView(_dm: dm, gearToEdit: nil, character: md.character(id: 2)) { _ in }
+    return AddEditGearView(_dm: dm, gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
 }

@@ -16,6 +16,9 @@ struct CheckInPlayerView: View {
 
     @State var loading: Bool = false
     @State var loadingText = ""
+    
+    @State var gearModified = false
+    @State var gearJsonModels: [GearJsonModel] = []
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -41,6 +44,9 @@ struct CheckInPlayerView: View {
                         }
                         self.playerCheckInModel = model
                         self.isScanning = false
+                        
+                        self.gearModified = false
+                        self.gearJsonModels = model.gear?.jsonModels ?? []
                     case .failure(let error):
                         self.scannerFailed(error.localizedDescription)
                     }
@@ -87,7 +93,7 @@ struct CheckInPlayerView: View {
                                 .padding(.vertical, 8)
 
                             // Skills Section
-                            RelevantSkillsView(relevantSkills: model.relevantSkills, primaryWeapon: model.gear)
+                            RelevantSkillsView(relevantSkills: model.relevantSkills, primaryFirearm: gearJsonModels.first(where: { $0.isPrimaryFirearm() }))
 
                             // Event Section
                             Spacer().frame(height: 16)
@@ -99,47 +105,23 @@ struct CheckInPlayerView: View {
                             KeyValueView(key: "Name", value: model.event.title, showDivider: false)
                             
                             Spacer().frame(height: 16)
-                            if let gear = model.gear {
+                            if let char = model.character {
                                 Divider().frame(height: 2).overlay(Color.black)
                                 Text("Gear (Editable)")
                                     .font(.system(size: 24, weight: .bold))
                                     .frame(maxWidth: .infinity, alignment: .center)
                                     .padding(.vertical, 8)
-                                // TODO Gear
+                                GearViewModular(allowEdit: true, characterName: char.fullName, loading: $loading, gearModified: $gearModified, gearJsonModels: $gearJsonModels)
                             }
 
-                            // Approve Section
-                            // TODO ajdust button text to say "Save Gear Modifications\nAnd\nCheck In if there are gear mods"
-                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, buttonText: "Check In") {
+                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, buttonText: "\(gearModified ? "Save Gear Modifications\nAnd\n" : "")Check In") {
                                 self.loading = true
-                                self.loadingText = "Checking in player"
-                                // DO NOT set the char id. The service will do that later
-                                let eventAttendee = EventAttendeeCreateModel(playerId: model.player.id, eventId: model.event.id, isCheckedIn: "TRUE", asNpc: model.character == nil ? "TRUE" : "FALSE")
-
-                                AdminService.checkInPlayer(eventAttendee) { eventAttendee in
-                                    if let char = model.character {
-                                        self.loadingText = "Giving character rewards"
-                                        let bullets = self.getBulletAmount(char)
-                                        AdminService.giveCharacterCheckInRewards(model.event.id, characterId: char.id, playerId: model.player.id, newBulletAmount: bullets) { updatedCharacter in
-                                            self.loadingText = "Checking in character"
-                                            AdminService.checkInCharacter(model.event.id, characterId: char.id, playerId: model.player.id) { c in
-                                                self.loading = false
-                                                self.showSuccessAlertAllowingRescan("\(model.player.fullName) checked in as \(updatedCharacter.fullName)")
-                                            } failureCase: { error in
-                                                self.loading = false
-                                                self.resetScanner()
-                                            }
-                                        } failureCase: { error in
-                                            self.loading = false
-                                            self.resetScanner()
-                                        }
-                                    } else {
-                                        self.loading = false
-                                        self.showSuccessAlertAllowingRescan("\(model.player.fullName) checked in as NPC")
+                                if gearModified {
+                                    saveGear(model) {
+                                        checkInPlayer(model)
                                     }
-                                } failureCase: { error in
-                                    self.loading = false
-                                    self.resetScanner()
+                                } else {
+                                    checkInPlayer(model)
                                 }
                             }.padding(.top, 48)
                         }
@@ -155,6 +137,77 @@ struct CheckInPlayerView: View {
                     .frame(alignment: .center)
                     .padding([.bottom], 16)
             }
+        }
+    }
+    
+    private func saveGear(_ model: PlayerCheckInBarcodeModel, onCompletion: @escaping () -> Void) {
+        self.loading = true
+        self.loadingText = "Organizing Gear..."
+        let character = model.character!
+        if let gear = model.gear {
+            // Edit
+            loadingText = "Updating Gear..."
+            let gearUpdateModel = GearModel(id: gear.id, characterId: character.id, gearJson: GearJsonListModel(gearJson: gearJsonModels).toJsonString() ?? "")
+            AdminService.updateGear(gearModel: gearUpdateModel) { gearModel in
+                runOnMainThread {
+                    self.loadingText = "Gear Updated!"
+                    self.gearModified = false
+                    onCompletion()
+                }
+            } failureCase: { error in
+                runOnMainThread {
+                    loading = false
+                }
+            }
+
+        } else {
+            // Add New
+            loadingText = "Creating Gear Listing..."
+            let gearCreateModel = GearCreateModel(characterId: character.id, gearJson: GearJsonListModel(gearJson: gearJsonModels).toJsonString() ?? "")
+            AdminService.createGear(gearCreateModel) { gearModel in
+                runOnMainThread {
+                    loadingText = "Gear Added!"
+                    gearModified = false
+                    onCompletion()
+                }
+            } failureCase: { error in
+                runOnMainThread {
+                    loading = false
+                }
+            }
+
+        }
+    }
+    
+    private func checkInPlayer(_ model: PlayerCheckInBarcodeModel) {
+        self.loadingText = "Checking in player..."
+        // DO NOT set the char id. The service will do that later
+        let eventAttendee = EventAttendeeCreateModel(playerId: model.player.id, eventId: model.event.id, isCheckedIn: "TRUE", asNpc: model.character == nil ? "TRUE" : "FALSE")
+
+        AdminService.checkInPlayer(eventAttendee) { eventAttendee in
+            if let char = model.character {
+                self.loadingText = "Adding Bullets..."
+                let bullets = self.getBulletAmount(char)
+                AdminService.giveCharacterCheckInRewards(model.event.id, characterId: char.id, playerId: model.player.id, newBulletAmount: bullets) { updatedCharacter in
+                    self.loadingText = "Checking In Character..."
+                    AdminService.checkInCharacter(model.event.id, characterId: char.id, playerId: model.player.id) { c in
+                        self.loading = false
+                        self.showSuccessAlertAllowingRescan("\(model.player.fullName) checked in as \(updatedCharacter.fullName)")
+                    } failureCase: { error in
+                        self.loading = false
+                        self.resetScanner()
+                    }
+                } failureCase: { error in
+                    self.loading = false
+                    self.resetScanner()
+                }
+            } else {
+                self.loading = false
+                self.showSuccessAlertAllowingRescan("\(model.player.fullName) checked in as NPC")
+            }
+        } failureCase: { error in
+            self.loading = false
+            self.resetScanner()
         }
     }
 
@@ -210,7 +263,7 @@ struct RelevantSkillsView: View {
     @ObservedObject var _dm = DataManager.shared
 
     let relevantSkills: [SkillBarcodeModel]
-    let primaryWeapon: GearModel?
+    let primaryFirearm: GearJsonModel?
     
     typealias ssid = Constants.SpecificSkillIds
 
@@ -273,12 +326,12 @@ struct RelevantSkillsView: View {
 
                 // Fully Loaded
                 if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.fullyLoaded}) {
-                    // TODO fix add gear stuff
-//                    if let weapon = primaryWeapon {
-//                        KeyValueView(key: "FULLY LOADED (<=25)", value: "\(weapon.description) - \(weapon.name)")
-//                    } else {
-//                        KeyValueView(key: "FULLY LOADED", value: "MISSING PRIMARY WEAPON REGISTRATION")
-//                    }
+                    if let primaryFirearm = primaryFirearm {
+                        KeyValueView(key: "Fully Loaded", value: "\(primaryFirearm.name)\n\(primaryFirearm.desc)", showDivider: false)
+                        KeyValueView(key: "BONUS AMMO", value: "Bullets: <= 25\nMegas: <= 8\nMilitaries: <= 5\nRockets: <= 2", showDivider: false).padding(.top, 4)
+                    } else {
+                        KeyValueView(key: "Fully Loaded", value: "!! No Primary Firearm Registered !!", showDivider: false)
+                    }
                 }
             }
         }
@@ -465,6 +518,6 @@ struct CharacterBarcodeSecondSubView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    
-    return CheckInPlayerView(_dm: dm, isScanning: false, playerCheckInModel: md.playerCheckInBarcodeModel(playerId: 3, characterId: 3, eventId: 2))
+    let bm = md.playerCheckInBarcodeModel(playerId: 2, characterId: 2, eventId: 2)
+    return CheckInPlayerView(_dm: dm, isScanning: false, playerCheckInModel: bm, gearModified: true, gearJsonModels: bm.gear?.jsonModels ?? [])
 }

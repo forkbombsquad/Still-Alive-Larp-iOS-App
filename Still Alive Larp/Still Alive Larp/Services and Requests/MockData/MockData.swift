@@ -357,7 +357,8 @@ fileprivate struct MockData1: MockData {
         SkillModel(id: 75, xpCost: "4", prestigeCost: "0", name: "Talent: Specialist", description: "Talent -1, Profession +1", minInfection: "0", skillTypeId: 3, skillCategoryId: 15),
         SkillModel(id: 48, xpCost: "1", prestigeCost: "0", name: "Medium Firearm Proficiency", description: "Medium Firearm Wielding", minInfection: "0", skillTypeId: 1, skillCategoryId: 2),
         SkillModel(id: 40, xpCost: "1", prestigeCost: "0", name: "Light Firearm Dual Wielding", description: "Two light firearms at once", minInfection: "0", skillTypeId: 1, skillCategoryId: 3),
-        SkillModel(id: 47, xpCost: "2", prestigeCost: "0", name: "Medium Firearm Dual Wielding", description: "Two medium firearms at once", minInfection: "0", skillTypeId: 1, skillCategoryId: 3)
+        SkillModel(id: 47, xpCost: "2", prestigeCost: "0", name: "Medium Firearm Dual Wielding", description: "Two medium firearms at once", minInfection: "0", skillTypeId: 1, skillCategoryId: 3),
+        SkillModel(id: 100, xpCost: "4", prestigeCost: "1", name: "Fully Loaded", description: "Primary Firearm gets filled up to 25 bullets worth.", minInfection: "0", skillTypeId: 3, skillCategoryId: 14)
     ])
 
     var prereqs = SkillPrereqListModel(skillPrereqs: [
@@ -432,7 +433,8 @@ fileprivate struct MockData1: MockData {
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 16, relevantSpecialization: -1),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 61, relevantSpecialization: -1),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 1, relevantSpecialization: -1),
-            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 23, relevantSpecialization: -1)
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 23, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 1, skillId: 100, relevantSpecialization: -1)
         ])
         
         // Char 2
@@ -446,7 +448,8 @@ fileprivate struct MockData1: MockData {
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 80, relevantSpecialization: 1),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 48, relevantSpecialization: -1),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 40, relevantSpecialization: -1),
-            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 47, relevantSpecialization: -1)
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 47, relevantSpecialization: -1),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 2, skillId: 100, relevantSpecialization: 1)
         ])
         
         // Char 3
@@ -459,7 +462,8 @@ fileprivate struct MockData1: MockData {
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 68),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 69),
             addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 93),
-            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 54)
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 54),
+            addSkillForCharacter(incrementingId: &incrementingId, characterId: 3, skillId: 100)
         ])
         
         return CharacterSkillListModel(charSkills: cs)

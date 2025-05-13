@@ -35,52 +35,24 @@ struct GearView: View {
             GeometryReader { gr in
                 VStack {
                     ScrollView {
-                        VStack {
-                            if (DataManager.shared.loadingSelectedCharacterGear) {
-                                Text("Loading Character Gear...")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
-                                    .padding([.bottom], 16)
-                                HStack {
-                                    Spacer()
-                                    ProgressView()
-                                    Spacer()
-                                }
-                            } else {
-                                Text("\(allowEdit ? "Manage\n" : "")\(character.fullName)'s\nGear\(gearModified ? "*" : "")\(offline ? " (Offline)" : "")")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
-                                    .padding([.bottom], 16)
-                                if allowEdit {
-                                    NavArrowViewGreen(title: "Add New", loading: $loading) {
-                                        runOnMainThread {
-                                            loading = true
-                                        }
-                                        return AddEditGearView(gearToEdit: nil, character: character) { newGearJsonIn in
-                                            if let ngj = newGearJsonIn {
-                                                runOnMainThread {
-                                                    if ngj.isPrimaryFirearm() {
-                                                        self.removeExistingPrimaryFirearms()
-                                                    }
-                                                    self.gearJsonModels.append(ngj)
-                                                    self.loading = false
-                                                    self.gearModified = true
-                                                }
-                                            }
-                                        }.onDisappear {
-                                            self.loading = false
-                                        }
-                                    }
-                                }
-                                GearSubview(title: "Firearms", key: Constants.GearTypes.firearm, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
-                                GearSubview(title: "Melee Weapons", key: Constants.GearTypes.meleeWeapon, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
-                                GearSubview(title: "Clothing", key: Constants.GearTypes.clothing, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
-                                GearSubview(title: "Accessories", key: Constants.GearTypes.accessory, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
-                                GearSubview(title: "Bags", key: Constants.GearTypes.bag, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
-                                GearSubview(title: "Other", key: Constants.GearTypes.other, allowEdit: allowEdit, gear: $gear, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, character: character)
+                        Text("\(allowEdit ? "Manage\n" : "")\(character.fullName)'s\nGear\(gearModified ? "*" : "")\(offline ? " (Offline)" : "")")
+                            .font(.system(size: 32, weight: .bold))
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                            .padding([.bottom], 16)
+                        if (DataManager.shared.loadingSelectedCharacterGear) {
+                            Text("Loading Character Gear...")
+                                .font(.system(size: 32, weight: .bold))
+                                .multilineTextAlignment(.center)
+                                .frame(alignment: .center)
+                                .padding([.bottom], 16)
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
                             }
+                        } else {
+                            GearViewModular(allowEdit: allowEdit, characterName: character.fullName, loading: $loading, gearModified: $gearModified, gearJsonModels: $gearJsonModels)
                         }
                     }
                     if gearModified {
@@ -149,6 +121,43 @@ struct GearView: View {
             }
         }
     }
+}
+
+struct GearViewModular: View {
+    
+    let allowEdit: Bool
+    let characterName: String
+    
+    @Binding var loading: Bool
+    @Binding var gearModified: Bool
+    @Binding var gearJsonModels: [GearJsonModel]
+
+    var body: some View {
+        VStack {
+            if allowEdit {
+                NavArrowViewGreen(title: "Add New", loading: $loading) {
+                    return AddEditGearView(gearToEdit: nil, characterName: characterName) { newGearJsonIn in
+                        if let ngj = newGearJsonIn {
+                            runOnMainThread {
+                                if ngj.isPrimaryFirearm() {
+                                    self.removeExistingPrimaryFirearms()
+                                }
+                                self.gearJsonModels.append(ngj)
+                                self.loading = false
+                                self.gearModified = true
+                            }
+                        }
+                    }
+                }
+            }
+            GearSubview(title: "Firearms", key: Constants.GearTypes.firearm, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+            GearSubview(title: "Melee Weapons", key: Constants.GearTypes.meleeWeapon, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+            GearSubview(title: "Clothing", key: Constants.GearTypes.clothing, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+            GearSubview(title: "Accessories", key: Constants.GearTypes.accessory, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+            GearSubview(title: "Bags", key: Constants.GearTypes.bag, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+            GearSubview(title: "Other", key: Constants.GearTypes.other, allowEdit: allowEdit, gearJsonModels: $gearJsonModels, loading: $loading, gearModified: $gearModified, characterName: characterName)
+        }
+    }
     
     private func removeExistingPrimaryFirearms() {
         if var prevPrim = self.gearJsonModels.first(where: { $0.isPrimaryFirearm() })?.clone() {
@@ -157,6 +166,7 @@ struct GearView: View {
             self.gearJsonModels.append(prevPrim)
         }
     }
+    
 }
 
 struct GearSubview: View {
@@ -165,12 +175,11 @@ struct GearSubview: View {
     let key: String
     let allowEdit: Bool
     
-    @Binding var gear: GearModel?
     @Binding var gearJsonModels: [GearJsonModel]
     @Binding var loading: Bool
     @Binding var gearModified: Bool
     
-    let character: CharacterModel
+    let characterName: String
     
     var body: some View {
         VStack {
@@ -182,8 +191,7 @@ struct GearSubview: View {
                 ForEach(sortAndFilterGear()) { gear in
                     if allowEdit {
                         GearCell(gearJsonModel: gear, loading: loading) {
-                            loading = true
-                            return AddEditGearView(gearToEdit: gear, character: character) { editedJsonGear in
+                            return AddEditGearView(gearToEdit: gear, characterName: characterName) { editedJsonGear in
                                 runOnMainThread {
                                     self.gearJsonModels.removeAll(where: { $0.isEqualTo(other: gear) })
                                     if let ejg = editedJsonGear {
@@ -195,8 +203,6 @@ struct GearSubview: View {
                                     self.loading = false
                                     self.gearModified = true
                                 }
-                            }.onDisappear {
-                                self.loading = false
                             }
                         }
                     } else {
