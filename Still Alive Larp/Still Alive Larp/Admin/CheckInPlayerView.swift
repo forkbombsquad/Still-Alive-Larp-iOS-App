@@ -31,7 +31,7 @@ struct CheckInPlayerView: View {
                     self.isScanning = false
                     switch result {
                     case .success(let data):
-                        guard let json = data.string.data(using: .utf8) else {
+                        guard let json = data.string.decompress() else {
                             self.scannerFailed("Unable to parse data")
                             return
                         }
@@ -56,28 +56,60 @@ struct CheckInPlayerView: View {
                                 .multilineTextAlignment(.center)
                                 .frame(alignment: .center)
                                 .padding([.bottom], 16)
-                            Divider()
+                            Divider().frame(height: 2).overlay(Color.black)
+                            Text("Player")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.vertical, 8)
 
                             // Player Section
                             PlayerBarcodeView(player: model.player, isCheckout: false, isNPC: model.character == nil)
-                            Spacer().frame(height: 48)
+                            Spacer().frame(height: 16)
 
                             // Character Section
-                            KeyValueView(key: "Character", value: "", showDivider: false)
+                            Divider().frame(height: 2).overlay(Color.black)
+                            Text("Character")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.vertical, 8)
                             if let character = model.character {
                                 CharacterBarcodeView(character: character, relevantSkills: model.relevantSkills)
                             } else {
                                 KeyValueView(key: "Name", value: "NPC")
+                                KeyValueView(key: "BONUS RAFFLE TICKETS", value: "+1", showDivider: false)
                             }
+                            
+                            Spacer().frame(height: 16)
+                            Divider().frame(height: 2).overlay(Color.black)
+                            Text("Relevant Skills")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.vertical, 8)
 
                             // Skills Section
                             RelevantSkillsView(relevantSkills: model.relevantSkills, primaryWeapon: model.gear)
 
                             // Event Section
-                            Spacer().frame(height: 48)
-                            KeyValueView(key: "Event", value: model.event.title)
+                            Spacer().frame(height: 16)
+                            Divider().frame(height: 2).overlay(Color.black)
+                            Text("Event")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.vertical, 8)
+                            KeyValueView(key: "Name", value: model.event.title, showDivider: false)
+                            
+                            Spacer().frame(height: 16)
+                            if let gear = model.gear {
+                                Divider().frame(height: 2).overlay(Color.black)
+                                Text("Gear (Editable)")
+                                    .font(.system(size: 24, weight: .bold))
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .padding(.vertical, 8)
+                                // TODO Gear
+                            }
 
                             // Approve Section
+                            // TODO ajdust button text to say "Save Gear Modifications\nAnd\nCheck In if there are gear mods"
                             LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, buttonText: "Check In") {
                                 self.loading = true
                                 self.loadingText = "Checking in player"
@@ -179,118 +211,69 @@ struct RelevantSkillsView: View {
 
     let relevantSkills: [SkillBarcodeModel]
     let primaryWeapon: GearModel?
+    
+    typealias ssid = Constants.SpecificSkillIds
 
     var body: some View {
         if hasCheckInRelevantSkills() {
             VStack {
-                Spacer().frame(height: 48)
-                KeyValueView(key: "Check In Relevant Skills", value: "", showDivider: false)
-
                 // Deep Pockets Type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.deepPocketTypeSkills)  }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.bandoliers }) {
-                        KeyValueView(key: "Ammo Skill", value: "Bandoliers")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.parachutePants }) {
-                        KeyValueView(key: "Ammo Skill", value: "Parachute Pants")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.deeperPockets }) {
-                        KeyValueView(key: "Ammo Skill", value: "Deeper Pockets")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.deepPockets }) {
-                        KeyValueView(key: "Ammo Skill", value: "Deep Pockets")
-                    }
+                let ammoSkills = getSkillNames(skillIds: ssid.deepPocketTypeSkills)
+                if ammoSkills.isNotEmpty {
+                    KeyValueView(key: "Ammo Skills", value: ammoSkills)
                 }
-
+                
                 // Investigator Type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.investigatorTypeSkills) }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.webOfInformants }) {
-                        KeyValueView(key: "Highest Intrigue Skill", value: "Web of Informants")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.interrogator }) {
-                        KeyValueView(key: "Highest Intrigue Skill", value: "Interrogator")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.investigator }) {
-                        KeyValueView(key: "Highest Intrigue Skill", value: "Investigator")
-                    }
+                let investSkills = getSkillNames(skillIds: ssid.investigatorTypeSkills)
+                if investSkills.isNotEmpty {
+                    KeyValueView(key: "Intrigue Skills", value: investSkills)
                 }
 
                 // Tough Skin Type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.toughSkinTypeSkills) }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.naturalArmor }) {
-                        KeyValueView(key: "Armor Skill", value: "Natrual Armor")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.painTolerance }) {
-                        KeyValueView(key: "Armor Skill", value: "Pain Tolerance")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.toughSkin }) {
-                        KeyValueView(key: "Armor Skill", value: "Tough Skin")
-                    }
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.scaledSkin }) {
-                        KeyValueView(key: "Armor Skill", value: "Scaled Skin")
-                    }
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.plotArmor }) {
-                        KeyValueView(key: "Prestige Armor Skill", value: "Plot Armor")
-                    }
-                    let blueBeadCount = getBlueBeadCount()
-                    let redBeadCount = getRedBeadCount()
-                    let blackBeadCount = getBlackBeadCount()
-                    if blueBeadCount > 0 {
-                        KeyValueView(key: "BLUE BEADS NEEDED", value: "\(blueBeadCount)")
-                    }
-                    if redBeadCount > 0 {
-                        KeyValueView(key: "RED BEADS NEEDED", value: "\(redBeadCount)")
-                    }
-                    if blackBeadCount > 0 {
-                        KeyValueView(key: "BlACK BEADS NEEDED", value: "\(blackBeadCount)")
-                    }
+                let regularArmorSkills = getSkillNames(skillIds: ssid.regularArmorSkills)
+                if regularArmorSkills.isNotEmpty {
+                    KeyValueView(key: "Regular Armor Skills", value: regularArmorSkills, showDivider: false)
+                    KeyValueView(key: "BLUE BEADS NEEDED", value: (regularArmorSkills.countOccurances(",") + 1).stringValue).padding(.top, 4)
+                }
+                // Scaled Skin Type
+                let bpArmorSkills = getSkillNames(skillIds: ssid.bulletProofArmorSkills)
+                if bpArmorSkills.isNotEmpty {
+                    KeyValueView(key: "Bullet Proof Armor Skills", value: bpArmorSkills, showDivider: false)
+                    KeyValueView(key: "RED BEADS NEEDED", value: (bpArmorSkills.countOccurances(",") + 1).stringValue).padding(.top, 4)
+                }
+                // Plot Armor Type
+                let pArmorSkills = getSkillNames(skillIds: ssid.plotArmorSkills)
+                if pArmorSkills.isNotEmpty {
+                    KeyValueView(key: "Plot Armor Skills", value: pArmorSkills, showDivider: false)
+                    KeyValueView(key: "BLACK BEADS NEEDED", value: (pArmorSkills.countOccurances(",") + 1).stringValue).padding(.top, 4)
                 }
 
                 // Walk like a zombie type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.walkLikeAZombieTypeSkills) }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.deadManWalking }) {
-                        KeyValueView(key: "Disguise Skill", value: "Dead Man Walking")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.deadManStanding }) {
-                        KeyValueView(key: "Disguise Skill", value: "Dead Man Standing")
-                    }
-                    let greenBeads = getGreenBeadCount()
-                    if greenBeads > 0 {
-                        KeyValueView(key: "GREEN BEADS NEEDED", value: "\(greenBeads)")
-                    }
+                let zombieSkills = getSkillNames(skillIds: ssid.walkLikeAZombieTypeSkills)
+                if zombieSkills.isNotEmpty {
+                    KeyValueView(key: "Disguise Skills", value: zombieSkills, showDivider: false)
+                    KeyValueView(key: "GREEN BEADS NEEDED", value: "1").padding(.top, 4)
                 }
 
                 // Gambler type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.deepPocketTypeSkills)  }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.gamblersHeart }) {
-                        KeyValueView(key: "Gambler Skill", value: "Gambler's Heart")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.gamblersEye }) {
-                        KeyValueView(key: "Gambler Skill", value: "Gambler's Eye")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.gamblersTalent }) {
-                        KeyValueView(key: "Gambler Skill", value: "Gambler's Talent")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.gamblersLuck }) {
-                        KeyValueView(key: "Gambler Skill", value: "Gambler's Luck")
-                    }
-                    let bonusRaffle = getBonusRaffleTicketCount()
-                    if bonusRaffle > 0 {
-                        KeyValueView(key: "BONUS RAFFLE TICKETS", value: "\(bonusRaffle)")
-                    }
+                let gamblerSkills = getSkillNames(skillIds: ssid.gamblerTypeSkills)
+                if gamblerSkills.isNotEmpty {
+                    KeyValueView(key: "Gambler Skills", value: gamblerSkills, showDivider: false)
+                    KeyValueView(key: "BONUS RAFFLE TICKETS", value: "+\((gamblerSkills.countOccurances(",") + 1).stringValue)").padding(.top, 4)
                 }
 
                 // Fortune type
-                if relevantSkills.contains(where: { $0.id.equalsAnyOf(Constants.SpecificSkillIds.fortuneSkills)  }) {
-                    Spacer().frame(height: 22)
-                    if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.prosperousDiscovery }) {
-                        KeyValueView(key: "Fortune Skill", value: "Prosperous Discovery")
-                    } else if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.fortunateFind }) {
-                        KeyValueView(key: "Fortune Skill", value: "Fortunate Find")
-                    }
-                    let bonusMaterialCount = getBonusMaterialCount()
-                    if bonusMaterialCount > 0 {
-                        KeyValueView(key: "BONUS MATERIALS", value: "\(bonusMaterialCount == 1 ? "Roll Randomly for " : "Choose ") \(bonusMaterialCount)d4 Wood/Cloth/Metal or \(bonusMaterialCount) Tech/Medical")
-                    }
+                if relevantSkills.contains(where: { $0.id == ssid.prosperousDiscovery }) {
+                    KeyValueView(key: "Fortune Skill", value: "Prosperous Discovery", showDivider: false)
+                    KeyValueView(key: "BONUS MATERIALS", value: "Choose:\n2d4 Wood, Cloth or Metal\nor\n2 Tech or Medical").padding(.top, 4)
+                } else if relevantSkills.contains(where: { $0.id == ssid.fortunateFind }) {
+                    KeyValueView(key: "Fortune Skill", value: "Fortunate Find", showDivider: false)
+                    KeyValueView(key: "BONUS MATERIALS", value: "Choose:\n1d4 Wood, Cloth or Metal\nor\n1 Tech or Medical").padding(.top, 4)
                 }
 
                 // Fully Loaded
                 if relevantSkills.contains(where: { $0.id == Constants.SpecificSkillIds.fullyLoaded}) {
-                    // TODO fix
+                    // TODO fix add gear stuff
 //                    if let weapon = primaryWeapon {
 //                        KeyValueView(key: "FULLY LOADED (<=25)", value: "\(weapon.description) - \(weapon.name)")
 //                    } else {
@@ -299,6 +282,17 @@ struct RelevantSkillsView: View {
                 }
             }
         }
+    }
+    
+    func getSkillNames(skillIds: [Int]) -> String {
+        var names = ""
+        for sk in relevantSkills.filter({ $0.id.equalsAnyOf(skillIds) }) {
+            if !names.isEmpty {
+                names += ",\n"
+            }
+            names += sk.name
+        }
+        return names
     }
 
     func hasCheckInRelevantSkills() -> Bool {
@@ -376,11 +370,10 @@ struct PlayerBarcodeView: View {
 
     var body: some View {
         VStack {
-            KeyValueView(key: "Player", value: "", showDivider: false)
             KeyValueView(key: "Name", value: player.fullName)
-            KeyValueView(key: "Total Events Attended", value: "\(player.numEventsAttended)\(isCheckout ? "+1" : "")")
-            KeyValueView(key: "NPC Events Attended", value: "\(player.numNpcEventsAttended)\((isCheckout && isNPC) ? "+1" : "")")
-            KeyValueView(key: "Last Event Attended", value: player.lastCheckIn.yyyyMMddToMonthDayYear(), showDivider: true)
+            KeyValueView(key: "Total Events Attended", value: "\(player.numEventsAttended)+1")
+            KeyValueView(key: "NPC Events Attended", value: "\(player.numNpcEventsAttended)\(isNPC ? "+1" : "")")
+            KeyValueView(key: "Last Event Attended", value: player.lastCheckIn.yyyyMMddToMonthDayYear(), showDivider: false)
         }
     }
 
@@ -397,10 +390,11 @@ struct CharacterBarcodeView: View {
             CharacterBarcodeFirstSubView(character: character, relevantSkills: relevantSkills)
             CharacterBarcodeSecondSubView(character: character)
             if let armor = CharacterModel.ArmorType(rawValue: character.armor) {
+                KeyValueView(key: "Armor", value: armor.rawValue, showDivider: armor == .none)
                 if armor == .metal {
-                    KeyValueView(key: "METAL ARMOR - BLUE BEADS NEEDED", value: "\(1)")
+                    KeyValueView(key: "BLUE BEADS NEEDED", value: "1", showDivider: false).padding(.top, 4)
                 } else if armor == .bulletProof {
-                    KeyValueView(key: "BULLET-PROOF ARMOR - RED BEADS NEEDED", value: "\(1)")
+                    KeyValueView(key: "RED BEADS NEEDED", value: "1", showDivider: false).padding(.top, 4)
                 }
             }
         }
@@ -417,7 +411,12 @@ struct CharacterBarcodeFirstSubView: View {
     var body: some View {
         VStack {
             KeyValueView(key: "Name", value: character.fullName)
-            KeyValueView(key: "Infection", value: "\(character.infection)%\(character.infection.intValueDefaultZero > 25 ? " *THRESHOLD*" : "")")
+            let inf = character.infection.intValueDefaultZero
+            KeyValueView(key: "Infection", value: "\(inf)%", showDivider: inf < 25)
+            if inf >= 25 {
+                let thresh = inf >= 75 ? "THIRD" : (inf >= 50 ? "SECOND" : "FIRST")
+                KeyValueView(key: "Infection Threshold", value: thresh).padding(.top, 4)
+            }
             KeyValueView(key: "Bullets", value: "\(character.bullets)+\(getBulletAdditions())")
             KeyValueView(key: "Megas", value: character.megas)
             KeyValueView(key: "Rivals", value: character.rivals)

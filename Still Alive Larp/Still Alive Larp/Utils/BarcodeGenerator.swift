@@ -14,7 +14,7 @@ struct BarcodeGenerator {
     private static let errorImage = UIImage(systemName: "xmark.circle") ?? UIImage()
 
     static func generateQrCodeFromModel(_ model: CustomCodeable) -> UIImage {
-        guard let data = model.toJsonString()?.data(using: .utf8) else {
+        guard let data = model.toJsonString()?.compress() else {
             return errorImage
         }
         let context = CIContext()

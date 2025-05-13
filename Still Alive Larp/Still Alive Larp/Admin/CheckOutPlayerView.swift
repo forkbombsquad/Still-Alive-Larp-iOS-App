@@ -52,7 +52,7 @@ struct CheckOutPlayerView: View {
                     self.isScanning = false
                     switch result {
                     case .success(let data):
-                        guard let json = data.string.data(using: .utf8) else {
+                        guard let json = data.string.decompress() else {
                             self.scannerFailed("Unable to parse data")
                             return
                         }

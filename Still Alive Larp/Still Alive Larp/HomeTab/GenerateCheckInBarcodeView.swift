@@ -13,6 +13,7 @@ struct GenerateCheckInBarcodeView: View {
     let useChar: Bool
 
     @State var loading: Bool = false
+    @State var loadingText: String = "Loading"
     @State var uiImage: UIImage? = nil
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
@@ -26,7 +27,7 @@ struct GenerateCheckInBarcodeView: View {
                             HStack {
                                 Spacer()
                                 ProgressView().padding(.bottom, 8)
-                                Text("Loading...")
+                                Text(loadingText)
                                 Spacer()
                             }
                             
@@ -68,13 +69,48 @@ struct GenerateCheckInBarcodeView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             self.loading = true
-            if let events = DataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
-                // TODO fix
-//                DataManager.shared.checkinBarcodeModel = PlayerCheckInBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: useChar ? DataManager.shared.character?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: useChar ? DataManager.shared.character?.getRelevantBarcodeSkills() ?? [] : [], primaryWeapon: DataManager.shared.selectedCharacterGear?.primaryWeapon)
-                if let barcode = DataManager.shared.checkinBarcodeModel {
-                    self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
+            self.loadingText = "Loading Events and Player Model..."
+            DataManager.shared.load([.events, .player]) {
+                runOnMainThread {
+                    if useChar {
+                        self.loadingText = "Loading Character..."
+                        DataManager.shared.load([.character]) {
+                            runOnMainThread {
+                                self.loadingText = "Loading Gear..."
+                                DataManager.shared.selectedChar = DataManager.shared.character?.baseModel
+                                DataManager.shared.load([.selectedCharacterGear]) {
+                                    self.generateBarcode()
+                                }
+                            }
+                        }
+                        
+                    } else {
+                        self.generateBarcode()
+                    }
+                    
                 }
+                
+            }
+        }
+    }
+    
+    private func generateBarcode() {
+        loadingText = "Generating Barcode..."
+        if let events = DataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })), let player = DataManager.shared.player {
+            
+            let char = DataManager.shared.character
+            let gear = DataManager.shared.selectedCharacterGear?.first
+            
+            let barcode = PlayerCheckInBarcodeModel(player: player.barcodeModel, character: useChar ? char?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+            runOnMainThread {
+                DataManager.shared.checkinBarcodeModel = barcode
+                self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
                 self.loading = false
+                self.loadingText = ""
+            }
+        } else {
+            AlertManager.shared.showOkAlert("Something Went Wrong!", message: "Error Generating Barcode. Please Try Again Later.") {
+                self.mode.wrappedValue.dismiss()
             }
         }
     }

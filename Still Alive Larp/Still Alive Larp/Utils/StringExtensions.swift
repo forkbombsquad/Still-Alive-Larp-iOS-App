@@ -10,6 +10,10 @@ import SwiftUI
 
 extension String {
     
+    var isNotEmpty: Bool {
+        return !self.isEmpty
+    }
+    
     var jsonData: Data? {
         return self.data(using: .utf8)
     }
@@ -46,6 +50,10 @@ extension String {
         }
         return strArray
     }
+    
+    func countOccurances(_ substring: String) -> Int {
+        return self.splitToStringArray(substring).count - 1
+    }
 
     func yyyyMMddtoDate() -> Date {
         let formatter = DateFormatter()
@@ -80,4 +88,20 @@ extension String {
         return self.lowercased() == text.lowercased()
     }
 
+    func compress() -> Data? {
+        guard let data = self.data(using: .utf8), let compressed = try? data.gzipped() else {
+            return nil
+        }
+        let base64String = compressed.base64EncodedString()
+        return base64String.data(using: .utf8)
+    }
+    
+    func decompress() -> Data? {
+        guard let gzippedData = Data(base64Encoded: self),
+              let decompressedData = try? gzippedData.gunzipped() else {
+            return nil
+        }
+        return decompressedData
+    }
+    
 }

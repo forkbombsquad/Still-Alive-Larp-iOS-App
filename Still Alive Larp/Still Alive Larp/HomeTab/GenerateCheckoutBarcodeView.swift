@@ -67,19 +67,21 @@ struct GenerateCheckoutBarcodeView: View {
             self.loading = true
             DataManager.shared.load([.eventAttendees]) {
                 if let ea = DataManager.shared.eventAttendeesForPlayer?.first(where: { $0.isCheckedIn.boolValueDefaultFalse }) {
-                    var charBarcode: CharacterBarcodeModel?
-                    var relevantSkills = [SkillBarcodeModel]()
+                    runOnMainThread {
+                        var charBarcode: CharacterBarcodeModel?
+                        var relevantSkills = [SkillBarcodeModel]()
 
-                    if (!ea.asNpc.boolValueDefaultFalse) {
-                        charBarcode = DataManager.shared.character?.barcodeModel
-                        relevantSkills = DataManager.shared.character?.getRelevantBarcodeSkills() ?? []
-                    }
+                        if (!ea.asNpc.boolValueDefaultFalse) {
+                            charBarcode = DataManager.shared.character?.barcodeModel
+                            relevantSkills = DataManager.shared.character?.getRelevantBarcodeSkills() ?? []
+                        }
 
-                    DataManager.shared.checkoutBarcodeModel = PlayerCheckOutBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: charBarcode, eventAttendeeId: ea.id, eventId: ea.eventId, relevantSkills: relevantSkills)
-                    if let bc = DataManager.shared.checkoutBarcodeModel {
-                        uiImage = BarcodeGenerator.generateCheckOutBarcode(bc)
+                        DataManager.shared.checkoutBarcodeModel = PlayerCheckOutBarcodeModel(player: DataManager.shared.player!.barcodeModel, character: charBarcode, eventAttendeeId: ea.id, eventId: ea.eventId, relevantSkills: relevantSkills)
+                        if let bc = DataManager.shared.checkoutBarcodeModel {
+                            uiImage = BarcodeGenerator.generateCheckOutBarcode(bc)
+                        }
+                        self.loading = false
                     }
-                    self.loading = false
                 }
             }
         }

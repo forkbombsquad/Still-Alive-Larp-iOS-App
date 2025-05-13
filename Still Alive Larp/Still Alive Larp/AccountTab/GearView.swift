@@ -55,7 +55,9 @@ struct GearView: View {
                                     .padding([.bottom], 16)
                                 if allowEdit {
                                     NavArrowViewGreen(title: "Add New", loading: $loading) {
-                                        loading = true
+                                        runOnMainThread {
+                                            loading = true
+                                        }
                                         return AddEditGearView(gearToEdit: nil, character: character) { newGearJsonIn in
                                             if let ngj = newGearJsonIn {
                                                 runOnMainThread {
