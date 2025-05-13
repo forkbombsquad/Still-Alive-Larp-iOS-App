@@ -10,6 +10,22 @@ import SwiftUI
 struct HomeTabView: View {
     @ObservedObject var _dm = DataManager.shared
     @State private var firstLoad = true
+    
+    @State var loadingEvents = false
+    @State var loadingEventAttendees = false
+    @State var loadingIntrigues = false
+    @State var loadingCharacter = false
+    @State var loadingAwards = false
+    @State var loadingPreregs = false
+    
+    @State var player: PlayerModel?
+    @State var character: FullCharacterModel?
+    @State var events: [EventModel] = []
+    @State var currentEvent: EventModel?
+    @State var awards: [AwardModel] = []
+    @State var intrigue: IntrigueModel?
+    @State var eventAttendees: [EventAttendeeModel] = []
+    @State var preregs: [Int : [EventPreregModel]] = [:]
 
     var body: some View {
         NavigationView {
@@ -24,23 +40,23 @@ struct HomeTabView: View {
                                 .font(.system(size: 32, weight: .bold))
                             AnnouncementsView()
                             if showIntrigueSection() {
-                                IntrigueView()
+                                IntrigueView(character: $character, intrigue: $intrigue)
                             }
                             if showCheckoutSection() {
                                 CardWithTitleView(title: "Checkout") {
-                                    NavArrowViewRed(title: "Checkout", loading: DataManager.$shared.loadingEventAttendees, content: {
+                                    NavArrowViewRed(title: "Checkout", loading: $loadingEventAttendees, content: {
                                         GenerateCheckoutBarcodeView()
                                     })
                                 }
                             }
                             if showCurrentCharSection() {
-                                CurrentCharacterView(grWidth: gr.size.width)
+                                CurrentCharacterView(grWidth: gr.size.width, loadingCharacter: $loadingCharacter, character: $character, player: $player)
                             }
-                            if DataManager.shared.loadingEvents || DataManager.shared.events?.isEmpty == false {
-                                EventsView()
+                            if loadingEvents || events.isNotEmpty {
+                                EventsView(loadingEvents: $loadingEvents, events: $events, currentEvent: $currentEvent, eventPreregs: $preregs, player: $player, character: $character, loadingCharacter: $loadingCharacter)
                             }
-                            if DataManager.shared.loadingAwards || !DataManager.shared.loadingEvents {
-                                AwardsView()
+                            if loadingAwards || awards.isNotEmpty {
+                                AwardsView(loadingAwards: $loadingAwards, awards: $awards)
                             }
                         }
                     }.coordinateSpace(name: "pullToRefresh_HomeTab")
@@ -58,15 +74,18 @@ struct HomeTabView: View {
     }
 
     func showIntrigueSection() -> Bool {
-        return DataManager.shared.player?.isCheckedIn.boolValueDefaultFalse ?? false && !(DataManager.shared.player?.isCheckedInAsNpc.boolValueDefaultFalse ?? false) && (DataManager.shared.character?.getIntrigueSkills() ?? []).count > 0 && !(DataManager.shared.loadingIntrigue) && DataManager.shared.intrigue != nil
+        return player?.isCheckedIn.boolValueDefaultFalse ?? false &&
+            !(player?.isCheckedInAsNpc.boolValueDefaultFalse ?? false) &&
+            (character?.getIntrigueSkills() ?? []).isNotEmpty &&
+            !loadingIntrigues && intrigue != nil
     }
 
     private func getCurrentEvent() -> EventModel? {
-        return DataManager.shared.events?.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse})
+        return events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse})
     }
 
     func showCheckoutSection() -> Bool {
-        return getCurrentEvent() == nil && DataManager.shared.player?.isCheckedIn.boolValueDefaultFalse == true && !DataManager.shared.loadingCharacter
+        return getCurrentEvent() == nil && player?.isCheckedIn.boolValueDefaultFalse == true && !loadingCharacter
     }
 
     func showCurrentCharSection() -> Bool {
@@ -74,27 +93,58 @@ struct HomeTabView: View {
     }
 
     func showEventsSection() -> Bool {
-        return DataManager.shared.loadingEvents || DataManager.shared.events?.isEmpty == false
+        return loadingEvents || events.isNotEmpty
     }
 
     func refreshEverything() {
-        DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
-            DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {}
-            runOnMainThread {
-                DataManager.shared.selectedChar = DataManager.shared.character?.baseModel
-                DataManager.shared.load([.selectedCharacterGear]) {}
+        runOnMainThread {
+            self.loadingEvents = true
+            self.loadingEventAttendees = true
+            self.loadingIntrigues = true
+            self.loadingCharacter = true
+            self.loadingAwards = true
+            self.loadingPreregs = true
+            
+            DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
+                runOnMainThread {
+                    let dm = DataManager.shared
+                    self.loadingEvents = false
+                    self.loadingEventAttendees = false
+                    self.loadingIntrigues = false
+                    self.loadingCharacter = false
+                    self.loadingAwards = false
+                    
+                    self.player = dm.player
+                    self.character = dm.character
+                    self.events = dm.events ?? []
+                    self.currentEvent = dm.currentEvent
+                    self.awards = dm.awards ?? []
+                    self.eventAttendees = dm.eventAttendeesForPlayer ?? []
+                    self.intrigue = dm.intrigue
+                    
+                    DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                        runOnMainThread {
+                            self.loadingPreregs = false
+                            self.preregs = DataManager.shared.eventPreregs
+                        }
+                    }
+                }
             }
         }
+        
     }
 
 }
 
 struct IntrigueView: View {
     @ObservedObject var _dm = DataManager.shared
+    
+    @Binding var character: FullCharacterModel?
+    @Binding var intrigue: IntrigueModel?
 
     var body: some View {
         VStack {
-            if let character = DataManager.shared.character, let intrigue = DataManager.shared.intrigue {
+            if let character = character, let intrigue = intrigue {
                 CardWithTitleView(title: "Intrigue") {
                     Text("The following information is only given to those with one (or more) of the following skills: Investigator, Interrogator, and Web of Informants. You are free to share this information with others or keep it to yourself.")
                     let intrigueSkills = character.getIntrigueSkills()
@@ -124,14 +174,21 @@ struct EventsView: View {
     @ObservedObject var _dm = DataManager.shared
 
     @State var currentEventIndex: Int = 0
+    @Binding var loadingEvents: Bool
+    @Binding var events: [EventModel]
+    @Binding var currentEvent: EventModel?
+    @Binding var eventPreregs: [Int : [EventPreregModel]]
+    @Binding var player: PlayerModel?
+    @Binding var character: FullCharacterModel?
+    @Binding var loadingCharacter: Bool
 
     var body: some View {
-        if DataManager.shared.loadingEvents {
+        if loadingEvents {
             CardWithTitleView(title: "Events") {
                 ProgressView().padding(.bottom, 8)
                 Text("Loading Events...")
             }
-        } else if let events = DataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
+        } else if let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
             CardWithTitleView(title: "Event Today!") {
                 VStack {
                     Text(event.title)
@@ -150,9 +207,9 @@ struct EventsView: View {
                         .padding(.top, 8)
                         .fixedSize(horizontal: false, vertical: true)
                     if event.isStarted.boolValueDefaultFalse && !event.isFinished.boolValueDefaultFalse {
-                        if !(DataManager.shared.player?.isCheckedIn.boolValueDefaultFalse ?? false) {
-                            if let character = DataManager.shared.character {
-                                NavArrowViewGreen(title: "Check In as \(character.fullName)", loading: DataManager.$shared.loadingSelectedCharacterGear) {
+                        if !(player?.isCheckedIn.boolValueDefaultFalse ?? false) {
+                            if let character = character {
+                                NavArrowViewGreen(title: "Check In as \(character.fullName)", loading: $loadingCharacter) {
                                     GenerateCheckInBarcodeView(useChar: true)
                                 }
                             }
@@ -160,7 +217,7 @@ struct EventsView: View {
                                 GenerateCheckInBarcodeView(useChar: false)
                             }
                         } else {
-                            Text("Checked in as \(DataManager.shared.player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (DataManager.shared.character?.fullName ?? ""))")
+                            Text("Checked in as \(player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (character?.fullName ?? ""))")
                                 .font(.system(size: 14, weight: .bold))
                                 .padding(.top, 8)
                         }
@@ -170,7 +227,7 @@ struct EventsView: View {
         } else {
             CardWithTitleView(title: "Events") {
                 VStack {
-                    if let currentEvent = DataManager.shared.currentEvent {
+                    if let currentEvent = currentEvent {
                         Text(currentEvent.title)
                             .font(.system(size: 16, weight: .bold))
                             .lineLimit(nil)
@@ -186,7 +243,7 @@ struct EventsView: View {
                             .padding(.top, 8)
                             .fixedSize(horizontal: false, vertical: true)
                         if currentEvent.isInFuture() {
-                            NavArrowViewBlue(title: (DataManager.shared.eventPreregs[currentEvent.id] ?? []).contains(where: { $0.eventId == currentEvent.id }) ? "Edit Your Pre-Registartion" : "Pre-Register for this event") {
+                            NavArrowViewBlue(title: (eventPreregs[currentEvent.id] ?? []).contains(where: { $0.eventId == currentEvent.id }) ? "Edit Your Pre-Registartion" : "Pre-Register for this event") {
                                 PreregView()
                             }
                         }
@@ -201,7 +258,7 @@ struct EventsView: View {
                                     }
                             }
                             Spacer()
-                            if currentEventIndex < (DataManager.shared.events?.count ?? 0) - 1 {
+                            if currentEventIndex < events.count - 1 {
                                 Image(systemName: "arrow.right.circle")
                                     .font(.system(size: 44))
                                     .foregroundColor(.midRed)
@@ -227,7 +284,7 @@ struct EventsView: View {
 
     private func changeEvent(_ byAmount: Int) {
         currentEventIndex += byAmount
-        DataManager.shared.currentEvent = DataManager.shared.events?[currentEventIndex]
+        currentEvent = events[currentEventIndex]
     }
 
 }
@@ -236,20 +293,24 @@ struct CurrentCharacterView: View {
     @ObservedObject var _dm = DataManager.shared
 
     let grWidth: CGFloat
+    
+    @Binding var loadingCharacter: Bool
+    @Binding var character: FullCharacterModel?
+    @Binding var player: PlayerModel?
 
     var body: some View {
         CardWithTitleView(title: "Current Character") {
             VStack {
-                if DataManager.shared.loadingCharacter {
+                if loadingCharacter {
                     ProgressView().padding(.bottom, 8)
                     Text("Loading Character Information...")
-                } else if let currentCharacter = DataManager.shared.character {
+                } else if let currentCharacter = character {
                     Text(currentCharacter.fullName)
                         .font(.system(size: 16, weight: .bold))
                         .lineLimit(nil)
                         .padding(.top, 8)
                         .fixedSize(horizontal: false, vertical: true)
-                } else if DataManager.shared.player != nil {
+                } else if player != nil {
                     Text("You don't have any living characters!")
                         .font(.system(size: 16))
                         .lineLimit(nil)
@@ -273,20 +334,17 @@ struct CurrentCharacterView: View {
 struct AwardsView: View {
     @ObservedObject var _dm = DataManager.shared
 
-    @Binding private var loading: Bool
-
-    init() {
-        _loading = DataManager.$shared.loadingAwards
-    }
+    @Binding var loadingAwards: Bool
+    @Binding var awards: [AwardModel]
 
     var body: some View {
         CardWithTitleView(title: "Awards") {
             VStack {
-                if loading {
+                if loadingAwards {
                     ProgressView().padding(.bottom, 8)
                     Text("Loading Awards...")
-                } else if !(DataManager.shared.awards?.isEmpty ?? true) {
-                   ForEach(DataManager.shared.awards ?? []) { award in
+                } else if awards.isNotEmpty {
+                   ForEach(awards) { award in
                        VStack {
                            HStack {
                                Text("\(award.date.yyyyMMddToMonthDayYear())")
@@ -294,7 +352,7 @@ struct AwardsView: View {
                                Text("\(award.amount) \(award.awardType)")
                            }.padding([.top, .bottom], 8)
                            Text("\(award.reason)")
-                           if award != DataManager.shared.awards?.last {
+                           if award != awards.last {
                                Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
                            }
                        }

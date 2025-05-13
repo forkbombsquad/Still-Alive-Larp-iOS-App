@@ -7,6 +7,14 @@
 
 import Foundation
 
+extension Array {
+    
+    var isNotEmpty: Bool {
+        return !self.isEmpty
+    }
+    
+}
+
 extension Array where Element == PlayerModel {
 
     var alphabetized: [PlayerModel] {

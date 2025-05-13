@@ -11,16 +11,19 @@ struct AnnouncementsView: View {
     @ObservedObject var _dm = DataManager.shared
 
     @State private var currentAnnouncementIndex: Int = 0
+    @State private var currentAnnouncement: AnnouncementModel?
+    @State private var announcements: [AnnouncementSubModel] = []
+    @State private var loadingAnnouncements: Bool = false
 
     var body: some View {
         CardWithTitleView(title: "Announcements") {
             VStack {
-                if DataManager.shared.loadingAnnouncements {
+                if loadingAnnouncements {
                     ProgressView().padding(.bottom, 8)
                     Text("Loading Announcements...")
-                } else if (DataManager.shared.announcements ?? []).isEmpty {
+                } else if announcements.isEmpty {
                     Text("No announcements found!")
-                } else if let ca = DataManager.shared.currentAnnouncement {
+                } else if let ca = currentAnnouncement {
                     Text(ca.title)
                         .font(.system(size: 16, weight: .bold))
                         .lineLimit(nil)
@@ -46,7 +49,7 @@ struct AnnouncementsView: View {
                                 }
                         }
                         Spacer()
-                        if currentAnnouncementIndex < (DataManager.shared.announcements?.count ?? 0) - 1 {
+                        if currentAnnouncementIndex < announcements.count - 1 {
                             Image(systemName: "arrow.right.circle")
                                 .font(.system(size: 44))
                                 .foregroundColor(.midRed)
@@ -58,7 +61,14 @@ struct AnnouncementsView: View {
                     }
                 }
             }.onAppear(perform: {
-                DataManager.shared.load([.announcements])
+                self.loadingAnnouncements = true
+                DataManager.shared.load([.announcements]) {
+                    runOnMainThread {
+                        self.loadingAnnouncements = false
+                        self.announcements = DataManager.shared.announcements ?? []
+                        self.currentAnnouncement = DataManager.shared.currentAnnouncement
+                    }
+                }
             })
         }
     }
@@ -73,8 +83,10 @@ struct AnnouncementsView: View {
 
     private func changeShownAnnouncement(_ byAmount: Int) {
         currentAnnouncementIndex = currentAnnouncementIndex + byAmount
-        AnnouncementManager.shared.getAnnouncement(DataManager.shared.announcements?[currentAnnouncementIndex].id ?? -1) { announcement in
-            DataManager.shared.currentAnnouncement = announcement
+        AnnouncementManager.shared.getAnnouncement(announcements[currentAnnouncementIndex].id) { announcement in
+            runOnMainThread {
+                self.currentAnnouncement = announcement
+            }
         } failureCase: { _ in
             // Do nothing
         }
