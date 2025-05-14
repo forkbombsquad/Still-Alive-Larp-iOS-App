@@ -10,7 +10,7 @@ import SwiftUI
 class DataManager: ObservableObject {
 
     enum DataManagerType {
-        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage
+        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects
     }
 
     @ObservedObject static var shared = DataManager()
@@ -83,6 +83,15 @@ class DataManager: ObservableObject {
 
             shared.profileImage = nil
             shared.loadingProfileImage = true
+            
+            shared.allPlannedCharacters = []
+            shared.loadingAllPlayers = true
+            
+            shared.npcs = []
+            shared.loadingNpcs = true
+            
+            shared.researchProjects = []
+            shared.loadingResearchProjects = true
         }
     }
 
@@ -183,6 +192,15 @@ class DataManager: ObservableObject {
     @Published var loadingProfileImage: Bool = true
 
     @Published var downloadedImage: UIImage?
+    
+    @Published var allPlannedCharacters: [CharacterModel] = []
+    @Published var loadingAllPlannedCharacters: Bool = true
+    
+    @Published var npcs: [CharacterModel] = []
+    @Published var loadingNpcs: Bool = true
+    
+    @Published var researchProjects: [ResearchProjectModel] = []
+    @Published var loadingResearchProjects: Bool = true
 
     func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, finished: @escaping () -> Void = {}) {
         guard !debugMode else {
@@ -609,6 +627,69 @@ class DataManager: ObservableObject {
                     } else {
                         self.loadingProfileImage = false
                         self.finishedRequest(currentCountIndex, "Profile Image From Memory")
+                    }
+                case .plannedCharacters:
+                    self.loadingAllPlannedCharacters = true
+                    if self.allPlannedCharacters.isEmpty || forceDownloadIfApplicable {
+                        CharacterService.getAllPlayerCharactersForCharacterType(self.player?.id ?? -1, characterType: Constants.CharacterTypes.planner) { charList in
+                            runOnMainThread {
+                                self.allPlannedCharacters = charList.characters
+                                self.loadingAllPlannedCharacters = false
+                                self.finishedRequest(currentCountIndex, "Planned Character Success")
+                            }
+                        } failureCase: { error in
+                            runOnMainThread {
+                                self.allPlannedCharacters = []
+                                self.loadingAllPlannedCharacters = false
+                                self.finishedRequest(currentCountIndex, "Planned Character Failure")
+                            }
+                        }
+
+                    } else {
+                        self.loadingAllPlannedCharacters = false
+                        self.finishedRequest(currentCountIndex, "Planned Characters From Memory")
+                    }
+                case .npcs:
+                    self.loadingNpcs = true
+                    if self.npcs.isEmpty || forceDownloadIfApplicable {
+                        CharacterService.getAllNPCCharacters { characterList in
+                            runOnMainThread {
+                                self.npcs = characterList.characters
+                                self.loadingNpcs = false
+                                self.finishedRequest(currentCountIndex, "NPCs Success")
+                            }
+                        } failureCase: { error in
+                            runOnMainThread {
+                                self.npcs = []
+                                self.loadingNpcs = false
+                                self.finishedRequest(currentCountIndex, "NPCs Failure")
+                            }
+                        }
+
+                    } else {
+                        self.loadingNpcs = false
+                        self.finishedRequest(currentCountIndex, "NPCs From Memory")
+                    }
+                case .researchProjects:
+                    self.loadingResearchProjects = true
+                    if self.researchProjects.isEmpty || forceDownloadIfApplicable {
+                        ResearchProjectService.getAllResearchProjects { projectList in
+                            runOnMainThread {
+                                self.researchProjects = projectList.researchProjects
+                                self.loadingResearchProjects = false
+                                self.finishedRequest(currentCountIndex, "Research Projects Success")
+                            }
+                        } failureCase: { error in
+                            runOnMainThread {
+                                self.researchProjects = []
+                                self.loadingResearchProjects = false
+                                self.finishedRequest(currentCountIndex, "Research Projects Failure")
+                            }
+                        }
+
+                    } else {
+                        self.loadingResearchProjects = false
+                        self.finishedRequest(currentCountIndex, "Research Projects From Memory")
                     }
                 }
             }

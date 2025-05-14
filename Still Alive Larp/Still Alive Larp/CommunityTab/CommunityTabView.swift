@@ -40,7 +40,7 @@ struct CommunityTabView: View {
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
-                DataManager.shared.load([.allPlayers])
+                DataManager.shared.load([.allPlayers, .npcs, .researchProjects])
             }
         }
     }

@@ -167,5 +167,17 @@ struct AdminService {
         }, failureCase: failureCase)
 
     }
+    
+    static func createResearchProject(_ researchProjectCreateModel: ResearchProjectCreateModel, onSuccess: @escaping (_ researchProjectCreateModel: ResearchProjectModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.createResearchProject, bodyJson: researchProjectCreateModel, responseObject: ResearchProjectModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+    
+    static func updateResearchProject(_ researchProjectModel: ResearchProjectModel, onSuccess: @escaping (_ researchProjectCreateModel: ResearchProjectModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.updateResearchProject, bodyJson: researchProjectModel, responseObject: ResearchProjectModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
 }

@@ -22,6 +22,13 @@ struct CharacterService {
         }, failureCase: failureCase)
 
     }
+    
+    static func createPlannedCharacter(_ character: CreateCharacterModel, onSuccess: @escaping (_ characterModel: CharacterModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.createPlannedCharacter, bodyJson: character, responseObject: CharacterModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+
+    }
 
     static func updateBio(_ character: CharacterModel, onSuccess: @escaping (_ characterModel: CharacterModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.updateBio, bodyJson: character, responseObject: CharacterModel.self, success: { success in
@@ -35,9 +42,24 @@ struct CharacterService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllPlayerCharactersForCharacterType(_ playerId: Int, characterType: Int, onSuccess: @escaping (_ characterListModel: CharacterListFullModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.charactersForPlayerWithType, addToEndOfUrl: "\(characterType)", params: ["player_id_in" : playerId], responseObject: CharacterListFullModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
     static func getAllCharacters(onSuccess: @escaping (_ characterList: CharacterListFullModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.allCharacters, responseObject: CharacterListFullModel.self, success: { success in
+            var jsonObject = success.jsonObject
+            jsonObject.characters = success.jsonObject.characters.filter({ $0.fullName.lowercased() != "google test" })
+            onSuccess(jsonObject)
+        }, failureCase: failureCase)
+
+    }
+    
+    static func getAllNPCCharacters(onSuccess: @escaping (_ characterList: CharacterListFullModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allNPCCharacters, responseObject: CharacterListFullModel.self, success: { success in
             var jsonObject = success.jsonObject
             jsonObject.characters = success.jsonObject.characters.filter({ $0.fullName.lowercased() != "google test" })
             onSuccess(jsonObject)

@@ -281,7 +281,7 @@ extension MockData {
                 return featureFlagList
             case .getProfileImage, .createProfileImage, .updateProfileImage, .deleteProfileImage:
                 return profileImageModel
-        case .getResearchProject, .createResearchProject, .updateResearchProject:
+            case .getResearchProject, .createResearchProject, .updateResearchProject:
                 return researchProject()
             case .getAllResearchProjects:
                 return researchProjects

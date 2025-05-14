@@ -21,6 +21,7 @@
 		B21691EE28FDEF06006AA921 /* ContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691ED28FDEF06006AA921 /* ContactView.swift */; };
 		B21691F028FF2184006AA921 /* PasswordField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691EF28FF2184006AA921 /* PasswordField.swift */; };
 		B21691F228FF2859006AA921 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691F128FF2859006AA921 /* Validator.swift */; };
+		B21F1C142DD5247A0004B391 /* ResearchProjectService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21F1C132DD5247A0004B391 /* ResearchProjectService.swift */; };
 		B222248D291DA33F003BCA0A /* HomeTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222248C291DA33F003BCA0A /* HomeTabView.swift */; };
 		B222248F291DAA01003BCA0A /* AnnouncementModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222248E291DAA01003BCA0A /* AnnouncementModel.swift */; };
 		B2222492291DB13B003BCA0A /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2222491291DB13B003BCA0A /* AnnouncementManager.swift */; };
@@ -194,6 +195,7 @@
 		B21691ED28FDEF06006AA921 /* ContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactView.swift; sourceTree = "<group>"; };
 		B21691EF28FF2184006AA921 /* PasswordField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordField.swift; sourceTree = "<group>"; };
 		B21691F128FF2859006AA921 /* Validator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
+		B21F1C132DD5247A0004B391 /* ResearchProjectService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchProjectService.swift; sourceTree = "<group>"; };
 		B222248C291DA33F003BCA0A /* HomeTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTabView.swift; sourceTree = "<group>"; };
 		B222248E291DAA01003BCA0A /* AnnouncementModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementModel.swift; sourceTree = "<group>"; };
 		B2222491291DB13B003BCA0A /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
@@ -606,6 +608,7 @@
 				B2750B5629FAD69200AA5F5B /* EventAttendeeService.swift */,
 				B2E135B929FD7F330038DE31 /* SpecialClassXpReductionService.swift */,
 				B25D45B62A12B73200C3048C /* EventPreregService.swift */,
+				B21F1C132DD5247A0004B391 /* ResearchProjectService.swift */,
 				B233D76F2A1D4E8F002B9BBA /* VersionService.swift */,
 				B2F29FAD2A420AD900E07108 /* GearService.swift */,
 				B251B0662BD1A25800915F01 /* FeatureFlagService.swift */,
@@ -915,6 +918,7 @@
 				B25D45C62A15223C00C3048C /* ViewPreregForEventView.swift in Sources */,
 				B2E0A04F2A4DD1F60089FF2E /* RegisterPrimaryWeaponView.swift in Sources */,
 				B228C29429F848630064686D /* ViewPlayerStuffView.swift in Sources */,
+				B21F1C142DD5247A0004B391 /* ResearchProjectService.swift in Sources */,
 				B222248F291DAA01003BCA0A /* AnnouncementModel.swift in Sources */,
 				B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */,
 				B25D45B52A12B5D600C3048C /* EventPreregModel.swift in Sources */,

@@ -25,9 +25,13 @@ class ServiceEndpoints {
         case announcement = "announcements/"
         case announcementCreate = "announcements/create/"
         case charactersForPlayer = "characters/all_with_player_id/"
+        case charactersForPlayerWithType = "characters/all_with_type_for_player_id/"
         case character = "characters/"
-        case allCharacters = "characters/all/"
+        case allCharacters = "characters/all_with_type/1"
+        case allCharactersWithType = "characters/all_with_type/"
         case characterCreate = "characters/create/"
+        case allNPCCharacters = "characters/all_with_type/2"
+        case createPlannedCharacter = "characters/createplan/"
         case skill = "skills/"
         case allSkills = "skills/all/"
         case skillPrereqsForId = "skill-prereqs/all_with_skill_id/"
@@ -93,9 +97,9 @@ class ServiceEndpoints {
 
         var requestType: ServiceController.RequestType {
             switch self {
-            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects:
+            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters:
                     return .get
-            case .authToken, .playerCreate, .characterCreate, .awardPlayer, .awardChar, .takeSkill, .announcementCreate, .createEvent, .checkInPlayer, .createContact, .createIntrigue, .giveXpReduction, .prereg, .createGear, .createFeatureFlag, .createProfileImage, .createResearchProject:
+            case .authToken, .playerCreate, .characterCreate, .awardPlayer, .awardChar, .takeSkill, .announcementCreate, .createEvent, .checkInPlayer, .createContact, .createIntrigue, .giveXpReduction, .prereg, .createGear, .createFeatureFlag, .createProfileImage, .createResearchProject, .createPlannedCharacter:
                     return .post
             case .updateCharacter, .eventUpdate, .checkInCharacter, .giveCharCheckInRewards, .updateBio, .updateContact, .updateP, .updatePAdmin, .updateIntrigue, .updatePlayer, .eventAttendeeUpdate, .updatePrereg, .updateGear, .updateFeatureFlag, .updateProfileImage, .updateResearchProject:
                     return .put
