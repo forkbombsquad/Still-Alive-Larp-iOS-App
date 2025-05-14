@@ -193,7 +193,6 @@ struct CharacterBarcodeModel: CustomCodeable {
     let unshakableResolveUses: String
     let mysteriousStrangerUses: String
     let playerId: Int
-    let characterTypeId: Int
 
     init(_ characterModel: FullCharacterModel) {
         self.id = characterModel.id
@@ -210,10 +209,9 @@ struct CharacterBarcodeModel: CustomCodeable {
         self.techSupplies = characterModel.techSupplies
         self.medicalSupplies = characterModel.medicalSupplies
         self.armor = characterModel.armor
-        self.unshakableResolveUses = characterModel.mysteriousStrangerUses
+        self.unshakableResolveUses = characterModel.unshakableResolveUses
         self.mysteriousStrangerUses = characterModel.mysteriousStrangerUses
         self.playerId = characterModel.playerId
-        self.characterTypeId = characterModel.characterTypeId
     }
 }
 

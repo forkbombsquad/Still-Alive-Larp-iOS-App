@@ -39,7 +39,7 @@ struct HomeTabView: View {
                             Text("Home")
                                 .font(.system(size: 32, weight: .bold))
                             AnnouncementsView()
-                            if showIntrigueSection() {
+                            if showIntrigueSection() && !loadingIntrigues && !loadingCharacter {
                                 IntrigueView(character: $character, intrigue: $intrigue)
                             }
                             if showCheckoutSection() {
@@ -53,7 +53,7 @@ struct HomeTabView: View {
                                 CurrentCharacterView(grWidth: gr.size.width, loadingCharacter: $loadingCharacter, character: $character, player: $player)
                             }
                             if loadingEvents || events.isNotEmpty {
-                                EventsView(loadingEvents: $loadingEvents, events: $events, currentEvent: $currentEvent, eventPreregs: $preregs, player: $player, character: $character, loadingCharacter: $loadingCharacter)
+                                EventsView(loadingEvents: $loadingEvents, events: $events, currentEvent: $currentEvent, loadingPreregs: $loadingPreregs, eventPreregs: $preregs, player: $player, character: $character, loadingCharacter: $loadingCharacter)
                             }
                             if loadingAwards || awards.isNotEmpty {
                                 AwardsView(loadingAwards: $loadingAwards, awards: $awards)
@@ -75,9 +75,9 @@ struct HomeTabView: View {
 
     func showIntrigueSection() -> Bool {
         return player?.isCheckedIn.boolValueDefaultFalse ?? false &&
-            !(player?.isCheckedInAsNpc.boolValueDefaultFalse ?? false) &&
-            (character?.getIntrigueSkills() ?? []).isNotEmpty &&
-            !loadingIntrigues && intrigue != nil
+        !(player?.isCheckedInAsNpc.boolValueDefaultFalse ?? false) &&
+        (character?.getIntrigueSkills() ?? []).isNotEmpty &&
+        intrigue != nil
     }
 
     private func getCurrentEvent() -> EventModel? {
@@ -89,7 +89,15 @@ struct HomeTabView: View {
     }
 
     func showCurrentCharSection() -> Bool {
-        return !showIntrigueSection() && !showCheckoutSection()
+        var value = true
+        if let player = player {
+            if player.isCheckedIn.boolValueDefaultFalse {
+                if !loadingCharacter && character == nil {
+                    value = false
+                }
+            }
+        }
+        return value
     }
 
     func showEventsSection() -> Bool {
@@ -105,12 +113,11 @@ struct HomeTabView: View {
             self.loadingAwards = true
             self.loadingPreregs = true
             
-            DataManager.shared.load([.player, .character, .announcements, .events, .awards, .intrigue, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
+            DataManager.shared.load([.player, .character, .announcements, .events, .awards, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
                 runOnMainThread {
                     let dm = DataManager.shared
                     self.loadingEvents = false
                     self.loadingEventAttendees = false
-                    self.loadingIntrigues = false
                     self.loadingCharacter = false
                     self.loadingAwards = false
                     
@@ -120,12 +127,13 @@ struct HomeTabView: View {
                     self.currentEvent = dm.currentEvent
                     self.awards = dm.awards ?? []
                     self.eventAttendees = dm.eventAttendeesForPlayer ?? []
-                    self.intrigue = dm.intrigue
                     
-                    DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                    DataManager.shared.load([.eventPreregs, .intrigue], forceDownloadIfApplicable: true) {
                         runOnMainThread {
-                            self.loadingPreregs = false
                             self.preregs = DataManager.shared.eventPreregs
+                            self.intrigue = DataManager.shared.intrigue
+                            self.loadingPreregs = false
+                            self.loadingIntrigues = false
                         }
                     }
                 }
@@ -146,22 +154,17 @@ struct IntrigueView: View {
         VStack {
             if let character = character, let intrigue = intrigue {
                 CardWithTitleView(title: "Intrigue") {
-                    Text("The following information is only given to those with one (or more) of the following skills: Investigator, Interrogator, and Web of Informants. You are free to share this information with others or keep it to yourself.")
+                    Text("The following information is only given to those with one or both of the following skills: Investigator, Interrogator. You are free to share this information with others or keep it to yourself.")
                     let intrigueSkills = character.getIntrigueSkills()
                     if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.investigator }) {
                         Divider().padding([.leading, .trailing], 16)
-                        Text("Rumor (Investigator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
+                        Text("Fact 1 (Investigator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
                         Text(intrigue.investigatorMessage)
                     }
                     if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.interrogator }) {
                         Divider().padding([.leading, .trailing], 16)
-                        Text("Fact (Interrogator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
+                        Text("Fact 2 (Interrogator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
                         Text(intrigue.interrogatorMessage)
-                    }
-                    if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.webOfInformants }) {
-                        Divider().padding([.leading, .trailing], 16)
-                        Text("Additional Fact (Web of Informants)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
-                        Text(intrigue.webOfInformantsMessage)
                     }
                 }
             }
@@ -177,6 +180,7 @@ struct EventsView: View {
     @Binding var loadingEvents: Bool
     @Binding var events: [EventModel]
     @Binding var currentEvent: EventModel?
+    @Binding var loadingPreregs: Bool
     @Binding var eventPreregs: [Int : [EventPreregModel]]
     @Binding var player: PlayerModel?
     @Binding var character: FullCharacterModel?
@@ -217,7 +221,7 @@ struct EventsView: View {
                                 GenerateCheckInBarcodeView(useChar: false)
                             }
                         } else {
-                            Text("Checked in as \(player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (character?.fullName ?? ""))")
+                            Text("\(loadingCharacter ? "Loading Check In Information..." : "Checked in as \(player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (character?.fullName ?? ""))")")
                                 .font(.system(size: 14, weight: .bold))
                                 .padding(.top, 8)
                         }
@@ -232,19 +236,41 @@ struct EventsView: View {
                             .font(.system(size: 16, weight: .bold))
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 8)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                        Text("\(currentEvent.date.yyyyMMddToMonthDayYear())\nfrom \(currentEvent.startTime) to \(currentEvent.endTime)")
+                            .font(.system(size: 16))
+                            .lineLimit(nil)
+                            .padding(.top, 8)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
                         Text(currentEvent.description)
                             .font(.system(size: 16))
                             .lineLimit(nil)
                             .padding(.top, 8)
                             .fixedSize(horizontal: false, vertical: true)
-                        Text("\(currentEvent.date.yyyyMMddToMonthDayYear()) - from \(currentEvent.startTime) to \(currentEvent.endTime)")
-                            .font(.system(size: 16))
-                            .lineLimit(nil)
-                            .padding(.top, 8)
-                            .fixedSize(horizontal: false, vertical: true)
+                        
                         if currentEvent.isInFuture() {
-                            NavArrowViewBlue(title: (eventPreregs[currentEvent.id] ?? []).contains(where: { $0.eventId == currentEvent.id }) ? "Edit Your Pre-Registartion" : "Pre-Register for this event") {
-                                PreregView()
+                            let prereg = (eventPreregs[currentEvent.id] ?? []).first(where: { $0.playerId == player?.id })
+                            NavArrowViewBlue(title: loadingPreregs ? "Loading Preregs..." : (prereg != nil ? "Edit Your Pre-Registartion" : "Pre-Register for this event"), loading: $loadingPreregs) {
+                                PreregView(event: currentEvent, prereg: prereg, player: player, character: character?.baseModel).onDisappear {
+                                    runOnMainThread {
+                                        self.loadingPreregs = true
+                                        DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                                            runOnMainThread {
+                                                self.eventPreregs = DataManager.shared.eventPreregs
+                                                self.loadingPreregs = false
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if let prereg = prereg {
+                                Text("You are pre-registered for this event as:\n\n\(prereg.getCharId() == nil ? "NPC" : character?.fullName ?? "") - \(prereg.regType)")
+                                    .multilineTextAlignment(.center)
+                                    .frame(alignment: .center)
                             }
                         }
                         HStack {

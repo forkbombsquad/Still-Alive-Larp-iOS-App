@@ -47,3 +47,14 @@ extension Array where Element == EventModel {
     }
 
 }
+
+extension Optional where Wrapped: Collection {
+    var isNullOrEmpty: Bool {
+        guard let self = self else { return true }
+        return self.isEmpty
+    }
+    
+    var isNotNullOrEmpty: Bool {
+        return !isNullOrEmpty
+    }
+}

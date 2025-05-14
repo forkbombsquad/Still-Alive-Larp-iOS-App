@@ -54,6 +54,20 @@ struct AddEditGearView: View {
                         }
                         StyledPickerView(title: .constant("Secondary Subtype"), selection: $secondarySubtype, options: $secondarySubtypes) { _ in }
                         
+                        if let limit = getNewCharacterLimitString() {
+                            Text("**New Character Limits**\n\(limit)")
+                                .multilineTextAlignment(.center)
+                                .frame(alignment: .center)
+                                .padding(8)
+                        }
+                        
+                        if let classification = getClassificationString() {
+                            Text("**Classification**\n\(classification)")
+                                .multilineTextAlignment(.center)
+                                .frame(alignment: .center)
+                                .padding(8)
+                        }
+                        
                         TextEditor(text: $desc)
                             .padding(.top, 8)
                             .padding(.trailing, 0)
@@ -127,6 +141,40 @@ struct AddEditGearView: View {
                     secondarySubtypes = ss.allNonFirearmTypes
             }
             secondarySubtype = secondarySubtypes[0]
+        }
+    }
+    
+    private func getNewCharacterLimitString() -> String? {
+        typealias gt = Constants.GearTypes
+        switch type {
+        case gt.meleeWeapon, gt.firearm:
+            return "Up to 2 of each type you're proficient with"
+        case gt.clothing:
+            return "1 Mechanically Advantageous piece of Clothing\nNO LIMIT ON: regular clothing"
+        case gt.accessory:
+            return "2 Mechancially Advangageous Accessories (such as flashlights or holsters)\nNO LIMIT ON: non-advantageous accessories (such as safety glasses, sunglasses, belts, masks, headbands, gloves, phones, watches, etc)"
+        case gt.bag:
+            return "3 Small Bags OR 1 Medium Bag and 2 Small Bags OR 1 Large Bag and 1 Small Bag"
+        default:
+            return nil
+        }
+    }
+    
+    private func getClassificationString() -> String? {
+        typealias gt = Constants.GearTypes
+        switch type {
+        case gt.meleeWeapon:
+            return "Super Light: Coreless\nLight: 22.99\" (57.3cm) or shorter\nMedium: 23\" - 43.99\" (57.4cm - 111.7cm)\nHeavy: 44\" (111.8cm) or longer"
+        case gt.firearm:
+            return "+1 per magazine\n+1 more than 5 bullets\n+1 more than 10 bullets\n+1 more than 15 bullets\n+1 Semi-Auto\n+2 Auto\nRivals or Rockets = Military Grade\n\nLight: 0\nMedium: 1\nHeavy: 2\nAdvanced: 3+\nMilitary Grade: Shoots Rivals or Rockets"
+        case gt.clothing:
+            return nil
+        case gt.accessory:
+            return nil
+        case gt.bag:
+            return "Small: 0.5L (30.5cu in) or less\nMedium: 0.5L - 5L (30.5cu in - 305.1cu in)\nLarge: 5L - 25L (305.1cu in - 1,525.6cu in)\nExtra Large: 25L (1,525.6cu in) or more"
+        default:
+            return nil
         }
     }
 }

@@ -580,7 +580,7 @@ struct CustomTextField: View {
 
 }
 
-struct PickerViewWithKey: View {
+fileprivate struct PickerViewWithKey: View {
     @ObservedObject var _dm = DataManager.shared
 
     let key: String

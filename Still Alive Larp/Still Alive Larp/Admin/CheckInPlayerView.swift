@@ -37,9 +37,10 @@ struct CheckInPlayerView: View {
                     switch result {
                     case .success(let data):
                         guard let json = data.string.decompress() else {
-                            self.scannerFailed("Unable to parse data")
+                            self.scannerFailed("Unable to read data")
                             return
                         }
+                        globalTestPrint("BARCODE DATA: \(String(data: json, encoding: .utf8) ?? "")")
                         guard let model: PlayerCheckInBarcodeModel = json.toJsonObject() else {
                             self.scannerFailed("Unable to parse data")
                             return

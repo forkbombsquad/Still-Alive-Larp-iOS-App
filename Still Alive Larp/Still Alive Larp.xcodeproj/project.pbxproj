@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		B205F4742A44988400C45B1A /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B205F4732A44988400C45B1A /* ArrayExtensions.swift */; };
 		B20FF4642A267FD600B13F1D /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20FF4632A267FD600B13F1D /* DataManager.swift */; };
-		B20FF4662A27D4BB00B13F1D /* IncrementalIndexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20FF4652A27D4BB00B13F1D /* IncrementalIndexManager.swift */; };
 		B21691BD28FDDC5D006AA921 /* Still_Alive_LarpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */; };
 		B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BE28FDDC5D006AA921 /* MainView.swift */; };
 		B21691C128FDDC5F006AA921 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B21691C028FDDC5F006AA921 /* Assets.xcassets */; };
@@ -180,7 +179,6 @@
 /* Begin PBXFileReference section */
 		B205F4732A44988400C45B1A /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		B20FF4632A267FD600B13F1D /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		B20FF4652A27D4BB00B13F1D /* IncrementalIndexManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncrementalIndexManager.swift; sourceTree = "<group>"; };
 		B21691B928FDDC5D006AA921 /* Still Alive Larp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Still Alive Larp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpApp.swift; sourceTree = "<group>"; };
 		B21691BE28FDDC5D006AA921 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -445,7 +443,6 @@
 				B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */,
 				B2E135B329FAFB8E0038DE31 /* GlobalFunctions.swift */,
 				B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */,
-				B20FF4652A27D4BB00B13F1D /* IncrementalIndexManager.swift */,
 				B205F4732A44988400C45B1A /* ArrayExtensions.swift */,
 				B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */,
 				B2F292E82C121BC100B5BE85 /* ZoomableScrollView.swift */,
@@ -911,7 +908,6 @@
 				B2F472A62DCBE4F300F37FA5 /* EditProfileImageView.swift in Sources */,
 				B2F9836829F033D800512839 /* CharacterBioListView.swift in Sources */,
 				B2F9838829F1747D00512839 /* CheckInPlayerView.swift in Sources */,
-				B20FF4662A27D4BB00B13F1D /* IncrementalIndexManager.swift in Sources */,
 				B2D68235296880DC005FDCCE /* CharacterManager.swift in Sources */,
 				B2F292D52C120A7700B5BE85 /* DownloadedImageView.swift in Sources */,
 				B2F9836F29F0441E00512839 /* CreateAnnouncementView.swift in Sources */,

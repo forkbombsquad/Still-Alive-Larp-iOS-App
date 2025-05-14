@@ -88,6 +88,7 @@ class DataManager: ObservableObject {
 
     private init() {}
 
+    @Published private var loadCountIndex: Int = 0
     @Published private var targetCount: [Int: Int] = [:]
     @Published private var countReturned: [Int: Int] = [:]
     @Published private var callbacks: [Int: () -> Void] = [:]
@@ -183,19 +184,21 @@ class DataManager: ObservableObject {
 
     @Published var downloadedImage: UIImage?
 
-    func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, incrementalIndex: Int = IncrementalIndexManager.shared.getNextIndex(), finished: @escaping () -> Void = {}) {
+    func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, finished: @escaping () -> Void = {}) {
         guard !debugMode else {
             finished()
             return
         }
         runOnMainThread {
-            self.targetCount[incrementalIndex] = types.count
-            self.countReturned[incrementalIndex] = 0
-            self.callbacks[incrementalIndex] = finished
-            if self.targetCount[incrementalIndex] == 0 {
-                self.callbacks[incrementalIndex]?()
+            let currentCountIndex = self.loadCountIndex
+            self.loadCountIndex += 1
+            self.targetCount[currentCountIndex] = types.count
+            self.countReturned[currentCountIndex] = 0
+            self.callbacks[currentCountIndex] = finished
+            if self.targetCount[currentCountIndex] == 0 {
+                self.callbacks[currentCountIndex]?()
             }
-
+            
             for t in types {
                 switch t {
                 case .player:
@@ -206,19 +209,19 @@ class DataManager: ObservableObject {
                                 self.player = player
                                 PlayerManager.shared.setPlayer(player)
                                 self.loadingPlayer = false
-                                self.finishedRequest(incrementalIndex, "Player Success")
+                                self.finishedRequest(currentCountIndex, "Player Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.player = PlayerManager.shared.getPlayer()
                                 self.loadingPlayer = false
-                                self.finishedRequest(incrementalIndex, "Player Failure")
+                                self.finishedRequest(currentCountIndex, "Player Failure")
                             }
                         }
                     } else {
                         self.player = PlayerManager.shared.getPlayer()
                         self.loadingPlayer = false
-                        self.finishedRequest(incrementalIndex, "Player From Memory")
+                        self.finishedRequest(currentCountIndex, "Player From Memory")
                     }
                 case .character:
                     self.loadingCharacter = true
@@ -226,7 +229,7 @@ class DataManager: ObservableObject {
                         runOnMainThread {
                             self.character = character
                             self.loadingCharacter = false
-                            self.finishedRequest(incrementalIndex, "Load Character")
+                            self.finishedRequest(currentCountIndex, "Load Character")
                         }
                     }
                 case .announcements:
@@ -239,25 +242,25 @@ class DataManager: ObservableObject {
                                     runOnMainThread {
                                         self.currentAnnouncement = announcement
                                         self.loadingAnnouncements = false
-                                        self.finishedRequest(incrementalIndex, "Announcement Success")
+                                        self.finishedRequest(currentCountIndex, "Announcement Success")
                                     }
                                 } failureCase: { error in
                                     runOnMainThread {
                                         self.currentAnnouncement = nil
                                         self.loadingAnnouncements = false
-                                        self.finishedRequest(incrementalIndex, "Announcement Failure")
+                                        self.finishedRequest(currentCountIndex, "Announcement Failure")
                                     }
                                 }
                             } else {
                                 self.currentAnnouncement = nil
                                 self.loadingAnnouncements = false
-                                self.finishedRequest(incrementalIndex, "Announcements Failure")
+                                self.finishedRequest(currentCountIndex, "Announcements Failure")
                             }
                         }
                     } failureCase: { error in
                         runOnMainThread {
                             self.loadingAnnouncements = false
-                            self.finishedRequest(incrementalIndex, "Announcements From Memory")
+                            self.finishedRequest(currentCountIndex, "Announcements From Memory")
                         }
                     }
 
@@ -267,27 +270,8 @@ class DataManager: ObservableObject {
                         runOnMainThread {
                             self.events = eventList.inChronologicalOrder
                             self.currentEvent = self.events?.first
-                            if self.loadingIntrigue, let ev = self.events?.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse }) {
-                                self.currentEvent = ev
-                                IntrigueService.getIntrigue(ev.id) { intrigue in
-                                    runOnMainThread {
-                                        self.loadingIntrigue = false
-                                        self.intrigue = intrigue
-                                        self.finishedRequest(incrementalIndex, "Intriuge Success")
-                                    }
-                                } failureCase: { error in
-                                    runOnMainThread {
-                                        self.loadingIntrigue = false
-                                        self.intrigue = nil
-                                        self.finishedRequest(incrementalIndex, "Intrigue Failure")
-                                    }
-                                }
-                            } else {
-                                self.loadingIntrigue = false
-                                self.intrigue = nil
-                            }
                             self.loadingEvents = false
-                            self.finishedRequest(incrementalIndex, "Events Success")
+                            self.finishedRequest(currentCountIndex, "Events Success")
                         }
                     }
                 case .awards:
@@ -297,43 +281,43 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.awards = awardList.awards.reversed()
                                 self.loadingAwards = false
-                                self.finishedRequest(incrementalIndex, "Awards Success")
+                                self.finishedRequest(currentCountIndex, "Awards Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.loadingAwards = false
                                 self.awards = nil
-                                self.finishedRequest(incrementalIndex, "Awards Failure")
+                                self.finishedRequest(currentCountIndex, "Awards Failure")
                             }
                         }
                     } else {
                         self.loadingAwards = false
-                        self.finishedRequest(incrementalIndex, "Awards From Memory")
+                        self.finishedRequest(currentCountIndex, "Awards From Memory")
                     }
                 case .intrigue:
                     self.loadingIntrigue = true
                     if self.events == nil && !self.loadingEvents {
                         self.intrigue = nil
                         self.loadingIntrigue = false
-                        self.finishedRequest(incrementalIndex, "Intrigue (other) None")
+                        self.finishedRequest(currentCountIndex, "Intrigue (other) None")
                     } else if self.events != nil, let current = self.events?.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse }) {
                         IntrigueService.getIntrigue(current.id) { intrigue in
                             runOnMainThread {
                                 self.loadingIntrigue = false
                                 self.intrigue = intrigue
-                                self.finishedRequest(incrementalIndex, "Intrigue (other) Success")
+                                self.finishedRequest(currentCountIndex, "Intrigue (other) Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.intrigue = nil
                                 self.loadingIntrigue = false
-                                self.finishedRequest(incrementalIndex, "Intrigue (other) Failure")
+                                self.finishedRequest(currentCountIndex, "Intrigue (other) Failure")
                             }
                         }
                     } else {
                         self.intrigue = nil
                         self.loadingIntrigue = false
-                        self.finishedRequest(incrementalIndex, "Intrigue (other) Nonex2")
+                        self.finishedRequest(currentCountIndex, "Intrigue (other) Nonex2")
                     }
                 case .skills:
                     self.loadingSkills = true
@@ -341,7 +325,7 @@ class DataManager: ObservableObject {
                         runOnMainThread {
                             self.skills = skills
                             self.loadingSkills = false
-                            self.finishedRequest(incrementalIndex, "Skills Success")
+                            self.finishedRequest(currentCountIndex, "Skills Success")
                         }
                     }
                 case .allPlayers:
@@ -351,18 +335,18 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.allPlayers = playerList.players.filter({ $0.username.lowercased() != "googletestaccount@gmail.com" })
                                 self.loadingAllPlayers = false
-                                self.finishedRequest(incrementalIndex, "All Players Success")
+                                self.finishedRequest(currentCountIndex, "All Players Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.allPlayers = nil
                                 self.loadingAllPlayers = false
-                                self.finishedRequest(incrementalIndex, "All Players Failure")
+                                self.finishedRequest(currentCountIndex, "All Players Failure")
                             }
                         }
                     } else {
                         self.loadingAllPlayers = false
-                        self.finishedRequest(incrementalIndex, "All Players From Memory")
+                        self.finishedRequest(currentCountIndex, "All Players From Memory")
                     }
                 case .allCharacters:
                     self.loadingAllCharacters = true
@@ -371,18 +355,18 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.allCharacters = characterList.characters.filter({ $0.fullName.lowercased() != "google test" })
                                 self.loadingAllCharacters = false
-                                self.finishedRequest(incrementalIndex, "All Characters Success")
+                                self.finishedRequest(currentCountIndex, "All Characters Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.allCharacters = nil
                                 self.loadingAllCharacters = false
-                                self.finishedRequest(incrementalIndex, "All Characters Failure")
+                                self.finishedRequest(currentCountIndex, "All Characters Failure")
                             }
                         }
                     } else {
                         self.loadingAllCharacters = false
-                        self.finishedRequest(incrementalIndex, "All Characters From Memory")
+                        self.finishedRequest(currentCountIndex, "All Characters From Memory")
                     }
                 case .charForSelectedPlayer:
                     self.loadingCharForSelectedPlayer = true
@@ -392,23 +376,23 @@ class DataManager: ObservableObject {
                                 runOnMainThread {
                                     self.charForSelectedPlayer = character
                                     self.loadingCharForSelectedPlayer = false
-                                    self.finishedRequest(incrementalIndex, "Char For Selected Player Success")
+                                    self.finishedRequest(currentCountIndex, "Char For Selected Player Success")
                                 }
                             } failureCase: { error in
                                 runOnMainThread {
                                     self.charForSelectedPlayer = nil
                                     self.loadingCharForSelectedPlayer = false
-                                    self.finishedRequest(incrementalIndex, "Char For Selected Player Failure")
+                                    self.finishedRequest(currentCountIndex, "Char For Selected Player Failure")
                                 }
                             }
                         } else {
                             self.loadingCharForSelectedPlayer = false
-                            self.finishedRequest(incrementalIndex, "Char For Selected Player From Memory")
+                            self.finishedRequest(currentCountIndex, "Char For Selected Player From Memory")
                         }
                     } else {
                         self.charForSelectedPlayer = nil
                         self.loadingCharForSelectedPlayer = false
-                        self.finishedRequest(incrementalIndex, "Char For Selected Player No Player")
+                        self.finishedRequest(currentCountIndex, "Char For Selected Player No Player")
                     }
                 case .contactRequests:
                     self.loadingContactRequests = true
@@ -417,18 +401,18 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.contactRequests = contactRequestList.contactRequests
                                 self.loadingContactRequests = false
-                                self.finishedRequest(incrementalIndex, "Contact Success")
+                                self.finishedRequest(currentCountIndex, "Contact Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.contactRequests = nil
                                 self.loadingContactRequests = false
-                                self.finishedRequest(incrementalIndex, "Contact Failure")
+                                self.finishedRequest(currentCountIndex, "Contact Failure")
                             }
                         }
                     } else {
                         self.loadingContactRequests = false
-                        self.finishedRequest(incrementalIndex, "Contact From Memory")
+                        self.finishedRequest(currentCountIndex, "Contact From Memory")
                     }
                 case .eventAttendees:
                     self.loadingEventAttendees = true
@@ -437,19 +421,19 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.eventAttendeesForPlayer = attendeeList.eventAttendees
                                 self.loadingEventAttendees = false
-                                self.finishedRequest(incrementalIndex, "Attendees Success")
+                                self.finishedRequest(currentCountIndex, "Attendees Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.eventAttendeesForPlayer = nil
                                 self.loadingEventAttendees = false
-                                self.finishedRequest(incrementalIndex, "Attendees Failure")
+                                self.finishedRequest(currentCountIndex, "Attendees Failure")
                             }
                         }
 
                     } else {
                         self.loadingEventAttendees = false
-                        self.finishedRequest(incrementalIndex, "Attendees From Memory")
+                        self.finishedRequest(currentCountIndex, "Attendees From Memory")
                     }
                 case .xpReductions:
                     self.loadingXpReductions = true
@@ -458,23 +442,23 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.xpReductions = xpReductions.specialClassXpReductions
                                 self.loadingXpReductions = false
-                                self.finishedRequest(incrementalIndex, "Xp Reductions Success")
+                                self.finishedRequest(currentCountIndex, "Xp Reductions Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.xpReductions = nil
                                 self.loadingXpReductions = false
-                                self.finishedRequest(incrementalIndex, "Xp Reductions Failure")
+                                self.finishedRequest(currentCountIndex, "Xp Reductions Failure")
                             }
                         }
 
                     } else {
                         self.loadingXpReductions = false
-                        self.finishedRequest(incrementalIndex, "Xp Reductions From Memory")
+                        self.finishedRequest(currentCountIndex, "Xp Reductions From Memory")
                     }
                 case .eventPreregs:
                     self.loadingEventPreregs = true
-                    if self.hasEventWithoutPreregs() || (forceDownloadIfApplicable && (self.events == nil || self.events?.isEmpty == true)) {
+                    if self.hasEventWithoutPreregs() || (forceDownloadIfApplicable && self.events.isNotNullOrEmpty) {
                         var count = 0
                         let max = self.events?.count ?? 0
                         for event in self.events ?? [] {
@@ -484,7 +468,7 @@ class DataManager: ObservableObject {
                                     count += 1
                                     if count == max {
                                         self.loadingEventPreregs = false
-                                        self.finishedRequest(incrementalIndex, "Preregs Success")
+                                        self.finishedRequest(currentCountIndex, "Preregs Success")
                                     }
                                 }
                             } failureCase: { error in
@@ -493,14 +477,14 @@ class DataManager: ObservableObject {
                                     count += 1
                                     if count == max {
                                         self.loadingEventPreregs = false
-                                        self.finishedRequest(incrementalIndex, "Preregs Failure")
+                                        self.finishedRequest(currentCountIndex, "Preregs Failure")
                                     }
                                 }
                             }
                         }
                     } else {
                         self.loadingEventPreregs = false
-                        self.finishedRequest(incrementalIndex, "Preregs From Memory")
+                        self.finishedRequest(currentCountIndex, "Preregs From Memory or no events yet")
                     }
                 case .selectedCharXpReductions:
                     self.loadingSelectedCharacterXpReductions = true
@@ -509,18 +493,18 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.selectedCharacterXpReductions = xpReductions.specialClassXpReductions
                                 self.loadingSelectedCharacterXpReductions = false
-                                self.finishedRequest(incrementalIndex, "Selected Char Xp Reductions Success")
+                                self.finishedRequest(currentCountIndex, "Selected Char Xp Reductions Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.selectedCharacterXpReductions = nil
                                 self.loadingSelectedCharacterXpReductions = false
-                                self.finishedRequest(incrementalIndex, "Selected Char Xp Reductions Failure")
+                                self.finishedRequest(currentCountIndex, "Selected Char Xp Reductions Failure")
                             }
                         }
                     } else {
                         self.loadingSelectedCharacterXpReductions = false
-                        self.finishedRequest(incrementalIndex, "Selected Char Xp Reductions From Memory")
+                        self.finishedRequest(currentCountIndex, "Selected Char Xp Reductions From Memory")
                     }
                 case .intrigueForSelectedEvent:
                     self.loadingIntrigueForSelectedEvent = true
@@ -529,19 +513,19 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.intrigueForSelectedEvent = intrigue
                                 self.loadingIntrigueForSelectedEvent = false
-                                self.finishedRequest(incrementalIndex, "Intrigue For Event Success")
+                                self.finishedRequest(currentCountIndex, "Intrigue For Event Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.intrigueForSelectedEvent = nil
                                 self.loadingIntrigueForSelectedEvent = false
-                                self.finishedRequest(incrementalIndex, "Intrigue For Event Failure")
+                                self.finishedRequest(currentCountIndex, "Intrigue For Event Failure")
                             }
                         }
 
                     } else {
                         self.loadingIntrigueForSelectedEvent = false
-                        self.finishedRequest(incrementalIndex, "Intrigue For Event From Memory")
+                        self.finishedRequest(currentCountIndex, "Intrigue For Event From Memory")
                     }
                 case .selectedCharacterGear:
                     self.loadingSelectedCharacterGear = true
@@ -550,7 +534,7 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.selectedCharacterGear = gearListModel.charGear
                                 self.loadingSelectedCharacterGear = false
-                                self.finishedRequest(incrementalIndex, "Selected Char Gear Success")
+                                self.finishedRequest(currentCountIndex, "Selected Char Gear Success")
                                 // Store gear in local data
                                 if self.player != nil && self.selectedChar?.playerId == self.player?.id {
                                     LocalDataHandler.shared.storeGear(gearListModel)
@@ -560,13 +544,13 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.selectedCharacterGear = nil
                                 self.loadingSelectedCharacterGear = false
-                                self.finishedRequest(incrementalIndex, "Selected Char Gear Failure")
+                                self.finishedRequest(currentCountIndex, "Selected Char Gear Failure")
                             }
                         }
 
                     } else {
                         self.loadingSelectedCharacterGear = false
-                        self.finishedRequest(incrementalIndex, "Selected Char Gear From Memory")
+                        self.finishedRequest(currentCountIndex, "Selected Char Gear From Memory")
                     }
                 case .rulebook:
                     self.loadingRulebook = true
@@ -575,12 +559,12 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.rulebook = rulebook
                                 self.loadingRulebook = false
-                                self.finishedRequest(incrementalIndex, "Rulebook Success and/or Fail")
+                                self.finishedRequest(currentCountIndex, "Rulebook Success and/or Fail")
                             }
                         }
                     } else {
                         self.loadingRulebook = false
-                        self.finishedRequest(incrementalIndex, "Rulebook From Memory")
+                        self.finishedRequest(currentCountIndex, "Rulebook From Memory")
                     }
                 case .featureFlags:
                     self.loadingFeatureFlags = true
@@ -589,19 +573,19 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.featureFlags = featureFlags.results
                                 self.loadingFeatureFlags = false
-                                self.finishedRequest(incrementalIndex, "Feature Flag Success")
+                                self.finishedRequest(currentCountIndex, "Feature Flag Success")
                             }
                         } failureCase: { error in
                             runOnMainThread {
                                 self.featureFlags = []
                                 self.loadingFeatureFlags = false
-                                self.finishedRequest(incrementalIndex, "Feature Flag Failure")
+                                self.finishedRequest(currentCountIndex, "Feature Flag Failure")
                             }
                         }
 
                     } else {
                         self.loadingFeatureFlags = false
-                        self.finishedRequest(incrementalIndex, "Feature Flags From Memory")
+                        self.finishedRequest(currentCountIndex, "Feature Flags From Memory")
                     }
                 case .profileImage:
                     self.loadingProfileImage = true
@@ -611,20 +595,20 @@ class DataManager: ObservableObject {
                             runOnMainThread {
                                 self.profileImage = profileImage
                                 self.loadingProfileImage = false
-                                self.finishedRequest(incrementalIndex, "Profile Image Success")
+                                self.finishedRequest(currentCountIndex, "Profile Image Success")
                             }
                             
                         } failureCase: { error in
                             runOnMainThread {
                                 self.profileImage = nil
                                 self.loadingProfileImage = false
-                                self.finishedRequest(incrementalIndex, "Profile Image Failure")
+                                self.finishedRequest(currentCountIndex, "Profile Image Failure")
                             }
                         }
 
                     } else {
                         self.loadingProfileImage = false
-                        self.finishedRequest(incrementalIndex, "Profile Image From Memory")
+                        self.finishedRequest(currentCountIndex, "Profile Image From Memory")
                     }
                 }
             }
@@ -660,16 +644,18 @@ class DataManager: ObservableObject {
         return hasEventWithoutPreregs
     }
 
-    private func finishedRequest(_ incrementalIndex: Int, _ source: String) {
+    private func finishedRequest(_ currentCountIndex: Int, _ source: String) {
         runOnMainThread {
-            self.countReturned[incrementalIndex] = (self.countReturned[incrementalIndex] ?? 0) + 1
-            globalPrintServiceLogs("DataManager - finished \(source) request \(self.countReturned[incrementalIndex] ?? 0) of \(self.targetCount[incrementalIndex] ?? 0)")
-            if self.targetCount[incrementalIndex] ?? 0 == self.countReturned[incrementalIndex] ?? 0 {
-                self.callbacks[incrementalIndex]?()
+            let cr = self.countReturned[currentCountIndex] ?? 0
+            let tc = self.targetCount[currentCountIndex] ?? 0
+            self.countReturned[currentCountIndex] = cr + 1
+            globalPrintServiceLogs("DataManager - finished \(source) request \(cr) of \(tc)")
+            if tc == (cr + 1) {
+                self.callbacks[currentCountIndex]?()
                 // Reset values to save memory
-                self.countReturned[incrementalIndex] = 0
-                self.targetCount[incrementalIndex] = 0
-                self.callbacks[incrementalIndex] = {}
+                self.countReturned[currentCountIndex] = 0
+                self.targetCount[currentCountIndex] = 0
+                self.callbacks[currentCountIndex] = {}
             }
         }
     }

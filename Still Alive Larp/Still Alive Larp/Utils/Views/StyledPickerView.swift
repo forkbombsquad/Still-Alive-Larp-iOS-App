@@ -14,6 +14,20 @@ struct StyledPickerView: View {
     @Binding var options: [String]
     let onSelectionChanged: (_ selection: String) -> Void
     
+    init(title: String, selection: Binding<String>, options: [String], onSelectionChanged: @escaping (_ selection: String) -> Void) {
+        _title = .constant(title)
+        _selection = selection
+        _options = .constant(options)
+        self.onSelectionChanged = onSelectionChanged
+    }
+    
+    init(title: Binding<String>, selection: Binding<String>, options: Binding<[String]>, onSelectionChanged: @escaping (_ selection: String) -> Void) {
+        _title = title
+        _selection = selection
+        _options = options
+        self.onSelectionChanged = onSelectionChanged
+    }
+    
     var body: some View {
         CardView {
             VStack {

@@ -8,9 +8,15 @@
 import Foundation
 
 extension Data {
-
-    func toJsonObject<T:Decodable>() -> T? {
-        return try? JSONDecoder().decode(T.self, from: self)
+    
+    func toJsonObject<T: Decodable>() -> T? {
+        do {
+            return try JSONDecoder().decode(T.self, from: self)
+        } catch {
+            globalTestPrint("❌ Decoding error: \(error)")
+            return nil
+        }
     }
+
 
 }

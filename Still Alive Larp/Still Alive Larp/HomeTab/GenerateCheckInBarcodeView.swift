@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO still need to test this boi
-
 struct GenerateCheckInBarcodeView: View {
     @ObservedObject var _dm = DataManager.shared
 
