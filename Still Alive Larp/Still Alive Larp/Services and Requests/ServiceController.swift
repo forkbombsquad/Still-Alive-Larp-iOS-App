@@ -119,14 +119,7 @@ struct ServiceController {
             case .prod:
                 let request = requestBuilder.getUrlRequest()
                 
-                globalPrintServiceLogs("SERVICE CONTROLLER: Request:\n\(request)")
-                globalPrintServiceLogs("SERVICE CONTROLLER: Headers")
-                for (key, value) in request.allHTTPHeaderFields ?? [:] {
-                    globalPrintServiceLogs("SERVICE CONTROLLER: Header - \(key): \(value)")
-                }
-                if let body = request.httpBody {
-                    globalPrintServiceLogs("SERVICE CONTROLLER: Request Body:\n\(String(data: body, encoding: .utf8) ?? "Unknown")")
-                }
+                self.logRequest(request)
 
                 let task = URLSession.shared.dataTask(with: request) { data, response, error in
                     if let error = error {
@@ -134,7 +127,7 @@ struct ServiceController {
                     } else if let rsp = response as? HTTPURLResponse {
                         let d = data ?? Data()
                         
-                        globalPrintServiceLogs("SERVICE CONTROLLER: Response\n\(String(data: d, encoding: .utf8) ?? "")")
+                        logResponse(rsp, d)
 
                         if let jsonObject: T = d.toJsonObject() {
                             success(ServiceSuccess(data: d, response: rsp, jsonObject: jsonObject))
@@ -151,6 +144,7 @@ struct ServiceController {
                 task.resume()
             case .test:
                 let mockRequest = requestBuilder.getMockRequest()
+                self.logRequest(mockRequest)
                 globalPrintServiceLogs("SERVICE CONTROLLER: Mock Request:\n\(mockRequest)")
 
                 if let responseObject: T = mockRequest.getResponse() {
@@ -163,6 +157,43 @@ struct ServiceController {
 
         }
 
+    }
+    
+    private static func logRequest(_ request: URLRequest) {
+        var requestLog = ""
+        requestLog.buildJsonLine(key: "SERVICE CONTROLLER REQUEST", value: "{", indentValue: 0, addNewline: false, addComma: false)
+        requestLog.buildJsonLine(key: "Endpoint", value: "\(request.httpMethod ?? "") \(request.url?.absoluteString ?? "")", indentValue: 1)
+        requestLog.buildJsonLine(key: "Headers", value: request.allHTTPHeaderFields ?? [:], indentValue: 1)
+        if let body = request.httpBody {
+            requestLog.buildJsonLine(key: "Body", value: "\(String(data: body, encoding: .utf8) ?? "Unknown")", indentValue: 1)
+        }
+        requestLog += "\n}"
+        
+        globalPrintServiceLogs(requestLog)
+    }
+    
+    private static func logRequest(_ request: MockRequest) {
+        var requestLog = ""
+        requestLog.buildJsonLine(key: "SERVICE CONTROLLER REQUEST", value: "{", indentValue: 0, addNewline: false, addComma: false)
+        requestLog.buildJsonLine(key: "Endpoint", value: "\(request.requestType.rawValue) \(request.urlString)", indentValue: 1)
+        requestLog.buildJsonLine(key: "Headers", value: request.headers, indentValue: 1)
+        if let body = request.body {
+            requestLog.buildJsonLine(key: "Body", value: "\(String(data: body, encoding: .utf8) ?? "Unknown")", indentValue: 1)
+        }
+        requestLog += "\n}"
+        
+        globalPrintServiceLogs(requestLog)
+    }
+    
+    private static func logResponse(_ response: HTTPURLResponse, _ data: Data) {
+        var responseLog = ""
+        responseLog.buildJsonLine(key: "SERVICE CONTROLLER RESPONSE", value: "{", indentValue: 0, addNewline: false, addComma: false)
+        responseLog.buildJsonLine(key: "Endpoint", value: "\(response.statusCode.stringValue) \(response.url?.absoluteString ?? "")", indentValue: 1)
+        responseLog.buildJsonLine(key: "Headers", value: response.allHeaderFields, indentValue: 1)
+        responseLog.buildJsonLine(key: "Body", value: String(data: data, encoding: .utf8) ?? "", indentValue: 1)
+        responseLog += "\n}"
+        
+        globalPrintServiceLogs(responseLog)
     }
 
 }

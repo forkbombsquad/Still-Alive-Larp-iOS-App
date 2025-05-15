@@ -42,6 +42,7 @@ struct CommunityTabView: View {
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
+                globalTestPrint("ON APPEAR: COMMUNITY TAB VIEW")
                 self.loadingAllPlayers = true
                 self.loadingAllNpcs = true
                 self.loadingAllResearchProjects = true
@@ -55,6 +56,8 @@ struct CommunityTabView: View {
                         self.loadingAllResearchProjects = false
                     }
                 }
+            }.onDisappear {
+                globalTestPrint("ON DISAPPEAR: COMMUNITY TAB VIEW")
             }
         }
     }

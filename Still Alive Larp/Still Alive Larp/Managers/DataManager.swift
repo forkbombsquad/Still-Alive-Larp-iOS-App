@@ -746,17 +746,6 @@ class DataManager: ObservableObject {
         }
     }
 
-    func loadLocalData() {
-        guard !debugMode else { return }
-        runOnMainThread {
-            self.selectedPlayer = LocalDataHandler.shared.getPlayer()
-            self.charForSelectedPlayer = LocalDataHandler.shared.getCharacter()
-            self.selectedChar = self.charForSelectedPlayer?.baseModel
-            self.selectedCharacterGear = LocalDataHandler.shared.getGear()
-            self.rulebook = RulebookManager.shared.getOfflineVersion()
-        }
-    }
-
     private func hasEventWithoutPreregs() -> Bool {
         var hasEventWithoutPreregs = false
         for event in events ?? [] {
@@ -773,7 +762,7 @@ class DataManager: ObservableObject {
             let cr = self.countReturned[currentCountIndex] ?? 0
             let tc = self.targetCount[currentCountIndex] ?? 0
             self.countReturned[currentCountIndex] = cr + 1
-            globalPrintServiceLogs("DataManager - finished \(source) request \(cr) of \(tc)")
+            globalPrintServiceLogs("DataManager - finished \(source) request \(cr + 1) of \(tc)")
             if tc == (cr + 1) {
                 self.callbacks[currentCountIndex]?()
                 // Reset values to save memory

@@ -9,26 +9,41 @@ import SwiftUI
 
 struct BioView: View {
     @ObservedObject var _dm = DataManager.shared
+    
+    static func Offline(character: FullCharacterModel) -> BioView {
+        return BioView(character: character, allowEdit: false, offline: true)
+    }
 
-    init(allowEdit: Bool, offline: Bool = false) {
+    init(allowEdit: Bool) {
+        self.allowEdit = allowEdit
+        self.offline = false
+        self.initialChar = nil
+    }
+    
+    private init(character: FullCharacterModel, allowEdit: Bool, offline: Bool) {
         self.allowEdit = allowEdit
         self.offline = offline
+        self.initialChar = character
     }
 
     let allowEdit: Bool
     let offline: Bool
+    @State var firstLoad = true
+    @State var character: FullCharacterModel? = nil
+    
+    let initialChar: FullCharacterModel?
 
     var body: some View {
         VStack(alignment: .center) {
             ScrollView {
                 VStack {
-                    Text("\(DataManager.shared.charForSelectedPlayer?.fullName ?? "")'s\nBio\(offline ? " (Offline)" : "")")
+                    Text("\(character?.fullName ?? "")'s\nBio\(offline ? " (Offline)" : "")")
                         .font(.system(size: 32, weight: .bold))
                         .multilineTextAlignment(.center)
                         .frame(alignment: .center)
                         .padding([.bottom], 16)
                     Divider()
-                    Text(DataManager.shared.charForSelectedPlayer?.bio ?? "")
+                    Text(character?.bio ?? "")
                     if allowEdit && !offline {
                         NavArrowViewRed(title: "Edit Bio") {
                             EditBioView()
@@ -41,6 +56,14 @@ struct BioView: View {
             }
         }.padding(16)
         .background(Color.lightGray)
+        .onAppear {
+            if firstLoad && !offline {
+                self.firstLoad = false
+                self.character = DataManager.shared.charForSelectedPlayer
+            } else if offline {
+                self.character = initialChar
+            }
+        }
     }
 }
 
@@ -50,7 +73,7 @@ struct BioView: View {
     dm.loadMockData()
     let md = getMockData()
     dm.charForSelectedPlayer = md.fullCharacters()[1]
-    var bv = BioView(allowEdit: true, offline: false)
+    var bv = BioView(allowEdit: true)
     bv._dm = dm
     return bv
 }

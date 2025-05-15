@@ -20,3 +20,15 @@ extension Dictionary where Key == String, Value == String {
     }
 
 }
+
+extension Dictionary where Key == AnyHashable, Value == Any {
+    
+    var stringDictionary: [String: String] {
+        var result: [String: String] = [:]
+        for (key, value) in self {
+            result["\(key)"] = "\(value)"
+        }
+        return result
+    }
+    
+}

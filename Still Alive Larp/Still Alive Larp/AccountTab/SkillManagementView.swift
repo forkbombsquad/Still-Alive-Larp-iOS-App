@@ -9,43 +9,78 @@ import SwiftUI
 
 struct SkillManagementView: View {
     @ObservedObject var _dm = DataManager.shared
-
-    init(offline: Bool = false) {
-        self.offline = offline
+    
+    static func Offline(character: FullCharacterModel, skills: [FullSkillModel]) -> SkillManagementView {
+        return SkillManagementView(offline: true, allowEdit: false, character: character, skills: skills)
     }
 
     let offline: Bool
-
+    let allowEdit: Bool
+    @State var character: FullCharacterModel? = nil
+    @State var skills: [FullSkillModel] = []
+    @State var loadingSkills: Bool = false
     @State var searchText: String = ""
+    
+    let initialChar: FullCharacterModel
+    let initalSkills: [FullSkillModel]
+    
+    // Online
+    init(_dm: DataManager = DataManager.shared, character: FullCharacterModel, allowEdit: Bool) {
+        self._dm = _dm
+        self.offline = false
+        self.allowEdit = allowEdit
+        self.initialChar = character
+        self.initalSkills = []
+    }
+    
+    private init (offline: Bool, allowEdit: Bool, character: FullCharacterModel, skills: [FullSkillModel]) {
+        self.offline = offline
+        self.allowEdit = allowEdit
+        self.initialChar = character
+        self.initalSkills = skills
+        
+    }
 
     var body: some View {
         VStack {
-            if let character = DataManager.shared.charForSelectedPlayer {
+            if let character = character {
                 Text("\(character.fullName)'s\nSkills\(offline ? " (Offline)" : "")")
                     .font(.system(size: 32, weight: .bold))
-                    .frame(alignment: .center)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .multilineTextAlignment(.center)
                 HStack {
                     TextField("Search", text: $searchText)
                         .padding([.leading, .trailing], 16)
                         .textFieldStyle(.roundedBorder)
                         .textInputAutocapitalization(.never)
-                    if !offline {
+                    if allowEdit {
                         Spacer()
-                        if !DataManager.shared.loadingSkills {
-                            if DataManager.shared.character?.id == DataManager.shared.charForSelectedPlayer?.id {
-                                NavigationLink {
-                                    AddSkillView()
-                                } label: {
-                                    VStack {
-                                        Image(systemName: "plus.app.fill").resizable().frame(width: 22, height: 22)
-                                        Text("Add New").font(.system(size: 16, weight: .bold))
+                        if !loadingSkills {
+                            NavigationLink {
+                                AddSkillView().onDisappear {
+                                    runOnMainThread {
+                                        self.loadingSkills = true
+                                        CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
+                                            runOnMainThread {
+                                                if let fcm = fcm {
+                                                    self.character = fcm
+                                                    DataManager.shared.character = fcm
+                                                }
+                                                self.loadingSkills = false
+                                            }
+                                        }
+                                        
                                     }
-                                    .padding(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20).strokeBorder(Color.brightRed, lineWidth: 2)
-                                    )
                                 }
+                            } label: {
+                                VStack {
+                                    Image(systemName: "plus.app.fill").resizable().frame(width: 22, height: 22)
+                                    Text("Add New").font(.system(size: 16, weight: .bold))
+                                }
+                                .padding(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20).strokeBorder(Color.brightRed, lineWidth: 2)
+                                )
                             }
                         } else {
                             ProgressView()
@@ -56,21 +91,23 @@ struct SkillManagementView: View {
                         }
                     }
                 }.padding([.leading, .trailing, .top], 16)
-                if DataManager.shared.loadingCharForSelectedPlayer || DataManager.shared.loadingSkills {
-
+                if loadingSkills {
                     VStack {
                         ScrollView {
                             VStack {
-                                ProgressView()
+                                HStack {
+                                    Spacer()
+                                    ProgressView().controlSize(.large)
+                                    Spacer()
+                                }
                             }
                         }
                     }
                     .padding(16)
                     .background(Color.lightGray)
-
                 } else {
                     List() {
-                        ForEach(shouldDoFiltering() ? getFilteredSkills() : getSortedSkills(DataManager.shared.charForSelectedPlayer?.skills ?? [])) { skill in
+                        ForEach(shouldDoFiltering() ? getFilteredSkills() : getSortedSkills(skills)) { skill in
                             SkillCellView(skill: skill)
                         }
                     }
@@ -80,8 +117,17 @@ struct SkillManagementView: View {
         }
         .background(Color.lightGray)
         .onAppear {
-            if !offline {
-                DataManager.shared.load([.skills, .charForSelectedPlayer])
+            self.character = initialChar
+            if offline {
+                self.skills = initalSkills
+            } else {
+                self.loadingSkills = true
+                DataManager.shared.load([.skills]) {
+                    runOnMainThread {
+                        self.loadingSkills = false
+                        self.skills = DataManager.shared.skills ?? []
+                    }
+                }
             }
         }
     }
@@ -93,7 +139,7 @@ struct SkillManagementView: View {
     func getFilteredSkills() -> [FullSkillModel] {
         var filteredSkills = [FullSkillModel]()
 
-        for skill in DataManager.shared.charForSelectedPlayer?.skills ?? [] {
+        for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
                 filteredSkills.append(skill)
             }
@@ -113,9 +159,6 @@ struct SkillManagementView: View {
     let dm = DataManager.shared
     dm.debugMode = true
     dm.loadMockData()
-    dm.loadingCharForSelectedPlayer = false
-    dm.loadingSkills = false
-    var smv = SkillManagementView(offline: false)
-    smv._dm = dm
-    return smv
+    let md = getMockData()
+    return SkillManagementView(_dm: dm, character: md.fullCharacters().first!, allowEdit: true)
 }

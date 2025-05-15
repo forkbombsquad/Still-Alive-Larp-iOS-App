@@ -12,8 +12,17 @@ struct PlayerStatsView: View {
 
     let player: PlayerModel?
     let offline: Bool
+    
+    static func Offline(player: PlayerModel) -> PlayerStatsView {
+        return PlayerStatsView(offline: true, player: player)
+    }
 
-    init(offline: Bool = false, player: PlayerModel?) {
+    init(player: PlayerModel?) {
+        self.offline = false
+        self.player = player
+    }
+    
+    private init(offline: Bool, player: PlayerModel?) {
         self.offline = offline
         self.player = player
     }
@@ -61,7 +70,7 @@ struct PlayerStatsView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    var psv = PlayerStatsView(offline: false, player: md.player(2))
+    var psv = PlayerStatsView(player: md.player(2))
     psv._dm = dm
     return psv
 }

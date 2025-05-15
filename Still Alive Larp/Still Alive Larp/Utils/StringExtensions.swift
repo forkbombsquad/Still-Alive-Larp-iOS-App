@@ -104,4 +104,44 @@ extension String {
         return decompressedData
     }
     
+    func repeated(_ times: Int) -> String {
+        var str = ""
+        for index in 0..<times {
+            str += self
+        }
+        return str
+    }
+    
+    mutating func buildJsonLine(key: String, value: String, indentAmount: String = "  ", indentValue: Int, addNewline: Bool = true, addComma: Bool = true) {
+        self += "\(addNewline ? "\n" : "")\(indentAmount.repeated(indentValue))\(key): \(value)"
+        self += "\(addComma ? "," : "")"
+    }
+    
+    mutating func buildJsonLine(key: String, value: [String], indentAmount: String = "  ", indentValue: Int, addNewline: Bool = true, addComma: Bool = true) {
+        self += "\(addNewline ? "\n" : "")\(indentAmount.repeated(indentValue))\(key): ["
+        for (index, v) in value.enumerated() {
+            self += "\n\(indentAmount.repeated(indentValue + 1))\(v)\(index + 1 == value.count ? "" : ",")"
+        }
+        self += "\n\(indentAmount.repeated(indentValue))]"
+        self += "\(addComma ? "," : "")"
+    }
+    
+    mutating func buildJsonLine(key: String, value: [String : String], indentAmount: String = "  ", indentValue: Int, addNewline: Bool = true, addComma: Bool = true) {
+        self += "\(addNewline ? "\n" : "")\(indentAmount.repeated(indentValue))\(key): {"
+        var count = 0
+        for (key, v) in value {
+            self += "\n\(indentAmount.repeated(indentValue + 1))\(key): \(v)"
+            count += 1
+            if count < value.count {
+                self += ","
+            }
+        }
+        self += "\n\(indentAmount.repeated(indentValue))}"
+        self += "\(addComma ? "," : "")"
+    }
+    
+    mutating func buildJsonLine(key: String, value: [AnyHashable : Any], indentAmount: String = "  ", indentValue: Int, addNewline: Bool = true, addComma: Bool = true) {
+        self.buildJsonLine(key: key, value: value.stringDictionary, indentAmount: indentAmount, indentValue: indentValue, addNewline: addNewline, addComma: addComma)
+    }
+    
 }

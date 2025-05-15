@@ -11,7 +11,7 @@ struct AllPlayersListView: View {
     
     @ObservedObject var _dm = DataManager.shared
     
-    @State var allPlayers: [PlayerModel]
+    let allPlayers: [PlayerModel]
     
     var body: some View {
         VStack {
@@ -36,6 +36,12 @@ struct AllPlayersListView: View {
         }
         .padding(16)
         .background(Color.lightGray)
+        .onAppear {
+            globalTestPrint("ON APPEAR: ALL PLAYERS LIST VIEW")
+        }
+        .onDisappear {
+            globalTestPrint("ON DISAPPEAR: ALL PLAYERS LIST VIEW")
+        }
     }
 }
 

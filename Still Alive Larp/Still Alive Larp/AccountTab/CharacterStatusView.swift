@@ -9,12 +9,25 @@ import SwiftUI
 
 struct CharacterStatusView: View {
     @ObservedObject var _dm = DataManager.shared
-
-    let offline: Bool
-
-    init(offline: Bool = false) {
-        self.offline = offline
+    
+    static func Offline(character: FullCharacterModel) -> CharacterStatusView {
+        return CharacterStatusView(offline: true, character: character)
     }
+    
+    init() {
+        self.offline = false
+        self.character = nil
+        self.initialChar = nil
+    }
+    
+    private init (offline: Bool, character: FullCharacterModel?) {
+        self.offline = offline
+        self.initialChar = character
+    }
+    
+    let initialChar: FullCharacterModel?
+    let offline: Bool
+    @State var character: FullCharacterModel? = nil
 
     var body: some View {
         VStack(alignment: .center) {
@@ -26,7 +39,7 @@ struct CharacterStatusView: View {
                         .frame(alignment: .center)
                         .padding([.bottom], 16)
                     Divider()
-                    if let character = DataManager.shared.charForSelectedPlayer {
+                    if let character = character {
                         KeyValueView(key: "Name", value: character.fullName)
                         if let playerName = DataManager.shared.selectedPlayer?.fullName {
                             KeyValueView(key: "Player", value: playerName)
@@ -42,8 +55,16 @@ struct CharacterStatusView: View {
             HStack {
                 Spacer()
             }
-        }.padding(16)
+        }
+        .padding(16)
         .background(Color.lightGray)
+        .onAppear {
+            if self.offline {
+                self.character = initialChar
+            } else {
+                self.character = DataManager.shared.charForSelectedPlayer
+            }
+        }
     }
 }
 
@@ -138,7 +159,7 @@ struct CharacterSkillAndArmorSubView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    var csv = CharacterStatusView(offline: false)
+    var csv = CharacterStatusView()
     csv._dm = dm
     return csv
 }

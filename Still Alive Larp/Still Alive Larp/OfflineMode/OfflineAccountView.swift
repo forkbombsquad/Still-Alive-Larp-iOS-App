@@ -8,9 +8,34 @@
 import SwiftUI
 
 struct OfflineAccountView: View {
-    @ObservedObject var _dm = DataManager.shared
+    
+    init() {
+        self.player = LocalDataHandler.shared.getPlayer()
+        self.character = LocalDataHandler.shared.getCharacter()
+        self.skills = SkillManager.shared.getSkillsOffline()
+        self.gear = LocalDataHandler.shared.getGear()?.first
+        self.npcs = LocalDataHandler.shared.getNPCs() ?? []
+        self.rulebook = RulebookManager.shared.getOfflineVersion()
+        self.treatingWoundsDiagram = LocalDataHandler.shared.getImage(.treatingWounds)
+    }
+    
+    init(_ player: PlayerModel?, _ character: FullCharacterModel?, _ skills: [FullSkillModel], _ gear: GearModel?, _ npcs: [FullCharacterModel], _ rulebook: Rulebook?, _ treatingWoundsDiagram: UIImage?) {
+        self.player = player
+        self.character = character
+        self.skills = skills
+        self.gear = gear
+        self.npcs = npcs
+        self.rulebook = rulebook
+        self.treatingWoundsDiagram = treatingWoundsDiagram
+    }
 
-    @State private var loading = false
+    let player: PlayerModel?
+    let character: FullCharacterModel?
+    let skills: [FullSkillModel]
+    let gear: GearModel?
+    let npcs: [FullCharacterModel]
+    let rulebook: Rulebook?
+    let treatingWoundsDiagram: UIImage?
 
     var body: some View {
         VStack {
@@ -20,36 +45,33 @@ struct OfflineAccountView: View {
                         Text("Offline Mode")
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
-                        if loading {
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                        } else if let player = DataManager.shared.selectedPlayer {
+                        if let player = player {
                             Text("Personal")
                                 .font(.system(size: 24, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 8)
                             NavArrowView(title: "Player Stats") { _ in
-                                PlayerStatsView(offline: true, player: DataManager.shared.selectedPlayer)
+                                PlayerStatsView.Offline(player: player)
                             }
-                            if DataManager.shared.charForSelectedPlayer != nil {
+                            if let character = character {
                                 NavArrowView(title: "Character Stats") { _ in
-                                    CharacterStatusView(offline: true)
+                                    CharacterStatusView.Offline(character: character)
                                 }
                                 NavArrowView(title: "Character Skills") { _ in
-                                    SkillManagementView(offline: true)
+                                    SkillManagementView.Offline(character: character, skills: self.skills)
                                 }
                                 NavArrowView(title: "Personal Skill Tree Diagram") { _ in
                                     // TODO
                                 }
                                 NavArrowView(title: "Character Bio") { _ in
-                                    BioView(allowEdit: false, offline: true)
+                                    BioView.Offline(character: character)
                                 }
-                                NavArrowView(title: "Character Gear") { _ in
-                                    GearView(character: DataManager.shared.charForSelectedPlayer!.baseModel, offline: true, allowEdit: false)
+                                if let gear = gear {
+                                    NavArrowView(title: "Character Gear") { _ in
+                                        GearView.Offline(character, gear: gear)
+                                    }
                                 }
+                                
                             }
 
                         }
@@ -58,24 +80,25 @@ struct OfflineAccountView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
                         NavArrowView(title: "All Skills") { _ in
-                            SkillListView(skills: SkillManager.shared.getSkillsOffline())
+                            SkillListView(skills: skills)
                         }
                         NavArrowView(title: "Skill Tree Diagram") { _ in
                             // TODO
                         }
-                        if DataManager.shared.rulebook != nil {
+                        if let rulebook = rulebook {
                             NavArrowView(title: "Rulebook") { _ in
-                                ViewRulesView(rulebook: DataManager.shared.rulebook)
+                                ViewRulesView(rulebook: rulebook)
                             }
                         }
-                        NavArrowView(title: "Treating Wounds Diagram") { _ in
-                            if let image = LocalDataHandler.shared.getImage(.treatingWounds) {
+                        if let image = treatingWoundsDiagram {
+                            NavArrowView(title: "Treating Wounds Diagram") { _ in
                                 DownloadedImageView(image: image)
                             }
                         }
                         NavArrowView(title: "All NPCs") { _ in
-                            AllNpcsListView(fullNpcModelsOffline: LocalDataHandler.shared.getNPCs() ?? [])
+                            AllNpcsListView(fullNpcModelsOffline: self.npcs, offlineSkills: self.skills)
                         }
+                        
                         if FeatureFlag.oldSkillTreeImage.isActive() {
                             NavArrowView(title: "Skill Tree Diagram Image (Legacy)") { _ in
                                 if let image = LocalDataHandler.shared.getImage(.skillTree) {
@@ -94,23 +117,10 @@ struct OfflineAccountView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            loading = true
-            runOnMainThread {
-                DataManager.shared.loadLocalData()
-                DataManager.shared.loadingSelectedCharacterGear = false
-                DataManager.shared.loadingCharForSelectedPlayer = false
-                DataManager.shared.loadingRulebook = false
-                self.loading = false
-                DataManager.shared.loadingSkills = false
-            }
-        }
     }
 }
 
 #Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return OfflineAccountView(_dm: dm)
+    let md = getMockData()
+    OfflineAccountView(md.player(), md.fullCharacters().first!, md.fullSkills(), md.gear(), md.fullCharacters(), md.rulebook, nil)
 }

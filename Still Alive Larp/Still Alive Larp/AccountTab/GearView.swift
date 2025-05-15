@@ -10,15 +10,27 @@ import SwiftUI
 struct GearView: View {
     @ObservedObject var _dm = DataManager.shared
     @Environment(\.presentationMode) var presentationMode
+    
+    static func Offline(_ character: FullCharacterModel, gear: GearModel) -> GearView {
+        return GearView(character: character.baseModel, gear: gear, offline: true, allowEdit: false)
+    }
 
-    init(character: CharacterModel, offline: Bool, allowEdit: Bool) {
+    init(character: CharacterModel, allowEdit: Bool) {
+        self.character = character
+        self.offline = false
+        self.allowEdit = allowEdit
+        self.initialGear = nil
+    }
+    
+    private init(character: CharacterModel, gear: GearModel, offline: Bool, allowEdit: Bool) {
         self.character = character
         self.offline = offline
         self.allowEdit = allowEdit
+        self.initialGear = gear
     }
 
     let character: CharacterModel
-    let offline: Bool
+    private let offline: Bool
     let allowEdit: Bool
     
     @State var loading: Bool = false
@@ -26,7 +38,7 @@ struct GearView: View {
     @State var gear: GearModel? = nil
     @State var gearJsonModels: [GearJsonModel] = []
     
-    @State var gearReference: GearJsonModel? = nil
+    let initialGear: GearModel?
     
     @State var firstLoad: Bool = true
     
@@ -40,7 +52,7 @@ struct GearView: View {
                             .multilineTextAlignment(.center)
                             .frame(alignment: .center)
                             .padding([.bottom], 16)
-                        if (DataManager.shared.loadingSelectedCharacterGear) {
+                        if (loading) {
                             Text("Loading Character Gear...")
                                 .font(.system(size: 32, weight: .bold))
                                 .multilineTextAlignment(.center)
@@ -88,19 +100,24 @@ struct GearView: View {
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
-            if firstLoad {
-                runOnMainThread {
-                    firstLoad = false
-                    loading = true
-                    DataManager.shared.selectedChar = character
-                    DataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
-                        runOnMainThread {
-                            self.loading = false
-                            self.gear = DataManager.shared.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
-                            self.gearJsonModels = self.gear?.jsonModels ?? []
+            if !offline {
+                if firstLoad {
+                    runOnMainThread {
+                        firstLoad = false
+                        loading = true
+                        DataManager.shared.selectedChar = character
+                        DataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
+                            runOnMainThread {
+                                self.loading = false
+                                self.gear = DataManager.shared.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
+                                self.gearJsonModels = self.gear?.jsonModels ?? []
+                            }
                         }
                     }
                 }
+            } else {
+                self.gear = initialGear
+                self.gearJsonModels = initialGear?.jsonModels ?? []
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -272,7 +289,7 @@ struct GearSubview: View {
     let md = getMockData()
     dm.loadingSelectedCharacterGear = false
     dm.selectedCharacterGear = [md.gear(characterId: 2)]
-    var gv = GearView(character: md.character(id: 2), offline: false, allowEdit: true)
+    var gv = GearView(character: md.character(id: 2), allowEdit: true)
     gv._dm = dm
     return gv
 }

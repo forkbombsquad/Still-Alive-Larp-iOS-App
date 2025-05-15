@@ -13,7 +13,7 @@ struct Constants {
 //        TODO ALWAYS - set these to false before release
         static let showServiceLogging = true
         static let showTestLogging = true
-        static let showDebugButtonInAccountView = true
+        static let showDebugButtonInAccountView = false
         static let allowChangingServiceOperationMode = true
     }
     

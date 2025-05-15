@@ -12,7 +12,10 @@ struct AccountTabView: View {
     @ObservedObject var _dm = DataManager.shared
 
     @State private var loading: Bool = false
+    @State private var loadingProfileImage: Bool = false
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
+    @State private var player: PlayerModel? = nil
+    @State private var character: FullCharacterModel? = nil
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -23,9 +26,7 @@ struct AccountTabView: View {
                     let imgWidth = gr.size.width * 0.75
                     ScrollView {
                         PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 60) {
-                            DataManager.shared.load([.player, .character], forceDownloadIfApplicable: true) {
-                                DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
-                            }
+                            self.reload(true)
                         }
                         VStack {
                             Text("My Account")
@@ -37,17 +38,17 @@ struct AccountTabView: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: imgWidth, height: imgWidth)
-                                    if DataManager.shared.loadingProfileImage {
+                                    if loadingProfileImage {
                                         ProgressView()
                                         .tint(.red)
                                         .controlSize(.large)
                                         .padding(.top, 80)
                                     }
-                                    FakeLoadingButtonView($loading, width: 44, height: 44, buttonText: "Edit")
+                                    FakeLoadingButtonView($loadingProfileImage, width: 44, height: 44, buttonText: "Edit")
                                     
                                 }
-                            }.disabled(DataManager.shared.loadingProfileImage)
-                            Text(DataManager.shared.player?.fullName ?? "")
+                            }.disabled(loadingProfileImage)
+                            Text(self.player?.fullName ?? "")
                                 .font(.system(size: 20))
                                 .underline()
                                 .frame(alignment: .center)
@@ -55,23 +56,23 @@ struct AccountTabView: View {
                                 .font(.system(size: 24, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 8)
-                            if DataManager.shared.character != nil {
-                                NavArrowView(title: "Character Stats") { _ in
+                            if let character = character {
+                                NavArrowView(title: "Character Stats", loading: $loading) { _ in
                                     CharacterStatusView()
                                 }
-                                NavArrowView(title: "Skill Management") { _ in
-                                    SkillManagementView()
+                                NavArrowView(title: "Skill Management", loading: $loading) { _ in
+                                    SkillManagementView(character: character, allowEdit: true)
                                 }
-                                NavArrowView(title: "Personal Skill Tree Diagram") { _ in
+                                NavArrowView(title: "Personal Skill Tree Diagram", loading: $loading) { _ in
                                     // TODO
                                 }
-                                NavArrowView(title: "Bio") { _ in
+                                NavArrowView(title: "Bio", loading: $loading) { _ in
                                     BioView(allowEdit: true)
                                 }
-                                NavArrowView(title: "Gear") { _ in
-                                    GearView(character: DataManager.shared.character!.baseModel, offline: false, allowEdit: false)
+                                NavArrowView(title: "Gear", loading: $loading) { _ in
+                                    GearView(character: character.baseModel, allowEdit: false)
                                 }
-                                NavArrowView(title: "Special Class Xp Reductions") { _ in
+                                NavArrowView(title: "Special Class Xp Reductions", loading: $loading) { _ in
                                     SpecialClassXpReductionsView()
                                 }
                             }
@@ -82,20 +83,20 @@ struct AccountTabView: View {
                             Text("Account")
                                 .font(.system(size: 24, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            NavArrowView(title: "Player Stats") { _ in
-                                PlayerStatsView(player: DataManager.shared.player)
+                            NavArrowView(title: "Player Stats", loading: $loading) { _ in
+                                PlayerStatsView(player: self.player)
                             }
                             
-                            NavArrowView(title: "Manage Account") { _ in
+                            NavArrowView(title: "Manage Account", loading: $loading) { _ in
                                 ManageAccountView()
                             }
-                            if DataManager.shared.player?.isAdmin.boolValue ?? false {
-                                NavArrowViewRed(title: "Admin Tools") {
+                            if self.player?.isAdmin.boolValue ?? false {
+                                NavArrowViewRed(title: "Admin Tools", loading: $loading) {
                                     AdminView()
                                 }
                             }
                             if Constants.Logging.showDebugButtonInAccountView {
-                                NavArrowViewRed(title: "Debug Button") {
+                                NavArrowViewRed(title: "Debug Button", loading: $loading) {
                                     // TODO ALWAYS - remove all code here before launch
                                 }
                             }
@@ -111,15 +112,26 @@ struct AccountTabView: View {
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
-                DataManager.shared.loadingProfileImage = true
-                DataManager.shared.load([.player, .character]) {
-                    DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
-                    runOnMainThread {
-                        DataManager.shared.profileImage = nil
-                        DataManager.shared.load([.profileImage]) {
-                            runOnMainThread {
-                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                            }
+                self.reload(false)
+            }
+        }
+    }
+    
+    private func reload(_ force: Bool) {
+        runOnMainThread {
+            self.loading = true
+            self.loadingProfileImage = true
+            DataManager.shared.load([.player, .character], forceDownloadIfApplicable: force) {
+                DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
+                runOnMainThread {
+                    self.player = DataManager.shared.player
+                    self.character = DataManager.shared.character
+                    self.loading = false
+                    DataManager.shared.profileImage = nil
+                    DataManager.shared.load([.profileImage], forceDownloadIfApplicable: force) {
+                        runOnMainThread {
+                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                            self.loadingProfileImage = false
                         }
                     }
                 }

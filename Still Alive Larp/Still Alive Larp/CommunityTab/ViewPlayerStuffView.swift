@@ -50,7 +50,9 @@ struct ViewPlayerStuffView: View {
                                 CharacterStatusView()
                             }
                             NavArrowView(title: "Skills", loading: $loadingCharacter) { _ in
-                                SkillManagementView()
+                                if let char = self.character {
+                                    SkillManagementView(character: char, allowEdit: false)
+                                }
                             }
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingCharacter) { _ in
                                 // TODO
@@ -60,7 +62,7 @@ struct ViewPlayerStuffView: View {
                             }
                             if let character = character {
                                 NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in
-                                    GearView(character: character.baseModel, offline: false, allowEdit: false)
+                                    GearView(character: character.baseModel, allowEdit: false)
                                 }
                             } else {
                                 NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in }
@@ -72,26 +74,38 @@ struct ViewPlayerStuffView: View {
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
+            globalTestPrint("ON APPEAR: VIEW PLAYER STUFF VIEW")
             self.loadingCharacter = true
             self.loadingProfileImage = true
-            DataManager.shared.selectedPlayer = self.playerModel
-            DataManager.shared.load([.charForSelectedPlayer, .profileImage]) {
+            CharacterManager.shared.getActiveCharacterForOtherPlayer(playerModel.id) { character in
                 runOnMainThread {
-                    self.character = DataManager.shared.charForSelectedPlayer
-                    self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                    self.loadingProfileImage = false
+                    self.character = character
                     self.loadingCharacter = false
+                    DataManager.shared.selectedPlayer = playerModel
+                    DataManager.shared.charForSelectedPlayer = character
+                    DataManager.shared.load([.profileImage]) {
+                        runOnMainThread {
+                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                            self.loadingProfileImage = false
+                        }
+                    }
                 }
-            }
-            runOnMainThread {
-                DataManager.shared.profileImage = nil
-                DataManager.shared.load([.charForSelectedPlayer])
-                DataManager.shared.load([.profileImage]) {
-                    runOnMainThread {
-                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+            } failureCase: { error in
+                runOnMainThread {
+                    self.character = nil
+                    self.loadingCharacter = false
+                    DataManager.shared.selectedPlayer = playerModel
+                    DataManager.shared.load([.profileImage]) {
+                        runOnMainThread {
+                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                            self.loadingProfileImage = false
+                        }
                     }
                 }
             }
+        }
+        .onDisappear {
+            globalTestPrint("ON DISAPPEAR: VIEW PLAYER STUFF VIEW")
         }
     }
 }

@@ -17,12 +17,14 @@ struct AllNpcsListView: View {
     
     @State var npcs: [CharacterModel]
     @State var fullNpcModelsOffline: [FullCharacterModel] = []
+    @State var offlineSkills: [FullSkillModel] = []
     
-    init(_dm: DataManager = DataManager.shared, fullNpcModelsOffline: [FullCharacterModel]) {
+    init(_dm: DataManager = DataManager.shared, fullNpcModelsOffline: [FullCharacterModel], offlineSkills: [FullSkillModel]) {
         self._dm = _dm
         self.offline = true
-        self.npcs = fullNpcModelsOffline.map({ $0.baseModel })
         self.fullNpcModelsOffline = fullNpcModelsOffline
+        self.npcs = fullNpcModelsOffline.map({ $0.baseModel })
+        self.offlineSkills = offlineSkills
     }
     
     init(_dm: DataManager = DataManager.shared, npcs: [CharacterModel]) {
@@ -45,19 +47,19 @@ struct AllNpcsListView: View {
                         KeyValueView(key: "Total Living NPCs", value: "\(livingCount) / 10", showDivider: false)
                         KeyValueView(key: "Quest Rewards Reduced By", value: "\(100 - (10 * livingCount))%").padding(.top, 8)
                         LazyVStack(spacing: 8) {
-                            ForEach(npcs.filter({ $0.isAlive.boolValueDefaultFalse }).sorted(by: { $0.fullName < $1.fullName })) { npc in
+                            ForEach(aliveNpcs()) { npc in
                                 NavArrowView(title: npc.fullName) { _ in
                                     if self.offline {
-                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!)
+                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: self.offlineSkills)
                                     } else {
                                         ViewNPCStuffView(characterModel: npc)
                                     }
                                 }
                             }
-                            ForEach(npcs.filter({ !$0.isAlive.boolValueDefaultFalse }).sorted(by: { $0.fullName < $1.fullName })) { npc in
+                            ForEach(deadNpcs()) { npc in
                                 NavArrowViewRed(title: "\(npc.fullName) (Dead)") {
                                     if self.offline {
-                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!)
+                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: self.offlineSkills)
                                     } else {
                                         ViewNPCStuffView(characterModel: npc)
                                     }
@@ -70,6 +72,14 @@ struct AllNpcsListView: View {
         }
         .padding(16)
         .background(Color.lightGray)
+    }
+    
+    func aliveNpcs() -> [CharacterModel] {
+        return npcs.filter({ $0.isAlive.boolValueDefaultFalse }).sorted(by: { $0.fullName < $1.fullName })
+    }
+    
+    func deadNpcs() -> [CharacterModel] {
+        return npcs.filter({ !$0.isAlive.boolValueDefaultFalse }).sorted(by: { $0.fullName < $1.fullName })
     }
 }
 
