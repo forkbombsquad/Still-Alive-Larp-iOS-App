@@ -21,6 +21,27 @@ class CharacterManager {
     private var completionBlocks = [((character: FullCharacterModel?) -> Void)?]()
 
     private init() {}
+    
+    func fetchFullCharacter(characterId: Int, callback: @escaping (FullCharacterModel?) -> Void) {
+        CharacterService.getCharacter(characterId) { characterModel in
+            var character = FullCharacterModel(characterModel)
+            SkillManager.shared.getSkills() { skills in
+                CharacterSkillService.getAllSkillsForChar(character.id, onSuccess: { charSkills in
+                    for cs in charSkills.charSkills {
+                        guard let sk = skills.first(where: { $0.id == cs.skillId }) else { continue }
+                        character.skills.append(sk)
+                    }
+                    callback(character)
+
+                }, failureCase: { error in
+                    callback(nil)
+                })
+            }
+        } failureCase: { error in
+            callback(nil)
+        }
+
+    }
 
     func getActiveCharacterForOtherPlayer(_ playerId: Int, completion: @escaping (_ character: FullCharacterModel?) -> Void, failureCase: @escaping FailureCase) {
         CharacterService.getAllPlayerCharacters(playerId, onSuccess: { characterListModel in

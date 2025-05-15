@@ -13,7 +13,7 @@ struct SelectEventForPreregView: View {
     let events: [EventModel]
 
     init(events: [EventModel]) {
-        self.events = events.filter({ $0.isInFuture() && !$0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })
+        self.events = events
     }
 
     var body: some View {
@@ -25,9 +25,21 @@ struct SelectEventForPreregView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         ForEach(events) { event in
-                            NavArrowViewBlue(title: "\(event.title) - \(event.date.yyyyMMddToMonthDayYear())") {
-                                ViewPreregForEventView(event: event)
-                            }.navigationViewStyle(.stack)
+                            if event.isFinished.boolValueDefaultFalse {
+                                NavArrowViewRed(title: "\(event.title) - \(event.date.yyyyMMddToMonthDayYear())") {
+                                    ViewPreregForEventView(event: event)
+                                }.navigationViewStyle(.stack)
+                            } else if event.isStarted.boolValueDefaultFalse {
+                                NavArrowViewBlue(title: "\(event.title) - \(event.date.yyyyMMddToMonthDayYear())") {
+                                    ViewPreregForEventView(event: event)
+                                }.navigationViewStyle(.stack)
+                            } else {
+                                NavArrowView(title: "\(event.title) - \(event.date.yyyyMMddToMonthDayYear())") { _ in
+                                    
+                                    ViewPreregForEventView(event: event)
+                                }.navigationViewStyle(.stack)
+                            }
+                            
                         }
                     }
                 }

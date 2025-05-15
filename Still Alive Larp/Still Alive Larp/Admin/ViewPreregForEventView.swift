@@ -9,6 +9,14 @@ import SwiftUI
 
 struct ViewPreregForEventView: View {
     @ObservedObject var _dm = DataManager.shared
+    
+    @State var loadingPlayers = true
+    @State var loadingCharacters = true
+    @State var loadingEventPreregs = true
+    
+    @State var eventPreregs: [Int : [EventPreregModel]] = [:]
+    @State var allPlayers: [PlayerModel] = []
+    @State var allCharacters: [CharacterModel] = []
 
     let event: EventModel
 
@@ -20,7 +28,7 @@ struct ViewPreregForEventView: View {
                 .lineLimit(nil)
                 .frame(alignment: .center)
                 .fixedSize(horizontal: false, vertical: true)
-            if DataManager.shared.loadingAllPlayers || DataManager.shared.loadingAllCharacters || DataManager.shared.loadingEventPreregs {
+            if loadingPlayers || loadingCharacters || loadingEventPreregs {
                 ScrollView {
                     HStack {
                         Spacer()
@@ -48,23 +56,34 @@ struct ViewPreregForEventView: View {
         .background(Color.lightGray)
         .onAppear {
             runOnMainThread {
-                DataManager.shared.load([.eventPreregs, .allPlayers, .character], forceDownloadIfApplicable: true)
+                DataManager.shared.load([.allPlayers, .allCharacters]) {
+                    runOnMainThread {
+                        self.allPlayers = DataManager.shared.allPlayers ?? []
+                        self.allCharacters = DataManager.shared.allCharacters ?? []
+                        self.loadingPlayers = false
+                        self.loadingCharacters = false
+                        DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                            self.eventPreregs = DataManager.shared.eventPreregs
+                            self.loadingEventPreregs = false
+                        }
+                    }
+                }
             }
         }
     }
 
     func sortedPreregs() -> [EventPreregModel] {
-        return (DataManager.shared.eventPreregs[event.id] ?? []).sorted(by: { f, s in
+        return (eventPreregs[event.id] ?? []).sorted(by: { f, s in
             getPlayerName(f.playerId).caseInsensitiveCompare(getPlayerName(s.playerId)) == .orderedAscending
         })
     }
 
     func getPlayerName(_ id: Int) -> String {
-        return (DataManager.shared.allPlayers ?? []).first(where: { $0.id == id })?.fullName ?? ""
+        return allPlayers.first(where: { $0.id == id })?.fullName ?? ""
     }
 
     func getCharName(_ id: Int) -> String {
-        return (DataManager.shared.allCharacters ?? []).first(where: { $0.id == id })?.fullName ?? "NPC"
+        return allCharacters.first(where: { $0.id == id })?.fullName ?? "NPC"
     }
 }
 

@@ -78,8 +78,11 @@ struct AdminView: View {
                 self.loadingCharacters = false
             }
             EventManager.shared.getEvents(overrideLocal: true) { events in
-                self.loadingEvents = false
-                self.events = events.reversed()
+                runOnMainThread {
+                    self.loadingEvents = false
+                    self.events = events.reversed()
+                    DataManager.shared.events = events
+                }
             }
             AdminService.getAllContactRequests { contactRequestList in
                 self.loadingContacts = false
@@ -130,7 +133,7 @@ struct EventToolsView: View {
             NavArrowView(title: "Player Check-Out") { _ in
                 CheckOutPlayerView()
             }
-            NavArrowView(title: "View Preregistration", loading: $loadingEvents) { _ in
+            NavArrowView(title: "View Preregistrations", loading: $loadingEvents) { _ in
                 SelectEventForPreregView(events: events)
             }
             NavArrowView(title: "Event Management", loading: $loadingEvents) { _ in
@@ -166,11 +169,7 @@ struct PlayerCharacterManagementView: View {
                 SelectCharacterForClassXpReducitonView(characters: allCharacters)
             }
             NavArrowView(title: "Manage Character Gear", loading: $loadingCharacters) { _ in
-                // TODO probably need to change something here
                 SelectCharacterForGearManagementView(characters: allCharacters)
-            }
-            NavArrowView(title: "Refund Skills", loading: $loadingCharacters) { _ in
-                // TODO
             }
             NavArrowView(title: "Update Player Password", loading: $loadingPlayers) { _ in
                 ChangePasswordListView(players: allPlayers)

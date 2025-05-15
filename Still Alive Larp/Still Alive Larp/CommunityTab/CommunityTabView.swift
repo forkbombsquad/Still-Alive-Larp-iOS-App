@@ -9,6 +9,13 @@ import SwiftUI
 
 struct CommunityTabView: View {
     @ObservedObject var _dm = DataManager.shared
+    
+    @State var allPlayers: [PlayerModel] = []
+    @State var loadingAllPlayers: Bool = true
+    @State var allNpcs: [CharacterModel] = []
+    @State var loadingAllNpcs: Bool = true
+    @State var allResearchProjects: [ResearchProjectModel] = []
+    @State var loadingAllResearchProjects: Bool = true
 
     var body: some View {
         NavigationView {
@@ -17,30 +24,37 @@ struct CommunityTabView: View {
                     Text("Community")
                         .font(.system(size: 32, weight: .bold))
                         .frame(alignment: .center)
-                    NavArrowView(title: "All Players", loading: DataManager.$shared.loadingAllPlayers) { _ in
-                        ForEach(DataManager.shared.allPlayers?.alphabetized ?? []) { player in
-                            // TODO this, use the code below to help
-//                            NavArrowView(title: "\(player.fullName)\((player.isAdmin.uppercased() == "TRUE") ? " (Staff)" : "")") { _ in
-//                                ViewPlayerStuffView(player: player)
-//                            }.navigationViewStyle(.stack)
-                        }
+                    NavArrowView(title: "All Players", loading: $loadingAllPlayers) { _ in
+                        AllPlayersListView(allPlayers: allPlayers)
                     }
                     if FeatureFlag.campStatus.isActive() {
                         NavArrowView(title: "Camp Status") { _ in
-                            // TODO
+                            // TODO sometime in the future
                         }
                     }
-                    NavArrowView(title: "All NPCs") { _ in
-                        // TODO
+                    NavArrowView(title: "All NPCs", loading: $loadingAllNpcs) { _ in
+                        AllNpcsListView(npcs: allNpcs)
                     }
-                    NavArrowView(title: "Research Projects") { _ in
+                    NavArrowView(title: "Research Projects", loading: $loadingAllResearchProjects) { _ in
                         // TODO
                     }
                 }
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
-                DataManager.shared.load([.allPlayers, .npcs, .researchProjects])
+                self.loadingAllPlayers = true
+                self.loadingAllNpcs = true
+                self.loadingAllResearchProjects = true
+                DataManager.shared.load([.allPlayers, .npcs, .researchProjects]) {
+                    runOnMainThread {
+                        self.allPlayers = DataManager.shared.allPlayers ?? []
+                        self.allNpcs = DataManager.shared.npcs
+                        self.allResearchProjects = DataManager.shared.researchProjects
+                        self.loadingAllPlayers = false
+                        self.loadingAllNpcs = false
+                        self.loadingAllResearchProjects = false
+                    }
+                }
             }
         }
     }

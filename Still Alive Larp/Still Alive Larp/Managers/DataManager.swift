@@ -10,7 +10,7 @@ import SwiftUI
 class DataManager: ObservableObject {
 
     enum DataManagerType {
-        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects
+        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects, eventAttendeesForSelectedEvent
     }
 
     @ObservedObject static var shared = DataManager()
@@ -92,6 +92,9 @@ class DataManager: ObservableObject {
             
             shared.researchProjects = []
             shared.loadingResearchProjects = true
+            
+            shared.eventAttendeesForEvent = []
+            shared.loadingEventAttendeesForEvent = true
         }
     }
 
@@ -165,7 +168,9 @@ class DataManager: ObservableObject {
     @Published var loadingContactRequests: Bool = true
 
     @Published var eventAttendeesForPlayer: [EventAttendeeModel]? = nil
+    @Published var eventAttendeesForEvent: [EventAttendeeModel] = []
     @Published var loadingEventAttendees: Bool = true
+    @Published var loadingEventAttendeesForEvent: Bool = true
 
     @Published var xpReductions: [SpecialClassXpReductionModel]? = nil
     @Published var loadingXpReductions: Bool = true
@@ -657,6 +662,7 @@ class DataManager: ObservableObject {
                                 self.npcs = characterList.characters
                                 self.loadingNpcs = false
                                 self.finishedRequest(currentCountIndex, "NPCs Success")
+                                self.storeNPCs()
                             }
                         } failureCase: { error in
                             runOnMainThread {
@@ -691,6 +697,43 @@ class DataManager: ObservableObject {
                         self.loadingResearchProjects = false
                         self.finishedRequest(currentCountIndex, "Research Projects From Memory")
                     }
+                case .eventAttendeesForSelectedEvent:
+                    self.loadingEventAttendeesForEvent = true
+                    if (self.eventAttendeesForEvent.isEmpty || forceDownloadIfApplicable), let se = self.selectedEvent {
+                        EventAttendeeService.getEventAttendeesForEvent(se.id) { attendeeList in
+                            runOnMainThread {
+                                self.eventAttendeesForEvent = attendeeList.eventAttendees
+                                self.loadingEventAttendeesForEvent = false
+                                self.finishedRequest(currentCountIndex, "Event Attendees For Event Success")
+                            }
+                        } failureCase: { error in
+                            runOnMainThread {
+                                self.eventAttendeesForEvent = []
+                                self.loadingEventAttendeesForEvent = false
+                                self.finishedRequest(currentCountIndex, "Event Attendees For Event Failure")
+                            }
+                        }
+
+                    } else {
+                        self.loadingEventAttendeesForEvent = false
+                        self.finishedRequest(currentCountIndex, "Event Attendees For Event From Memory or selected event null")
+                    }
+                }
+            }
+        }
+    }
+    
+    func storeNPCs() {
+        var fullNPCs: [FullCharacterModel] = []
+        var counter = 0
+        self.npcs.forEach { npc in
+            CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fullChar in
+                if let fullNPC = fullChar {
+                    fullNPCs.append(fullNPC)
+                }
+                counter += 1
+                if counter == self.npcs.count {
+                    LocalDataHandler.shared.storeNPCs(fullNPCs)
                 }
             }
         }
@@ -717,7 +760,7 @@ class DataManager: ObservableObject {
     private func hasEventWithoutPreregs() -> Bool {
         var hasEventWithoutPreregs = false
         for event in events ?? [] {
-            if event.isInFuture() && eventPreregs[event.id] == nil {
+            if eventPreregs[event.id] == nil {
                 hasEventWithoutPreregs = true
                 break
             }

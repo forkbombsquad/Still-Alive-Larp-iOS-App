@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct EventAttendeeModel: CustomCodeable {
+struct EventAttendeeModel: CustomCodeable, Identifiable {
     let id: Int
     let playerId: Int
     let characterId: Int?

@@ -225,7 +225,7 @@ extension MockData {
                 return announcement
             case .charactersForPlayer:
                 return characterList()
-            case .characterCreate, .awardChar, .updateCharacter, .updateBio, .character, .giveCharCheckInRewards:
+            case .characterCreate, .awardChar, .updateCharacter, .updateBio, .character, .giveCharCheckInRewards, .createPlannedCharacter:
                 return character()
             case .skill:
                 return skill()
@@ -237,7 +237,7 @@ extension MockData {
                 return playerList
             case .awards, .deleteAwards:
                 return awards
-            case .allCharacters, .deleteCharacters:
+            case .allCharacters, .deleteCharacters, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters:
                 return characterListFullModel
             case .takeSkill:
                 return characterSkill()
@@ -259,7 +259,7 @@ extension MockData {
                 return intrigue()
             case .getAllIntrigue:
                 return intrigues
-            case .eventAttendeesForPlayer, .deleteEventAttendee:
+            case .eventAttendeesForPlayer, .deleteEventAttendee, .getAttendeesForEvent:
                 return eventAttendees
             case .giveXpReduction:
                 return xpReduction()

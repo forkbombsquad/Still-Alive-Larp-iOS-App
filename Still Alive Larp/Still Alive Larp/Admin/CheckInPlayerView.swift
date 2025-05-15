@@ -8,8 +8,6 @@
 import SwiftUI
 import CodeScanner
 
-// TODO test to make sure the gear modifications work. Also make sure checking in still works.
-
 struct CheckInPlayerView: View {
     @ObservedObject var _dm = DataManager.shared
 

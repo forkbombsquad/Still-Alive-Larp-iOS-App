@@ -14,6 +14,12 @@ struct EventAttendeeService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getEventAttendeesForEvent(_ eventId: Int, onSuccess: @escaping (_ attendeeList: EventAttendeeListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.getAttendeesForEvent, addToEndOfUrl: "\(eventId)", responseObject: EventAttendeeListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
     static func deleteAttendees(onSuccess: @escaping (_ attendeeList: EventAttendeeListModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.deleteEventAttendee, responseObject: EventAttendeeListModel.self, overrideDefaultErrorBehavior: true, success: { success in

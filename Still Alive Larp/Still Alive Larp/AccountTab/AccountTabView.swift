@@ -97,7 +97,6 @@ struct AccountTabView: View {
                             if Constants.Logging.showDebugButtonInAccountView {
                                 NavArrowViewRed(title: "Debug Button") {
                                     // TODO ALWAYS - remove all code here before launch
-                                    GenerateCheckInBarcodeView(useChar: true)
                                 }
                             }
                             LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Sign Out") {

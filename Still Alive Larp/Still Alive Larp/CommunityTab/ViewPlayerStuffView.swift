@@ -12,6 +12,10 @@ struct ViewPlayerStuffView: View {
 
     private let playerModel: PlayerModel
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
+    
+    @State var character: FullCharacterModel? = nil
+    @State var loadingCharacter: Bool = true
+    @State var loadingProfileImage: Bool = true
 
     init(player: PlayerModel) {
         self.playerModel = player
@@ -22,7 +26,7 @@ struct ViewPlayerStuffView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text(DataManager.shared.selectedPlayer?.fullName ?? playerModel.fullName)
+                        Text(playerModel.fullName)
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
@@ -31,7 +35,7 @@ struct ViewPlayerStuffView: View {
                                 .scaledToFit()
                                 .frame(width: 200, height: 200)
                                 .padding(.bottom, 8)
-                            if DataManager.shared.loadingProfileImage {
+                            if loadingProfileImage {
                                 ProgressView()
                                 .tint(.red)
                                 .controlSize(.large)
@@ -39,24 +43,27 @@ struct ViewPlayerStuffView: View {
                             }
                         }
                         NavArrowView(title: "Player Stats") { _ in
-                            PlayerStatsView(player: DataManager.shared.selectedPlayer ?? playerModel)
+                            PlayerStatsView(player: playerModel)
                         }
-                        if DataManager.shared.loadingCharForSelectedPlayer {
-                            NavArrowView(title: "Character Stats", loading: DataManager.$shared.loadingCharForSelectedPlayer) { _ in }
-                            NavArrowView(title: "Skills", loading: DataManager.$shared.loadingCharForSelectedPlayer) { _ in }
-                            NavArrowView(title: "Bio", loading: DataManager.$shared.loadingCharForSelectedPlayer) { _ in }
-                        } else if DataManager.shared.charForSelectedPlayer != nil {
-                            NavArrowView(title: "Character Stats") { _ in
+                        if loadingCharacter || character != nil {
+                            NavArrowView(title: "Character Stats", loading: $loadingCharacter) { _ in
                                 CharacterStatusView()
                             }
-                            NavArrowView(title: "Skills") { _ in
+                            NavArrowView(title: "Skills", loading: $loadingCharacter) { _ in
                                 SkillManagementView()
                             }
-                            NavArrowView(title: "Bio") { _ in
+                            NavArrowView(title: "Skill Tree Diagram", loading: $loadingCharacter) { _ in
+                                // TODO
+                            }
+                            NavArrowView(title: "Bio", loading: $loadingCharacter) { _ in
                                 BioView(allowEdit: false)
                             }
-                            NavArrowView(title: "Gear") { _ in
-                                GearView(character: DataManager.shared.charForSelectedPlayer!.baseModel, offline: false, allowEdit: false)
+                            if let character = character {
+                                NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in
+                                    GearView(character: character.baseModel, offline: false, allowEdit: false)
+                                }
+                            } else {
+                                NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in }
                             }
                         }
                     }
@@ -65,18 +72,37 @@ struct ViewPlayerStuffView: View {
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
-            runOnMainThread {
-                DataManager.shared.selectedPlayer = self.playerModel
+            self.loadingCharacter = true
+            self.loadingProfileImage = true
+            DataManager.shared.selectedPlayer = self.playerModel
+            DataManager.shared.load([.charForSelectedPlayer, .profileImage]) {
                 runOnMainThread {
-                    DataManager.shared.profileImage = nil
-                    DataManager.shared.load([.charForSelectedPlayer])
-                    DataManager.shared.load([.profileImage]) {
-                        runOnMainThread {
-                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                        }
+                    self.character = DataManager.shared.charForSelectedPlayer
+                    self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                    self.loadingProfileImage = false
+                    self.loadingCharacter = false
+                }
+            }
+            runOnMainThread {
+                DataManager.shared.profileImage = nil
+                DataManager.shared.load([.charForSelectedPlayer])
+                DataManager.shared.load([.profileImage]) {
+                    runOnMainThread {
+                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
                     }
                 }
             }
         }
     }
+}
+
+#Preview {
+    let dm = DataManager.shared
+    dm.debugMode = true
+    dm.loadMockData()
+    let md = getMockData()
+    dm.charForSelectedPlayer = md.fullCharacters().first!
+    var vps = ViewPlayerStuffView(player: md.player())
+    vps._dm = dm
+    return vps
 }

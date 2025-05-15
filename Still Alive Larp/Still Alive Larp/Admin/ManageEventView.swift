@@ -39,6 +39,9 @@ struct ManageEventView: View {
                     NavArrowViewRed(title: "Edit Event Details") {
                         CreateEditEventView(events: $events, event: event)
                     }.padding(.top, 16)
+                    NavArrowViewBlue(title: "View Attendees") {
+                        ViewEventAttendeesView(eventModel: event)
+                    }.padding(.top, 8)
                     if !event.isFinished.boolValueDefaultFalse {
                         LoadingButtonView($loading, width: gr.size.width - 32, buttonText: event.isStarted.boolValueDefaultFalse ? "Finish Event" : "Start Event") {
                             self.loading = true

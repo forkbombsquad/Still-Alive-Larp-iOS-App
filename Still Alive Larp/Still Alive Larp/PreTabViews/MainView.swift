@@ -55,7 +55,7 @@ struct MainView: View {
 
                                 LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.35, height: 60, buttonText: "Log In", progressViewOffset: 0) {
                                     self.loading = true
-                                    self.loadingText = "Checking Credentials..."
+                                    self.loadingText = "Checking Creds..."
                                     VersionService.getVersions { versions in
                                         let currentVersion = getBuildNumber()
                                         if (currentVersion < versions.iosVersion) {

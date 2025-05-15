@@ -17,6 +17,7 @@ class LocalDataHandler {
         static let rulebookKey = "rulebook_ud_key"
         static let rulebookVersionKey = "rulebook_version_ud_key"
         static let skillsKey = "skills_ud_key"
+        static let npcKey = "npcs_ud_key"
     }
 
     static func forceReset() {
@@ -93,6 +94,17 @@ class LocalDataHandler {
     func getSkills() -> [FullSkillModel]? {
         guard let json = UserDefaults.standard.data(forKey: Keys.skillsKey), let skillM: FullSkillListModel = json.toJsonObject() else { return nil }
         return skillM.skills
+    }
+    
+    func storeNPCs(_ npcs: [FullCharacterModel]) {
+        let fclm = FullCharacterListModel(characters: npcs)
+        guard let json = fclm.toData() else { return }
+        UserDefaults.standard.set(json, forKey: Keys.npcKey)
+    }
+    
+    func getNPCs() -> [FullCharacterModel]? {
+        guard let json = UserDefaults.standard.data(forKey: Keys.npcKey), let npcM: FullCharacterListModel = json.toJsonObject() else { return nil }
+        return npcM.characters
     }
 
 }

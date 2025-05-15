@@ -74,7 +74,7 @@ struct OfflineAccountView: View {
                             }
                         }
                         NavArrowView(title: "All NPCs") { _ in
-                            // TODO
+                            AllNpcsListView(fullNpcModelsOffline: LocalDataHandler.shared.getNPCs() ?? [])
                         }
                         if FeatureFlag.oldSkillTreeImage.isActive() {
                             NavArrowView(title: "Skill Tree Diagram Image (Legacy)") { _ in

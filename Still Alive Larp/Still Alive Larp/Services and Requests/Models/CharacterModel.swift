@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct FullCharacterListModel: CustomCodeable {
+    let characters: [FullCharacterModel]
+}
+
 struct FullCharacterModel: CustomCodeable {
     let id: Int
     let fullName: String
