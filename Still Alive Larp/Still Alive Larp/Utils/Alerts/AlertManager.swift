@@ -109,6 +109,10 @@ struct AlertButton {
     var title: String
     var role: ButtonRole? = nil
     var onPress: () -> Void
+    
+    static func cancel(onPress: @escaping () -> Void) -> AlertButton {
+        AlertButton(title: "Cancel", role: .cancel, onPress: onPress)
+    }
 }
 
 struct CustomAlertModel {

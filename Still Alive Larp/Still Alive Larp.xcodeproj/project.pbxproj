@@ -63,6 +63,15 @@
 		B23552CB29EB1F0E00183748 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552CA29EB1F0E00183748 /* ErrorModel.swift */; };
 		B23552CF29EB267000183748 /* LoadingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552CE29EB267000183748 /* LoadingButtonView.swift */; };
 		B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */; };
+		B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */; };
+		B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */; };
+		B235A4F12DD788C800AF96DC /* LoadingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F02DD788C800AF96DC /* LoadingBlock.swift */; };
+		B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */; };
+		B235A4F62DD7A59600AF96DC /* SkillCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */; };
+		B235A4F82DD7A82900AF96DC /* SkillCategoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F72DD7A82400AF96DC /* SkillCategoryService.swift */; };
+		B235A4FA2DD7AAD400AF96DC /* SkillGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F92DD7AAD000AF96DC /* SkillGrid.swift */; };
+		B235A4FC2DD7B88400AF96DC /* CGRectExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4FB2DD7B87F00AF96DC /* CGRectExtensions.swift */; };
+		B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4FD2DD7D58300AF96DC /* ManageNPCView.swift */; };
 		B23728AC2DC1BBCC00495777 /* ServiceUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */; };
 		B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B12DC1C10600495777 /* ServiceEndpoints.swift */; };
 		B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B32DC1CCBC00495777 /* ReserachProject.swift */; };
@@ -240,6 +249,15 @@
 		B23552CE29EB267000183748 /* LoadingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButtonView.swift; sourceTree = "<group>"; };
 		B23552F429ED9B8D00183748 /* Still-Alive-Larp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Still-Alive-Larp-Info.plist"; sourceTree = SOURCE_ROOT; };
 		B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNPCStuffView.swift; sourceTree = "<group>"; };
+		B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllResearchProjectsListView.swift; sourceTree = "<group>"; };
+		B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchProjectCell.swift; sourceTree = "<group>"; };
+		B235A4F02DD788C800AF96DC /* LoadingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBlock.swift; sourceTree = "<group>"; };
+		B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSkillTree.swift; sourceTree = "<group>"; };
+		B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillCategoryModel.swift; sourceTree = "<group>"; };
+		B235A4F72DD7A82400AF96DC /* SkillCategoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillCategoryService.swift; sourceTree = "<group>"; };
+		B235A4F92DD7AAD000AF96DC /* SkillGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillGrid.swift; sourceTree = "<group>"; };
+		B235A4FB2DD7B87F00AF96DC /* CGRectExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRectExtensions.swift; sourceTree = "<group>"; };
+		B235A4FD2DD7D58300AF96DC /* ManageNPCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageNPCView.swift; sourceTree = "<group>"; };
 		B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceUtils.swift; sourceTree = "<group>"; };
 		B23728B12DC1C10600495777 /* ServiceEndpoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceEndpoints.swift; sourceTree = "<group>"; };
 		B23728B32DC1CCBC00495777 /* ReserachProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserachProject.swift; sourceTree = "<group>"; };
@@ -387,6 +405,7 @@
 		B21691BB28FDDC5D006AA921 /* Still Alive Larp */ = {
 			isa = PBXGroup;
 			children = (
+				B235A4F22DD7A4F200AF96DC /* NativeSkillTree */,
 				B228C29029F846F20064686D /* CommunityTab */,
 				B258D9AD29F31D18003BE368 /* OfflineMode */,
 				B2F9836D29F043F200512839 /* PreTabViews */,
@@ -433,6 +452,7 @@
 		B21691E628FDE449006AA921 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B235A4FB2DD7B87F00AF96DC /* CGRectExtensions.swift */,
 				B23552D029EB268A00183748 /* Views */,
 				B23552C729EB02AC00183748 /* Alerts */,
 				B21691E928FDE6DB006AA921 /* ColorExtensions.swift */,
@@ -481,6 +501,8 @@
 				B26192ED2DD5856B00F3C43B /* AllPlayersListView.swift */,
 				B26192EF2DD58E3300F3C43B /* AllNpcsListView.swift */,
 				B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */,
+				B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */,
+				B235A4FD2DD7D58300AF96DC /* ManageNPCView.swift */,
 			);
 			path = CommunityTab;
 			sourceTree = "<group>";
@@ -530,6 +552,7 @@
 		B23552D029EB268A00183748 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */,
 				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
 				B23552CE29EB267000183748 /* LoadingButtonView.swift */,
 				B2D6823829688A46005FDCCE /* KeyValueView.swift */,
@@ -540,8 +563,18 @@
 				B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */,
 				B294A41B2DD02EAB002877B9 /* GearCell.swift */,
 				B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */,
+				B235A4F02DD788C800AF96DC /* LoadingBlock.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		B235A4F22DD7A4F200AF96DC /* NativeSkillTree */ = {
+			isa = PBXGroup;
+			children = (
+				B235A4F92DD7AAD000AF96DC /* SkillGrid.swift */,
+				B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */,
+			);
+			path = NativeSkillTree;
 			sourceTree = "<group>";
 		};
 		B258D9AD29F31D18003BE368 /* OfflineMode */ = {
@@ -555,6 +588,7 @@
 		B293AEF629155D5C00D2447C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */,
 				B293AEF729155D7000D2447C /* OAuthToken.swift */,
 				B293AEFB29156B9200D2447C /* PlayerModel.swift */,
 				B222248E291DAA01003BCA0A /* AnnouncementModel.swift */,
@@ -598,6 +632,7 @@
 				B2DFB0C129563C4D00132B08 /* MockData */,
 				B293AEF629155D5C00D2447C /* Models */,
 				B293AEF429154F0400D2447C /* ServiceController.swift */,
+				B235A4F72DD7A82400AF96DC /* SkillCategoryService.swift */,
 				B222249E291E9F99003BCA0A /* CharacterService.swift */,
 				B2DFB0B72955FB4600132B08 /* MockRequest.swift */,
 				B2DFB0B92955FCEB00132B08 /* RequestBuilder.swift */,
@@ -817,6 +852,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookManager.swift in Sources */,
 				B2F9837929F07C7200512839 /* CreateEditEventView.swift in Sources */,
@@ -837,9 +873,12 @@
 				B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */,
 				B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */,
 				B2E135B429FAFB8E0038DE31 /* GlobalFunctions.swift in Sources */,
+				B235A4F82DD7A82900AF96DC /* SkillCategoryService.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
 				B235529229E8480600183748 /* AwardPlayerView.swift in Sources */,
 				B294A4202DD24AE4002877B9 /* StyledPickerView.swift in Sources */,
+				B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */,
+				B235A4FC2DD7B88400AF96DC /* CGRectExtensions.swift in Sources */,
 				B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */,
 				B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */,
 				B222249D291E9B4C003BCA0A /* PlayerManager.swift in Sources */,
@@ -882,6 +921,7 @@
 				B23552C029E9EA0E00183748 /* AddSkillView.swift in Sources */,
 				B2A0D4E329E5B29F00A235B4 /* SkillManager.swift in Sources */,
 				B293AEF829155D7000D2447C /* OAuthToken.swift in Sources */,
+				B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */,
 				B21691EA28FDE6DB006AA921 /* ColorExtensions.swift in Sources */,
 				B21F1C162DD57C040004B391 /* ViewEventAttendeesView.swift in Sources */,
 				B235528C29E83A0E00183748 /* AdminView.swift in Sources */,
@@ -893,7 +933,10 @@
 				B235529029E8469400183748 /* AdminService.swift in Sources */,
 				B293AEFC29156B9200D2447C /* PlayerModel.swift in Sources */,
 				B2750B4929F9900C00AA5F5B /* ChangePasswordListView.swift in Sources */,
+				B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */,
+				B235A4F12DD788C800AF96DC /* LoadingBlock.swift in Sources */,
 				B2DFB0C329563C9900132B08 /* MockData.swift in Sources */,
+				B235A4F62DD7A59600AF96DC /* SkillCategoryModel.swift in Sources */,
 				B26192EE2DD5856B00F3C43B /* AllPlayersListView.swift in Sources */,
 				B2DFB0C7295649D500132B08 /* AccountTabView.swift in Sources */,
 				B23552B629E9C49400183748 /* SkillManagementView.swift in Sources */,
@@ -901,6 +944,7 @@
 				B233D76E2A1D4E1C002B9BBA /* AppVersionModel.swift in Sources */,
 				B2222492291DB13B003BCA0A /* AnnouncementManager.swift in Sources */,
 				B25D45C42A151D7600C3048C /* SelectEventForPreregView.swift in Sources */,
+				B235A4FA2DD7AAD400AF96DC /* SkillGrid.swift in Sources */,
 				B222248D291DA33F003BCA0A /* HomeTabView.swift in Sources */,
 				B2750B3F29F979F300AA5F5B /* ContactService.swift in Sources */,
 				B2750B4D29F9B05D00AA5F5B /* IntrigueModel.swift in Sources */,

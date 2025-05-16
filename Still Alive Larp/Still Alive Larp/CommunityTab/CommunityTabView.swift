@@ -33,16 +33,15 @@ struct CommunityTabView: View {
                         }
                     }
                     NavArrowView(title: "All NPCs", loading: $loadingAllNpcs) { _ in
-                        AllNpcsListView(npcs: allNpcs)
+                        AllNpcsListView(npcs: allNpcs, allowEdit: false)
                     }
                     NavArrowView(title: "Research Projects", loading: $loadingAllResearchProjects) { _ in
-                        // TODO
+                        AllResearchProjectsListView(researchProjects: allResearchProjects, allowEdit: false)
                     }
                 }
             }.padding(16)
             .background(Color.lightGray)
             .onAppear {
-                globalTestPrint("ON APPEAR: COMMUNITY TAB VIEW")
                 self.loadingAllPlayers = true
                 self.loadingAllNpcs = true
                 self.loadingAllResearchProjects = true
@@ -56,8 +55,6 @@ struct CommunityTabView: View {
                         self.loadingAllResearchProjects = false
                     }
                 }
-            }.onDisappear {
-                globalTestPrint("ON DISAPPEAR: COMMUNITY TAB VIEW")
             }
         }
     }

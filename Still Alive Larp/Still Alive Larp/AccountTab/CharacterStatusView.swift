@@ -16,16 +16,14 @@ struct CharacterStatusView: View {
     
     init() {
         self.offline = false
-        self.character = nil
-        self.initialChar = nil
+        self._character = globalState(DataManager.shared.charForSelectedPlayer)
     }
     
     private init (offline: Bool, character: FullCharacterModel?) {
         self.offline = offline
-        self.initialChar = character
+        self._character = globalState(character)
     }
     
-    let initialChar: FullCharacterModel?
     let offline: Bool
     @State var character: FullCharacterModel? = nil
 
@@ -58,13 +56,6 @@ struct CharacterStatusView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            if self.offline {
-                self.character = initialChar
-            } else {
-                self.character = DataManager.shared.charForSelectedPlayer
-            }
-        }
     }
 }
 

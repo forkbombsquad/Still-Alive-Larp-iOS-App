@@ -64,7 +64,7 @@ struct AccountTabView: View {
                                     SkillManagementView(character: character, allowEdit: true)
                                 }
                                 NavArrowView(title: "Personal Skill Tree Diagram", loading: $loading) { _ in
-                                    // TODO
+                                    // TODO skill tree
                                 }
                                 NavArrowView(title: "Bio", loading: $loading) { _ in
                                     BioView(allowEdit: true)
@@ -77,7 +77,7 @@ struct AccountTabView: View {
                                 }
                             }
                             NavArrowViewBlue(title: "Character Planner") {
-                                // TODO
+                                // TODO character planner
                             }
                             
                             Text("Account")

@@ -9,6 +9,10 @@ import SwiftUI
 
 struct ViewNPCStuffView: View {
     
+    static func Offline(characterModel: FullCharacterModel, skills: [FullSkillModel]) -> ViewNPCStuffView {
+        return ViewNPCStuffView(character: characterModel, skills: skills)
+    }
+    
     @ObservedObject var _dm = DataManager.shared
     
     let offline: Bool
@@ -25,11 +29,10 @@ struct ViewNPCStuffView: View {
         self.offlineSkills = []
     }
     
-    init(_dm: DataManager = DataManager.shared, offlineCharacterModel: FullCharacterModel, skills: [FullSkillModel]) {
-        self._dm = _dm
+    private init(character: FullCharacterModel, skills: [FullSkillModel]) {
         self.offline = true
-        self.characterModel = offlineCharacterModel.baseModel
-        self.fullModel = offlineCharacterModel
+        self.characterModel = character.baseModel
+        self._fullModel = globalState(character)
         self.offlineSkills = skills
     }
     
@@ -51,7 +54,7 @@ struct ViewNPCStuffView: View {
                             KeyValueView(key: "Bullets", value: "\(char.bullets)%")
                             NavArrowView(title: "NPC Skills") { _ in
                                 if self.offline {
-                                    SkillManagementView.Offline(character: char, skills: offlineSkills)
+                                    SkillManagementView.Offline(character: char)
                                 } else {
                                     SkillManagementView(character: char, allowEdit: false)
                                 }
@@ -76,9 +79,7 @@ struct ViewNPCStuffView: View {
         .onAppear {
             if firstLoad {
                 self.firstLoad = false
-                if offline {
-                    DataManager.shared.charForSelectedPlayer = fullModel
-                } else {
+                if !offline {
                     self.loadingFullModel = true
                     CharacterManager.shared.fetchFullCharacter(characterId: characterModel.id) { fcm in
                         runOnMainThread {

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO modify this to match the new skill management view binding style
-
 struct AddSkillView: View {
     @ObservedObject var _dm = DataManager.shared
 

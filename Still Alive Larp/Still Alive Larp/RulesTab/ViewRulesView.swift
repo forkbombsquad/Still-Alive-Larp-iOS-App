@@ -26,7 +26,7 @@ struct ViewRulesView: View {
         self.rulebook = rulebook
         allFilters = ["No Filter"]
         allFilters.append(contentsOf: rulebook?.getAllFilterableHeadingNames() ?? [])
-        filter = "No Filter"
+        _filter = globalState("No Filter")
     }
 
     var body: some View {

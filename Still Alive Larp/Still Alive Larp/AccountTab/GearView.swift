@@ -19,14 +19,14 @@ struct GearView: View {
         self.character = character
         self.offline = false
         self.allowEdit = allowEdit
-        self.initialGear = nil
     }
     
     private init(character: CharacterModel, gear: GearModel, offline: Bool, allowEdit: Bool) {
         self.character = character
         self.offline = offline
         self.allowEdit = allowEdit
-        self.initialGear = gear
+        self._gear = globalState(gear)
+        self._gearJsonModels = globalState(gear.jsonModels ?? [])
     }
 
     let character: CharacterModel
@@ -37,8 +37,6 @@ struct GearView: View {
     @State var gearModified: Bool = false
     @State var gear: GearModel? = nil
     @State var gearJsonModels: [GearJsonModel] = []
-    
-    let initialGear: GearModel?
     
     @State var firstLoad: Bool = true
     
@@ -115,9 +113,6 @@ struct GearView: View {
                         }
                     }
                 }
-            } else {
-                self.gear = initialGear
-                self.gearJsonModels = initialGear?.jsonModels ?? []
             }
         }
         .navigationBarBackButtonHidden(true)

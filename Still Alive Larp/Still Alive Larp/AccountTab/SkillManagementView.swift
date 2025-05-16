@@ -10,34 +10,31 @@ import SwiftUI
 struct SkillManagementView: View {
     @ObservedObject var _dm = DataManager.shared
     
-    static func Offline(character: FullCharacterModel, skills: [FullSkillModel]) -> SkillManagementView {
-        return SkillManagementView(offline: true, allowEdit: false, character: character, skills: skills)
+    static func Offline(character: FullCharacterModel) -> SkillManagementView {
+        return SkillManagementView(offline: true, allowEdit: false, character: character)
     }
 
     let offline: Bool
     let allowEdit: Bool
     @State var character: FullCharacterModel? = nil
-    @State var skills: [FullSkillModel] = []
+    let skills: [FullSkillModel]
     @State var loadingSkills: Bool = false
     @State var searchText: String = ""
-    
-    let initialChar: FullCharacterModel
-    let initalSkills: [FullSkillModel]
     
     // Online
     init(_dm: DataManager = DataManager.shared, character: FullCharacterModel, allowEdit: Bool) {
         self._dm = _dm
         self.offline = false
         self.allowEdit = allowEdit
-        self.initialChar = character
-        self.initalSkills = []
+        self._character = globalState(character)
+        self.skills = character.skills
     }
     
-    private init (offline: Bool, allowEdit: Bool, character: FullCharacterModel, skills: [FullSkillModel]) {
+    private init (offline: Bool, allowEdit: Bool, character: FullCharacterModel) {
         self.offline = offline
         self.allowEdit = allowEdit
-        self.initialChar = character
-        self.initalSkills = skills
+        self._character = globalState(character)
+        self.skills = character.skills
         
     }
 
@@ -116,20 +113,6 @@ struct SkillManagementView: View {
             }
         }
         .background(Color.lightGray)
-        .onAppear {
-            self.character = initialChar
-            if offline {
-                self.skills = initalSkills
-            } else {
-                self.loadingSkills = true
-                DataManager.shared.load([.skills]) {
-                    runOnMainThread {
-                        self.loadingSkills = false
-                        self.skills = DataManager.shared.skills ?? []
-                    }
-                }
-            }
-        }
     }
 
     func shouldDoFiltering() -> Bool {

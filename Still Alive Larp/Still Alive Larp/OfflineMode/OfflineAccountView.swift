@@ -58,10 +58,10 @@ struct OfflineAccountView: View {
                                     CharacterStatusView.Offline(character: character)
                                 }
                                 NavArrowView(title: "Character Skills") { _ in
-                                    SkillManagementView.Offline(character: character, skills: self.skills)
+                                    SkillManagementView.Offline(character: character)
                                 }
                                 NavArrowView(title: "Personal Skill Tree Diagram") { _ in
-                                    // TODO
+                                    // TODO skill tree
                                 }
                                 NavArrowView(title: "Character Bio") { _ in
                                     BioView.Offline(character: character)
@@ -79,11 +79,14 @@ struct OfflineAccountView: View {
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
+                        NavArrowView(title: "All NPCs") { _ in
+                            AllNpcsListView.Offline(npcs: npcs, skills: skills)
+                        }
                         NavArrowView(title: "All Skills") { _ in
                             SkillListView(skills: skills)
                         }
                         NavArrowView(title: "Skill Tree Diagram") { _ in
-                            // TODO
+                            // TODO skill tree
                         }
                         if let rulebook = rulebook {
                             NavArrowView(title: "Rulebook") { _ in
@@ -94,9 +97,6 @@ struct OfflineAccountView: View {
                             NavArrowView(title: "Treating Wounds Diagram") { _ in
                                 DownloadedImageView(image: image)
                             }
-                        }
-                        NavArrowView(title: "All NPCs") { _ in
-                            AllNpcsListView(fullNpcModelsOffline: self.npcs, offlineSkills: self.skills)
                         }
                         
                         if FeatureFlag.oldSkillTreeImage.isActive() {

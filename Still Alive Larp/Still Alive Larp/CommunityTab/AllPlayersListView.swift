@@ -36,12 +36,6 @@ struct AllPlayersListView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            globalTestPrint("ON APPEAR: ALL PLAYERS LIST VIEW")
-        }
-        .onDisappear {
-            globalTestPrint("ON DISAPPEAR: ALL PLAYERS LIST VIEW")
-        }
     }
 }
 

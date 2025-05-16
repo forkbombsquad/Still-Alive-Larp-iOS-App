@@ -95,10 +95,11 @@ class ServiceEndpoints {
         case updateResearchProject = "research-project/update/"
         case createResearchProject = "research-project/create/"
         case getAttendeesForEvent = "event-attendee/all_for_event/"
+        case getAllSkillCategories = "skill-categories/all/"
 
         var requestType: ServiceController.RequestType {
             switch self {
-            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent:
+            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent, .getAllSkillCategories:
                     return .get
             case .authToken, .playerCreate, .characterCreate, .awardPlayer, .awardChar, .takeSkill, .announcementCreate, .createEvent, .checkInPlayer, .createContact, .createIntrigue, .giveXpReduction, .prereg, .createGear, .createFeatureFlag, .createProfileImage, .createResearchProject, .createPlannedCharacter:
                     return .post

@@ -18,12 +18,15 @@ class LocalDataHandler {
         static let rulebookVersionKey = "rulebook_version_ud_key"
         static let skillsKey = "skills_ud_key"
         static let npcKey = "npcs_ud_key"
+        static let categoriesKey = "categories_ud_key"
+        
+        static let allKeys: [String] = [playerKey, characterKey, gearKey, rulebookKey, rulebookVersionKey, skillsKey, npcKey, categoriesKey]
     }
 
     static func forceReset() {
-        UserDefaults.standard.removeObject(forKey: Keys.playerKey)
-        UserDefaults.standard.removeObject(forKey: Keys.characterKey)
-        UserDefaults.standard.removeObject(forKey: Keys.gearKey)
+        for key in Keys.allKeys {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
     }
 
     static let shared = LocalDataHandler()
@@ -105,6 +108,16 @@ class LocalDataHandler {
     func getNPCs() -> [FullCharacterModel]? {
         guard let json = UserDefaults.standard.data(forKey: Keys.npcKey), let npcM: FullCharacterListModel = json.toJsonObject() else { return nil }
         return npcM.characters
+    }
+    
+    func storeSkillCategories(_ skillCategories: SKillCategoryListModel) {
+        guard let json = skillCategories.toData() else { return }
+        UserDefaults.standard.set(json, forKey: Keys.categoriesKey)
+    }
+    
+    func getSkillCategories() -> [SkillCategoryModel]? {
+        guard let json = UserDefaults.standard.data(forKey: Keys.categoriesKey), let categories: SKillCategoryListModel = json.toJsonObject() else { return nil }
+        return categories.results
     }
 
 }

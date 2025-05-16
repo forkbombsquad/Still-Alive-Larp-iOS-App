@@ -33,6 +33,7 @@ protocol MockData {
     var profileImageModel: ProfileImageModel { get }
     var researchProjects: ResearchProjectListModel { get }
     var rulebook: Rulebook { get }
+    var skillCategories: SKillCategoryListModel { get }
 }
 
 extension MockData {
@@ -198,6 +199,14 @@ extension MockData {
         return researchProjects.researchProjects.first(where: { $0.id == id })!
     }
     
+    func skillCategory(_ index: Int = 0) -> SkillCategoryModel {
+        return skillCategories.results[index]
+    }
+    
+    func researchProject(id: Int) -> SkillCategoryModel {
+        return skillCategories.results.first(where: { $0.id == id })!
+    }
+    
     func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> PlayerCheckInBarcodeModel {
         let player = playerList.players.first(where: { $0.id == playerId })!
         let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
@@ -285,6 +294,8 @@ extension MockData {
                 return researchProject()
             case .getAllResearchProjects:
                 return researchProjects
+            case .getAllSkillCategories:
+                return skillCategories
         }
     }
     
@@ -594,6 +605,24 @@ fileprivate struct MockData1: MockData {
                 ])
             ])
         ])
+    ])
+    
+    let skillCategories: SKillCategoryListModel = SKillCategoryListModel(results: [
+        SkillCategoryModel(id: 1, name: "Beginner (Free) Skills"),
+        SkillCategoryModel(id: 2, name: "Firearms"),
+        SkillCategoryModel(id: 3, name: "Dual Wielding"),
+        SkillCategoryModel(id: 4, name: "Melee"),
+        SkillCategoryModel(id: 5, name: "Deconstruction"),
+        SkillCategoryModel(id: 6, name: "Combat Techniques"),
+        SkillCategoryModel(id: 7, name: "Resistance and Resolve"),
+        SkillCategoryModel(id: 8, name: "Deus Ex Machina"),
+        SkillCategoryModel(id: 9, name: "Mutualism"),
+        SkillCategoryModel(id: 10, name: "Gathering"),
+        SkillCategoryModel(id: 11, name: "Crafting and Repair"),
+        SkillCategoryModel(id: 12, name: "Medicine"),
+        SkillCategoryModel(id: 13, name: "The Infected"),
+        SkillCategoryModel(id: 14, name: "Prestige"),
+        SkillCategoryModel(id: 15, name: "Specialization")
     ])
 
     private func freeSkillsForCharacter(incrementingId: inout Int, characterId: Int) -> [CharacterSkillModel] {

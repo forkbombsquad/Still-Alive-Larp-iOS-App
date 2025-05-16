@@ -28,6 +28,13 @@ struct Constants {
         }
     }
     
+    struct SpecificSkillCategories {
+        static let beginner = 1
+        static let infected = 13
+        static let prestige = 14
+        static let spec = 15
+    }
+    
     struct CharacterTypes {
         static let standard = 1
         static let NPC = 2

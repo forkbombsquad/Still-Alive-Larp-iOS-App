@@ -12,6 +12,8 @@ struct RulesTabView: View {
 
     @State var loadingSkills: Bool = true
     @State var allSkills = [FullSkillModel]()
+    @State var skillCategories = [SkillCategoryModel]()
+    
     let skillTreeUrl = URL(string: Constants.urls.skillTreeImage)!
     let skillTreeUrlDark = URL(string: Constants.urls.skillTreeImageDark)!
     let treatingWoundsUrl = URL(string: Constants.urls.treatingWoundsImage)!
@@ -20,6 +22,7 @@ struct RulesTabView: View {
     @State var loadingSkillTreeDiagram: Bool = true
     @State var loadingSkillTreeDiagramDark: Bool = true
     @State var loadingTreatingWoundsDiagram: Bool = true
+    @State var loadingSkillCategories: Bool = true
 
     var body: some View {
         NavigationView {
@@ -34,7 +37,8 @@ struct RulesTabView: View {
                                 SkillListView(skills: allSkills)
                             }
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkills) { _ in
-                                // TODO
+                                SkillTreeView(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
+                                // TODO skill tree
                             }
                             NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in
                                 ViewRulesView(rulebook: DataManager.shared.rulebook)
@@ -63,26 +67,35 @@ struct RulesTabView: View {
             .background(Color.lightGray)
             .onAppear {
                 self.loadingSkills = true
-                SkillManager.shared.getSkills { skills in
-                    self.allSkills = skills
-                    self.loadingSkills = false
-                }
                 DataManager.shared.load([.rulebook])
 
-                let imageDownloader = ImageDownloader()
-                imageDownloader.download(key: .skillTree) { success in
-                    runOnMainThread {
-                        self.loadingSkillTreeDiagram = false
+                DispatchQueue.global(qos: .userInitiated).async {
+                    let imageDownloader = ImageDownloader()
+                    imageDownloader.download(key: .skillTree) { success in
+                        runOnMainThread {
+                            self.loadingSkillTreeDiagram = false
+                        }
+                    }
+                    imageDownloader.download(key: .skillTreeDark) { success in
+                        runOnMainThread {
+                            self.loadingSkillTreeDiagramDark = false
+                        }
+                    }
+                    imageDownloader.download(key: .treatingWounds) { success in
+                        runOnMainThread {
+                            self.loadingTreatingWoundsDiagram = false
+                        }
                     }
                 }
-                imageDownloader.download(key: .skillTreeDark) { success in
+                self.loadingSkillCategories = true
+                DataManager.shared.load([.skillCategories]) {
                     runOnMainThread {
-                        self.loadingSkillTreeDiagramDark = false
-                    }
-                }
-                imageDownloader.download(key: .treatingWounds) { success in
-                    runOnMainThread {
-                        self.loadingTreatingWoundsDiagram = false
+                        self.skillCategories = DataManager.shared.skillCategories
+                        self.loadingSkillCategories = false
+                        SkillManager.shared.getSkills { skills in
+                            self.allSkills = skills
+                            self.loadingSkills = false
+                        }
                     }
                 }
             }

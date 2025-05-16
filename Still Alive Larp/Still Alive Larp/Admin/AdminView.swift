@@ -27,11 +27,22 @@ struct AdminView: View {
     @State var loadingContacts: Bool = true
     @State var unreadContactsText = ""
     @State var contactRequests = [ContactRequestModel]()
+    
+    @State var researchProjects: [ResearchProjectModel] = []
+    @State var loadingResearchProjects: Bool = true
+    
+    @State var loadingNPCs: Bool = true
+    @State var npcs: [CharacterModel] = []
+    
+    @State var firstLoad = true
 
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
+                    PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 60) {
+                        self.reloadData()
+                    }
                     VStack {
                         Text("Admin Tools")
                             .font(.system(size: 32, weight: .bold))
@@ -45,37 +56,56 @@ struct AdminView: View {
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
-                        PlayerCharacterManagementView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, allPlayers: $allPlayers, loadingPlayers: $loadingPlayers)
+                        PlayerCharacterManagementView(allCharacters: $allCharacters, npcs: $npcs, loadingCharacters: $loadingCharacters, allPlayers: $allPlayers, loadingPlayers: $loadingPlayers, loadingNPCs: $loadingNPCs)
                         Text("Misc Administration")
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
-                        MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests)
+                        MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, researchProjects: $researchProjects, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests, loadingResearchProjects: $loadingResearchProjects)
                     }
                 }
             }
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
+            if firstLoad {
+                firstLoad = false
+                reloadData()
+            }
+        }
+    }
+    
+    private func reloadData() {
+        runOnMainThread {
             self.loadingPlayers = true
             self.loadingCharacters = true
             self.loadingEvents = true
             self.loadingContacts = true
+            self.loadingResearchProjects = true
+            self.loadingNPCs = true
             PlayerService.getAllPlayers { playerList in
-                self.allPlayers = playerList.players
-                self.loadingPlayers = false
+                runOnMainThread {
+                    self.allPlayers = playerList.players
+                    self.loadingPlayers = false
+                }
             } failureCase: { _ in
-                self.loadingPlayers = false
+                runOnMainThread {
+                    self.loadingPlayers = false
+                }
             }
             CharacterService.getAllCharacters { characterList in
-                self.allCharacters = characterList.characters
-                self.charactersWhoNeedBios = self.allCharacters.filter({ c in
-                    !c.approvedBio.boolValueDefaultFalse && !c.bio.isEmpty
-                })
-                self.unapprovedBioText = self.getUnapprovedBioCount()
-                self.loadingCharacters = false
+                runOnMainThread {
+                    self.allCharacters = characterList.characters
+                    self.charactersWhoNeedBios = self.allCharacters.filter({ c in
+                        !c.approvedBio.boolValueDefaultFalse && !c.bio.isEmpty
+                    })
+                    self.unapprovedBioText = self.getUnapprovedBioCount()
+                    self.loadingCharacters = false
+                }
             } failureCase: { _ in
-                self.loadingCharacters = false
+                runOnMainThread {
+                    self.loadingCharacters = false
+                }
             }
             EventManager.shared.getEvents(overrideLocal: true) { events in
                 runOnMainThread {
@@ -85,12 +115,28 @@ struct AdminView: View {
                 }
             }
             AdminService.getAllContactRequests { contactRequestList in
-                self.loadingContacts = false
-                self.contactRequests = self.sortContactRequests(contactRequestList)
+                runOnMainThread {
+                    self.loadingContacts = false
+                    self.contactRequests = self.sortContactRequests(contactRequestList)
+                }
             } failureCase: { error in
-                self.loadingContacts = false
+                runOnMainThread {
+                    self.loadingContacts = false
+                }
+            }
+            DataManager.shared.load([.researchProjects], forceDownloadIfApplicable: true) {
+                runOnMainThread {
+                    self.researchProjects = DataManager.shared.researchProjects
+                    self.loadingResearchProjects = false
+                }
             }
             DataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true)
+            DataManager.shared.load([.npcs], forceDownloadIfApplicable: true) {
+                runOnMainThread {
+                    self.npcs = DataManager.shared.npcs
+                    self.loadingNPCs = false
+                }
+            }
         }
     }
 
@@ -150,14 +196,16 @@ struct PlayerCharacterManagementView: View {
     @ObservedObject var _dm = DataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
+    @Binding var npcs: [CharacterModel]
     @Binding var loadingCharacters: Bool
     @Binding var allPlayers: [PlayerModel]
     @Binding var loadingPlayers: Bool
+    @Binding var loadingNPCs: Bool
 
     var body: some View {
         VStack {
-            NavArrowView(title: "Manage NPCs", loading: $loadingCharacters) { _ in
-                // TODO change the loading to be loadingNPCs and create destination view. Don't forget to add to load onAppear
+            NavArrowView(title: "Manage NPCs", loading: $loadingNPCs) { _ in
+                AllNpcsListView(npcs: npcs, allowEdit: true)
             }
             NavArrowView(title: "Award Player", loading: $loadingPlayers) { _ in
                 AwardPlayerView(players: allPlayers)
@@ -185,15 +233,21 @@ struct MiscAdminView: View {
     @Binding var loadingCharacters: Bool
     @Binding var unapprovedBioText: String
     @Binding var charactersWhoNeedBios: [CharacterModel]
+    @Binding var researchProjects: [ResearchProjectModel]
     
     @Binding var loadingContacts: Bool
     @Binding var unreadContactsText: String
     @Binding var contactRequests: [ContactRequestModel]
+    @Binding var loadingResearchProjects: Bool
     
     var body: some View {
         VStack {
             NavArrowView(title: "Manage Research Projects") { _ in
-                // TODO don't forget to add loading
+                AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true).onDisappear {
+                    runOnMainThread {
+                        self.researchProjects = DataManager.shared.researchProjects
+                    }
+                }
             }
             NavArrowView(title: "Create Announcement") { _ in
                 CreateAnnouncementView()

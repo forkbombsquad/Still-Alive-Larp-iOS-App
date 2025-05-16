@@ -276,6 +276,7 @@ struct FullSkillModel: SkillModelProtocol {
     let skillTypeId: Int
     let skillCategoryId: Int
     var prereqs: [FullSkillModel]
+    var postreqs: [Int] = []
 
     var barcodeModel: SkillBarcodeModel {
         return SkillBarcodeModel(self)
@@ -316,5 +317,135 @@ struct FullSkillModel: SkillModelProtocol {
         self.skillCategoryId = skillModel.skillCategoryId
         self.prereqs = skillModel.prereqs
     }
+    
+    func getModCost(
+        combatMod: Int,
+        professionMod: Int,
+        talentMod: Int,
+        xpReductions: [SpecialClassXpReductionModel]
+    ) -> Int {
+        var cost = xpCost.intValueDefaultZero
+        switch skillTypeId {
+        case Constants.SkillTypes.combat:
+            if cost > 0 || combatMod > 0 {
+                cost = cost.addMinOne(combatMod)
+            }
+        case Constants.SkillTypes.profession:
+            if cost > 0 || professionMod > 0 {
+                cost = cost.addMinOne(professionMod)
+            }
+        case Constants.SkillTypes.talent:
+            if cost > 0 || talentMod > 0 {
+                cost = cost.addMinOne(talentMod)
+            }
+        default:
+            break
+        }
+
+        for reduction in xpReductions {
+            if reduction.skillId == self.id {
+                cost = cost.addMinOne(-reduction.xpReduction.intValueDefaultZero)
+            }
+        }
+
+        return cost
+    }
+
+    func getModCost(
+        combatMod: Int,
+        professionMod: Int,
+        talentMod: Int,
+        xpReduction: SpecialClassXpReductionModel
+    ) -> Int {
+        var cost = xpCost.intValueDefaultZero
+        switch skillTypeId {
+        case Constants.SkillTypes.combat:
+            if cost > 0 || combatMod > 0 {
+                cost = cost.addMinOne(combatMod)
+            }
+        case Constants.SkillTypes.profession:
+            if cost > 0 || professionMod > 0 {
+                cost = cost.addMinOne(professionMod)
+            }
+        case Constants.SkillTypes.talent:
+            if cost > 0 || talentMod > 0 {
+                cost = cost.addMinOne(talentMod)
+            }
+        default:
+            break
+        }
+
+        if xpReduction.skillId == self.id {
+            cost = cost.addMinOne(-xpReduction.xpReduction.intValueDefaultZero)
+        }
+
+        return cost
+    }
+
+    func getInfModCost(inf50Mod: Int, inf75Mod: Int) -> Int {
+        switch minInfection.intValueDefaultZero {
+        case 50:
+            return inf50Mod
+        case 75:
+            return inf75Mod
+        default:
+            return minInfection.intValueDefaultZero
+        }
+    }
+
+    func getTypeText() -> String {
+        switch skillTypeId {
+        case Constants.SkillTypes.combat:
+            return "Combat"
+        case Constants.SkillTypes.profession:
+            return "Profession"
+        case Constants.SkillTypes.talent:
+            return "Talent"
+        default:
+            return ""
+        }
+    }
+
+    func getFullCostText(purchaseableSkills: [CharacterModifiedSkillModel]) -> String {
+        var text = ""
+        let pskill = purchaseableSkills.first(where: { $0.id == self.id })
+
+        if let pskill = pskill {
+            if pskill.hasModCost {
+                text += "\(pskill.modXpCost)xp (usual cost: \(xpCost)xp)"
+            } else {
+                text += "\(xpCost)xp"
+            }
+
+            if pskill.hasModInfCost, minInfection.intValueDefaultZero > 0 {
+                text += " | \(pskill.modInfCost)% Inf Threshold (usual threshold: \(minInfection)%)"
+            } else if minInfection.intValueDefaultZero > 0 {
+                text += " | \(minInfection)% Inf Threshold"
+            }
+
+            if prestigeCost.intValueDefaultZero > 0 {
+                text += " | \(prestigeCost)pp"
+            }
+        } else {
+            text += "\(xpCost)xp"
+            if minInfection.intValueDefaultZero > 0 {
+                text += " | \(minInfection)% Inf Threshold"
+            }
+            if prestigeCost.intValueDefaultZero > 0 {
+                text += " | \(prestigeCost)pp"
+            }
+        }
+
+        return text
+    }
+
+    func getPrereqNames() -> String {
+        return prereqs.map { $0.name }.joined(separator: "\n")
+    }
+
+    func hasSameCostPrereq() -> Bool {
+        return prereqs.contains { $0.xpCost == self.xpCost }
+    }
 
 }
+

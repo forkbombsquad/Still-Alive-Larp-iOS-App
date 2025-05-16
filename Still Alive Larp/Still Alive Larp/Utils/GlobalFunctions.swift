@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 func runOnMainThread(_ code: @escaping () -> Void) {
     DispatchQueue.main.async {
@@ -41,4 +42,12 @@ func globalTestPrint(_ message: String) {
 
 func getMockData(_ index: Int = 0) -> MockData {
     return MockDataManagement.allMockData[index]
+}
+
+func globalState<T>(_ variable: T) -> State<T> {
+    return State(initialValue: variable)
+}
+
+func max(_ x: CGFloat, _ y: CGFloat) -> CGFloat {
+    return CGFloat.maximum(x, y)
 }

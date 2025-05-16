@@ -16,6 +16,8 @@ struct ViewPlayerStuffView: View {
     @State var character: FullCharacterModel? = nil
     @State var loadingCharacter: Bool = true
     @State var loadingProfileImage: Bool = true
+    
+    @State var firstLoad: Bool = true
 
     init(player: PlayerModel) {
         self.playerModel = player
@@ -55,7 +57,7 @@ struct ViewPlayerStuffView: View {
                                 }
                             }
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingCharacter) { _ in
-                                // TODO
+                                // TODO native skill tree
                             }
                             NavArrowView(title: "Bio", loading: $loadingCharacter) { _ in
                                 BioView(allowEdit: false)
@@ -74,38 +76,37 @@ struct ViewPlayerStuffView: View {
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
-            globalTestPrint("ON APPEAR: VIEW PLAYER STUFF VIEW")
-            self.loadingCharacter = true
-            self.loadingProfileImage = true
-            CharacterManager.shared.getActiveCharacterForOtherPlayer(playerModel.id) { character in
-                runOnMainThread {
-                    self.character = character
-                    self.loadingCharacter = false
-                    DataManager.shared.selectedPlayer = playerModel
-                    DataManager.shared.charForSelectedPlayer = character
-                    DataManager.shared.load([.profileImage]) {
-                        runOnMainThread {
-                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                            self.loadingProfileImage = false
+            if firstLoad {
+                self.firstLoad = false
+                self.loadingCharacter = true
+                self.loadingProfileImage = true
+                CharacterManager.shared.getActiveCharacterForOtherPlayer(playerModel.id) { character in
+                    runOnMainThread {
+                        self.character = character
+                        self.loadingCharacter = false
+                        DataManager.shared.selectedPlayer = playerModel
+                        DataManager.shared.charForSelectedPlayer = character
+                        DataManager.shared.load([.profileImage]) {
+                            runOnMainThread {
+                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                self.loadingProfileImage = false
+                            }
                         }
                     }
-                }
-            } failureCase: { error in
-                runOnMainThread {
-                    self.character = nil
-                    self.loadingCharacter = false
-                    DataManager.shared.selectedPlayer = playerModel
-                    DataManager.shared.load([.profileImage]) {
-                        runOnMainThread {
-                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                            self.loadingProfileImage = false
+                } failureCase: { error in
+                    runOnMainThread {
+                        self.character = nil
+                        self.loadingCharacter = false
+                        DataManager.shared.selectedPlayer = playerModel
+                        DataManager.shared.load([.profileImage]) {
+                            runOnMainThread {
+                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                self.loadingProfileImage = false
+                            }
                         }
                     }
                 }
             }
-        }
-        .onDisappear {
-            globalTestPrint("ON DISAPPEAR: VIEW PLAYER STUFF VIEW")
         }
     }
 }

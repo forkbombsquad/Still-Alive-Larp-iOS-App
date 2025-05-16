@@ -9,29 +9,34 @@ import SwiftUI
 
 struct AllNpcsListView: View {
     
-    // TODO offline mode is crashing. Might be an issue with the Offline Data Cacheing
+    static func Offline(npcs: [FullCharacterModel], skills: [FullSkillModel]) -> AllNpcsListView {
+        return AllNpcsListView(fullCharacterModels: npcs, skills: skills, allowEdit: false)
+    }
     
     @ObservedObject var _dm = DataManager.shared
     
     let offline: Bool
+    let allowEdit: Bool
     
-    @State var npcs: [CharacterModel]
+    @State var npcs: [CharacterModel] = []
     @State var fullNpcModelsOffline: [FullCharacterModel] = []
     @State var offlineSkills: [FullSkillModel] = []
     
-    init(_dm: DataManager = DataManager.shared, fullNpcModelsOffline: [FullCharacterModel], offlineSkills: [FullSkillModel]) {
+    private init(_dm: DataManager = DataManager.shared, fullCharacterModels: [FullCharacterModel], skills: [FullSkillModel], allowEdit: Bool) {
         self._dm = _dm
         self.offline = true
-        self.fullNpcModelsOffline = fullNpcModelsOffline
-        self.npcs = fullNpcModelsOffline.map({ $0.baseModel })
-        self.offlineSkills = offlineSkills
+        self.allowEdit = allowEdit
+        self._npcs = globalState(fullCharacterModels.map({ $0.baseModel }))
+        self._fullNpcModelsOffline = globalState(fullCharacterModels)
+        self._offlineSkills = globalState(skills)
+        
     }
     
-    init(_dm: DataManager = DataManager.shared, npcs: [CharacterModel]) {
+    init(_dm: DataManager = DataManager.shared, npcs: [CharacterModel], allowEdit: Bool) {
         self._dm = _dm
         self.offline = false
-        self.npcs = npcs
-        self.fullNpcModelsOffline = fullNpcModelsOffline
+        self.allowEdit = allowEdit
+        self._npcs = globalState(npcs)
     }
     
     var body: some View {
@@ -39,7 +44,7 @@ struct AllNpcsListView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("All NPCs")
+                        Text("\(allowEdit ? "Manage" : "All") NPCs")
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         Divider().padding(.horizontal, 16).padding(.bottom, 8)
@@ -49,8 +54,10 @@ struct AllNpcsListView: View {
                         LazyVStack(spacing: 8) {
                             ForEach(aliveNpcs()) { npc in
                                 NavArrowView(title: npc.fullName) { _ in
-                                    if self.offline {
-                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: self.offlineSkills)
+                                    if self.allowEdit {
+                                        ManageNPCView(npcs: $npcs, npc: npc)
+                                    } else if self.offline {
+                                        ViewNPCStuffView.Offline(characterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: offlineSkills)
                                     } else {
                                         ViewNPCStuffView(characterModel: npc)
                                     }
@@ -58,8 +65,10 @@ struct AllNpcsListView: View {
                             }
                             ForEach(deadNpcs()) { npc in
                                 NavArrowViewRed(title: "\(npc.fullName) (Dead)") {
-                                    if self.offline {
-                                        ViewNPCStuffView(offlineCharacterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: self.offlineSkills)
+                                    if self.allowEdit {
+                                        ManageNPCView(npcs: $npcs, npc: npc)
+                                    } else if self.offline {
+                                        ViewNPCStuffView.Offline(characterModel: fullNpcModelsOffline.first(where: { $0.id == npc.id })!, skills: offlineSkills)
                                     } else {
                                         ViewNPCStuffView(characterModel: npc)
                                     }
@@ -88,5 +97,5 @@ struct AllNpcsListView: View {
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
-    return AllNpcsListView(_dm: dm, npcs: md.characterListFullModel.characters)
+    return AllNpcsListView(_dm: dm, npcs: md.characterListFullModel.characters, allowEdit: false)
 }

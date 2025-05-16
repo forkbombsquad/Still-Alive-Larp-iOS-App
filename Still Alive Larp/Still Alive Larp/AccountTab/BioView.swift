@@ -17,21 +17,18 @@ struct BioView: View {
     init(allowEdit: Bool) {
         self.allowEdit = allowEdit
         self.offline = false
-        self.initialChar = nil
+        self._character = globalState(DataManager.shared.charForSelectedPlayer)
     }
     
     private init(character: FullCharacterModel, allowEdit: Bool, offline: Bool) {
         self.allowEdit = allowEdit
         self.offline = offline
-        self.initialChar = character
+        self._character = globalState(character)
     }
 
     let allowEdit: Bool
     let offline: Bool
-    @State var firstLoad = true
     @State var character: FullCharacterModel? = nil
-    
-    let initialChar: FullCharacterModel?
 
     var body: some View {
         VStack(alignment: .center) {
@@ -56,14 +53,6 @@ struct BioView: View {
             }
         }.padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            if firstLoad && !offline {
-                self.firstLoad = false
-                self.character = DataManager.shared.charForSelectedPlayer
-            } else if offline {
-                self.character = initialChar
-            }
-        }
     }
 }
 

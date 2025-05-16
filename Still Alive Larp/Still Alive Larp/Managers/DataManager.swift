@@ -10,7 +10,7 @@ import SwiftUI
 class DataManager: ObservableObject {
 
     enum DataManagerType {
-        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects, eventAttendeesForSelectedEvent
+        case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects, eventAttendeesForSelectedEvent, skillCategories
     }
 
     @ObservedObject static var shared = DataManager()
@@ -95,6 +95,9 @@ class DataManager: ObservableObject {
             
             shared.eventAttendeesForEvent = []
             shared.loadingEventAttendeesForEvent = true
+            
+            shared.skillCategories = []
+            shared.loadingSkillCategories = true
         }
     }
 
@@ -206,6 +209,9 @@ class DataManager: ObservableObject {
     
     @Published var researchProjects: [ResearchProjectModel] = []
     @Published var loadingResearchProjects: Bool = true
+    
+    @Published var skillCategories: [SkillCategoryModel] = []
+    @Published var loadingSkillCategories: Bool = true
 
     func load(_ types: [DataManagerType], forceDownloadIfApplicable: Bool = false, finished: @escaping () -> Void = {}) {
         guard !debugMode else {
@@ -717,6 +723,28 @@ class DataManager: ObservableObject {
                     } else {
                         self.loadingEventAttendeesForEvent = false
                         self.finishedRequest(currentCountIndex, "Event Attendees For Event From Memory or selected event null")
+                    }
+                case .skillCategories:
+                    self.loadingSkillCategories = true
+                    if self.skillCategories.isEmpty || forceDownloadIfApplicable {
+                        SkillCategoryService.getAllSkillCategories { skillCategories in
+                            runOnMainThread {
+                                self.skillCategories = skillCategories.results
+                                self.loadingSkillCategories = false
+                                self.finishedRequest(currentCountIndex, "Skill Categories Success")
+                                LocalDataHandler.shared.storeSkillCategories(skillCategories)
+                            }
+                        } failureCase: { error in
+                            runOnMainThread {
+                                self.skillCategories = []
+                                self.loadingSkillCategories = false
+                                self.finishedRequest(currentCountIndex, "Skill Categories Failure")
+                            }
+                        }
+
+                    } else {
+                        self.loadingSkillCategories = false
+                        self.finishedRequest(currentCountIndex, "Skill Categores From Memory")
                     }
                 }
             }

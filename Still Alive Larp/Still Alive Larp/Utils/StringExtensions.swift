@@ -106,7 +106,7 @@ extension String {
     
     func repeated(_ times: Int) -> String {
         var str = ""
-        for index in 0..<times {
+        for _ in 0..<times {
             str += self
         }
         return str

@@ -44,6 +44,13 @@ class SkillManager {
                             }
                         }
                     }
+                    for (index, skill) in (self.skills ?? []).enumerated() {
+                        for prereq in prereqs.filter({ $0.prereqSkillId == skill.id }) {
+                            if let prereqSkill = self.skills?.first(where: { $0.id == prereq.baseSkillId }) {
+                                self.skills?[index].postreqs.append(prereqSkill.id)
+                            }
+                        }
+                    }
                     LocalDataHandler.shared.storeSkills(self.skills ?? [])
                     self.fetching = false
                     for cb in self.completionBlocks {
