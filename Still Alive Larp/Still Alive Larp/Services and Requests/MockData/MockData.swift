@@ -341,7 +341,7 @@ fileprivate struct MockData1: MockData {
         SkillModel(id: 38, xpCost: "1", prestigeCost: "0", name: "Investigator", description: "1 true fact", minInfection: "0", skillTypeId: 2, skillCategoryId: 10),
         SkillModel(id: 55, xpCost: "4", prestigeCost: "0", name: "Natural Armor", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
         SkillModel(id: 60, xpCost: "2", prestigeCost: "0", name: "Pain Tolerance", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
-        SkillModel(id: 70, xpCost: "2", prestigeCost: "0", name: "Scaled Skin", description: "+1 red beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 13),
+        SkillModel(id: 70, xpCost: "2", prestigeCost: "0", name: "Scaled Skin", description: "+1 red beads", minInfection: "50", skillTypeId: 3, skillCategoryId: 13),
         SkillModel(id: 80, xpCost: "1", prestigeCost: "0", name: "Tough Skin", description: "+1 blue beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 7),
         SkillModel(id: 96, xpCost: "2", prestigeCost: "1", name: "Plot Armor", description: "+1 black beads", minInfection: "0", skillTypeId: 3, skillCategoryId: 14),
         SkillModel(id: 13, xpCost: "2", prestigeCost: "0", name: "Dead Man Walking", description: "Pretend to be a zombie.", minInfection: "50", skillTypeId: 3, skillCategoryId: 13),

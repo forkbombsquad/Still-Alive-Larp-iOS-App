@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -353,6 +353,10 @@
 		B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAttendeeModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		B235A4FF2DDA328900AF96DC /* Canvas Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Canvas Models"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		B21691B628FDDC5D006AA921 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -571,6 +575,7 @@
 		B235A4F22DD7A4F200AF96DC /* NativeSkillTree */ = {
 			isa = PBXGroup;
 			children = (
+				B235A4FF2DDA328900AF96DC /* Canvas Models */,
 				B235A4F92DD7AAD000AF96DC /* SkillGrid.swift */,
 				B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */,
 			);
@@ -724,6 +729,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B235A4FF2DDA328900AF96DC /* Canvas Models */,
 			);
 			name = "Still Alive Larp";
 			packageProductDependencies = (

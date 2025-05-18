@@ -4,11 +4,11 @@ class SkillGrid {
     private let personal: Bool
     private let allowPurchase: Bool
 
-    private let skills: [FullSkillModel]
+    let skills: [FullSkillModel]
     private var purchaseableSkills: [CharacterModifiedSkillModel] = []
     private let skillCategories: [SkillCategoryModel]
     private var gridCategories: [SkillGridCategory] = []
-    private var trueGrid: [GridSkill] = []
+    var trueGrid: [GridSkill] = []
 
     private var purchaseButton: TappablePurchaseButton?
 
@@ -1111,6 +1111,10 @@ struct GridSkill {
     let gridX: Int
     let gridY: Int
     var expanded: Bool = false
+    
+    var lowered: Bool {
+        return skill.prereqs.contains { $0.xpCost.intValueDefaultZero == skill.xpCost.intValueDefaultZero }
+    }
 }
 
 struct SkillRequirement {

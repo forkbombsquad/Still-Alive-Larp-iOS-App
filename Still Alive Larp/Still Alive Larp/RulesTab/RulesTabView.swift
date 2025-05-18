@@ -37,7 +37,7 @@ struct RulesTabView: View {
                                 SkillListView(skills: allSkills)
                             }
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkills) { _ in
-                                SkillTreeView(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
+                                NativeSkillTree(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
                                 // TODO skill tree
                             }
                             NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in

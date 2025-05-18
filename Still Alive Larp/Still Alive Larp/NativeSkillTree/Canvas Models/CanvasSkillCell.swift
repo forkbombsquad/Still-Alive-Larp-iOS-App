@@ -1,0 +1,287 @@
+//
+//  CanvasSkillCell.swift
+//  Still Alive Larp
+//
+//  Created by Rydge Craker on 5/18/25.
+//
+
+import SwiftUI
+
+enum PurchaseState {
+    case purchased, couldPurchase, cantPurchase
+}
+
+struct CanvasSkillCell: View {
+    
+    let expanded: Bool
+    let skill: FullSkillModel
+    let allowPurchase: Bool
+    let purchaseState: PurchaseState
+    let loadingPurchase: Bool
+    let collapsedWidth: CGFloat
+    let expandedWidth: CGFloat
+    
+    let loadingText = "Purchasing..."
+    
+    var body: some View {
+        VStack {
+            if let skillTopBoxText = skillTopBoxText() {
+                VStack {
+                    Text(skillTopBoxText)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(Color.white)
+                        .padding(16)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .shadow(color: .black, radius: 1)
+                }
+                .background(Color.black)
+                .frame(width: expanded ? expandedWidth : collapsedWidth, alignment: .center)
+                .overlay(
+                    Rectangle().strokeBorder(Color.white, lineWidth: 2)
+                )
+            }
+            VStack {
+                // Rest of cell
+                if expanded {
+                    VStack {
+                        HStack {
+                            Text(skill.name)
+                                .font(.system(size: 24, weight: .bold))
+                                .foregroundStyle(Color.white)
+                                .padding(.horizontal, 16)
+                                .padding(.top, 16)
+                                .multilineTextAlignment(.leading)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                            Text(skill.getTypeText())
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundStyle(Color.white)
+                                .padding(.horizontal, 16)
+                                .padding(.top, 16)
+                                .multilineTextAlignment(.trailing)
+                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                                .shadow(color: .black, radius: 0.4)
+                        }
+                        Divider()
+                            .frame(height: 2)
+                            .overlay(Color.darkGray)
+                            .padding(.horizontal, 16)
+                        Text(getXpRowText())
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundStyle(Color.white)
+                            .padding(16)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                    }
+                    .frame(maxWidth: .infinity)
+                    Divider()
+                        .frame(height: 2)
+                        .overlay(Color.darkGray)
+                        .padding(.horizontal, 16)
+                    if skill.prereqs.isNotEmpty {
+                        
+                        Text("Prerequisites")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(Color.white)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 16)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                            .shadow(color: .black, radius: 0.4)
+                        LazyVStack {
+                            ForEach(skill.prereqs) { prereq in
+                                Text(prereq.name)
+                                    .font(.system(size: 16, weight: .regular))
+                                    .foregroundStyle(Color.white)
+                                    .padding(.horizontal, 16)
+                                    .multilineTextAlignment(.center)
+                                    .frame(alignment: .center)
+                                    .shadow(color: .black, radius: 0.4)
+                                    .shadow(color: .black, radius: 0.4)
+                                    .shadow(color: .black, radius: 0.4)
+                                    .shadow(color: .black, radius: 0.4)
+                            }
+                        }
+                        Divider()
+                            .frame(height: 2)
+                            .overlay(Color.darkGray)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 4)
+                    }
+                    Text(skill.description)
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundStyle(Color.white)
+                        .padding(16)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
+                    if allowPurchase {
+                        LoadingButtonView(.constant(false), width: expandedWidth - 100, buttonText: "Purchase") {
+                            // TODO purchase skill
+                        }
+                        .padding([.horizontal, .bottom], 32)
+                    }
+                } else {
+                    Text(skill.name)
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(Color.white)
+                        .padding(16)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, minHeight: collapsedWidth, alignment: .center)
+                        .shadow(color: .black, radius: 1)
+                }
+            }
+            .background(
+                LinearGradient(colors: [getTopColor(), getBottomColor()], startPoint: .top, endPoint: .bottom)
+            )
+        }
+        .frame(width: expanded ? expandedWidth : collapsedWidth, alignment: .center)
+    }
+    
+    func getTopColor() -> Color {
+        if allowPurchase && purchaseState == .cantPurchase {
+            return Color(hex: "#797979")
+        }
+        switch skill.skillTypeId {
+            case Constants.SkillTypes.combat:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#F7C9C6")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#EA6E69")
+                }
+            case Constants.SkillTypes.profession:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#CAE1C5")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#667D61")
+                }
+            case Constants.SkillTypes.talent:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#D8E7FB")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#748397")
+                }
+            default:
+                break
+        }
+        return .midRed
+    }
+    
+    func getBottomColor() -> Color {
+        if allowPurchase && purchaseState == .cantPurchase {
+            return Color(hex: "#353535")
+        }
+        switch skill.skillTypeId {
+            case Constants.SkillTypes.combat:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#EA6E69")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#860A05")
+                }
+            case Constants.SkillTypes.profession:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#98D078")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#346C14")
+                }
+            case Constants.SkillTypes.talent:
+                if !allowPurchase || purchaseState == .purchased {
+                    return Color(hex: "#7FA7E0")
+                } else if purchaseState == .couldPurchase {
+                    return Color(hex: "#1B437C")
+                }
+            default:
+                break
+        }
+        return .midRed
+    }
+    
+    func getXpRowText() -> String {
+        var xpRow = "\(skill.xpCost)xp"
+        if skill.prestigeCost.intValueDefaultZero > 0 {
+            xpRow += " | \(skill.prestigeCost)pp"
+        }
+        if skill.minInfection.intValueDefaultZero > 0 {
+            xpRow += " | \(skill.minInfection)% Inf Threshold"
+        }
+        return xpRow
+    }
+    
+    func skillTopBoxText() -> String? {
+        var str = ""
+        if skill.skillCategoryId == Constants.SpecificSkillCategories.infected {
+            str = "At least \(skill.minInfection)% Infection Rating Required"
+        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.spec {
+            str = "You may only select 1 Tier-\(skill.xpCost) specialization skill"
+        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.prestige {
+            str = "Requires \(skill.prestigeCost) Prestige Point"
+        }
+        return str.isEmpty ? nil : str
+    }
+    
+}
+
+#Preview {
+    let md = getMockData()
+    let freeSkill = 6
+    let longSkill = 72
+    let prestigeSkill = 23
+    let infSkill = 40
+    let specSkill = 19
+    let manyPrereqs = 47
+    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == longSkill })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 200, expandedWidth: 350)
+}
+
+struct SkillCellMeasurer: View {
+    let skill: FullSkillModel
+    
+    let expanded: Bool
+    let allowPurchase: Bool
+    let purchaseState: PurchaseState
+    let loadingPurchase: Bool
+    let collapsedWidth: CGFloat
+    let expandedWidth: CGFloat
+    
+    var body: some View {
+        CanvasSkillCell(
+            expanded: expanded,
+            skill: skill,
+            allowPurchase: allowPurchase,
+            purchaseState: purchaseState,
+            loadingPurchase: loadingPurchase,
+            collapsedWidth: collapsedWidth,
+            expandedWidth: expandedWidth
+        )
+        .background(
+            GeometryReader { geo in
+                Color.clear
+                    .preference(key: SkillSizePreferenceKey.self,
+                                value: [skill.id: geo.size])
+            }
+        )
+    }
+}
+
+struct SkillSizePreferenceKey: PreferenceKey {
+    static var defaultValue: [Int: CGSize] = [:]
+    static func reduce(value: inout [Int: CGSize], nextValue: () -> [Int: CGSize]) {
+        value.merge(nextValue(), uniquingKeysWith: { $1 })
+    }
+}

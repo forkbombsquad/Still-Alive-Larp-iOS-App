@@ -12,6 +12,10 @@ extension Int {
     var stringValue: String {
         return "\(self)"
     }
+    
+    var cgFloat: CGFloat {
+        return CGFloat(self)
+    }
 
     func equalsAnyOf(_ intArray: [Int]) -> Bool {
         for i in intArray {
