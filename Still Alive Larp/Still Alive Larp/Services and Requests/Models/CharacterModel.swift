@@ -223,12 +223,12 @@ struct CharacterModel: CustomCodeable, Identifiable {
     let id: Int
     let fullName: String
     let startDate: String
-    let isAlive: String
+    var isAlive: String
     let deathDate: String
-    let infection: String
+    var infection: String
     var bio: String
     var approvedBio: String
-    let bullets: String
+    var bullets: String
     let megas: String
     let rivals: String
     let rockets: String

@@ -30,11 +30,7 @@ struct ViewPreregForEventView: View {
                 .fixedSize(horizontal: false, vertical: true)
             if loadingPlayers || loadingCharacters || loadingEventPreregs {
                 ScrollView {
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
+                    LoadingBlock()
                 }
             } else {
                 List() {

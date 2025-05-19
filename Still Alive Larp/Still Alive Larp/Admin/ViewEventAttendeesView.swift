@@ -28,11 +28,7 @@ struct ViewEventAttendeesView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                             .multilineTextAlignment(.center)
                         if loadingEventAttendees || loadingPlayers {
-                            HStack {
-                                Spacer()
-                                ProgressView().controlSize(.large)
-                                Spacer()
-                            }
+                            LoadingBlock()
                         } else {
                             Text("Players")
                                 .font(.system(size: 28, weight: .bold))

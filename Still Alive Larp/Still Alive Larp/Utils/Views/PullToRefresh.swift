@@ -11,7 +11,7 @@ import SwiftUI
 // the parent view where "pullToRefresh" is the coordinate space name that is passed in to this struct.
 // Example:
 // ScrollView {
-//     PullToRefresh(coordinateSpaceName: "pullToRefresh", spinnerOffsetY: -100, pullDownDistance: 50) {
+//     PullToRefresh(coordinateSpaceName: "pullToRefresh", spinnerOffsetY: -100, pullDownDistance: 150) {
 //         //Do refresh stuff here
 //     }
 // }

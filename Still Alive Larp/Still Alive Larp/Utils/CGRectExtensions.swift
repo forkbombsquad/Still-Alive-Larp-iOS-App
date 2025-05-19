@@ -13,4 +13,8 @@ extension CGRect {
         return self.contains(CGPoint(x: x, y: y))
     }
     
+    func center() -> CGPoint {
+        return CGPoint(x: midX, y: midY)
+    }
+    
 }

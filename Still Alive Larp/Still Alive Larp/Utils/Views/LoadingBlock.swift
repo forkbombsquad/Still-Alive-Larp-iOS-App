@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO use this everywhere
-
 struct LoadingBlock: View {
     var body: some View {
         HStack {

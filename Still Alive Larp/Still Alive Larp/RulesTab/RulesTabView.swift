@@ -38,7 +38,6 @@ struct RulesTabView: View {
                             }
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkills) { _ in
                                 NativeSkillTree(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
-                                // TODO skill tree
                             }
                             NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in
                                 ViewRulesView(rulebook: DataManager.shared.rulebook)
@@ -92,7 +91,7 @@ struct RulesTabView: View {
                     runOnMainThread {
                         self.skillCategories = DataManager.shared.skillCategories
                         self.loadingSkillCategories = false
-                        SkillManager.shared.getSkills { skills in
+                        SkillManager.shared.getSkills(overrideLocal: true) { skills in
                             self.allSkills = skills
                             self.loadingSkills = false
                         }

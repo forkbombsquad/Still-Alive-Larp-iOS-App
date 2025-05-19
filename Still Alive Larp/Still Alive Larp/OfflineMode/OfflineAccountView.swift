@@ -16,16 +16,18 @@ struct OfflineAccountView: View {
         self.gear = LocalDataHandler.shared.getGear()?.first
         self.npcs = LocalDataHandler.shared.getNPCs() ?? []
         self.rulebook = RulebookManager.shared.getOfflineVersion()
+        self.skillCategories = LocalDataHandler.shared.getSkillCategories() ?? []
         self.treatingWoundsDiagram = LocalDataHandler.shared.getImage(.treatingWounds)
     }
     
-    init(_ player: PlayerModel?, _ character: FullCharacterModel?, _ skills: [FullSkillModel], _ gear: GearModel?, _ npcs: [FullCharacterModel], _ rulebook: Rulebook?, _ treatingWoundsDiagram: UIImage?) {
+    init(_ player: PlayerModel?, _ character: FullCharacterModel?, _ skills: [FullSkillModel], _ gear: GearModel?, _ npcs: [FullCharacterModel], _ rulebook: Rulebook?, _ skillCategories: [SkillCategoryModel], _ treatingWoundsDiagram: UIImage?) {
         self.player = player
         self.character = character
         self.skills = skills
         self.gear = gear
         self.npcs = npcs
         self.rulebook = rulebook
+        self.skillCategories = skillCategories
         self.treatingWoundsDiagram = treatingWoundsDiagram
     }
 
@@ -35,6 +37,7 @@ struct OfflineAccountView: View {
     let gear: GearModel?
     let npcs: [FullCharacterModel]
     let rulebook: Rulebook?
+    let skillCategories: [SkillCategoryModel]
     let treatingWoundsDiagram: UIImage?
 
     var body: some View {
@@ -61,7 +64,7 @@ struct OfflineAccountView: View {
                                     SkillManagementView.Offline(character: character)
                                 }
                                 NavArrowView(title: "Personal Skill Tree Diagram") { _ in
-                                    // TODO skill tree
+                                    NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: true, allowPurchase: false), character: character)
                                 }
                                 NavArrowView(title: "Character Bio") { _ in
                                     BioView.Offline(character: character)
@@ -86,7 +89,7 @@ struct OfflineAccountView: View {
                             SkillListView(skills: skills)
                         }
                         NavArrowView(title: "Skill Tree Diagram") { _ in
-                            // TODO skill tree
+                            NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: false, allowPurchase: false))
                         }
                         if let rulebook = rulebook {
                             NavArrowView(title: "Rulebook") { _ in
@@ -122,5 +125,5 @@ struct OfflineAccountView: View {
 
 #Preview {
     let md = getMockData()
-    OfflineAccountView(md.player(), md.fullCharacters().first!, md.fullSkills(), md.gear(), md.fullCharacters(), md.rulebook, nil)
+    OfflineAccountView(md.player(), md.fullCharacters().first!, md.fullSkills(), md.gear(), md.fullCharacters(), md.rulebook, md.skillCategories.results, nil)
 }

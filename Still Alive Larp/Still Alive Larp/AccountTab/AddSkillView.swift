@@ -103,7 +103,7 @@ struct AddSkillView: View {
                 }
                 .scrollContentBackground(.hidden)
             } else {
-                ProgressView()
+                LoadingBlock()
             }
 
         }

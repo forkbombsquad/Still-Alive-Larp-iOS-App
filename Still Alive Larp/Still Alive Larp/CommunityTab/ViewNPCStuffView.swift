@@ -45,9 +45,7 @@ struct ViewNPCStuffView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .center)
                         if loadingFullModel {
-                            Spacer()
-                            ProgressView().controlSize(.large)
-                            Spacer()
+                            LoadingBlock()
                         } else if let char = fullModel {
                             Divider().padding(.horizontal, 16)
                             KeyValueView(key: "Infection Rating", value: "\(char.infection)%", showDivider: false).padding(.top, 8)

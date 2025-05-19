@@ -16,6 +16,10 @@ struct AccountTabView: View {
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
     @State private var player: PlayerModel? = nil
     @State private var character: FullCharacterModel? = nil
+    @State private var skills: [FullSkillModel] = []
+    @State private var skillCategories: [SkillCategoryModel] = []
+    @State private var xpReductions: [SpecialClassXpReductionModel] = []
+    @State private var loadingXpReductions = false
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -25,7 +29,7 @@ struct AccountTabView: View {
                 GeometryReader { gr in
                     let imgWidth = gr.size.width * 0.75
                     ScrollView {
-                        PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 60) {
+                        PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 150) {
                             self.reload(true)
                         }
                         VStack {
@@ -56,15 +60,15 @@ struct AccountTabView: View {
                                 .font(.system(size: 24, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 8)
-                            if let character = character {
+                            if let player = player, let character = character {
                                 NavArrowView(title: "Character Stats", loading: $loading) { _ in
                                     CharacterStatusView()
                                 }
                                 NavArrowView(title: "Skill Management", loading: $loading) { _ in
                                     SkillManagementView(character: character, allowEdit: true)
                                 }
-                                NavArrowView(title: "Personal Skill Tree Diagram", loading: $loading) { _ in
-                                    // TODO skill tree
+                                NavArrowView(title: "Personal Skill Tree Diagram", loading: $loadingXpReductions) { _ in
+                                    NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: true, allowPurchase: true), player: player, character: character, xpReductions: xpReductions)
                                 }
                                 NavArrowView(title: "Bio", loading: $loading) { _ in
                                     BioView(allowEdit: true)
@@ -121,12 +125,21 @@ struct AccountTabView: View {
         runOnMainThread {
             self.loading = true
             self.loadingProfileImage = true
-            DataManager.shared.load([.player, .character], forceDownloadIfApplicable: force) {
+            self.loadingXpReductions = true
+            DataManager.shared.load([.player, .character, .skills, .skillCategories], forceDownloadIfApplicable: force) {
                 DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
                 runOnMainThread {
                     self.player = DataManager.shared.player
                     self.character = DataManager.shared.character
+                    self.skills = DataManager.shared.skills ?? []
+                    self.skillCategories = DataManager.shared.skillCategories
                     self.loading = false
+                    DataManager.shared.load([.xpReductions]) {
+                        runOnMainThread {
+                            self.xpReductions = DataManager.shared.xpReductions ?? []
+                            self.loadingXpReductions = false
+                        }
+                    }
                     DataManager.shared.profileImage = nil
                     DataManager.shared.load([.profileImage], forceDownloadIfApplicable: force) {
                         runOnMainThread {

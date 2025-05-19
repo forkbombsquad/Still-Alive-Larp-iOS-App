@@ -94,11 +94,7 @@ struct AddEditEventIntrigueView: View {
                         .padding(.top, 16)
                         .padding(.trailing, 0)
                     } else {
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
-                        }
+                        LoadingBlock()
                     }
                 }
             }

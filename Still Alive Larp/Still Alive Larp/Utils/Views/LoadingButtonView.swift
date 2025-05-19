@@ -9,13 +9,14 @@ import SwiftUI
 
 struct LoadingButtonView: View {
 
-    init(_ loading: Binding<Bool>, loadingText: Binding<String> = .init(get: {return ""}, set: {_ in}), width: CGFloat, height: CGFloat = 90, buttonText: String, progressViewOffset: CGFloat = 0, onButtonPress: @escaping () -> Void) {
+    init(_ loading: Binding<Bool>, loadingText: Binding<String> = .init(get: {return ""}, set: {_ in}), width: CGFloat, height: CGFloat = 90, buttonText: String, progressViewOffset: CGFloat = 0, font: Font? = nil, onButtonPress: @escaping () -> Void) {
         self._loading = loading
         self.width = width
         self.height = height
         self.buttonText = buttonText
         self.progressViewOffest = progressViewOffset
         self.onButtonPress = onButtonPress
+        self.font = font ?? .system(size: 20, weight: .bold)
         self._loadingText = loadingText
     }
 
@@ -27,6 +28,7 @@ struct LoadingButtonView: View {
     let height: CGFloat
     let buttonText: String
     let progressViewOffest: CGFloat
+    let font: Font
     let onButtonPress: () -> Void
 
     var body: some View {
@@ -36,6 +38,7 @@ struct LoadingButtonView: View {
             onButtonPress()
         }, label: {
             Text(buttonText)
+                .font(font)
                 .frame(width: width, height: height)
             })
             .overlay(content: {
@@ -44,11 +47,16 @@ struct LoadingButtonView: View {
                         ProgressView()
                         .tint(.white)
                         .padding(.top, progressViewOffest)
+                        .padding(.horizontal, loadingText.isNotEmpty ? 8 : 0)
                         if !loadingText.isEmpty {
                             Text(" \(loadingText) ").foregroundColor(.white)
+                                .font(font)
+                                .multilineTextAlignment(.center)
+                                .frame(alignment: .center)
                             ProgressView()
                             .tint(.white)
                             .padding(.top, progressViewOffest)
+                            .padding(.horizontal, 8)
                         }
                     }
                 } else {

@@ -20,15 +20,34 @@ struct CanvasSkillCell: View {
     let loadingPurchase: Bool
     let collapsedWidth: CGFloat
     let expandedWidth: CGFloat
+    let loadingText: String
     
-    let loadingText = "Purchasing..."
+    let largeFont: Font = .system(size: 40, weight: .bold)
+    let medFont: Font = .system(size: 34, weight: .bold)
+    let smallFont: Font = .system(size: 30, weight: .bold)
+    let smallFontReg: Font = .system(size: 30, weight: .regular)
     
     var body: some View {
         VStack {
+            let bubbleNum = getSkillBubbleNum()
+            if bubbleNum > 1 {
+                ZStack {
+                    let cSize = expanded ? (expandedWidth / 5) : collapsedWidth / 5
+                    Circle()
+                        .frame(width: cSize, height: cSize)
+                        .foregroundColor(.black)
+                    Circle()
+                        .stroke(Color.white, style: StrokeStyle(lineWidth: 5))
+                        .frame(width: cSize, height: cSize)
+                    Text(bubbleNum.stringValue)
+                        .font(medFont)
+                        .foregroundColor(.white)
+                }.padding(.bottom, -4)
+            }
             if let skillTopBoxText = skillTopBoxText() {
                 VStack {
                     Text(skillTopBoxText)
-                        .font(.system(size: 16, weight: .bold))
+                        .font(smallFont)
                         .foregroundStyle(Color.white)
                         .padding(16)
                         .multilineTextAlignment(.center)
@@ -47,7 +66,7 @@ struct CanvasSkillCell: View {
                     VStack {
                         HStack {
                             Text(skill.name)
-                                .font(.system(size: 28, weight: .bold))
+                                .font(largeFont)
                                 .foregroundStyle(Color.white)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 16)
@@ -59,7 +78,7 @@ struct CanvasSkillCell: View {
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
                             Text(skill.getTypeText())
-                                .font(.system(size: 24, weight: .bold))
+                                .font(medFont)
                                 .foregroundStyle(Color.white)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 16)
@@ -76,7 +95,7 @@ struct CanvasSkillCell: View {
                             .overlay(Color.darkGray)
                             .padding(.horizontal, 16)
                         Text(getXpRowText())
-                            .font(.system(size: 20, weight: .bold))
+                            .font(smallFont)
                             .foregroundStyle(Color.white)
                             .padding(16)
                             .multilineTextAlignment(.center)
@@ -95,7 +114,7 @@ struct CanvasSkillCell: View {
                     if skill.prereqs.isNotEmpty {
                         
                         Text("Prerequisites")
-                            .font(.system(size: 24, weight: .bold))
+                            .font(medFont)
                             .foregroundStyle(Color.white)
                             .padding(.horizontal, 16)
                             .padding(.top, 16)
@@ -109,7 +128,7 @@ struct CanvasSkillCell: View {
                         LazyVStack {
                             ForEach(skill.prereqs) { prereq in
                                 Text(prereq.name)
-                                    .font(.system(size: 20, weight: .regular))
+                                    .font(smallFontReg)
                                     .foregroundStyle(Color.white)
                                     .padding(.horizontal, 16)
                                     .multilineTextAlignment(.center)
@@ -128,7 +147,7 @@ struct CanvasSkillCell: View {
                             .padding(.top, 4)
                     }
                     Text(skill.description)
-                        .font(.system(size: 20, weight: .regular))
+                        .font(smallFontReg)
                         .foregroundStyle(Color.white)
                         .padding(16)
                         .multilineTextAlignment(.leading)
@@ -139,15 +158,13 @@ struct CanvasSkillCell: View {
                         .shadow(color: .black, radius: 0.4)
                         .shadow(color: .black, radius: 0.4)
                     if allowPurchase {
-                        LoadingButtonView(.constant(false), width: expandedWidth - 100, buttonText: "Purchase") {
-                            // TODO purchase skill
-                        }
+                        LoadingButtonView(.constant(loadingPurchase), loadingText: .constant(loadingText), width: expandedWidth - 100, buttonText: "Purchase", font: largeFont) {}
                         .padding([.horizontal, .bottom], 32)
                         .fixedSize(horizontal: false, vertical: true)
                     }
                 } else {
                     Text(skill.name)
-                        .font(.system(size: 24, weight: .bold))
+                        .font(largeFont)
                         .foregroundStyle(Color.white)
                         .padding(16)
                         .multilineTextAlignment(.center)
@@ -155,6 +172,7 @@ struct CanvasSkillCell: View {
                         .shadow(color: .black, radius: 1)
                 }
             }
+            .padding(0)
             .background(
                 LinearGradient(colors: [getTopColor(), getBottomColor()], startPoint: .top, endPoint: .bottom)
             )
@@ -162,25 +180,29 @@ struct CanvasSkillCell: View {
         .frame(width: expanded ? expandedWidth : collapsedWidth, alignment: .center)
     }
     
+    private func getSkillBubbleNum() -> Int {
+        return skill.prereqs.count
+    }
+    
     func getTopColor() -> Color {
-        if allowPurchase && purchaseState == .cantPurchase {
+        if purchaseState == .cantPurchase {
             return Color(hex: "#797979")
         }
         switch skill.skillTypeId {
             case Constants.SkillTypes.combat:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#F7C9C6")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#EA6E69")
                 }
             case Constants.SkillTypes.profession:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#CAE1C5")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#667D61")
                 }
             case Constants.SkillTypes.talent:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#D8E7FB")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#748397")
@@ -192,24 +214,24 @@ struct CanvasSkillCell: View {
     }
     
     func getBottomColor() -> Color {
-        if allowPurchase && purchaseState == .cantPurchase {
+        if purchaseState == .cantPurchase {
             return Color(hex: "#353535")
         }
         switch skill.skillTypeId {
             case Constants.SkillTypes.combat:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#EA6E69")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#860A05")
                 }
             case Constants.SkillTypes.profession:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#98D078")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#346C14")
                 }
             case Constants.SkillTypes.talent:
-                if !allowPurchase || purchaseState == .purchased {
+                if purchaseState == .purchased {
                     return Color(hex: "#7FA7E0")
                 } else if purchaseState == .couldPurchase {
                     return Color(hex: "#1B437C")
@@ -253,7 +275,7 @@ struct CanvasSkillCell: View {
     let infSkill = 40
     let specSkill = 19
     let manyPrereqs = 47
-    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == longSkill })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300)
+    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == manyPrereqs })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
 }
 
 struct SkillCellMeasurer: View {
@@ -275,7 +297,8 @@ struct SkillCellMeasurer: View {
                 purchaseState: purchaseState,
                 loadingPurchase: loadingPurchase,
                 collapsedWidth: collapsedWidth,
-                expandedWidth: expandedWidth
+                expandedWidth: expandedWidth,
+                loadingText: "Purchasing..."
             )
             .fixedSize(horizontal: false, vertical: true)
             GeometryReader { geo in

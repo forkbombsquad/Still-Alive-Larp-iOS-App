@@ -31,26 +31,21 @@ class SkillManager {
             guard !fetching else { return }
             fetching = true
             SkillService.getAllSkills { skillListModel in
-                self.skills = []
+                var fullSkills: [FullSkillModel] = []
                 for s in skillListModel.results {
-                    self.skills?.append(FullSkillModel(s))
+                    fullSkills.append(FullSkillModel(s))
                 }
                 SkillPrereqService.getAllSkillPrereqs { skillPrereqListModel in
                     let prereqs = skillPrereqListModel.skillPrereqs
-                    for (index, skill) in (self.skills ?? []).enumerated() {
-                        for prereq in prereqs.filter({ $0.baseSkillId == skill.id }) {
-                            if let pskill = self.skills?.first(where: { $0.id == prereq.prereqSkillId }) {
-                                self.skills?[index].prereqs.append(pskill)
-                            }
+                    for prereq in prereqs {
+                        if let baseSkillIndex = fullSkills.firstIndex(where: { $0.id == prereq.baseSkillId }), let prereqSkill = fullSkills.first(where: { $0.id == prereq.prereqSkillId }), let prereqIndex = fullSkills.firstIndex(where: { $0.id == prereq.prereqSkillId }) {
+                            fullSkills[prereqIndex].postreqs.append(prereq.baseSkillId)
+                            fullSkills[baseSkillIndex].prereqs.append(prereqSkill)
                         }
+                        
                     }
-                    for (index, skill) in (self.skills ?? []).enumerated() {
-                        for prereq in prereqs.filter({ $0.prereqSkillId == skill.id }) {
-                            if let prereqSkill = self.skills?.first(where: { $0.id == prereq.baseSkillId }) {
-                                self.skills?[index].postreqs.append(prereqSkill.id)
-                            }
-                        }
-                    }
+                    
+                    self.skills = fullSkills
                     LocalDataHandler.shared.storeSkills(self.skills ?? [])
                     self.fetching = false
                     for cb in self.completionBlocks {
@@ -58,6 +53,7 @@ class SkillManager {
                     }
                     self.completionBlocks = []
                 } failureCase: { _ in
+                    self.skills = fullSkills
                     self.fetching = false
                     for cb in self.completionBlocks {
                         cb?(self.skills ?? [])

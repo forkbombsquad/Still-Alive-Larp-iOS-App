@@ -18,6 +18,9 @@ struct ViewPlayerStuffView: View {
     @State var loadingProfileImage: Bool = true
     
     @State var firstLoad: Bool = true
+    @State var skills: [FullSkillModel] = []
+    @State var loadingSkills: Bool = false
+    @State var skillCategories: [SkillCategoryModel] = []
 
     init(player: PlayerModel) {
         self.playerModel = player
@@ -56,13 +59,13 @@ struct ViewPlayerStuffView: View {
                                     SkillManagementView(character: char, allowEdit: false)
                                 }
                             }
-                            NavArrowView(title: "Skill Tree Diagram", loading: $loadingCharacter) { _ in
-                                // TODO native skill tree
-                            }
-                            NavArrowView(title: "Bio", loading: $loadingCharacter) { _ in
-                                BioView(allowEdit: false)
-                            }
                             if let character = character {
+                                NavArrowView(title: "Skill Tree Diagram", loading: $loadingCharacter) { _ in
+                                    NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: true, allowPurchase: false), character: character)
+                                }
+                                NavArrowView(title: "Bio", loading: $loadingCharacter) { _ in
+                                    BioView(allowEdit: false)
+                                }
                                 NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in
                                     GearView(character: character.baseModel, allowEdit: false)
                                 }
@@ -80,10 +83,18 @@ struct ViewPlayerStuffView: View {
                 self.firstLoad = false
                 self.loadingCharacter = true
                 self.loadingProfileImage = true
+                self.loadingSkills = true
                 CharacterManager.shared.getActiveCharacterForOtherPlayer(playerModel.id) { character in
                     runOnMainThread {
                         self.character = character
-                        self.loadingCharacter = false
+                        DataManager.shared.load([.skills, .skillCategories]) {
+                            runOnMainThread {
+                                self.skills = DataManager.shared.skills ?? []
+                                self.skillCategories = DataManager.shared.skillCategories
+                                self.loadingSkills = false
+                                self.loadingCharacter = false
+                            }
+                        }
                         DataManager.shared.selectedPlayer = playerModel
                         DataManager.shared.charForSelectedPlayer = character
                         DataManager.shared.load([.profileImage]) {
@@ -97,6 +108,7 @@ struct ViewPlayerStuffView: View {
                     runOnMainThread {
                         self.character = nil
                         self.loadingCharacter = false
+                        self.loadingSkills = false
                         DataManager.shared.selectedPlayer = playerModel
                         DataManager.shared.load([.profileImage]) {
                             runOnMainThread {

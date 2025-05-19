@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct ManageNPCView: View {
-    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var _dm = DataManager.shared
     
     @Binding var npcs: [CharacterModel]
     let npc: CharacterModel
     
     @State var loading = false
+    @State var bullets = ""
+    @State var infection = ""
+    @State var isAlive = true
     
-    // TODO don't forget to update the binding so that it updates the view below
+    // TODO this page jumps back to base admin panel when you get to it. Fix it.
     
     var body: some View {
         VStack {
@@ -27,14 +30,51 @@ struct ManageNPCView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         ArrowViewButton(title: "Manage Bullets and Infection", loading: $loading) {
-                            // TODO edit bullets and infection. dont forget loading
-                            /*
-                             Adjust .fullName Values
-                             Field(Bullets)
-                             Field(Infection Rating)
-                             Checkbox(Is Alive)
-                             ok/cancel
-                             */
+                            runOnMainThread {
+                                self.bullets = npc.bullets
+                                self.infection = npc.infection
+                                self.isAlive = npc.isAlive.boolValueDefaultFalse
+                                self.loading = true
+                                AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
+                                    title: "Adjust \(npc.fullName) Values", textFields: [
+                                        AlertTextField(placeholder: "Bullets", value: $bullets),
+                                        AlertTextField(placeholder: "Infection Rating", value: $infection)
+                                    ], checkboxes: [
+                                        AlertToggle(text: "Is Alive?", isOn: $isAlive)
+                                    ], buttons: [
+                                        AlertButton(title: "Ok", onPress: {
+                                            var update = self.npc
+                                            update.bullets = self.bullets
+                                            update.infection = self.infection
+                                            update.isAlive = self.isAlive.stringValue.uppercased()
+                                            AdminService.updateCharacter(update) { characterModel in
+                                                runOnMainThread {
+                                                    if let index = npcs.firstIndex(where: { $0.id == characterModel.id }) {
+                                                        npcs[index] = characterModel
+                                                    }
+                                                    AlertManager.shared.showOkAlert("Update Successful!") {
+                                                        runOnMainThread {
+                                                            self.loading = false
+                                                            self.presentationMode.wrappedValue.dismiss()
+                                                        }
+                                                    }
+                                                }
+                                                
+                                            } failureCase: { error in
+                                                runOnMainThread {
+                                                    self.loading = false
+                                                }
+                                            }
+
+                                        }),
+                                        AlertButton.cancel(onPress: {
+                                            runOnMainThread {
+                                                self.loading = false
+                                            }
+                                        })
+                                    ])
+                                )
+                            }
                         }
                         NavArrowView(title: "Manage Skills", loading: $loading) { attachedObject in
                             // TODO

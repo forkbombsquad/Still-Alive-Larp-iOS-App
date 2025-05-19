@@ -40,7 +40,7 @@ struct AdminView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 60) {
+                    PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 150) {
                         self.reloadData()
                     }
                     VStack {

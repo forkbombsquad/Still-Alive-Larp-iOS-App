@@ -92,11 +92,7 @@ struct SkillManagementView: View {
                     VStack {
                         ScrollView {
                             VStack {
-                                HStack {
-                                    Spacer()
-                                    ProgressView().controlSize(.large)
-                                    Spacer()
-                                }
+                                LoadingBlock()
                             }
                         }
                     }

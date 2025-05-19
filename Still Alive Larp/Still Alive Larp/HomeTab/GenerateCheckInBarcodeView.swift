@@ -26,7 +26,7 @@ struct GenerateCheckInBarcodeView: View {
                         if loading {
                             HStack {
                                 Spacer()
-                                ProgressView().padding(.bottom, 8)
+                                ProgressView().controlSize(.large).padding(.bottom, 8)
                                 Text(loadingText)
                                 Spacer()
                             }

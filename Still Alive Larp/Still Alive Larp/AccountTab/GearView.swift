@@ -56,11 +56,7 @@ struct GearView: View {
                                 .multilineTextAlignment(.center)
                                 .frame(alignment: .center)
                                 .padding([.bottom], 16)
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
+                            LoadingBlock()
                         } else {
                             GearViewModular(allowEdit: allowEdit, characterName: character.fullName, loading: $loading, gearModified: $gearModified, gearJsonModels: $gearJsonModels)
                         }

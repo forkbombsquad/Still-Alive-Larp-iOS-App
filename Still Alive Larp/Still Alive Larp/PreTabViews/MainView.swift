@@ -51,9 +51,12 @@ struct MainView: View {
                                         rememberMe.toggle()
                                     }
                                 Text("Remember Me")
-                                Spacer()
+                                    .lineLimit(nil)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(alignment: .leading)
+                                    .padding(.trailing, 8)
 
-                                LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.35, height: 60, buttonText: "Log In", progressViewOffset: 0) {
+                                LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.4, height: 90, buttonText: "Log In", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
                                     self.loading = true
                                     self.loadingText = "Checking Creds..."
                                     VersionService.getVersions { versions in
@@ -90,6 +93,7 @@ struct MainView: View {
                             }.padding(.top, 32)
                             NavigationLink(destination: CreateAccountView()) {
                                 Text("Create Account")
+                                    .font(.system(size: 20, weight: .bold))
                                     .frame(width: gr.size.width, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
@@ -100,6 +104,7 @@ struct MainView: View {
 
                             NavigationLink(destination: ContactView()) {
                                 Text("Contact Us")
+                                    .font(.system(size: 20, weight: .bold))
                                     .frame(width: gr.size.width, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
@@ -111,6 +116,7 @@ struct MainView: View {
                             if player != nil {
                                 NavigationLink(destination: OfflineAccountView()) {
                                     Text("Offline Mode")
+                                        .font(.system(size: 20, weight: .bold))
                                         .frame(width: gr.size.width, height: 90)
                                         .background(Color.midRed)
                                         .cornerRadius(15)
