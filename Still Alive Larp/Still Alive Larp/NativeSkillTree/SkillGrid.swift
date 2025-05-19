@@ -7,7 +7,7 @@ class SkillGrid {
     let skills: [FullSkillModel]
     private var purchaseableSkills: [CharacterModifiedSkillModel] = []
     private let skillCategories: [SkillCategoryModel]
-    private var gridCategories: [SkillGridCategory] = []
+    var gridCategories: [SkillGridCategory] = []
     var trueGrid: [GridSkill] = []
 
     private var purchaseButton: TappablePurchaseButton?
@@ -1105,7 +1105,11 @@ struct CGCircle: Hashable {
     let radius: CGFloat
 }
 
-struct GridSkill {
+struct GridSkill: Identifiable {
+    var id: Int {
+        return skill.id
+    }
+    
     var rect: CGRect
     let skill: FullSkillModel
     let gridX: Int

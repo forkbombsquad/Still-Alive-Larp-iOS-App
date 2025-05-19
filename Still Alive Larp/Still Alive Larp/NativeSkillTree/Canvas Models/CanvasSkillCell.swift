@@ -47,23 +47,25 @@ struct CanvasSkillCell: View {
                     VStack {
                         HStack {
                             Text(skill.name)
-                                .font(.system(size: 24, weight: .bold))
+                                .font(.system(size: 28, weight: .bold))
                                 .foregroundStyle(Color.white)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 16)
                                 .multilineTextAlignment(.leading)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .fixedSize(horizontal: false, vertical: true)
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
                             Text(skill.getTypeText())
-                                .font(.system(size: 20, weight: .bold))
+                                .font(.system(size: 24, weight: .bold))
                                 .foregroundStyle(Color.white)
                                 .padding(.horizontal, 16)
                                 .padding(.top, 16)
                                 .multilineTextAlignment(.trailing)
-                                .frame(maxWidth: .infinity, alignment: .trailing)
+                                .frame(alignment: .trailing)
+                                .fixedSize(horizontal: false, vertical: true)
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
                                 .shadow(color: .black, radius: 0.4)
@@ -74,11 +76,12 @@ struct CanvasSkillCell: View {
                             .overlay(Color.darkGray)
                             .padding(.horizontal, 16)
                         Text(getXpRowText())
-                            .font(.system(size: 16, weight: .bold))
+                            .font(.system(size: 20, weight: .bold))
                             .foregroundStyle(Color.white)
                             .padding(16)
                             .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fixedSize(horizontal: false, vertical: true)
                             .shadow(color: .black, radius: 0.4)
                             .shadow(color: .black, radius: 0.4)
                             .shadow(color: .black, radius: 0.4)
@@ -92,12 +95,13 @@ struct CanvasSkillCell: View {
                     if skill.prereqs.isNotEmpty {
                         
                         Text("Prerequisites")
-                            .font(.system(size: 20, weight: .bold))
+                            .font(.system(size: 24, weight: .bold))
                             .foregroundStyle(Color.white)
                             .padding(.horizontal, 16)
                             .padding(.top, 16)
                             .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .fixedSize(horizontal: false, vertical: true)
                             .shadow(color: .black, radius: 0.4)
                             .shadow(color: .black, radius: 0.4)
                             .shadow(color: .black, radius: 0.4)
@@ -105,11 +109,12 @@ struct CanvasSkillCell: View {
                         LazyVStack {
                             ForEach(skill.prereqs) { prereq in
                                 Text(prereq.name)
-                                    .font(.system(size: 16, weight: .regular))
+                                    .font(.system(size: 20, weight: .regular))
                                     .foregroundStyle(Color.white)
                                     .padding(.horizontal, 16)
                                     .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .fixedSize(horizontal: false, vertical: true)
                                     .shadow(color: .black, radius: 0.4)
                                     .shadow(color: .black, radius: 0.4)
                                     .shadow(color: .black, radius: 0.4)
@@ -123,11 +128,12 @@ struct CanvasSkillCell: View {
                             .padding(.top, 4)
                     }
                     Text(skill.description)
-                        .font(.system(size: 16, weight: .regular))
+                        .font(.system(size: 20, weight: .regular))
                         .foregroundStyle(Color.white)
                         .padding(16)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .fixedSize(horizontal: false, vertical: true)
                         .shadow(color: .black, radius: 0.4)
                         .shadow(color: .black, radius: 0.4)
                         .shadow(color: .black, radius: 0.4)
@@ -137,6 +143,7 @@ struct CanvasSkillCell: View {
                             // TODO purchase skill
                         }
                         .padding([.horizontal, .bottom], 32)
+                        .fixedSize(horizontal: false, vertical: true)
                     }
                 } else {
                     Text(skill.name)
@@ -246,38 +253,43 @@ struct CanvasSkillCell: View {
     let infSkill = 40
     let specSkill = 19
     let manyPrereqs = 47
-    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == longSkill })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 200, expandedWidth: 350)
+    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == longSkill })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300)
 }
 
 struct SkillCellMeasurer: View {
     let skill: FullSkillModel
-    
+
     let expanded: Bool
     let allowPurchase: Bool
     let purchaseState: PurchaseState
     let loadingPurchase: Bool
     let collapsedWidth: CGFloat
     let expandedWidth: CGFloat
-    
+
     var body: some View {
-        CanvasSkillCell(
-            expanded: expanded,
-            skill: skill,
-            allowPurchase: allowPurchase,
-            purchaseState: purchaseState,
-            loadingPurchase: loadingPurchase,
-            collapsedWidth: collapsedWidth,
-            expandedWidth: expandedWidth
-        )
-        .background(
+        ZStack {
+            CanvasSkillCell(
+                expanded: expanded,
+                skill: skill,
+                allowPurchase: allowPurchase,
+                purchaseState: purchaseState,
+                loadingPurchase: loadingPurchase,
+                collapsedWidth: collapsedWidth,
+                expandedWidth: expandedWidth
+            )
+            .fixedSize(horizontal: false, vertical: true)
             GeometryReader { geo in
                 Color.clear
-                    .preference(key: SkillSizePreferenceKey.self,
-                                value: [skill.id: geo.size])
+                    .preference(
+                        key: SkillSizePreferenceKey.self,
+                        value: [skill.id: geo.size]
+                    )
             }
-        )
+        }
+        .frame(width: expanded ? expandedWidth : collapsedWidth)
     }
 }
+
 
 struct SkillSizePreferenceKey: PreferenceKey {
     static var defaultValue: [Int: CGSize] = [:]
