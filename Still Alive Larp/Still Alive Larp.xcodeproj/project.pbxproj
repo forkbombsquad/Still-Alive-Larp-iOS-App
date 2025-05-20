@@ -731,10 +731,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B21691DD28FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive Larp" */;
 			buildPhases = (
+				B2869FF32DDD0C4100B21C40 /* Get Secrets On Cloud */,
 				B21691B528FDDC5D006AA921 /* Sources */,
 				B21691B628FDDC5D006AA921 /* Frameworks */,
 				B21691B728FDDC5D006AA921 /* Resources */,
-				B2869FF32DDD0C4100B21C40 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -866,7 +866,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		B2869FF32DDD0C4100B21C40 /* ShellScript */ = {
+		B2869FF32DDD0C4100B21C40 /* Get Secrets On Cloud */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -876,6 +876,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Get Secrets On Cloud";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -883,6 +884,7 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "echo \"🧪 Run Script phase is executing\"\n\necho \"CI_XCODEBUILD_ACTION = $CI_XCODEBUILD_ACTION\"\n\n# Check if we are running in Xcode Cloud\nif [[ -n \"$CI_XCODEBUILD_ACTION\" ]]; then\n  echo \"🔐 Running on Xcode Cloud – fetching secrets...\"\n\n  curl -H \"Authorization: token $GITHUB_TOKEN\" \\\n       -H \"Accept: application/vnd.github.v3.raw\" \\\n       -L \"https://api.github.com/repos/forkbombsquad/Still-Alive-Larp-Private-Files/contents/iOS/Still%20Alive%20Larp/Still%20Alive%20Larp/Services%20and%20Requests/ServiceUtils.swift\" \\\n       -o \"${SRCROOT}/Still Alive Larp/Still Alive Larp/Services and Requests/ServiceUtils.swift\"\n\n  echo \"✅ Secrets fetched.\"\nelse\n  echo \"💤 Not in Xcode Cloud – skipping secret fetch.\"\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
