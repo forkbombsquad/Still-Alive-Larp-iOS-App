@@ -194,14 +194,14 @@
 /* Begin PBXFileReference section */
 		B205F4732A44988400C45B1A /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		B20FF4632A267FD600B13F1D /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
-		B21691B928FDDC5D006AA921 /* Still Alive Larp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Still Alive Larp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B21691B928FDDC5D006AA921 /* StillAliveLarp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StillAliveLarp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpApp.swift; sourceTree = "<group>"; };
 		B21691BE28FDDC5D006AA921 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		B21691C028FDDC5F006AA921 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B21691C328FDDC5F006AA921 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		B21691C928FDDC60006AA921 /* Still Alive LarpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Still Alive LarpTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B21691C928FDDC60006AA921 /* StillAliveLarpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StillAliveLarpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691CD28FDDC60006AA921 /* Still_Alive_LarpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpTests.swift; sourceTree = "<group>"; };
-		B21691D328FDDC60006AA921 /* Still Alive LarpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Still Alive LarpUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B21691D328FDDC60006AA921 /* StillAliveLarpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StillAliveLarpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691D728FDDC60006AA921 /* Still_Alive_LarpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpUITests.swift; sourceTree = "<group>"; };
 		B21691D928FDDC60006AA921 /* Still_Alive_LarpUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		B21691E928FDE6DB006AA921 /* ColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
@@ -395,7 +395,7 @@
 		B21691B028FDDC5D006AA921 = {
 			isa = PBXGroup;
 			children = (
-				B21691BB28FDDC5D006AA921 /* Still Alive Larp */,
+				B21691BB28FDDC5D006AA921 /* StillAliveLarp */,
 				B21691CC28FDDC60006AA921 /* Still Alive LarpTests */,
 				B21691D628FDDC60006AA921 /* Still Alive LarpUITests */,
 				B21691BA28FDDC5D006AA921 /* Products */,
@@ -405,14 +405,14 @@
 		B21691BA28FDDC5D006AA921 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B21691B928FDDC5D006AA921 /* Still Alive Larp.app */,
-				B21691C928FDDC60006AA921 /* Still Alive LarpTests.xctest */,
-				B21691D328FDDC60006AA921 /* Still Alive LarpUITests.xctest */,
+				B21691B928FDDC5D006AA921 /* StillAliveLarp.app */,
+				B21691C928FDDC60006AA921 /* StillAliveLarpTests.xctest */,
+				B21691D328FDDC60006AA921 /* StillAliveLarpUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B21691BB28FDDC5D006AA921 /* Still Alive Larp */ = {
+		B21691BB28FDDC5D006AA921 /* StillAliveLarp */ = {
 			isa = PBXGroup;
 			children = (
 				B235A4F22DD7A4F200AF96DC /* NativeSkillTree */,
@@ -425,13 +425,13 @@
 				B2DFB0C5295649BA00132B08 /* AccountTab */,
 				B2DFB0C42956499800132B08 /* HomeTab */,
 				B2222490291DB10E003BCA0A /* Managers */,
-				B2A6A7E92914630D0025040B /* Services and Requests */,
+				B2A6A7E92914630D0025040B /* ServiceandRequests */,
 				B21691E628FDE449006AA921 /* Utils */,
 				B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */,
 				B21691C028FDDC5F006AA921 /* Assets.xcassets */,
 				B21691C228FDDC5F006AA921 /* Preview Content */,
 			);
-			path = "Still Alive Larp";
+			path = StillAliveLarp;
 			sourceTree = "<group>";
 		};
 		B21691C228FDDC5F006AA921 /* Preview Content */ = {
@@ -636,7 +636,7 @@
 			path = RulesTab;
 			sourceTree = "<group>";
 		};
-		B2A6A7E92914630D0025040B /* Services and Requests */ = {
+		B2A6A7E92914630D0025040B /* ServiceandRequests */ = {
 			isa = PBXGroup;
 			children = (
 				B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */,
@@ -667,7 +667,7 @@
 				B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */,
 				B23728B12DC1C10600495777 /* ServiceEndpoints.swift */,
 			);
-			path = "Services and Requests";
+			path = ServiceandRequests;
 			sourceTree = "<group>";
 		};
 		B2DFB0C129563C4D00132B08 /* MockData */ = {
@@ -727,9 +727,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B21691B828FDDC5D006AA921 /* Still Alive Larp */ = {
+		B21691B828FDDC5D006AA921 /* StillAliveLarp */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B21691DD28FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive Larp" */;
+			buildConfigurationList = B21691DD28FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarp" */;
 			buildPhases = (
 				B2869FF32DDD0C4100B21C40 /* Get Secrets On Cloud */,
 				B21691B528FDDC5D006AA921 /* Sources */,
@@ -743,7 +743,7 @@
 			fileSystemSynchronizedGroups = (
 				B235A4FF2DDA328900AF96DC /* Canvas Models */,
 			);
-			name = "Still Alive Larp";
+			name = StillAliveLarp;
 			packageProductDependencies = (
 				B2F9838329F1728C00512839 /* CodeScanner */,
 				B2E5F2D82AD07FBB004D61F5 /* SwiftSoup */,
@@ -751,12 +751,12 @@
 				B23728B82DCA828B00495777 /* Gzip */,
 			);
 			productName = "Still Alive Larp";
-			productReference = B21691B928FDDC5D006AA921 /* Still Alive Larp.app */;
+			productReference = B21691B928FDDC5D006AA921 /* StillAliveLarp.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B21691C828FDDC60006AA921 /* Still Alive LarpTests */ = {
+		B21691C828FDDC60006AA921 /* StillAliveLarpTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B21691E028FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive LarpTests" */;
+			buildConfigurationList = B21691E028FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarpTests" */;
 			buildPhases = (
 				B21691C528FDDC60006AA921 /* Sources */,
 				B21691C628FDDC60006AA921 /* Frameworks */,
@@ -767,14 +767,14 @@
 			dependencies = (
 				B21691CB28FDDC60006AA921 /* PBXTargetDependency */,
 			);
-			name = "Still Alive LarpTests";
+			name = StillAliveLarpTests;
 			productName = "Still Alive LarpTests";
-			productReference = B21691C928FDDC60006AA921 /* Still Alive LarpTests.xctest */;
+			productReference = B21691C928FDDC60006AA921 /* StillAliveLarpTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B21691D228FDDC60006AA921 /* Still Alive LarpUITests */ = {
+		B21691D228FDDC60006AA921 /* StillAliveLarpUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B21691E328FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive LarpUITests" */;
+			buildConfigurationList = B21691E328FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarpUITests" */;
 			buildPhases = (
 				B21691CF28FDDC60006AA921 /* Sources */,
 				B21691D028FDDC60006AA921 /* Frameworks */,
@@ -785,9 +785,9 @@
 			dependencies = (
 				B21691D528FDDC60006AA921 /* PBXTargetDependency */,
 			);
-			name = "Still Alive LarpUITests";
+			name = StillAliveLarpUITests;
 			productName = "Still Alive LarpUITests";
-			productReference = B21691D328FDDC60006AA921 /* Still Alive LarpUITests.xctest */;
+			productReference = B21691D328FDDC60006AA921 /* StillAliveLarpUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -813,7 +813,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B21691B428FDDC5D006AA921 /* Build configuration list for PBXProject "Still Alive Larp" */;
+			buildConfigurationList = B21691B428FDDC5D006AA921 /* Build configuration list for PBXProject "StillAliveLarp" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -832,9 +832,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B21691B828FDDC5D006AA921 /* Still Alive Larp */,
-				B21691C828FDDC60006AA921 /* Still Alive LarpTests */,
-				B21691D228FDDC60006AA921 /* Still Alive LarpUITests */,
+				B21691B828FDDC5D006AA921 /* StillAliveLarp */,
+				B21691C828FDDC60006AA921 /* StillAliveLarpTests */,
+				B21691D228FDDC60006AA921 /* StillAliveLarpUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -880,10 +880,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${SRCROOT}/StillAliveLarp/ServiceandRequests/ServiceUtils.swift",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\n# Enable verbose output for debugging\nset -x\n\necho \"🧪 Run Script phase is executing\"\n\n# Show all environment variables (helpful for Xcode Cloud debugging)\nenv | sort\n\n# Detect if we're running in a CI (like Xcode Cloud) environment\nif [[ \"$CI\" == \"true\" ]]; then\n  echo \"🔐 Running in CI (likely Xcode Cloud) – fetching secrets...\"\n\n  # Check if GITHUB_TOKEN is set\n  if [[ -z \"$GITHUB_TOKEN\" ]]; then\n    echo \"❌ GITHUB_TOKEN is not set – cannot fetch secrets.\"\n    exit 1\n  fi\n\n  # Fetch the private Swift secrets file from GitHub\n  curl -H \"Authorization: token $GITHUB_TOKEN\" \\\n       -H \"Accept: application/vnd.github.v3.raw\" \\\n       -L \"https://api.github.com/repos/forkbombsquad/Still-Alive-Larp-Private-Files/contents/iOS/Still%20Alive%20Larp/Still%20Alive%20Larp/Services%20and%20Requests/ServiceUtils.swift\" \\\n       -o \"${SRCROOT}/Still Alive Larp/Still Alive Larp/Services and Requests/ServiceUtils.swift\"\n\n  if [[ $? -eq 0 ]]; then\n    echo \"✅ Secrets fetched successfully.\"\n  else\n    echo \"❌ Failed to fetch secrets.\"\n    exit 1\n  fi\nelse\n  echo \"💤 Not running in CI – skipping secret fetch.\"\nfi\n";
+			shellScript = "#!/bin/sh\n\n# Enable verbose output for debugging\nset -ex\n\necho \"🧪 Run Script phase is executing\"\n\n# Detect if we're running in a CI (like Xcode Cloud) environment\n if [[ \"$CI\" == \"true\" ]]; then\n  echo \"🔐 Running in CI (likely Xcode Cloud) – fetching secrets...\"\n\n  # Fetch the private Swift secrets file from GitHub\n  echo \"Writing to: ${SRCROOT}/StillAliveLarp/ServiceandRequests/ServiceUtils.swift\"\n  echo \"SRCROOT is: $SRCROOT\"\n  \n    #-H \"Authorization: token $GITHUB_TOKEN\"\n\nHTTP_STATUS=$(curl -v -s -o tmpfile.swift -w \"%{http_code}\" \\\n  -H \"Authorization: token $GITHUB_TOKEN\" \\\n  -H \"Accept: application/vnd.github.v3.raw\" \\\n  -L \"https://api.github.com/repos/forkbombsquad/Still-Alive-Larp-Private-Files/contents/iOS/Still%20Alive%20Larp/Still%20Alive%20Larp/Services%20and%20Requests/ServiceUtils.swift\")\n\necho \"HTTP status: $HTTP_STATUS\"\n\nif [[ \"$HTTP_STATUS\" -eq 200 ]]; then\n  mv tmpfile.swift \"${SRCROOT}/StillAliveLarp/ServiceandRequests/ServiceUtils.swift\"\n  echo \"✅ Secrets fetched successfully.\"\nelse\n  cat tmpfile.swift\n  echo \"❌ Failed to fetch secrets. HTTP $HTTP_STATUS\"\n  exit 1\nfi\n\nelse\n  echo \"💤 Not running in CI – skipping secret fetch.\"\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1074,12 +1075,12 @@
 /* Begin PBXTargetDependency section */
 		B21691CB28FDDC60006AA921 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B21691B828FDDC5D006AA921 /* Still Alive Larp */;
+			target = B21691B828FDDC5D006AA921 /* StillAliveLarp */;
 			targetProxy = B21691CA28FDDC60006AA921 /* PBXContainerItemProxy */;
 		};
 		B21691D528FDDC60006AA921 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B21691B828FDDC5D006AA921 /* Still Alive Larp */;
+			target = B21691B828FDDC5D006AA921 /* StillAliveLarp */;
 			targetProxy = B21691D428FDDC60006AA921 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1209,9 +1210,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 22;
-				DEVELOPMENT_ASSET_PATHS = "\"Still Alive Larp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Still-Alive-Larp-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Still Alive Larp";
@@ -1249,9 +1251,10 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 22;
-				DEVELOPMENT_ASSET_PATHS = "\"Still Alive Larp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Still-Alive-Larp-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Still Alive Larp";
@@ -1296,7 +1299,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Still Alive Larp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Still Alive Larp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StillAliveLarp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StillAliveLarp";
 			};
 			name = Debug;
 		};
@@ -1315,7 +1318,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Still Alive Larp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Still Alive Larp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StillAliveLarp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/StillAliveLarp";
 			};
 			name = Release;
 		};
@@ -1356,7 +1359,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B21691B428FDDC5D006AA921 /* Build configuration list for PBXProject "Still Alive Larp" */ = {
+		B21691B428FDDC5D006AA921 /* Build configuration list for PBXProject "StillAliveLarp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B21691DB28FDDC60006AA921 /* Debug */,
@@ -1365,7 +1368,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B21691DD28FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive Larp" */ = {
+		B21691DD28FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B21691DE28FDDC60006AA921 /* Debug */,
@@ -1374,7 +1377,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B21691E028FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive LarpTests" */ = {
+		B21691E028FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarpTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B21691E128FDDC60006AA921 /* Debug */,
@@ -1383,7 +1386,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B21691E328FDDC60006AA921 /* Build configuration list for PBXNativeTarget "Still Alive LarpUITests" */ = {
+		B21691E328FDDC60006AA921 /* Build configuration list for PBXNativeTarget "StillAliveLarpUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B21691E428FDDC60006AA921 /* Debug */,
