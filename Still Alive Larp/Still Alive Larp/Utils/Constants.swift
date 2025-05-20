@@ -11,10 +11,10 @@ struct Constants {
     
     struct Logging {
 //        TODO ALWAYS - set these to false before release
-        static let showServiceLogging = true
-        static let showTestLogging = true
+        static let showServiceLogging = false
+        static let showTestLogging = false
         static let showDebugButtonInAccountView = false
-        static let allowChangingServiceOperationMode = true
+        static let allowChangingServiceOperationMode = false
     }
     
     struct ServiceOperationMode {

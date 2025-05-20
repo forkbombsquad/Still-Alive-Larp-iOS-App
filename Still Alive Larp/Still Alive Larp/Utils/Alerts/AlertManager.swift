@@ -120,6 +120,7 @@ struct CustomAlertModel {
     var message: String?
     var textFields: [AlertTextField]
     var checkboxes: [AlertToggle]
+    var verticalButtons: [AlertButton]
     var buttons: [AlertButton]
 }
 
@@ -158,6 +159,17 @@ struct CustomAlertView: View {
             ForEach(0..<model.checkboxes.count, id: \.self) { index in
                 Toggle(isOn: model.checkboxes[index].isOn) {
                     Text(model.checkboxes[index].text)
+                }
+            }
+            
+            ForEach(0..<model.verticalButtons.count, id: \.self) { index in
+                let button = model.verticalButtons[index]
+                Button(role: button.role) {
+                    isPresented = false
+                    button.onPress()
+                } label: {
+                    Text(button.title)
+                        .frame(maxWidth: .infinity)
                 }
             }
 

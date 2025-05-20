@@ -139,7 +139,7 @@ struct MainView: View {
                 self.player = LocalDataHandler.shared.getPlayer()
                 self.character = LocalDataHandler.shared.getCharacter()
             }
-        }
+        }.navigationViewStyle(.stack)
     }
 
     private func getPrefilledUser() -> String {

@@ -258,6 +258,16 @@ struct AddSkillCellView: View {
     @Binding var purchasingSkill: Bool
 
     let onTap: (_ skill: CharacterModifiedSkillModel) -> Void
+    
+    let purchaseText: String
+    
+    init(_dm: DataManager = DataManager.shared, skill: CharacterModifiedSkillModel, purchasingSkill: Binding<Bool>, purchaseText: String = "Purchase Skill", onTap: @escaping (_: CharacterModifiedSkillModel) -> Void) {
+        self._dm = _dm
+        self.skill = skill
+        self._purchasingSkill = purchasingSkill
+        self.purchaseText = purchaseText
+        self.onTap = onTap
+    }
 
     var body: some View {
         CardView {
@@ -316,7 +326,7 @@ struct AddSkillCellView: View {
                     Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
                 }
                 Text(skill.description).padding(.top, 8)
-                LoadingButtonView($purchasingSkill, width: 180, height: 44, buttonText: "Purchase Skill") {
+                LoadingButtonView($purchasingSkill, width: 180, height: 44, buttonText: purchaseText) {
                     onTap(skill)
                 }
             }

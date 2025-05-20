@@ -56,7 +56,7 @@ struct CommunityTabView: View {
                     }
                 }
             }
-        }
+        }.navigationViewStyle(.stack)
     }
 }
 

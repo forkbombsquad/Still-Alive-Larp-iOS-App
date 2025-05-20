@@ -98,6 +98,7 @@ struct AllResearchProjectsListView: View {
                 checkboxes: [
                     AlertToggle(text: "Is Complete?", isOn: self.$projectComplete)
                 ],
+                verticalButtons: [],
                 buttons: [
                     AlertButton(title: rpIsNil ? "Create" : "Update", onPress: {
                         if let rp = rp {

@@ -34,6 +34,9 @@
 		B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222249E291E9F99003BCA0A /* CharacterService.swift */; };
 		B22224A1291EA70F003BCA0A /* CharacterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A0291EA70F003BCA0A /* CharacterModel.swift */; };
 		B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A2291EADFD003BCA0A /* StringExtensions.swift */; };
+		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
+		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
+		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
 		B228C27B29F83B470064686D /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C27A29F83B470064686D /* BioView.swift */; };
 		B228C28F29F840770064686D /* EditBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C28E29F840770064686D /* EditBioView.swift */; };
 		B228C29229F8471B0064686D /* CommunityTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C29129F8471B0064686D /* CommunityTabView.swift */; };
@@ -219,6 +222,9 @@
 		B222249E291E9F99003BCA0A /* CharacterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterService.swift; sourceTree = "<group>"; };
 		B22224A0291EA70F003BCA0A /* CharacterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModel.swift; sourceTree = "<group>"; };
 		B22224A2291EADFD003BCA0A /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
+		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
+		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
 		B228C27A29F83B470064686D /* BioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
 		B228C28E29F840770064686D /* EditBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBioView.swift; sourceTree = "<group>"; };
 		B228C29129F8471B0064686D /* CommunityTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityTabView.swift; sourceTree = "<group>"; };
@@ -692,7 +698,9 @@
 				B2D682362968879C005FDCCE /* PlayerStatsView.swift */,
 				B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */,
 				B23552B529E9C49400183748 /* SkillManagementView.swift */,
+				B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */,
 				B23552BF29E9EA0E00183748 /* AddSkillView.swift */,
+				B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */,
 				B228C27A29F83B470064686D /* BioView.swift */,
 				B228C28E29F840770064686D /* EditBioView.swift */,
 				B2750B4429F98C5700AA5F5B /* ManageAccountView.swift */,
@@ -700,6 +708,7 @@
 				B2E135BF29FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift */,
 				B2F29FB12A4214A700E07108 /* GearView.swift */,
 				B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */,
+				B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */,
 			);
 			path = AccountTab;
 			sourceTree = "<group>";
@@ -866,6 +875,7 @@
 				B2F9837929F07C7200512839 /* CreateEditEventView.swift in Sources */,
 				B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */,
 				B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */,
+				B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */,
 				B2222496291DBB95003BCA0A /* DataExtensions.swift in Sources */,
 				B2F472A42DCBDEAB00F37FA5 /* BoolExtensions.swift in Sources */,
 				B25D45B92A12BA4100C3048C /* PreregView.swift in Sources */,
@@ -888,6 +898,7 @@
 				B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */,
 				B235A4FC2DD7B88400AF96DC /* CGRectExtensions.swift in Sources */,
 				B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */,
+				B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */,
 				B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */,
 				B222249D291E9B4C003BCA0A /* PlayerManager.swift in Sources */,
 				B25D45B72A12B73200C3048C /* EventPreregService.swift in Sources */,
@@ -961,6 +972,7 @@
 				B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */,
 				B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */,
 				B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */,
+				B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */,
 				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,
 				B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */,

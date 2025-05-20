@@ -71,7 +71,7 @@ struct ServiceController {
             if !overrideDefaultErrorBehavior {
                 // Default failure behavior does some basic stuff before loading. Only override if necessary
                 failure = { error in
-                    AlertManager.shared.showOkAlert("Server Error", message: error.localizedDescription, onOkAction: {})
+                    AlertManager.shared.showOkAlert("Server Error", message: error.localizedDescription + "\n\nIf you are seeing this error, please take a screenshot of it and post it in the bug-reports channel of the Still Alive Discord Server along with some details about what you did before getting this message!", onOkAction: {})
                     globalPrintServiceLogs("SERVICE ERROR: \(error)")
                     failureCase(error)
                 }

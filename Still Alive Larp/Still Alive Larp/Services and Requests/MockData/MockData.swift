@@ -248,7 +248,7 @@ extension MockData {
                 return awards
             case .allCharacters, .deleteCharacters, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters:
                 return characterListFullModel
-            case .takeSkill:
+            case .takeSkill, .createPlannedCharacterSkill:
                 return characterSkill()
             case .getAllSkillsForChar, .deleteSkills:
                 return characterSkillList

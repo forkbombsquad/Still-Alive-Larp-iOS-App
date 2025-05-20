@@ -70,7 +70,7 @@ struct HomeTabView: View {
                     self.refreshEverything()
                 }
             }
-        }
+        }.navigationViewStyle(.stack)
     }
 
     func showIntrigueSection() -> Bool {

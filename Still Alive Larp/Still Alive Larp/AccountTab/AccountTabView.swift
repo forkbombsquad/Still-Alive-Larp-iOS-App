@@ -60,28 +60,30 @@ struct AccountTabView: View {
                                 .font(.system(size: 24, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.top, 8)
-                            if let player = player, let character = character {
-                                NavArrowView(title: "Character Stats", loading: $loading) { _ in
-                                    CharacterStatusView()
+                            if let player = player {
+                                if let character = character {
+                                    NavArrowView(title: "Character Stats", loading: $loading) { _ in
+                                        CharacterStatusView()
+                                    }
+                                    NavArrowView(title: "Skill Management", loading: $loading) { _ in
+                                        SkillManagementView(character: character, allowEdit: true)
+                                    }
+                                    NavArrowView(title: "Personal Skill Tree Diagram", loading: $loadingXpReductions) { _ in
+                                        NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: true, allowPurchase: true), player: player, character: character, xpReductions: xpReductions)
+                                    }
+                                    NavArrowView(title: "Bio", loading: $loading) { _ in
+                                        BioView(allowEdit: true)
+                                    }
+                                    NavArrowView(title: "Gear", loading: $loading) { _ in
+                                        GearView(character: character.baseModel, allowEdit: false)
+                                    }
+                                    NavArrowView(title: "Special Class Xp Reductions", loading: $loading) { _ in
+                                        SpecialClassXpReductionsView()
+                                    }
                                 }
-                                NavArrowView(title: "Skill Management", loading: $loading) { _ in
-                                    SkillManagementView(character: character, allowEdit: true)
+                                NavArrowViewBlue(title: "Character Planner") {
+                                    CharacterPlannerListView(player: player)
                                 }
-                                NavArrowView(title: "Personal Skill Tree Diagram", loading: $loadingXpReductions) { _ in
-                                    NativeSkillTree(skillGrid: SkillGrid(skills: skills, skillCategories: skillCategories, personal: true, allowPurchase: true), player: player, character: character, xpReductions: xpReductions)
-                                }
-                                NavArrowView(title: "Bio", loading: $loading) { _ in
-                                    BioView(allowEdit: true)
-                                }
-                                NavArrowView(title: "Gear", loading: $loading) { _ in
-                                    GearView(character: character.baseModel, allowEdit: false)
-                                }
-                                NavArrowView(title: "Special Class Xp Reductions", loading: $loading) { _ in
-                                    SpecialClassXpReductionsView()
-                                }
-                            }
-                            NavArrowViewBlue(title: "Character Planner") {
-                                // TODO character planner
                             }
                             
                             Text("Account")
@@ -118,7 +120,7 @@ struct AccountTabView: View {
             .onAppear {
                 self.reload(false)
             }
-        }
+        }.navigationViewStyle(.stack)
     }
     
     private func reload(_ force: Bool) {

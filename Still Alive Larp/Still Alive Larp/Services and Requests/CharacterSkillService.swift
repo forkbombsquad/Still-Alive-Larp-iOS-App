@@ -20,6 +20,13 @@ struct CharacterSkillService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func takePlannedCharacterSkill(_ charSkillModel: CharacterSkillCreateModel, onSuccess: @escaping (_ charSkill: CharacterSkillModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.createPlannedCharacterSkill, bodyJson: charSkillModel, responseObject: CharacterSkillModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+
+    }
 
     static func deleteSkills(characterId: Int, onSuccess: @escaping (_ charSkills: CharacterSkillListModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.deleteSkills, addToEndOfUrl: "\(characterId)", responseObject: CharacterSkillListModel.self, overrideDefaultErrorBehavior: true, success: { success in

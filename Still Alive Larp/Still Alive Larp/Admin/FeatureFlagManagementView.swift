@@ -39,7 +39,7 @@ struct FeatureFlagManagementView: View {
                                 ], checkboxes: [
                                     AlertToggle(text: "Active on iOS", isOn: $activeiOS),
                                     AlertToggle(text: "Active on Android", isOn: $activeAndroid)
-                                ], buttons: [
+                                ], verticalButtons: [], buttons: [
                                     AlertButton(title: "Save", role: nil, onPress: {
                                         self.createNewFlag()
                                     }),
@@ -63,7 +63,7 @@ struct FeatureFlagManagementView: View {
                                         ], checkboxes: [
                                             AlertToggle(text: "Active on iOS", isOn: $activeiOS),
                                             AlertToggle(text: "Active on Android", isOn: $activeAndroid)
-                                        ], buttons: [
+                                        ], verticalButtons: [], buttons: [
                                             AlertButton(title: "Update", role: nil, onPress: {
                                                 self.updateFlag(flag.wrappedValue.id)
                                             }),

@@ -19,7 +19,7 @@ struct ManageNPCView: View {
     @State var infection = ""
     @State var isAlive = true
     
-    // TODO this page jumps back to base admin panel when you get to it. Fix it.
+    @State var fullChar: FullCharacterModel? = nil
     
     var body: some View {
         VStack {
@@ -41,7 +41,7 @@ struct ManageNPCView: View {
                                         AlertTextField(placeholder: "Infection Rating", value: $infection)
                                     ], checkboxes: [
                                         AlertToggle(text: "Is Alive?", isOn: $isAlive)
-                                    ], buttons: [
+                                    ], verticalButtons: [], buttons: [
                                         AlertButton(title: "Ok", onPress: {
                                             var update = self.npc
                                             update.bullets = self.bullets
@@ -76,8 +76,10 @@ struct ManageNPCView: View {
                                 )
                             }
                         }
-                        NavArrowView(title: "Manage Skills", loading: $loading) { attachedObject in
-                            // TODO
+                        NavArrowView(title: "Manage Skills", loading: $loading) { _ in
+                            if let char = self.fullChar {
+                                SkillManagementView(character: char, allowEdit: true)
+                            }
                         }
                     }
                 }
@@ -86,7 +88,11 @@ struct ManageNPCView: View {
         .padding(16)
         .background(Color.lightGray)
         .onAppear {
-            DataManager.shared.load([])
+            self.loading = true
+            CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fcm in
+                self.fullChar = fcm
+                self.loading = false
+            }
         }
     }
 }

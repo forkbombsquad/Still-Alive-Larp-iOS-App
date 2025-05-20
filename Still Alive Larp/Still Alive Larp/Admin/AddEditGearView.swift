@@ -154,7 +154,7 @@ struct AddEditGearView: View {
         case gt.accessory:
             return "2 Mechancially Advangageous Accessories (such as flashlights or holsters)\nNO LIMIT ON: non-advantageous accessories (such as safety glasses, sunglasses, belts, masks, headbands, gloves, phones, watches, etc)"
         case gt.bag:
-            return "3 Small Bags OR 1 Medium Bag and 2 Small Bags OR 1 Large Bag and 1 Small Bag"
+            return "1 Small Bag and 1 of Either: 1 Large Bag or 1 Medium Bag."
         default:
             return nil
         }

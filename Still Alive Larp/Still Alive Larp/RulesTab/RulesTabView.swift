@@ -98,7 +98,7 @@ struct RulesTabView: View {
                     }
                 }
             }
-        }
+        }.navigationViewStyle(.stack)
     }
 }
 

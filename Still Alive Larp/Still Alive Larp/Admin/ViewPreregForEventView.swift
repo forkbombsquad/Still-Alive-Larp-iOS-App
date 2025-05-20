@@ -33,15 +33,20 @@ struct ViewPreregForEventView: View {
                     LoadingBlock()
                 }
             } else {
+                let sortedPreregs = sortedPreregs()
+                KeyValueView(key: "Premiums", value: "\(sortedPreregs.count(where: { $0.eventRegType == .premium })) Total (\(sortedPreregs.count(where: { $0.eventRegType == .premium && $0.getCharId() == nil })) NPCs)")
+                KeyValueView(key: "Basics", value: "\(sortedPreregs.count(where: { $0.eventRegType == .basic })) Total (\(sortedPreregs.count(where: { $0.eventRegType == .basic && $0.getCharId() == nil })) NPCs)")
+                KeyValueView(key: "Frees", value: "\(sortedPreregs.count(where: { $0.eventRegType == .free })) Total (\(sortedPreregs.count(where: { $0.eventRegType == .free && $0.getCharId() == nil })) NPCs)")
+                KeyValueView(key: "Not Attending", value: "\(sortedPreregs.count(where: { $0.eventRegType == .notPrereged }))", showDivider: false)
                 List() {
-                    ForEach(sortedPreregs()) { prereg in
+                    ForEach(sortedPreregs) { prereg in
                         CardView {
                             VStack {
                                 KeyValueView(key: "Name", value: getPlayerName(prereg.playerId))
                                 if prereg.eventRegType != .notPrereged {
                                     KeyValueView(key: "Character", value: getCharName(prereg.getCharId() ?? -1))
                                 }
-                                KeyValueView(key: "Reg Type", value: prereg.eventRegType.getAttendingText(), showDivider: false)
+                                KeyValueView(key: "Reg Type", value: prereg.eventRegType.rawValue, showDivider: false)
                             }
                         }.listRowSeparator(.hidden)
                         .listRowBackground(Color.lightGray)

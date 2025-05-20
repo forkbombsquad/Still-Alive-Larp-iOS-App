@@ -287,7 +287,9 @@ struct ArrowViewButton: View {
                     Spacer()
                     Image(systemName: "arrow.right").foregroundColor(Color.black)
                 }
-            }.onTapGesture {
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
                 self.onButtonPress()
             }
         }
@@ -322,7 +324,9 @@ struct ArrowViewButtonGreen: View {
                     Spacer()
                     Image(systemName: "arrow.right").foregroundColor(Color.black)
                 }
-            }.onTapGesture {
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
                 self.onButtonPress()
             }
         }
