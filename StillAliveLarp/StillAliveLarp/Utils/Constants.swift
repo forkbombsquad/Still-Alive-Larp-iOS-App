@@ -9,6 +9,12 @@ import Foundation
 
 struct Constants {
     
+    struct Versioning {
+        // TODO use this instead of the built-in to prevent issues. Make sure to change both
+        static let appBuildNumber = "24"
+        static let appVersion = "2.2.2.0"
+    }
+    
     struct Logging {
 //        TODO ALWAYS - set these to false before release
         static let showServiceLogging = false

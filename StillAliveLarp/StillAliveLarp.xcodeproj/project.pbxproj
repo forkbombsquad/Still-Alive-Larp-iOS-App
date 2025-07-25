@@ -35,6 +35,9 @@
 		B22224A1291EA70F003BCA0A /* CharacterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A0291EA70F003BCA0A /* CharacterModel.swift */; };
 		B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A2291EADFD003BCA0A /* StringExtensions.swift */; };
 		B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */; };
+		B22324B52E33C7170087786E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B42E33C7110087786E /* DataManager.swift */; };
+		B22324B72E33DFC30087786E /* UpdateTrackerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B62E33DFB90087786E /* UpdateTrackerService.swift */; };
+		B22324B92E33E6C30087786E /* LocalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B82E33E6BD0087786E /* LocalDataManager.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -224,6 +227,9 @@
 		B22224A0291EA70F003BCA0A /* CharacterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModel.swift; sourceTree = "<group>"; };
 		B22224A2291EADFD003BCA0A /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
 		B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTrackerModel.swift; sourceTree = "<group>"; };
+		B22324B42E33C7110087786E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		B22324B62E33DFB90087786E /* UpdateTrackerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTrackerService.swift; sourceTree = "<group>"; };
+		B22324B82E33E6BD0087786E /* LocalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManager.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -492,6 +498,8 @@
 		B2222490291DB10E003BCA0A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				B22324B82E33E6BD0087786E /* LocalDataManager.swift */,
+				B22324B42E33C7110087786E /* DataManager.swift */,
 				B2A6A7EC291464D90025040B /* AuthManager.swift */,
 				B293AEF9291569B200D2447C /* UserAndPassManager.swift */,
 				B2222491291DB13B003BCA0A /* AnnouncementManager.swift */,
@@ -642,6 +650,7 @@
 		B2A6A7E92914630D0025040B /* ServiceandRequests */ = {
 			isa = PBXGroup;
 			children = (
+				B22324B62E33DFB90087786E /* UpdateTrackerService.swift */,
 				B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */,
 				B2DFB0C129563C4D00132B08 /* MockData */,
 				B293AEF629155D5C00D2447C /* Models */,
@@ -957,6 +966,7 @@
 				B2D6823B29688D2D005FDCCE /* CharacterStatusView.swift in Sources */,
 				B2E5F2DD2AD09634004D61F5 /* ViewRulesView.swift in Sources */,
 				B2F29FB22A4214A700E07108 /* GearView.swift in Sources */,
+				B22324B52E33C7170087786E /* DataManager.swift in Sources */,
 				B258D9AF29F31D32003BE368 /* OfflineAccountView.swift in Sources */,
 				B2F9838E29F1906300512839 /* BarcodeGenerator.swift in Sources */,
 				B2750B5129F9B56000AA5F5B /* SelectEventForIntrigueView.swift in Sources */,
@@ -994,6 +1004,7 @@
 				B25D45C42A151D7600C3048C /* SelectEventForPreregView.swift in Sources */,
 				B235A4FA2DD7AAD400AF96DC /* SkillGrid.swift in Sources */,
 				B222248D291DA33F003BCA0A /* HomeTabView.swift in Sources */,
+				B22324B92E33E6C30087786E /* LocalDataManager.swift in Sources */,
 				B2750B3F29F979F300AA5F5B /* ContactService.swift in Sources */,
 				B2750B4D29F9B05D00AA5F5B /* IntrigueModel.swift in Sources */,
 				B23552CB29EB1F0E00183748 /* ErrorModel.swift in Sources */,
@@ -1044,6 +1055,7 @@
 				B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */,
 				B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */,
 				B2F9839029F2F09D00512839 /* EventAttendeeModel.swift in Sources */,
+				B22324B72E33DFC30087786E /* UpdateTrackerService.swift in Sources */,
 				B235529629E85D3200183748 /* AwardService.swift in Sources */,
 				B2F9836C29F040FE00512839 /* PullToRefresh.swift in Sources */,
 				B2750B5529FAD48300AA5F5B /* GenerateCheckoutBarcodeView.swift in Sources */,

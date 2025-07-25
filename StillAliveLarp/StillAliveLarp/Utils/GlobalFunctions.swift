@@ -51,3 +51,11 @@ func globalState<T>(_ variable: T) -> State<T> {
 func max(_ x: CGFloat, _ y: CGFloat) -> CGFloat {
     return CGFloat.maximum(x, y)
 }
+
+func getViewName<T: View>(_ view: T.Type) -> String {
+    return String(describing: view)
+}
+
+func getViewName<T: View>(_ view: T) -> String {
+    return String(describing: type(of: view))
+}
