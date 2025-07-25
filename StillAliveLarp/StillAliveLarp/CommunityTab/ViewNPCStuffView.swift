@@ -13,7 +13,7 @@ struct ViewNPCStuffView: View {
         return ViewNPCStuffView(character: characterModel, skills: skills)
     }
     
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     let offline: Bool
     let characterModel: CharacterModel
@@ -22,7 +22,7 @@ struct ViewNPCStuffView: View {
     @State var loadingFullModel: Bool = false
     @State var firstLoad: Bool = true
     
-    init(_dm: DataManager = DataManager.shared, characterModel: CharacterModel) {
+    init(_dm: OldDataManager = OldDataManager.shared, characterModel: CharacterModel) {
         self._dm = _dm
         self.offline = false
         self.characterModel = characterModel
@@ -83,8 +83,8 @@ struct ViewNPCStuffView: View {
                         runOnMainThread {
                             if let fcm = fcm {
                                 self.fullModel = fcm
-                                DataManager.shared.selectedPlayer = DataManager.shared.player
-                                DataManager.shared.charForSelectedPlayer = fcm
+                                OldDataManager.shared.selectedPlayer = OldDataManager.shared.player
+                                OldDataManager.shared.charForSelectedPlayer = fcm
                             }
                             self.loadingFullModel = false
                         }
@@ -97,7 +97,7 @@ struct ViewNPCStuffView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

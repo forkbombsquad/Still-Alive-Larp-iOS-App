@@ -10,14 +10,14 @@ import SwiftUI
 struct OfflineAccountView: View {
     
     init() {
-        self.player = LocalDataHandler.shared.getPlayer()
-        self.character = LocalDataHandler.shared.getCharacter()
+        self.player = OldLocalDataHandler.shared.getPlayer()
+        self.character = OldLocalDataHandler.shared.getCharacter()
         self.skills = SkillManager.shared.getSkillsOffline()
-        self.gear = LocalDataHandler.shared.getGear()?.first
-        self.npcs = LocalDataHandler.shared.getNPCs() ?? []
+        self.gear = OldLocalDataHandler.shared.getGear()?.first
+        self.npcs = OldLocalDataHandler.shared.getNPCs() ?? []
         self.rulebook = RulebookManager.shared.getOfflineVersion()
-        self.skillCategories = LocalDataHandler.shared.getSkillCategories() ?? []
-        self.treatingWoundsDiagram = LocalDataHandler.shared.getImage(.treatingWounds)
+        self.skillCategories = OldLocalDataHandler.shared.getSkillCategories() ?? []
+        self.treatingWoundsDiagram = OldLocalDataHandler.shared.getImage(.treatingWounds)
     }
     
     init(_ player: PlayerModel?, _ character: FullCharacterModel?, _ skills: [FullSkillModel], _ gear: GearModel?, _ npcs: [FullCharacterModel], _ rulebook: Rulebook?, _ skillCategories: [SkillCategoryModel], _ treatingWoundsDiagram: UIImage?) {
@@ -104,12 +104,12 @@ struct OfflineAccountView: View {
                         
                         if FeatureFlag.oldSkillTreeImage.isActive() {
                             NavArrowView(title: "Skill Tree Diagram Image (Legacy)") { _ in
-                                if let image = LocalDataHandler.shared.getImage(.skillTree) {
+                                if let image = OldLocalDataHandler.shared.getImage(.skillTree) {
                                     DownloadedImageView(image: image)
                                 }
                             }
                             NavArrowView(title: "Dark Skill Tree Diagram Image (Legacy)") { _ in
-                                if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                if let image = OldLocalDataHandler.shared.getImage(.skillTreeDark) {
                                     DownloadedImageView(image: image)
                                 }
                             }

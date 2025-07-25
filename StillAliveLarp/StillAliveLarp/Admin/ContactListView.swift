@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactListView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @Binding var contactRequests: [ContactRequestModel]
 
@@ -35,7 +35,7 @@ struct ContactListView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

@@ -10,7 +10,7 @@ import CodeScanner
 
 struct AdminView: View {
 
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State var loadingPlayers: Bool = true
     @State var allPlayers = [PlayerModel]()
@@ -111,7 +111,7 @@ struct AdminView: View {
                 runOnMainThread {
                     self.loadingEvents = false
                     self.events = events.reversed()
-                    DataManager.shared.events = events
+                    OldDataManager.shared.events = events
                 }
             }
             AdminService.getAllContactRequests { contactRequestList in
@@ -124,16 +124,16 @@ struct AdminView: View {
                     self.loadingContacts = false
                 }
             }
-            DataManager.shared.load([.researchProjects], forceDownloadIfApplicable: true) {
+            OldDataManager.shared.load([.researchProjects], forceDownloadIfApplicable: true) {
                 runOnMainThread {
-                    self.researchProjects = DataManager.shared.researchProjects
+                    self.researchProjects = OldDataManager.shared.researchProjects
                     self.loadingResearchProjects = false
                 }
             }
-            DataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true)
-            DataManager.shared.load([.npcs], forceDownloadIfApplicable: true) {
+            OldDataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true)
+            OldDataManager.shared.load([.npcs], forceDownloadIfApplicable: true) {
                 runOnMainThread {
-                    self.npcs = DataManager.shared.npcs
+                    self.npcs = OldDataManager.shared.npcs
                     self.loadingNPCs = false
                 }
             }
@@ -166,7 +166,7 @@ struct AdminView: View {
 }
 
 struct EventToolsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @Binding var events: [EventModel]
     @Binding var loadingEvents: Bool
@@ -193,7 +193,7 @@ struct EventToolsView: View {
 }
 
 struct PlayerCharacterManagementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var npcs: [CharacterModel]
@@ -227,7 +227,7 @@ struct PlayerCharacterManagementView: View {
 }
 
 struct MiscAdminView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var loadingCharacters: Bool
@@ -245,7 +245,7 @@ struct MiscAdminView: View {
             NavArrowView(title: "Manage Research Projects") { _ in
                 AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true).onDisappear {
                     runOnMainThread {
-                        self.researchProjects = DataManager.shared.researchProjects
+                        self.researchProjects = OldDataManager.shared.researchProjects
                     }
                 }
             }
@@ -258,8 +258,8 @@ struct MiscAdminView: View {
             NavArrowView(title: "Contact Requests", loading: $loadingContacts, notificationBubbleText: $unreadContactsText) { _ in
                 ContactListView(contactRequests: $contactRequests)
             }
-            NavArrowView(title: "Feature Flag Management", loading: DataManager.$shared.loadingFeatureFlags) { _ in
-                FeatureFlagManagementView(featureFlags: DataManager.$shared.featureFlags)
+            NavArrowView(title: "Feature Flag Management", loading: OldDataManager.$shared.loadingFeatureFlags) { _ in
+                FeatureFlagManagementView(featureFlags: OldDataManager.$shared.featureFlags)
             }
         }
     }
@@ -267,7 +267,7 @@ struct MiscAdminView: View {
 
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return AdminView(_dm: dm)

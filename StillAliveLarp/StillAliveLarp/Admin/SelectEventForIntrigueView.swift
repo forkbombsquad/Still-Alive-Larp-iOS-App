@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SelectEventForIntrigueView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let events: [EventModel]
     @State var loading: Bool = false
@@ -36,7 +36,7 @@ struct SelectEventForIntrigueView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

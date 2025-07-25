@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PlayerStatsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let player: PlayerModel?
     let offline: Bool
@@ -39,7 +39,7 @@ struct PlayerStatsView: View {
                     Divider()
                     if let player = player {
                         KeyValueView(key: "Name", value: player.fullName)
-                        if DataManager.shared.player?.id == player.id {
+                        if OldDataManager.shared.player?.id == player.id {
                             KeyValueView(key: "Email", value: player.username)
                         }
                         KeyValueView(key: "Start Date", value: player.startDate.yyyyMMddToMonthDayYear())
@@ -66,7 +66,7 @@ struct PlayerStatsView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

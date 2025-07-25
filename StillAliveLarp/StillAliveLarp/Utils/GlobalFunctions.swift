@@ -20,8 +20,8 @@ func getBuildNumber() -> Int {
 
 func forceResetAllPlayerData() {
     runOnMainThread {
-        DataManager.forceReset()
-        LocalDataHandler.forceReset()
+        OldDataManager.forceReset()
+        OldLocalDataHandler.forceReset()
         UserAndPassManager.forceReset()
         PlayerManager.forceReset()
         CharacterManager.forceReset()

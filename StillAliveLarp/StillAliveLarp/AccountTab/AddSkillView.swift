@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddSkillView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     typealias slk = SkillListView
 
@@ -23,7 +23,7 @@ struct AddSkillView: View {
 
     var body: some View {
         VStack {
-            if let player = DataManager.shared.player, let character = DataManager.shared.character, let allSkills = DataManager.shared.skills {
+            if let player = OldDataManager.shared.player, let character = OldDataManager.shared.character, let allSkills = OldDataManager.shared.skills {
                 Text("Add Skill")
                     .font(.system(size: 32, weight: .bold))
                     .frame(alignment: .center)
@@ -86,8 +86,8 @@ struct AddSkillView: View {
                                         AlertManager.shared.showOkAlert("Skill Purchased", message: messageString, onOkAction: {
                                         })
                                         PlayerManager.shared.updatePlayer(updatedPlayer)
-                                        DataManager.shared.player = updatedPlayer
-                                        DataManager.shared.character = character
+                                        OldDataManager.shared.player = updatedPlayer
+                                        OldDataManager.shared.character = character
                                         self.skills = self.getAvailableSkills(allSkills)
                                         self.purchasingSkill = false
                                     }
@@ -109,9 +109,9 @@ struct AddSkillView: View {
         }
         .background(Color.lightGray)
         .onAppear() {
-            self.skills = getAvailableSkills(DataManager.shared.skills ?? [])
-            DataManager.shared.load([.skills, .player, .character, .xpReductions]) {
-                self.skills = getAvailableSkills(DataManager.shared.skills ?? [])
+            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+            OldDataManager.shared.load([.skills, .player, .character, .xpReductions]) {
+                self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
             }
         }
     }
@@ -161,7 +161,7 @@ struct AddSkillView: View {
     }
 
     func getAvailableSkills(_ allSkills: [FullSkillModel]) -> [CharacterModifiedSkillModel] {
-        let charSkills = DataManager.shared.character?.skills ?? []
+        let charSkills = OldDataManager.shared.character?.skills ?? []
         // Remove all skills the character already has
         var newSkillList = allSkills.filter { skillToKeep in
             return !charSkills.contains(where: { charSkill in
@@ -185,14 +185,14 @@ struct AddSkillView: View {
 
         // Filter out pp skills you don't qualify for
         newSkillList = newSkillList.filter({ skillToKeep in
-            if skillToKeep.prestigeCost.intValueDefaultZero > (DataManager.shared.player?.prestigePoints ?? "").intValueDefaultZero {
+            if skillToKeep.prestigeCost.intValueDefaultZero > (OldDataManager.shared.player?.prestigePoints ?? "").intValueDefaultZero {
                 return false
             }
             return true
         })
 
         // Remove Choose One skills that can't be chosen
-        let cskills = DataManager.shared.character?.getChooseOneSkills() ?? []
+        let cskills = OldDataManager.shared.character?.getChooseOneSkills() ?? []
         if cskills.isEmpty {
             // Remove all level 2 cskills
             newSkillList = newSkillList.filter({ skillToKeep in
@@ -221,25 +221,25 @@ struct AddSkillView: View {
             })
         }
 
-        let combatXpMod = DataManager.shared.character?.costOfCombatSkills() ?? 0
-        let professionXpMod = DataManager.shared.character?.costOfProfessionSkills() ?? 0
-        let talentXpMod = DataManager.shared.character?.costOfTalentSkills() ?? 0
-        let inf50Mod = DataManager.shared.character?.costOf50InfectSkills() ?? 0
-        let inf75Mod = DataManager.shared.character?.costOf75InfectSkills() ?? 0
+        let combatXpMod = OldDataManager.shared.character?.costOfCombatSkills() ?? 0
+        let professionXpMod = OldDataManager.shared.character?.costOfProfessionSkills() ?? 0
+        let talentXpMod = OldDataManager.shared.character?.costOfTalentSkills() ?? 0
+        let inf50Mod = OldDataManager.shared.character?.costOf50InfectSkills() ?? 0
+        let inf75Mod = OldDataManager.shared.character?.costOf75InfectSkills() ?? 0
 
         // Convert to new model type
         var newCharModSkills = [CharacterModifiedSkillModel]()
         for skill in newSkillList {
-            newCharModSkills.append(CharacterModifiedSkillModel(skill, modXpCost: skill.getModCost(combatMod: combatXpMod, professionMod: professionXpMod, talentMod: talentXpMod, xpReductions: DataManager.shared.xpReductions ?? []), modInfCost: skill.getInfModCost(inf50Mod: inf50Mod, inf75Mod: inf75Mod)))
+            newCharModSkills.append(CharacterModifiedSkillModel(skill, modXpCost: skill.getModCost(combatMod: combatXpMod, professionMod: professionXpMod, talentMod: talentXpMod, xpReductions: OldDataManager.shared.xpReductions ?? []), modInfCost: skill.getInfModCost(inf50Mod: inf50Mod, inf75Mod: inf75Mod)))
         }
 
         // Filter out skills that you don't have enough xp, fs, or inf for
         newCharModSkills = newCharModSkills.filter({ skillToKeep in
-            if skillToKeep.modInfCost.intValueDefaultZero > (DataManager.shared.character?.infection ?? "").intValueDefaultZero {
+            if skillToKeep.modInfCost.intValueDefaultZero > (OldDataManager.shared.character?.infection ?? "").intValueDefaultZero {
                 return false
             }
-            if skillToKeep.modXpCost.intValueDefaultZero > (DataManager.shared.player?.experience ?? "").intValueDefaultZero {
-                if skillToKeep.canUseFreeSkill && (DataManager.shared.player?.freeTier1Skills ?? "").intValueDefaultZero > 0 {
+            if skillToKeep.modXpCost.intValueDefaultZero > (OldDataManager.shared.player?.experience ?? "").intValueDefaultZero {
+                if skillToKeep.canUseFreeSkill && (OldDataManager.shared.player?.freeTier1Skills ?? "").intValueDefaultZero > 0 {
                     return true
                 }
                 return false
@@ -252,7 +252,7 @@ struct AddSkillView: View {
 }
 
 struct AddSkillCellView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let skill: CharacterModifiedSkillModel
     @Binding var purchasingSkill: Bool
@@ -261,7 +261,7 @@ struct AddSkillCellView: View {
     
     let purchaseText: String
     
-    init(_dm: DataManager = DataManager.shared, skill: CharacterModifiedSkillModel, purchasingSkill: Binding<Bool>, purchaseText: String = "Purchase Skill", onTap: @escaping (_: CharacterModifiedSkillModel) -> Void) {
+    init(_dm: OldDataManager = OldDataManager.shared, skill: CharacterModifiedSkillModel, purchasingSkill: Binding<Bool>, purchaseText: String = "Purchase Skill", onTap: @escaping (_: CharacterModifiedSkillModel) -> Void) {
         self._dm = _dm
         self.skill = skill
         self._purchasingSkill = purchasingSkill
@@ -283,7 +283,7 @@ struct AddSkillCellView: View {
                 HStack {
                     Spacer()
                     Text("Cost: ").font(.system(size: 16)).multilineTextAlignment(.trailing)
-                    if skill.canUseFreeSkill && (DataManager.shared.player?.freeTier1Skills ?? "").intValueDefaultZero > 0 {
+                    if skill.canUseFreeSkill && (OldDataManager.shared.player?.freeTier1Skills ?? "").intValueDefaultZero > 0 {
                         Text("1 Free Tier-1 Skill")
                             .foregroundColor(Color.darkGreen)
                             .multilineTextAlignment(.leading)
@@ -338,7 +338,7 @@ struct AddSkillCellView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     var asv = AddSkillView(_dm: dm)

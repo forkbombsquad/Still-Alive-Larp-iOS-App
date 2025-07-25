@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PreregView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State var loadingSubmit = false
     
@@ -111,7 +111,7 @@ struct PreregView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

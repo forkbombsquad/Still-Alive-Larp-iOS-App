@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B205F4742A44988400C45B1A /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B205F4732A44988400C45B1A /* ArrayExtensions.swift */; };
-		B20FF4642A267FD600B13F1D /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20FF4632A267FD600B13F1D /* DataManager.swift */; };
+		B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20FF4632A267FD600B13F1D /* OldDataManager.swift */; };
 		B21691BD28FDDC5D006AA921 /* Still_Alive_LarpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */; };
 		B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BE28FDDC5D006AA921 /* MainView.swift */; };
 		B21691C128FDDC5F006AA921 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B21691C028FDDC5F006AA921 /* Assets.xcassets */; };
@@ -34,6 +34,7 @@
 		B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222249E291E9F99003BCA0A /* CharacterService.swift */; };
 		B22224A1291EA70F003BCA0A /* CharacterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A0291EA70F003BCA0A /* CharacterModel.swift */; };
 		B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22224A2291EADFD003BCA0A /* StringExtensions.swift */; };
+		B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -86,7 +87,7 @@
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
 		B251B06B2BD1A5ED00915F01 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */; };
 		B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */; };
-		B258D9AB29F3197C003BE368 /* LocalDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */; };
+		B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */; };
 		B258D9AF29F31D32003BE368 /* OfflineAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AE29F31D31003BE368 /* OfflineAccountView.swift */; };
 		B25D45B52A12B5D600C3048C /* EventPreregModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B42A12B5D500C3048C /* EventPreregModel.swift */; };
 		B25D45B72A12B73200C3048C /* EventPreregService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B62A12B73200C3048C /* EventPreregService.swift */; };
@@ -193,7 +194,7 @@
 
 /* Begin PBXFileReference section */
 		B205F4732A44988400C45B1A /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
-		B20FF4632A267FD600B13F1D /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		B20FF4632A267FD600B13F1D /* OldDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldDataManager.swift; sourceTree = "<group>"; };
 		B21691B928FDDC5D006AA921 /* StillAliveLarp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StillAliveLarp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpApp.swift; sourceTree = "<group>"; };
 		B21691BE28FDDC5D006AA921 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 		B222249E291E9F99003BCA0A /* CharacterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterService.swift; sourceTree = "<group>"; };
 		B22224A0291EA70F003BCA0A /* CharacterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModel.swift; sourceTree = "<group>"; };
 		B22224A2291EADFD003BCA0A /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTrackerModel.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -274,7 +276,7 @@
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
 		B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCharacterForGearManagementView.swift; sourceTree = "<group>"; };
-		B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataHandler.swift; sourceTree = "<group>"; };
+		B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldLocalDataHandler.swift; sourceTree = "<group>"; };
 		B258D9AE29F31D31003BE368 /* OfflineAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineAccountView.swift; sourceTree = "<group>"; };
 		B25D45B42A12B5D500C3048C /* EventPreregModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPreregModel.swift; sourceTree = "<group>"; };
 		B25D45B62A12B73200C3048C /* EventPreregService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPreregService.swift; sourceTree = "<group>"; };
@@ -476,7 +478,7 @@
 				B23552C129E9ECAC00183748 /* IntExtensions.swift */,
 				B23552C329E9EEA500183748 /* Constants.swift */,
 				B2F9838D29F1906300512839 /* BarcodeGenerator.swift */,
-				B258D9AA29F3197C003BE368 /* LocalDataHandler.swift */,
+				B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */,
 				B2E135B329FAFB8E0038DE31 /* GlobalFunctions.swift */,
 				B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */,
 				B205F4732A44988400C45B1A /* ArrayExtensions.swift */,
@@ -497,7 +499,7 @@
 				B2D68234296880DC005FDCCE /* CharacterManager.swift */,
 				B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */,
 				B2F9837429F069B500512839 /* EventManager.swift */,
-				B20FF4632A267FD600B13F1D /* DataManager.swift */,
+				B20FF4632A267FD600B13F1D /* OldDataManager.swift */,
 				B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */,
 			);
 			path = Managers;
@@ -599,6 +601,7 @@
 		B293AEF629155D5C00D2447C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */,
 				B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */,
 				B293AEF729155D7000D2447C /* OAuthToken.swift */,
 				B293AEFB29156B9200D2447C /* PlayerModel.swift */,
@@ -897,6 +900,7 @@
 				B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookManager.swift in Sources */,
+				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,
 				B2F9837929F07C7200512839 /* CreateEditEventView.swift in Sources */,
 				B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */,
 				B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */,
@@ -1037,7 +1041,7 @@
 				B2750B5329F9B67300AA5F5B /* AddEditEventIntrigueView.swift in Sources */,
 				B293AEF529154F0400D2447C /* ServiceController.swift in Sources */,
 				B2F9837329F066CC00512839 /* EventService.swift in Sources */,
-				B258D9AB29F3197C003BE368 /* LocalDataHandler.swift in Sources */,
+				B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */,
 				B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */,
 				B2F9839029F2F09D00512839 /* EventAttendeeModel.swift in Sources */,
 				B235529629E85D3200183748 /* AwardService.swift in Sources */,
@@ -1048,7 +1052,7 @@
 				B2F9838A29F176EB00512839 /* PlayerCheckInBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
 				B2222499291E971D003BCA0A /* AnnouncementsView.swift in Sources */,
-				B20FF4642A267FD600B13F1D /* DataManager.swift in Sources */,
+				B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateAccountView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var fullName: String = ""
     @State private var emailAddress: String = ""
@@ -57,7 +57,7 @@ struct CreateAccountView: View {
                                 PlayerService.createPlayer(preApprovalCode, player: playerCreate) { player in
                                     PlayerManager.shared.setPlayer(player)
                                     UserAndPassManager.shared.setTemp(emailAddress, p: password)
-                                    DataManager.forceReset()
+                                    OldDataManager.forceReset()
                                     AlertManager.shared.showOkAlert("Account Created!") {
                                         runOnMainThread {
                                             self.loading = false
@@ -115,7 +115,7 @@ struct CreateAccountView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return CreateAccountView(_dm: dm)

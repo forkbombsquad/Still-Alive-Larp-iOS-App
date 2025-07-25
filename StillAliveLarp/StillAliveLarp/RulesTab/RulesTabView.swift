@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RulesTabView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State var loadingSkills: Bool = true
     @State var allSkills = [FullSkillModel]()
@@ -39,22 +39,22 @@ struct RulesTabView: View {
                             NavArrowView(title: "Skill Tree Diagram", loading: $loadingSkills) { _ in
                                 NativeSkillTree(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
                             }
-                            NavArrowView(title: "Core Rulebook", loading: DataManager.$shared.loadingRulebook) { _ in
-                                ViewRulesView(rulebook: DataManager.shared.rulebook)
+                            NavArrowView(title: "Core Rulebook", loading: OldDataManager.$shared.loadingRulebook) { _ in
+                                ViewRulesView(rulebook: OldDataManager.shared.rulebook)
                             }
                             NavArrowView(title: "Treating Wounds Flowchart", loading: $loadingTreatingWoundsDiagram) { _ in
-                                if let image = LocalDataHandler.shared.getImage(.treatingWounds) {
+                                if let image = OldLocalDataHandler.shared.getImage(.treatingWounds) {
                                     DownloadedImageView(image: image)
                                 }
                             }
                             if (FeatureFlag.oldSkillTreeImage.isActive()) {
                                 NavArrowView(title: "Skill Tree Diagram Image (Legacy)", loading: $loadingSkillTreeDiagramDark) { _ in
-                                    if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                    if let image = OldLocalDataHandler.shared.getImage(.skillTreeDark) {
                                         DownloadedImageView(image: image)
                                     }
                                 }
                                 NavArrowView(title: "Dark Skill Tree Diagram Image (Legacy)", loading: $loadingSkillTreeDiagramDark) { _ in
-                                    if let image = LocalDataHandler.shared.getImage(.skillTreeDark) {
+                                    if let image = OldLocalDataHandler.shared.getImage(.skillTreeDark) {
                                         DownloadedImageView(image: image)
                                     }
                                 }
@@ -66,7 +66,7 @@ struct RulesTabView: View {
             .background(Color.lightGray)
             .onAppear {
                 self.loadingSkills = true
-                DataManager.shared.load([.rulebook])
+                OldDataManager.shared.load([.rulebook])
 
                 DispatchQueue.global(qos: .userInitiated).async {
                     let imageDownloader = ImageDownloader()
@@ -87,9 +87,9 @@ struct RulesTabView: View {
                     }
                 }
                 self.loadingSkillCategories = true
-                DataManager.shared.load([.skillCategories]) {
+                OldDataManager.shared.load([.skillCategories]) {
                     runOnMainThread {
-                        self.skillCategories = DataManager.shared.skillCategories
+                        self.skillCategories = OldDataManager.shared.skillCategories
                         self.loadingSkillCategories = false
                         SkillManager.shared.getSkills(overrideLocal: true) { skills in
                             self.allSkills = skills
@@ -103,7 +103,7 @@ struct RulesTabView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     dm.loadingRulebook = false

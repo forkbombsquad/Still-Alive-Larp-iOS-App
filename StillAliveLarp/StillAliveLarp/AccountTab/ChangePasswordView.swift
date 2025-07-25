@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ChangePasswordView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var existingPassword: String = ""
     @State private var password: String = ""
@@ -35,7 +35,7 @@ struct ChangePasswordView: View {
                                 let valResult = validateFields()
                                 if !valResult.hasError {
                                     self.loading = true
-                                    PlayerService.updateP(self.password, playerId: DataManager.shared.player?.id ?? -1) { player in
+                                    PlayerService.updateP(self.password, playerId: OldDataManager.shared.player?.id ?? -1) { player in
                                         runOnMainThread {
                                             UserAndPassManager.shared.setUAndP(player.username, p: password, remember: true)
                                             AlertManager.shared.showOkAlert("Password Successfuly Updated") {
@@ -85,7 +85,7 @@ struct ChangePasswordView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return ChangePasswordView(_dm: dm)

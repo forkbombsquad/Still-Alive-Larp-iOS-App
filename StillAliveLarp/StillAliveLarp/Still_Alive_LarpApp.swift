@@ -11,7 +11,7 @@ import SwiftUI
 struct Still_Alive_LarpApp: App {
 
     @StateObject var alertManager = AlertManager.shared
-    @ObservedObject var dataManager = DataManager.shared
+    @ObservedObject var dataManager = OldDataManager.shared
 
     var body: some Scene {
         WindowGroup {

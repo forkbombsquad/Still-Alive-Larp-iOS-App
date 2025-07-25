@@ -1,5 +1,5 @@
 //
-//  LocalDataHandler.swift
+//  OldLocalDataHandler.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 4/21/23.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-class LocalDataHandler {
+class OldLocalDataHandler {
 
     struct Keys {
         static let playerKey = "player_ud_key"
@@ -29,7 +29,7 @@ class LocalDataHandler {
         }
     }
 
-    static let shared = LocalDataHandler()
+    static let shared = OldLocalDataHandler()
 
     private init() {}
 

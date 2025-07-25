@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityTabView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @State var allPlayers: [PlayerModel] = []
     @State var loadingAllPlayers: Bool = true
@@ -45,11 +45,11 @@ struct CommunityTabView: View {
                 self.loadingAllPlayers = true
                 self.loadingAllNpcs = true
                 self.loadingAllResearchProjects = true
-                DataManager.shared.load([.allPlayers, .npcs, .researchProjects]) {
+                OldDataManager.shared.load([.allPlayers, .npcs, .researchProjects]) {
                     runOnMainThread {
-                        self.allPlayers = DataManager.shared.allPlayers ?? []
-                        self.allNpcs = DataManager.shared.npcs
-                        self.allResearchProjects = DataManager.shared.researchProjects
+                        self.allPlayers = OldDataManager.shared.allPlayers ?? []
+                        self.allNpcs = OldDataManager.shared.npcs
+                        self.allResearchProjects = OldDataManager.shared.researchProjects
                         self.loadingAllPlayers = false
                         self.loadingAllNpcs = false
                         self.loadingAllResearchProjects = false
@@ -61,7 +61,7 @@ struct CommunityTabView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     dm.loadingAllPlayers = false

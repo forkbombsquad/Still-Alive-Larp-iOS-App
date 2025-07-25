@@ -22,7 +22,7 @@ class PlayerManager {
     func setPlayer(_ player: PlayerModel, fetchChars: Bool = true) {
         self.player = player
         if let p = self.player {
-            LocalDataHandler.shared.storePlayer(p)
+            OldLocalDataHandler.shared.storePlayer(p)
         }
     }
 
@@ -34,7 +34,7 @@ class PlayerManager {
     func updatePlayer(_ updatedPlayer: PlayerModel) {
         self.player = updatedPlayer
         if let p = self.player {
-            LocalDataHandler.shared.storePlayer(p)
+            OldLocalDataHandler.shared.storePlayer(p)
         }
     }
 

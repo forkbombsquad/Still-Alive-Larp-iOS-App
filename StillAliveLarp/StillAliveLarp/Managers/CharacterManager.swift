@@ -100,7 +100,7 @@ class CharacterManager {
                             }
 
                             if let c = self.character {
-                                LocalDataHandler.shared.storeCharacter(c)
+                                OldLocalDataHandler.shared.storeCharacter(c)
                             }
 
                             self.fetching = false
@@ -145,7 +145,7 @@ class CharacterManager {
                 }
 
                 if let c = self.character {
-                    LocalDataHandler.shared.storeCharacter(c)
+                    OldLocalDataHandler.shared.storeCharacter(c)
                 }
 
                 self.fetching = false

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CharacterStatusView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     static func Offline(character: FullCharacterModel) -> CharacterStatusView {
         return CharacterStatusView(offline: true, character: character)
@@ -16,7 +16,7 @@ struct CharacterStatusView: View {
     
     init() {
         self.offline = false
-        self._character = globalState(DataManager.shared.charForSelectedPlayer)
+        self._character = globalState(OldDataManager.shared.charForSelectedPlayer)
     }
     
     private init (offline: Bool, character: FullCharacterModel?) {
@@ -39,7 +39,7 @@ struct CharacterStatusView: View {
                     Divider()
                     if let character = character {
                         KeyValueView(key: "Name", value: character.fullName)
-                        if let playerName = DataManager.shared.selectedPlayer?.fullName {
+                        if let playerName = OldDataManager.shared.selectedPlayer?.fullName {
                             KeyValueView(key: "Player", value: playerName)
                         }
                         KeyValueView(key: "Start Date", value: character.startDate.yyyyMMddToMonthDayYear())
@@ -60,7 +60,7 @@ struct CharacterStatusView: View {
 }
 
 struct CharacterBulletsSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let character: FullCharacterModel
 
@@ -77,7 +77,7 @@ struct CharacterBulletsSubView: View {
 }
 
 struct CharacterMaterialsSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let character: FullCharacterModel
 
@@ -96,7 +96,7 @@ struct CharacterMaterialsSubView: View {
 }
 
 struct CharacterSkillAndArmorSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let character: FullCharacterModel
 
@@ -146,7 +146,7 @@ struct CharacterSkillAndArmorSubView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

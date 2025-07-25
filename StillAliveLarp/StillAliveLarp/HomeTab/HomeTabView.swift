@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     @State private var firstLoad = true
     
     @State var loadingEvents = false
@@ -113,9 +113,9 @@ struct HomeTabView: View {
             self.loadingAwards = true
             self.loadingPreregs = true
             
-            DataManager.shared.load([.player, .character, .announcements, .events, .awards, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
+            OldDataManager.shared.load([.player, .character, .announcements, .events, .awards, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
                 runOnMainThread {
-                    let dm = DataManager.shared
+                    let dm = OldDataManager.shared
                     self.loadingEvents = false
                     self.loadingEventAttendees = false
                     self.loadingCharacter = false
@@ -128,10 +128,10 @@ struct HomeTabView: View {
                     self.awards = dm.awards ?? []
                     self.eventAttendees = dm.eventAttendeesForPlayer ?? []
                     
-                    DataManager.shared.load([.eventPreregs, .intrigue], forceDownloadIfApplicable: true) {
+                    OldDataManager.shared.load([.eventPreregs, .intrigue], forceDownloadIfApplicable: true) {
                         runOnMainThread {
-                            self.preregs = DataManager.shared.eventPreregs
-                            self.intrigue = DataManager.shared.intrigue
+                            self.preregs = OldDataManager.shared.eventPreregs
+                            self.intrigue = OldDataManager.shared.intrigue
                             self.loadingPreregs = false
                             self.loadingIntrigues = false
                         }
@@ -145,7 +145,7 @@ struct HomeTabView: View {
 }
 
 struct IntrigueView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @Binding var character: FullCharacterModel?
     @Binding var intrigue: IntrigueModel?
@@ -174,7 +174,7 @@ struct IntrigueView: View {
 }
 
 struct EventsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State var currentEventIndex: Int = 0
     @Binding var loadingEvents: Bool
@@ -258,9 +258,9 @@ struct EventsView: View {
                                 PreregView(event: currentEvent, prereg: prereg, player: player, character: character?.baseModel).onDisappear {
                                     runOnMainThread {
                                         self.loadingPreregs = true
-                                        DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                                        OldDataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
                                             runOnMainThread {
-                                                self.eventPreregs = DataManager.shared.eventPreregs
+                                                self.eventPreregs = OldDataManager.shared.eventPreregs
                                                 self.loadingPreregs = false
                                             }
                                         }
@@ -316,7 +316,7 @@ struct EventsView: View {
 }
 
 struct CurrentCharacterView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let grWidth: CGFloat
     
@@ -358,7 +358,7 @@ struct CurrentCharacterView: View {
 }
 
 struct AwardsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @Binding var loadingAwards: Bool
     @Binding var awards: [AwardModel]
@@ -396,7 +396,7 @@ struct AwardsView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

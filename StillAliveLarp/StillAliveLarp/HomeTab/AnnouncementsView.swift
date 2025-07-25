@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AnnouncementsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var currentAnnouncementIndex: Int = 0
     @State private var currentAnnouncement: AnnouncementModel?
@@ -62,11 +62,11 @@ struct AnnouncementsView: View {
                 }
             }.onAppear(perform: {
                 self.loadingAnnouncements = true
-                DataManager.shared.load([.announcements]) {
+                OldDataManager.shared.load([.announcements]) {
                     runOnMainThread {
                         self.loadingAnnouncements = false
-                        self.announcements = DataManager.shared.announcements ?? []
-                        self.currentAnnouncement = DataManager.shared.currentAnnouncement
+                        self.announcements = OldDataManager.shared.announcements ?? []
+                        self.currentAnnouncement = OldDataManager.shared.currentAnnouncement
                     }
                 }
             })
@@ -95,7 +95,7 @@ struct AnnouncementsView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     dm.loadingAnnouncements = false

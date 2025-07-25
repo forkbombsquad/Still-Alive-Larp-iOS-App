@@ -50,7 +50,7 @@ class ImageDownloader {
                 onCompletion(false)
                 return
             }
-            LocalDataHandler.shared.storeImageData(data, key: key.rawValue)
+            OldLocalDataHandler.shared.storeImageData(data, key: key.rawValue)
             onCompletion(true)
         }
     }

@@ -17,7 +17,7 @@ import SwiftUI
 import SwiftUI
 
 struct ChangePlayerPasswordView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let player: PlayerModel
 
@@ -85,7 +85,7 @@ struct ChangePlayerPasswordView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ViewPreregForEventView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @State var loadingPlayers = true
     @State var loadingCharacters = true
@@ -57,14 +57,14 @@ struct ViewPreregForEventView: View {
         .background(Color.lightGray)
         .onAppear {
             runOnMainThread {
-                DataManager.shared.load([.allPlayers, .allCharacters]) {
+                OldDataManager.shared.load([.allPlayers, .allCharacters]) {
                     runOnMainThread {
-                        self.allPlayers = DataManager.shared.allPlayers ?? []
-                        self.allCharacters = DataManager.shared.allCharacters ?? []
+                        self.allPlayers = OldDataManager.shared.allPlayers ?? []
+                        self.allCharacters = OldDataManager.shared.allCharacters ?? []
                         self.loadingPlayers = false
                         self.loadingCharacters = false
-                        DataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
-                            self.eventPreregs = DataManager.shared.eventPreregs
+                        OldDataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
+                            self.eventPreregs = OldDataManager.shared.eventPreregs
                             self.loadingEventPreregs = false
                         }
                     }
@@ -89,7 +89,7 @@ struct ViewPreregForEventView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     dm.loadingAllPlayers = false

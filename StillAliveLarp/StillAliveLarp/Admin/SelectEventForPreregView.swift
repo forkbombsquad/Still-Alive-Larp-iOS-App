@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SelectEventForPreregView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let events: [EventModel]
 
@@ -51,7 +51,7 @@ struct SelectEventForPreregView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

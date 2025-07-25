@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillManagementPlannerView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let character: CharacterModel
     @State var fullCharacterModel: FullCharacterModel? = nil
@@ -18,7 +18,7 @@ struct SkillManagementPlannerView: View {
     @State var firstLoad = true
     
     // Online
-    init(_dm: DataManager = DataManager.shared, character: CharacterModel) {
+    init(_dm: OldDataManager = OldDataManager.shared, character: CharacterModel) {
         self._dm = _dm
         self.character = character
     }
@@ -108,7 +108,7 @@ struct SkillManagementPlannerView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

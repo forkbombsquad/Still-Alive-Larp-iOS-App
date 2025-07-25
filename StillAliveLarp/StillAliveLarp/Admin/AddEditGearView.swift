@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddEditGearView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     let gearToEdit: GearJsonModel?
     let characterName: String
@@ -180,7 +180,7 @@ struct AddEditGearView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

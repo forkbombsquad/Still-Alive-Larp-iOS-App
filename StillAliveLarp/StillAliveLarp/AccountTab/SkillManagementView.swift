@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillManagementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     static func Offline(character: FullCharacterModel) -> SkillManagementView {
         return SkillManagementView(offline: true, allowEdit: false, character: character)
@@ -22,7 +22,7 @@ struct SkillManagementView: View {
     @State var searchText: String = ""
     
     // Online
-    init(_dm: DataManager = DataManager.shared, character: FullCharacterModel, allowEdit: Bool) {
+    init(_dm: OldDataManager = OldDataManager.shared, character: FullCharacterModel, allowEdit: Bool) {
         self._dm = _dm
         self.offline = false
         self.allowEdit = allowEdit
@@ -61,7 +61,7 @@ struct SkillManagementView: View {
                                             runOnMainThread {
                                                 if let fcm = fcm {
                                                     self.character = fcm
-                                                    DataManager.shared.character = fcm
+                                                    OldDataManager.shared.character = fcm
                                                 }
                                                 self.loadingSkills = false
                                             }
@@ -135,7 +135,7 @@ struct SkillManagementView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CharacterPlannerListView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     let player: PlayerModel
     
@@ -65,11 +65,11 @@ struct CharacterPlannerListView: View {
         .onAppear {
             self.loadingText = "Loading Planned Characters..."
             self.loading = true
-            DataManager.shared.player = player
-            DataManager.shared.load([.allCharacters, .plannedCharacters]) {
+            OldDataManager.shared.player = player
+            OldDataManager.shared.load([.allCharacters, .plannedCharacters]) {
                 runOnMainThread {
-                    self.allRegularCharacters = DataManager.shared.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
-                    self.allPlannedCharacters = DataManager.shared.allPlannedCharacters
+                    self.allRegularCharacters = OldDataManager.shared.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
+                    self.allPlannedCharacters = OldDataManager.shared.allPlannedCharacters
                     self.loading = false
                 }
             }
@@ -181,10 +181,10 @@ struct CharacterPlannerListView: View {
     
     private func reload() {
         self.loadingText = "Loading New Planned Character..."
-        DataManager.shared.player = player
-        DataManager.shared.load([.plannedCharacters], forceDownloadIfApplicable: true) {
+        OldDataManager.shared.player = player
+        OldDataManager.shared.load([.plannedCharacters], forceDownloadIfApplicable: true) {
             runOnMainThread {
-                self.allPlannedCharacters = DataManager.shared.allPlannedCharacters
+                self.allPlannedCharacters = OldDataManager.shared.allPlannedCharacters
                 self.loading = false
             }
         }
@@ -192,7 +192,7 @@ struct CharacterPlannerListView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateAnnouncementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var title: String = ""
     @State private var message: String = ""
@@ -79,7 +79,7 @@ struct CreateAnnouncementView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return CreateAnnouncementView(_dm: dm)

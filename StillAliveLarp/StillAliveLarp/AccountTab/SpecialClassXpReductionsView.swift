@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SpecialClassXpReductionsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State var loading: Bool = true
 
@@ -16,7 +16,7 @@ struct SpecialClassXpReductionsView: View {
         VStack(alignment: .center) {
             ScrollView {
                 VStack(alignment: .center) {
-                    Text("Special Class Xp Reductions For\n\(DataManager.shared.charForSelectedPlayer?.fullName ?? "")")
+                    Text("Special Class Xp Reductions For\n\(OldDataManager.shared.charForSelectedPlayer?.fullName ?? "")")
                         .font(.system(size: 32, weight: .bold))
                         .multilineTextAlignment(.center)
                         .frame(alignment: .center)
@@ -26,8 +26,8 @@ struct SpecialClassXpReductionsView: View {
                         ProgressView().padding(.bottom, 8)
                         Text("Loading...")
                     } else {
-                        if !(DataManager.shared.xpReductions ?? []).isEmpty {
-                            ForEach(DataManager.shared.xpReductions ?? []) { xpRed in
+                        if !(OldDataManager.shared.xpReductions ?? []).isEmpty {
+                            ForEach(OldDataManager.shared.xpReductions ?? []) { xpRed in
                                 if let skill = getSkill(xpRed: xpRed) {
                                     KeyValueView(key: skill.name, value: "-\(xpRed.xpReduction) (new cost: \(skill.getModCost(combatMod: 0, professionMod: 0, talentMod: 0, xpReduction: xpRed)))")
                                 }
@@ -46,8 +46,8 @@ struct SpecialClassXpReductionsView: View {
         .background(Color.lightGray)
         .onAppear {
             self.loading = true
-            DataManager.shared.load([.xpReductions], forceDownloadIfApplicable: true) {
-                DataManager.shared.load([.skills]) {
+            OldDataManager.shared.load([.xpReductions], forceDownloadIfApplicable: true) {
+                OldDataManager.shared.load([.skills]) {
                     self.loading = false
                 }
             }
@@ -55,12 +55,12 @@ struct SpecialClassXpReductionsView: View {
     }
 
     func getSkill(xpRed: SpecialClassXpReductionModel) -> FullSkillModel? {
-        return DataManager.shared.skills?.first(where: { $0.id == xpRed.skillId })
+        return OldDataManager.shared.skills?.first(where: { $0.id == xpRed.skillId })
     }
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

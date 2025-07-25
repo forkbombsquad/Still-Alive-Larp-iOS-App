@@ -19,7 +19,7 @@ class SkillManager {
     private var completionBlocks = [((skills: [FullSkillModel]) -> Void)?]()
 
     func getSkillsOffline() -> [FullSkillModel] {
-        LocalDataHandler.shared.getSkills() ?? []
+        OldLocalDataHandler.shared.getSkills() ?? []
     }
 
 
@@ -46,7 +46,7 @@ class SkillManager {
                     }
                     
                     self.skills = fullSkills
-                    LocalDataHandler.shared.storeSkills(self.skills ?? [])
+                    OldLocalDataHandler.shared.storeSkills(self.skills ?? [])
                     self.fetching = false
                     for cb in self.completionBlocks {
                         cb?(self.skills ?? [])

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeTabBarView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     var body: some View {
         TabView {
@@ -35,7 +35,7 @@ struct HomeTabBarView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return HomeTabBarView(_dm: dm)

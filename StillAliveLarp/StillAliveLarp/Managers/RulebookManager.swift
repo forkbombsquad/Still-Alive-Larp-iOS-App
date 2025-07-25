@@ -28,17 +28,17 @@ class RulebookManager {
     private init() {}
 
     func getOfflineVersion() -> Rulebook? {
-        guard let rulebookString = LocalDataHandler.shared.getRulebook() else { return nil }
-        return parseDocAsRulebook(document: try? SwiftSoup.parse(rulebookString), version: LocalDataHandler.shared.getRulebookVersion() ?? "Unknown Version")
+        guard let rulebookString = OldLocalDataHandler.shared.getRulebook() else { return nil }
+        return parseDocAsRulebook(document: try? SwiftSoup.parse(rulebookString), version: OldLocalDataHandler.shared.getRulebookVersion() ?? "Unknown Version")
     }
 
     func getOnlineVersion(callback: @escaping (_ rulebook: Rulebook?) -> Void) {
         // check version
         VersionService.getVersions { versions in
-            let savedRulesVersion = LocalDataHandler.shared.getRulebookVersion()
-            if savedRulesVersion != versions.rulebookVersion || LocalDataHandler.shared.getRulebook() == nil {
+            let savedRulesVersion = OldLocalDataHandler.shared.getRulebookVersion()
+            if savedRulesVersion != versions.rulebookVersion || OldLocalDataHandler.shared.getRulebook() == nil {
                 // Download
-                LocalDataHandler.shared.storeRulebookVersion(versions.rulebookVersion)
+                OldLocalDataHandler.shared.storeRulebookVersion(versions.rulebookVersion)
                 self.downloadPage(version: versions.rulebookVersion) { rulebook in
                     callback(rulebook)
                 } onFailure: {
@@ -224,7 +224,7 @@ class RulebookManager {
         }
         do {
             let html = try String(contentsOf: url)
-            LocalDataHandler.shared.storeRulebook(html)
+            OldLocalDataHandler.shared.storeRulebook(html)
             onSuccess(parseDocAsRulebook(document: try SwiftSoup.parse(html), version: version))
         } catch {
             onFailure()

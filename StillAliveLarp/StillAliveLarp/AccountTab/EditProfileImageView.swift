@@ -12,7 +12,7 @@ struct EditProfileImageView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @State private var loading: Bool = false
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
@@ -36,7 +36,7 @@ struct EditProfileImageView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: imgWidth, height: imgWidth)
-                            if DataManager.shared.loadingProfileImage || loading {
+                            if OldDataManager.shared.loadingProfileImage || loading {
                                 ProgressView()
                                 .tint(.red)
                                 .controlSize(.large)
@@ -47,7 +47,7 @@ struct EditProfileImageView: View {
                             ArrowViewButton(bindingTitle: $selectImageText, loading: $loading) {
                                 showPicker = true
                             }
-                            if DataManager.shared.profileImage != nil || DataManager.shared.loadingProfileImage, let id = DataManager.shared.player?.id {
+                            if OldDataManager.shared.profileImage != nil || OldDataManager.shared.loadingProfileImage, let id = OldDataManager.shared.player?.id {
                                 LoadingButtonView($loading, width: buttonWidth, buttonText: "Delete Profile Image") {
                                     self.loading = true
                                     self.selectImageText = "Deleting Profile Image..."
@@ -56,7 +56,7 @@ struct EditProfileImageView: View {
                                             self.image = UIImage(imageLiteralResourceName: "blank-profile")
                                             AlertManager.shared.showSuccessAlert("Profile Image Deleted!") {}
                                             self.loading = false
-                                            DataManager.shared.profileImage = nil
+                                            OldDataManager.shared.profileImage = nil
                                             self.selectImageText = "Select Image"
                                         }
                                     } failureCase: { error in
@@ -77,14 +77,14 @@ struct EditProfileImageView: View {
         .padding(16)
         .background(Color.lightGray)
         .onAppear {
-            DataManager.shared.load([.profileImage]) {
+            OldDataManager.shared.load([.profileImage]) {
                 runOnMainThread {
-                    self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                    self.loading = DataManager.shared.loadingProfileImage
+                    self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                    self.loading = OldDataManager.shared.loadingProfileImage
                 }
             }
             runOnMainThread {
-                self.loading = DataManager.shared.loadingProfileImage
+                self.loading = OldDataManager.shared.loadingProfileImage
             }
         }
         .sheet(isPresented: $showPicker) {
@@ -107,9 +107,9 @@ struct EditProfileImageView: View {
                         runOnMainThread {
                             self.selectImageText = "Preparing Image For Upload..."
                         }
-                        if DataManager.shared.profileImage == nil || DataManager.shared.profileImage?.playerId != DataManager.shared.player?.id {
+                        if OldDataManager.shared.profileImage == nil || OldDataManager.shared.profileImage?.playerId != OldDataManager.shared.player?.id {
                             
-                            let createModel = ProfileImageCreateModel(playerId: DataManager.shared.player?.id ?? -1, image: bitmap)
+                            let createModel = ProfileImageCreateModel(playerId: OldDataManager.shared.player?.id ?? -1, image: bitmap)
                             
                             runOnMainThread {
                                 self.image = createModel.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
@@ -118,9 +118,9 @@ struct EditProfileImageView: View {
                             
                             ProfileImageService.createProfileImage(createModel) { _ in
                                 
-                                DataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
+                                OldDataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
                                     runOnMainThread {
-                                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage()
+                                        self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage()
                                         self.loading = false
                                         self.displayFinishedMessage()
                                     }
@@ -134,9 +134,9 @@ struct EditProfileImageView: View {
                             }
                             
                         } else {
-                            let prev = DataManager.shared.profileImage!
+                            let prev = OldDataManager.shared.profileImage!
                             
-                            let updatedImage = ProfileImageModel(id: prev.id, playerId: DataManager.shared.player?.id ?? -1, image: bitmap)
+                            let updatedImage = ProfileImageModel(id: prev.id, playerId: OldDataManager.shared.player?.id ?? -1, image: bitmap)
                             
                             runOnMainThread {
                                 self.image = updatedImage.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
@@ -145,9 +145,9 @@ struct EditProfileImageView: View {
                             
                             ProfileImageService.updateProfileImage(updatedImage) { _ in
                                 
-                                DataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
+                                OldDataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
                                     runOnMainThread {
-                                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage()
+                                        self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage()
                                         self.loading = false
                                         self.displayFinishedMessage()
                                     }
@@ -252,7 +252,7 @@ struct PhotoPicker: UIViewControllerRepresentable {
 
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return EditProfileImageView(_dm: dm)

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FeatureFlagManagementView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @Binding var featureFlags: [FeatureFlagModel]
     @State var loading: Bool = false
@@ -117,14 +117,14 @@ struct FeatureFlagManagementView: View {
     }
     
     private func reload() {
-        DataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true) {
+        OldDataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true) {
             self.loading = false
         }
     }
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

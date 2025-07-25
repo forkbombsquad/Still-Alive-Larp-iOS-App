@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var username: String = ""
     @State private var password: String = ""
@@ -25,7 +25,7 @@ struct MainView: View {
         NavigationView {
             VStack {
                 ScrollView {
-                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: DataManager.$shared.actionState) {
+                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: OldDataManager.$shared.actionState) {
                         EmptyView()
                     }
                     Image("StillAliveLogo_Black")
@@ -77,7 +77,7 @@ struct MainView: View {
                                             PlayerService.signInPlayer { player in
                                                 runOnMainThread {
                                                     self.loading = false
-                                                    DataManager.shared.actionState = 1
+                                                    OldDataManager.shared.actionState = 1
                                                     PlayerManager.shared.setPlayer(player)
                                                 }
 
@@ -136,8 +136,8 @@ struct MainView: View {
             .onAppear {
                 self.username = getPrefilledUser()
                 self.password = getPrefilledPass()
-                self.player = LocalDataHandler.shared.getPlayer()
-                self.character = LocalDataHandler.shared.getCharacter()
+                self.player = OldLocalDataHandler.shared.getPlayer()
+                self.character = OldLocalDataHandler.shared.getCharacter()
             }
         }.navigationViewStyle(.stack)
     }
@@ -160,7 +160,7 @@ struct MainView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return MainView(_dm: dm)

@@ -1,5 +1,5 @@
 //
-//  DataManager.swift
+//  OldDataManager.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 5/30/23.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-class DataManager: ObservableObject {
+class OldDataManager: ObservableObject {
 
     enum DataManagerType {
         case player, character, announcements, events, awards, intrigue, skills, allPlayers, allCharacters, charForSelectedPlayer, contactRequests, eventAttendees, xpReductions, eventPreregs, selectedCharXpReductions, intrigueForSelectedEvent, selectedCharacterGear, rulebook, featureFlags, profileImage, plannedCharacters, npcs, researchProjects, eventAttendeesForSelectedEvent, skillCategories
     }
 
-    @ObservedObject static var shared = DataManager()
+    @ObservedObject static var shared = OldDataManager()
 
     static func forceReset() {
         runOnMainThread {
@@ -566,7 +566,7 @@ class DataManager: ObservableObject {
                                 self.finishedRequest(currentCountIndex, "Selected Char Gear Success")
                                 // Store gear in local data
                                 if self.player != nil && self.selectedChar?.playerId == self.player?.id {
-                                    LocalDataHandler.shared.storeGear(gearListModel)
+                                    OldLocalDataHandler.shared.storeGear(gearListModel)
                                 }
                             }
                         } failureCase: { error in
@@ -732,7 +732,7 @@ class DataManager: ObservableObject {
                                 self.skillCategories = skillCategories.results
                                 self.loadingSkillCategories = false
                                 self.finishedRequest(currentCountIndex, "Skill Categories Success")
-                                LocalDataHandler.shared.storeSkillCategories(skillCategories)
+                                OldLocalDataHandler.shared.storeSkillCategories(skillCategories)
                             }
                         } failureCase: { error in
                             runOnMainThread {
@@ -761,7 +761,7 @@ class DataManager: ObservableObject {
                 }
                 counter += 1
                 if counter == self.npcs.count {
-                    LocalDataHandler.shared.storeNPCs(fullNPCs)
+                    OldLocalDataHandler.shared.storeNPCs(fullNPCs)
                 }
             }
         }

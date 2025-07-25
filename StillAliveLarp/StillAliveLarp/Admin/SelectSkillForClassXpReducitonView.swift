@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SelectSkillForClassXpReducitonView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let character: CharacterModel
     @State var loadingSkills: Bool = true
@@ -92,7 +92,7 @@ struct SelectSkillForClassXpReducitonView: View {
 }
 
 struct XpReductionSkillCellView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     let skill: FullSkillModel
     @Binding var loadingXpReduction: Bool
@@ -140,7 +140,7 @@ struct XpReductionSkillCellView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

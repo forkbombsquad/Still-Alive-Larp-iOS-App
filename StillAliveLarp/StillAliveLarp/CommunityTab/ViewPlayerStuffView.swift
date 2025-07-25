@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ViewPlayerStuffView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     private let playerModel: PlayerModel
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
@@ -87,19 +87,19 @@ struct ViewPlayerStuffView: View {
                 CharacterManager.shared.getActiveCharacterForOtherPlayer(playerModel.id) { character in
                     runOnMainThread {
                         self.character = character
-                        DataManager.shared.load([.skills, .skillCategories]) {
+                        OldDataManager.shared.load([.skills, .skillCategories]) {
                             runOnMainThread {
-                                self.skills = DataManager.shared.skills ?? []
-                                self.skillCategories = DataManager.shared.skillCategories
+                                self.skills = OldDataManager.shared.skills ?? []
+                                self.skillCategories = OldDataManager.shared.skillCategories
                                 self.loadingSkills = false
                                 self.loadingCharacter = false
                             }
                         }
-                        DataManager.shared.selectedPlayer = playerModel
-                        DataManager.shared.charForSelectedPlayer = character
-                        DataManager.shared.load([.profileImage]) {
+                        OldDataManager.shared.selectedPlayer = playerModel
+                        OldDataManager.shared.charForSelectedPlayer = character
+                        OldDataManager.shared.load([.profileImage]) {
                             runOnMainThread {
-                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
                                 self.loadingProfileImage = false
                             }
                         }
@@ -109,10 +109,10 @@ struct ViewPlayerStuffView: View {
                         self.character = nil
                         self.loadingCharacter = false
                         self.loadingSkills = false
-                        DataManager.shared.selectedPlayer = playerModel
-                        DataManager.shared.load([.profileImage]) {
+                        OldDataManager.shared.selectedPlayer = playerModel
+                        OldDataManager.shared.load([.profileImage]) {
                             runOnMainThread {
-                                self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
                                 self.loadingProfileImage = false
                             }
                         }
@@ -124,7 +124,7 @@ struct ViewPlayerStuffView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()

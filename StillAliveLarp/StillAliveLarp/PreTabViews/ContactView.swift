@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var fullName: String = ""
     @State private var emailAddress: String = ""
@@ -98,7 +98,7 @@ struct ContactView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return ContactView(_dm: dm)

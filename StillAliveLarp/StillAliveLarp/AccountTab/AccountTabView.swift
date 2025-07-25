@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountTabView: View {
 
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
 
     @State private var loading: Bool = false
     @State private var loadingProfileImage: Bool = false
@@ -108,8 +108,8 @@ struct AccountTabView: View {
                             }
                             LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Sign Out") {
                                 runOnMainThread {
-                                    DataManager.forceReset()
-                                    DataManager.shared.popToRoot()
+                                    OldDataManager.forceReset()
+                                    OldDataManager.shared.popToRoot()
                                 }
                             }
                         }
@@ -128,24 +128,24 @@ struct AccountTabView: View {
             self.loading = true
             self.loadingProfileImage = true
             self.loadingXpReductions = true
-            DataManager.shared.load([.player, .character, .skills, .skillCategories], forceDownloadIfApplicable: force) {
-                DataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
+            OldDataManager.shared.load([.player, .character, .skills, .skillCategories], forceDownloadIfApplicable: force) {
+                OldDataManager.shared.setSelectedPlayerAndCharFromPlayerAndChar()
                 runOnMainThread {
-                    self.player = DataManager.shared.player
-                    self.character = DataManager.shared.character
-                    self.skills = DataManager.shared.skills ?? []
-                    self.skillCategories = DataManager.shared.skillCategories
+                    self.player = OldDataManager.shared.player
+                    self.character = OldDataManager.shared.character
+                    self.skills = OldDataManager.shared.skills ?? []
+                    self.skillCategories = OldDataManager.shared.skillCategories
                     self.loading = false
-                    DataManager.shared.load([.xpReductions]) {
+                    OldDataManager.shared.load([.xpReductions]) {
                         runOnMainThread {
-                            self.xpReductions = DataManager.shared.xpReductions ?? []
+                            self.xpReductions = OldDataManager.shared.xpReductions ?? []
                             self.loadingXpReductions = false
                         }
                     }
-                    DataManager.shared.profileImage = nil
-                    DataManager.shared.load([.profileImage], forceDownloadIfApplicable: force) {
+                    OldDataManager.shared.profileImage = nil
+                    OldDataManager.shared.load([.profileImage], forceDownloadIfApplicable: force) {
                         runOnMainThread {
-                            self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                            self.image = OldDataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
                             self.loadingProfileImage = false
                         }
                     }
@@ -156,7 +156,7 @@ struct AccountTabView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     return AccountTabView(_dm: dm)

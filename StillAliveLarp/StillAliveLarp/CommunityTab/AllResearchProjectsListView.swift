@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllResearchProjectsListView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var _dm = DataManager.shared
+    @ObservedObject var _dm = OldDataManager.shared
     
     @State var researchProjects: [ResearchProjectModel]
     @State var loading = false
@@ -139,14 +139,14 @@ struct AllResearchProjectsListView: View {
         runOnMainThread {
             self.researchProjects.removeAll(where: { $0.id == rp.id })
             self.researchProjects.append(rp)
-            DataManager.shared.researchProjects = self.researchProjects
+            OldDataManager.shared.researchProjects = self.researchProjects
             self.loading = false
         }
     }
 }
 
 #Preview {
-    let dm = DataManager.shared
+    let dm = OldDataManager.shared
     dm.debugMode = true
     dm.loadMockData()
     let md = getMockData()
