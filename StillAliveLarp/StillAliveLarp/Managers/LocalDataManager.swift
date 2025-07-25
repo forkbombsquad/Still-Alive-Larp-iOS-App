@@ -9,6 +9,11 @@ import Foundation
 
 class LocalDataManager {
     
+    struct CollectionCompressorObject<C>: CustomCodeable, Identifiable where C: Collection & Codable, C.Element: Codable {
+        var id = UUID()
+        let collection: C
+    }
+    
     private typealias DMT = DataManager.DataManagerType
     
     private class LDMKeys {
@@ -41,6 +46,10 @@ class LocalDataManager {
     }
     
     private init() {}
+    
+    //
+    // MARK: - Utils and Generics
+    //
     
     private func getUnPUserDefaultsKey(_ key: String) -> String {
         return LDMKeys.unpUserDefaultsKey + "_\(key)"
@@ -80,15 +89,82 @@ class LocalDataManager {
         store(obj, key: key.getLocalDataKey())
     }
     
-    private func get<T: Decodable>(_ key: String) -> T? {
+    private func store<C>(_ obj: C, key: String) where C: Collection & Codable, C.Element: Codable {
+        let collectionCompressor = CollectionCompressorObject(collection: obj)
+        store(collectionCompressor, key: key)
+    }
+    
+    private func store<C>(_ obj: C, key: DMT) where C: Collection & Codable, C.Element: Codable {
+        store(obj, key: key.getLocalDataKey())
+    }
+    
+    private func get<T: CustomCodeable>(_ key: String) -> T? {
         guard let compressed = UserDefaults.standard.data(forKey: getUserDefaultsKey(key)) else { return nil }
         guard let json = compressed.decompress() else { return nil }
         guard let obj: T = json.toJsonObject(as: T.self) else { return nil }
         return obj
     }
     
-    private func get<T: Decodable>(_ key: DMT) -> T? {
+    private func get<T: CustomCodeable>(_ key: DMT) -> T? {
         return get(key.getLocalDataKey())
+    }
+    
+    private func get<C>(_ key: String) -> C? where C: Collection & Codable, C.Element: CustomCodeable {
+        guard let compressed = UserDefaults.standard.data(forKey: getUserDefaultsKey(key)) else { return nil }
+        guard let json = compressed.decompress() else { return nil }
+        guard let wrapper: CollectionCompressorObject<C> = json.toJsonObject() else { return nil }
+        return wrapper.collection
+    }
+    
+    private func get<C>(_ key: DMT) -> C? where C: Collection & Codable, C.Element: CustomCodeable {
+        return get(key.getLocalDataKey())
+    }
+    
+    //
+    // MARK: - storing objects
+    //
+    
+    private func storeUpdateTracker(_ updateTracker: UpdateTrackerModel) {
+        store(updateTracker, key: DMT.updateTracker)
+    }
+    
+    private func getUpdateTracker() -> UpdateTrackerModel? {
+        return get(DMT.updateTracker)
+    }
+    
+    private func storeAnnouncements(_ announcements: [AnnouncementModel]) {
+        store(announcements, key: DMT.announcements)
+    }
+    
+    private func getAnnouncements() -> [AnnouncementModel] {
+        return get(DMT.announcements) ?? []
+    }
+    
+    private func storeAwards(awards: [AwardModel]) {
+        var playerAwards: [Int : [AwardModel]] = [:]
+        var charAwards: [Int : [AwardModel]] = [:]
+        
+        for award in awards {
+            if let charId = award.characterId, charId != -1 {
+                charAwards[charId, default: []].append(award)
+            } else {
+                playerAwards[award.playerId, default: []].append(award)
+            }
+        }
+        let ams = LDAwardModels(playerAwards: playerAwards, characterAwards: charAwards)
+        store(ams, key: DMT.awards)
+    }
+    
+    private func getAwards() -> LDAwardModels {
+        return get(DMT.awards) ?? LDAwardModels(playerAwards: [:], characterAwards: [:])
+    }
+    
+    private func storeCharacters(_ characters: [CharacterModel]) {
+        store(characters, key: DMT.characters)
+    }
+    
+    private func getCharacters() -> [CharacterModel] {
+        return get(DMT.characters) ?? []
     }
     
 }

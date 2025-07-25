@@ -38,6 +38,7 @@
 		B22324B52E33C7170087786E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B42E33C7110087786E /* DataManager.swift */; };
 		B22324B72E33DFC30087786E /* UpdateTrackerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B62E33DFB90087786E /* UpdateTrackerService.swift */; };
 		B22324B92E33E6C30087786E /* LocalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B82E33E6BD0087786E /* LocalDataManager.swift */; };
+		B22324BD2E3417330087786E /* LocalDataManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -230,6 +231,7 @@
 		B22324B42E33C7110087786E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		B22324B62E33DFB90087786E /* UpdateTrackerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTrackerService.swift; sourceTree = "<group>"; };
 		B22324B82E33E6BD0087786E /* LocalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManager.swift; sourceTree = "<group>"; };
+		B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManagerModels.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -609,6 +611,7 @@
 		B293AEF629155D5C00D2447C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */,
 				B22324B22E33C5C40087786E /* UpdateTrackerModel.swift */,
 				B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */,
 				B293AEF729155D7000D2447C /* OAuthToken.swift */,
@@ -1040,6 +1043,7 @@
 				B2F9838C29F18F4500512839 /* GenerateCheckInBarcodeView.swift in Sources */,
 				B2F9836A29F0366900512839 /* ApproveBioView.swift in Sources */,
 				B22224A1291EA70F003BCA0A /* CharacterModel.swift in Sources */,
+				B22324BD2E3417330087786E /* LocalDataManagerModels.swift in Sources */,
 				B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */,
 				B23552BE29E9DB8E00183748 /* ViewExtensions.swift in Sources */,
 				B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */,
