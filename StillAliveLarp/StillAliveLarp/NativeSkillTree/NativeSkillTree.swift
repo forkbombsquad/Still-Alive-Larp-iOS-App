@@ -36,7 +36,7 @@ struct NativeSkillTree: View {
 
     @State var trueGrid: [GridSkill]
     @State var player: PlayerModel?
-    @State var character: FullCharacterModel?
+    @State var character: OldFullCharacterModel?
     @State var xpReductions: [SpecialClassXpReductionModel]
     @State var availableSKills: [CharacterModifiedSkillModel] = []
     @State var gridCategories: [SkillGridCategory] = []
@@ -53,7 +53,7 @@ struct NativeSkillTree: View {
         self._gridCategories = globalState(calcGridCategories())
     }
     
-    init(skillGrid: SkillGrid, character: FullCharacterModel) {
+    init(skillGrid: SkillGrid, character: OldFullCharacterModel) {
         self.skillGrid = skillGrid
         self._trueGrid = globalState(skillGrid.trueGrid)
         self.personal = true
@@ -65,7 +65,7 @@ struct NativeSkillTree: View {
         self._gridCategories = globalState(calcGridCategories())
     }
     
-    init(skillGrid: SkillGrid, player: PlayerModel, character: FullCharacterModel, xpReductions: [SpecialClassXpReductionModel]) {
+    init(skillGrid: SkillGrid, player: PlayerModel, character: OldFullCharacterModel, xpReductions: [SpecialClassXpReductionModel]) {
         self.skillGrid = skillGrid
         self._trueGrid = globalState(skillGrid.trueGrid)
         self.personal = true

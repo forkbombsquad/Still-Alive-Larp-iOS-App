@@ -14,7 +14,7 @@ struct AddPlannedSkillView: View {
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    @State var character: FullCharacterModel
+    @State var character: OldFullCharacterModel
     @State var charSkills: [CharacterSkillModel] = []
     @State var skills: [CharacterModifiedSkillModel] = []
     @State var loading: Bool = false
@@ -265,7 +265,7 @@ struct AddPlannedSkillView: View {
         }
     }
 
-    func getAvailableSkills(_ allSkills: [FullSkillModel]) -> [CharacterModifiedSkillModel] {
+    func getAvailableSkills(_ allSkills: [OldFullSkillModel]) -> [CharacterModifiedSkillModel] {
         let charSkills = character.skills
         // Remove all skills the character already has
         var newSkillList = allSkills.filter { skillToKeep in

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO rename this to XpReductionModel
 struct SpecialClassXpReductionModel: CustomCodeable, Identifiable {
     let id: Int
     let characterId: Int

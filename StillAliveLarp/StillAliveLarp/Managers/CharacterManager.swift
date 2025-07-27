@@ -15,16 +15,16 @@ class CharacterManager {
 
     static let shared = CharacterManager()
 
-    private var character: FullCharacterModel?
+    private var character: OldFullCharacterModel?
     private var fetching = false
 
-    private var completionBlocks = [((character: FullCharacterModel?) -> Void)?]()
+    private var completionBlocks = [((character: OldFullCharacterModel?) -> Void)?]()
 
     private init() {}
     
-    func fetchFullCharacter(characterId: Int, callback: @escaping (FullCharacterModel?) -> Void) {
+    func fetchFullCharacter(characterId: Int, callback: @escaping (OldFullCharacterModel?) -> Void) {
         CharacterService.getCharacter(characterId) { characterModel in
-            var character = FullCharacterModel(characterModel)
+            var character = OldFullCharacterModel(characterModel)
             SkillManager.shared.getSkills() { skills in
                 CharacterSkillService.getAllSkillsForChar(character.id, onSuccess: { charSkills in
                     for cs in charSkills.charSkills {
@@ -43,7 +43,7 @@ class CharacterManager {
 
     }
 
-    func getActiveCharacterForOtherPlayer(_ playerId: Int, completion: @escaping (_ character: FullCharacterModel?) -> Void, failureCase: @escaping FailureCase) {
+    func getActiveCharacterForOtherPlayer(_ playerId: Int, completion: @escaping (_ character: OldFullCharacterModel?) -> Void, failureCase: @escaping FailureCase) {
         CharacterService.getAllPlayerCharacters(playerId, onSuccess: { characterListModel in
             guard let aliveCharacter = characterListModel.characters.first(where: { $0.isAlive.boolValue ?? false }) else {
                 completion(nil)
@@ -51,7 +51,7 @@ class CharacterManager {
             }
 
             CharacterService.getCharacter(aliveCharacter.id, onSuccess: { characterModel in
-                var character = FullCharacterModel(characterModel)
+                var character = OldFullCharacterModel(characterModel)
 
                 SkillManager.shared.getSkills() { skills in
                     CharacterSkillService.getAllSkillsForChar(character.id, onSuccess: { charSkills in
@@ -68,7 +68,7 @@ class CharacterManager {
         }, failureCase: failureCase)
     }
 
-    func fetchActiveCharacter(overrideLocal: Bool = false, _ completion: ((_ character: FullCharacterModel?) -> Void)? = nil) {
+    func fetchActiveCharacter(overrideLocal: Bool = false, _ completion: ((_ character: OldFullCharacterModel?) -> Void)? = nil) {
         if !overrideLocal, let character = character {
             completion?(character)
         } else {
@@ -90,7 +90,7 @@ class CharacterManager {
                 }
                 CharacterService.getCharacter(aliveCharacter.id) { characterModel in
 
-                    self.character = FullCharacterModel(characterModel)
+                    self.character = OldFullCharacterModel(characterModel)
 
                     SkillManager.shared.getSkills() { skills in
                         CharacterSkillService.getAllSkillsForChar(self.character?.id ?? 0) { charSkills in
@@ -135,7 +135,7 @@ class CharacterManager {
     }
 
     func newCharacterCreated(_ characterModel: CharacterModel) {
-        self.character = FullCharacterModel(characterModel)
+        self.character = OldFullCharacterModel(characterModel)
         fetching = true
         SkillManager.shared.getSkills() { skills in
             CharacterSkillService.getAllSkillsForChar(self.character?.id ?? 0) { charSkills in

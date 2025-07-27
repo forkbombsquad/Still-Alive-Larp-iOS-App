@@ -11,7 +11,7 @@ struct SkillManagementPlannerView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
     let character: CharacterModel
-    @State var fullCharacterModel: FullCharacterModel? = nil
+    @State var fullCharacterModel: OldFullCharacterModel? = nil
     @State var loading: Bool = false
     @State var searchText: String = ""
     
@@ -88,8 +88,8 @@ struct SkillManagementPlannerView: View {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills(_ skills: [FullSkillModel]) -> [FullSkillModel] {
-        var filteredSkills = [FullSkillModel]()
+    func getFilteredSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
+        var filteredSkills = [OldFullSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -99,7 +99,7 @@ struct SkillManagementPlannerView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [FullSkillModel]) -> [FullSkillModel] {
+    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
         return skills.sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }

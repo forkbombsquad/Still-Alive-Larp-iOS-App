@@ -54,7 +54,7 @@ struct SpecialClassXpReductionsView: View {
         }
     }
 
-    func getSkill(xpRed: SpecialClassXpReductionModel) -> FullSkillModel? {
+    func getSkill(xpRed: SpecialClassXpReductionModel) -> OldFullSkillModel? {
         return OldDataManager.shared.skills?.first(where: { $0.id == xpRed.skillId })
     }
 }

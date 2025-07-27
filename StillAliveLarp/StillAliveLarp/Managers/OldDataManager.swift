@@ -142,7 +142,7 @@ class OldDataManager: ObservableObject {
     @Published var player: PlayerModel? = nil
     @Published var loadingPlayer: Bool = true
 
-    @Published var character: FullCharacterModel? = nil
+    @Published var character: OldFullCharacterModel? = nil
     @Published var loadingCharacter = true
 
     @Published var events: [EventModel]? = nil
@@ -155,7 +155,7 @@ class OldDataManager: ObservableObject {
     @Published var intrigue: IntrigueModel? = nil
     @Published var loadingIntrigue: Bool = true
 
-    @Published var skills: [FullSkillModel]? = nil
+    @Published var skills: [OldFullSkillModel]? = nil
     @Published var loadingSkills: Bool = true
 
     @Published var allPlayers: [PlayerModel]? = nil
@@ -164,7 +164,7 @@ class OldDataManager: ObservableObject {
     @Published var allCharacters: [CharacterModel]? = nil
     @Published var loadingAllCharacters: Bool = true
 
-    @Published var charForSelectedPlayer: FullCharacterModel? = nil
+    @Published var charForSelectedPlayer: OldFullCharacterModel? = nil
     @Published var loadingCharForSelectedPlayer: Bool = true
 
     @Published var contactRequests: [ContactRequestModel]? = nil
@@ -752,7 +752,7 @@ class OldDataManager: ObservableObject {
     }
     
     func storeNPCs() {
-        var fullNPCs: [FullCharacterModel] = []
+        var fullNPCs: [OldFullCharacterModel] = []
         var counter = 0
         self.npcs.forEach { npc in
             CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fullChar in

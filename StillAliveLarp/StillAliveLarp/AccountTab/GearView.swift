@@ -11,7 +11,7 @@ struct GearView: View {
     @ObservedObject var _dm = OldDataManager.shared
     @Environment(\.presentationMode) var presentationMode
     
-    static func Offline(_ character: FullCharacterModel, gear: GearModel) -> GearView {
+    static func Offline(_ character: OldFullCharacterModel, gear: GearModel) -> GearView {
         return GearView(character: character.baseModel, gear: gear, offline: true, allowEdit: false)
     }
 

@@ -14,7 +14,7 @@ enum PurchaseState {
 struct CanvasSkillCell: View {
     
     let expanded: Bool
-    let skill: FullSkillModel
+    let skill: OldFullSkillModel
     let allowPurchase: Bool
     let purchaseState: PurchaseState
     let loadingPurchase: Bool
@@ -279,7 +279,7 @@ struct CanvasSkillCell: View {
 }
 
 struct SkillCellMeasurer: View {
-    let skill: FullSkillModel
+    let skill: OldFullSkillModel
 
     let expanded: Bool
     let allowPurchase: Bool

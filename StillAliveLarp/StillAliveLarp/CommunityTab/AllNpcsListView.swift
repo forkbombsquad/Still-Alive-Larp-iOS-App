@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllNpcsListView: View {
     
-    static func Offline(npcs: [FullCharacterModel], skills: [FullSkillModel]) -> AllNpcsListView {
+    static func Offline(npcs: [OldFullCharacterModel], skills: [OldFullSkillModel]) -> AllNpcsListView {
         return AllNpcsListView(fullCharacterModels: npcs, skills: skills, allowEdit: false)
     }
     
@@ -19,10 +19,10 @@ struct AllNpcsListView: View {
     let allowEdit: Bool
     
     @State var npcs: [CharacterModel] = []
-    @State var fullNpcModelsOffline: [FullCharacterModel] = []
-    @State var offlineSkills: [FullSkillModel] = []
+    @State var fullNpcModelsOffline: [OldFullCharacterModel] = []
+    @State var offlineSkills: [OldFullSkillModel] = []
     
-    private init(_dm: OldDataManager = OldDataManager.shared, fullCharacterModels: [FullCharacterModel], skills: [FullSkillModel], allowEdit: Bool) {
+    private init(_dm: OldDataManager = OldDataManager.shared, fullCharacterModels: [OldFullCharacterModel], skills: [OldFullSkillModel], allowEdit: Bool) {
         self._dm = _dm
         self.offline = true
         self.allowEdit = allowEdit

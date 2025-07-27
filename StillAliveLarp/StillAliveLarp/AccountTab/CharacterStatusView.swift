@@ -10,7 +10,7 @@ import SwiftUI
 struct CharacterStatusView: View {
     @ObservedObject var _dm = OldDataManager.shared
     
-    static func Offline(character: FullCharacterModel) -> CharacterStatusView {
+    static func Offline(character: OldFullCharacterModel) -> CharacterStatusView {
         return CharacterStatusView(offline: true, character: character)
     }
     
@@ -19,13 +19,13 @@ struct CharacterStatusView: View {
         self._character = globalState(OldDataManager.shared.charForSelectedPlayer)
     }
     
-    private init (offline: Bool, character: FullCharacterModel?) {
+    private init (offline: Bool, character: OldFullCharacterModel?) {
         self.offline = offline
         self._character = globalState(character)
     }
     
     let offline: Bool
-    @State var character: FullCharacterModel? = nil
+    @State var character: OldFullCharacterModel? = nil
 
     var body: some View {
         VStack(alignment: .center) {
@@ -62,7 +62,7 @@ struct CharacterStatusView: View {
 struct CharacterBulletsSubView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
-    let character: FullCharacterModel
+    let character: OldFullCharacterModel
 
     var body: some View {
         VStack {
@@ -79,7 +79,7 @@ struct CharacterBulletsSubView: View {
 struct CharacterMaterialsSubView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
-    let character: FullCharacterModel
+    let character: OldFullCharacterModel
 
     var body: some View {
         VStack {
@@ -98,7 +98,7 @@ struct CharacterMaterialsSubView: View {
 struct CharacterSkillAndArmorSubView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
-    let character: FullCharacterModel
+    let character: OldFullCharacterModel
 
     var body: some View {
         VStack {

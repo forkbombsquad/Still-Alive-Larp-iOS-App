@@ -13,17 +13,17 @@ class SkillManager {
 
     private init() {}
 
-    private var skills: [FullSkillModel]?
+    private var skills: [OldFullSkillModel]?
     private var fetching = false
 
-    private var completionBlocks = [((skills: [FullSkillModel]) -> Void)?]()
+    private var completionBlocks = [((skills: [OldFullSkillModel]) -> Void)?]()
 
-    func getSkillsOffline() -> [FullSkillModel] {
+    func getSkillsOffline() -> [OldFullSkillModel] {
         OldLocalDataHandler.shared.getSkills() ?? []
     }
 
 
-    func getSkills(overrideLocal: Bool = false, _ completion: ((_ skills: [FullSkillModel]) -> Void)? = nil) {
+    func getSkills(overrideLocal: Bool = false, _ completion: ((_ skills: [OldFullSkillModel]) -> Void)? = nil) {
         if !overrideLocal, let skills = skills {
             completion?(skills)
         } else {
@@ -31,9 +31,9 @@ class SkillManager {
             guard !fetching else { return }
             fetching = true
             SkillService.getAllSkills { skillListModel in
-                var fullSkills: [FullSkillModel] = []
+                var fullSkills: [OldFullSkillModel] = []
                 for s in skillListModel.results {
-                    fullSkills.append(FullSkillModel(s))
+                    fullSkills.append(OldFullSkillModel(s))
                 }
                 SkillPrereqService.getAllSkillPrereqs { skillPrereqListModel in
                     let prereqs = skillPrereqListModel.skillPrereqs

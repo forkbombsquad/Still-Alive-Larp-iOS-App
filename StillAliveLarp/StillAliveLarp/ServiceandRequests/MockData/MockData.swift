@@ -63,11 +63,11 @@ extension MockData {
         return characterListFullModel.characters.first(where: { $0.playerId == playerId } )!
     }
     
-    func fullCharacters() -> [FullCharacterModel] {
-        var fcs = [FullCharacterModel]()
+    func fullCharacters() -> [OldFullCharacterModel] {
+        var fcs = [OldFullCharacterModel]()
         let fs = fullSkills()
         for character in characterListFullModel.characters {
-            var fc = FullCharacterModel(character)
+            var fc = OldFullCharacterModel(character)
             let csl = characterSkillList.charSkills
             for charSkill in csl.filter({ $0.characterId == character.id }) {
                 guard let skill = fs.first(where: { $0.id == charSkill.skillId }) else { continue }
@@ -86,10 +86,10 @@ extension MockData {
         return skills.results.first(where: { $0.id == id} )!
     }
     
-    func fullSkills() -> [FullSkillModel] {
-        var fs = [FullSkillModel]()
+    func fullSkills() -> [OldFullSkillModel] {
+        var fs = [OldFullSkillModel]()
         for skill in skills.results {
-            fs.append(FullSkillModel(skill))
+            fs.append(OldFullSkillModel(skill))
         }
         for (index, skill) in fs.enumerated() {
             for prereq in prereqs.skillPrereqs.filter({ $0.baseSkillId == skill.id }) {

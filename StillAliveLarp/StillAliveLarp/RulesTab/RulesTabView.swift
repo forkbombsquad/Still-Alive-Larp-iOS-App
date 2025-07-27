@@ -11,7 +11,7 @@ struct RulesTabView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
     @State var loadingSkills: Bool = true
-    @State var allSkills = [FullSkillModel]()
+    @State var allSkills = [OldFullSkillModel]()
     @State var skillCategories = [SkillCategoryModel]()
     
     let skillTreeUrl = URL(string: Constants.urls.skillTreeImage)!

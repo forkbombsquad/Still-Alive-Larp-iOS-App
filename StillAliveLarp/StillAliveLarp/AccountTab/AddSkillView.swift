@@ -160,7 +160,7 @@ struct AddSkillView: View {
         }
     }
 
-    func getAvailableSkills(_ allSkills: [FullSkillModel]) -> [CharacterModifiedSkillModel] {
+    func getAvailableSkills(_ allSkills: [OldFullSkillModel]) -> [CharacterModifiedSkillModel] {
         let charSkills = OldDataManager.shared.character?.skills ?? []
         // Remove all skills the character already has
         var newSkillList = allSkills.filter { skillToKeep in

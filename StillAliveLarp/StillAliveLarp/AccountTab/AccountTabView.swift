@@ -15,8 +15,8 @@ struct AccountTabView: View {
     @State private var loadingProfileImage: Bool = false
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
     @State private var player: PlayerModel? = nil
-    @State private var character: FullCharacterModel? = nil
-    @State private var skills: [FullSkillModel] = []
+    @State private var character: OldFullCharacterModel? = nil
+    @State private var skills: [OldFullSkillModel] = []
     @State private var skillCategories: [SkillCategoryModel] = []
     @State private var xpReductions: [SpecialClassXpReductionModel] = []
     @State private var loadingXpReductions = false

@@ -19,7 +19,7 @@ struct ManageNPCView: View {
     @State var infection = ""
     @State var isAlive = true
     
-    @State var fullChar: FullCharacterModel? = nil
+    @State var fullChar: OldFullCharacterModel? = nil
     
     var body: some View {
         VStack {

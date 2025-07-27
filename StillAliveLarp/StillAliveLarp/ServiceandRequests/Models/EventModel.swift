@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct FullEventModel: CustomCodeable, Identifiable {
+    let id: Int
+    // TODO
+}
+
 struct EventModel: CustomCodeable, Identifiable {
     let id: Int
     let title: String

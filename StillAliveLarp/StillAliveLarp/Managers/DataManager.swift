@@ -209,11 +209,9 @@ class DataManager: ObservableObject {
     //
     
     @Published var skills: [FullSkillModel] = []
-    // TODO
-//    @Published var events: [FullEventModel] = []
-    @Published var characters: [FullCharacterModel] = []
-    // TODO
-//    @Published var players: [FullPlayerModel] = []
+    @Published var events: [FullEventModel] = []
+    @Published var characters: [OldFullCharacterModel] = []
+    @Published var players: [FullPlayerModel] = []
     @Published var rulebook: Rulebook? = nil
     @Published var treatingWounds: UIImage? = nil
     
@@ -221,7 +219,7 @@ class DataManager: ObservableObject {
     // MARK: - Editable In Place Variables
     //
     
-    @Published var characterToEdit: FullCharacterModel? = nil
+    @Published var characterToEdit: OldFullCharacterModel? = nil
     @Published var gearToEdit: GearJsonModel? = nil
     // TODO
 //    @Published var fortificationToEdit: CampFortification? = nil

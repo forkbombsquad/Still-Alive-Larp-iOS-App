@@ -15,6 +15,22 @@ extension Array {
     
 }
 
+extension Array where Element: Equatable {
+    func doesNotContain(_ element: Element) -> Bool {
+        return !self.contains(element)
+    }
+    
+    func doesNotContainAnyOf(_ elements: [Element]) -> Bool {
+        for e in elements {
+            if (self.contains(e)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+
+
 extension Array where Element == PlayerModel {
 
     var alphabetized: [PlayerModel] {
@@ -23,9 +39,9 @@ extension Array where Element == PlayerModel {
 
 }
 
-extension Array where Element == FullCharacterModel {
+extension Array where Element == OldFullCharacterModel {
 
-    var alphabetized: [FullCharacterModel] {
+    var alphabetized: [OldFullCharacterModel] {
         return self.sorted { $0.fullName < $1.fullName }
     }
 

@@ -10,19 +10,19 @@ import SwiftUI
 struct SkillManagementView: View {
     @ObservedObject var _dm = OldDataManager.shared
     
-    static func Offline(character: FullCharacterModel) -> SkillManagementView {
+    static func Offline(character: OldFullCharacterModel) -> SkillManagementView {
         return SkillManagementView(offline: true, allowEdit: false, character: character)
     }
 
     let offline: Bool
     let allowEdit: Bool
-    @State var character: FullCharacterModel? = nil
-    let skills: [FullSkillModel]
+    @State var character: OldFullCharacterModel? = nil
+    let skills: [OldFullSkillModel]
     @State var loadingSkills: Bool = false
     @State var searchText: String = ""
     
     // Online
-    init(_dm: OldDataManager = OldDataManager.shared, character: FullCharacterModel, allowEdit: Bool) {
+    init(_dm: OldDataManager = OldDataManager.shared, character: OldFullCharacterModel, allowEdit: Bool) {
         self._dm = _dm
         self.offline = false
         self.allowEdit = allowEdit
@@ -30,7 +30,7 @@ struct SkillManagementView: View {
         self.skills = character.skills
     }
     
-    private init (offline: Bool, allowEdit: Bool, character: FullCharacterModel) {
+    private init (offline: Bool, allowEdit: Bool, character: OldFullCharacterModel) {
         self.offline = offline
         self.allowEdit = allowEdit
         self._character = globalState(character)
@@ -115,8 +115,8 @@ struct SkillManagementView: View {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills() -> [FullSkillModel] {
-        var filteredSkills = [FullSkillModel]()
+    func getFilteredSkills() -> [OldFullSkillModel] {
+        var filteredSkills = [OldFullSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -126,7 +126,7 @@ struct SkillManagementView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [FullSkillModel]) -> [FullSkillModel] {
+    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
         return skills.sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }

@@ -8,10 +8,16 @@
 import Foundation
 
 struct FullCharacterListModel: CustomCodeable {
-    let characters: [FullCharacterModel]
+    let characters: [OldFullCharacterModel]
 }
 
-struct FullCharacterModel: CustomCodeable {
+struct FullCharacterModel: CustomCodeable, Identifiable {
+    let id: Int
+    // TODO
+}
+
+struct OldFullCharacterModel: CustomCodeable {
+    // TODO get rid of this
     let id: Int
     let fullName: String
     let startDate: String
@@ -35,9 +41,9 @@ struct FullCharacterModel: CustomCodeable {
     let mysteriousStrangerUses: String
     let playerId: Int
     let characterTypeId: Int
-    var skills: [FullSkillModel]
+    var skills: [OldFullSkillModel]
 
-    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, characterTypeId: Int, skills: [FullSkillModel]) {
+    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, characterTypeId: Int, skills: [OldFullSkillModel]) {
         self.id = id
         self.fullName = fullName
         self.startDate = startDate
@@ -110,7 +116,7 @@ struct FullCharacterModel: CustomCodeable {
         return intrigueSkills
     }
 
-    func getChooseOneSkills() -> [FullSkillModel] {
+    func getChooseOneSkills() -> [OldFullSkillModel] {
         return skills.filter { skill in
             return skill.id.equalsAnyOf(Constants.SpecificSkillIds.allSpecalistSkills)
         }
@@ -198,7 +204,7 @@ struct CharacterBarcodeModel: CustomCodeable {
     let mysteriousStrangerUses: String
     let playerId: Int
 
-    init(_ characterModel: FullCharacterModel) {
+    init(_ characterModel: OldFullCharacterModel) {
         self.id = characterModel.id
         self.fullName = characterModel.fullName
         self.infection = characterModel.infection
@@ -250,7 +256,7 @@ struct CharacterModel: CustomCodeable, Identifiable {
         case bulletProof = "Bullet Proof"
     }
 
-    init(_ char: FullCharacterModel) {
+    init(_ char: OldFullCharacterModel) {
         self.id = char.id
         self.fullName = char.fullName
         self.startDate = char.startDate

@@ -13,12 +13,12 @@ struct ViewPlayerStuffView: View {
     private let playerModel: PlayerModel
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
     
-    @State var character: FullCharacterModel? = nil
+    @State var character: OldFullCharacterModel? = nil
     @State var loadingCharacter: Bool = true
     @State var loadingProfileImage: Bool = true
     
     @State var firstLoad: Bool = true
-    @State var skills: [FullSkillModel] = []
+    @State var skills: [OldFullSkillModel] = []
     @State var loadingSkills: Bool = false
     @State var skillCategories: [SkillCategoryModel] = []
 

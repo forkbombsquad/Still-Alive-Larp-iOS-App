@@ -20,7 +20,7 @@ struct OfflineAccountView: View {
         self.treatingWoundsDiagram = OldLocalDataHandler.shared.getImage(.treatingWounds)
     }
     
-    init(_ player: PlayerModel?, _ character: FullCharacterModel?, _ skills: [FullSkillModel], _ gear: GearModel?, _ npcs: [FullCharacterModel], _ rulebook: Rulebook?, _ skillCategories: [SkillCategoryModel], _ treatingWoundsDiagram: UIImage?) {
+    init(_ player: PlayerModel?, _ character: OldFullCharacterModel?, _ skills: [OldFullSkillModel], _ gear: GearModel?, _ npcs: [OldFullCharacterModel], _ rulebook: Rulebook?, _ skillCategories: [SkillCategoryModel], _ treatingWoundsDiagram: UIImage?) {
         self.player = player
         self.character = character
         self.skills = skills
@@ -32,10 +32,10 @@ struct OfflineAccountView: View {
     }
 
     let player: PlayerModel?
-    let character: FullCharacterModel?
-    let skills: [FullSkillModel]
+    let character: OldFullCharacterModel?
+    let skills: [OldFullSkillModel]
     let gear: GearModel?
-    let npcs: [FullCharacterModel]
+    let npcs: [OldFullCharacterModel]
     let rulebook: Rulebook?
     let skillCategories: [SkillCategoryModel]
     let treatingWoundsDiagram: UIImage?

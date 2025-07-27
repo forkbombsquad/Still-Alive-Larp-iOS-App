@@ -19,7 +19,7 @@ struct MainView: View {
     @State var loadingText = ""
 
     @State var player: PlayerModel?
-    @State var character: FullCharacterModel?
+    @State var character: OldFullCharacterModel?
 
     var body: some View {
         NavigationView {

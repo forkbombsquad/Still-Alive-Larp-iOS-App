@@ -4,16 +4,16 @@ class SkillGrid {
     let personal: Bool
     let allowPurchase: Bool
 
-    let skills: [FullSkillModel]
+    let skills: [OldFullSkillModel]
     private var purchaseableSkills: [CharacterModifiedSkillModel] = []
     private let skillCategories: [SkillCategoryModel]
     var gridCategories: [SkillGridCategory] = []
     var trueGrid: [GridSkill] = []
 
-    var fullGrid: [[FullSkillModel?]] = []
+    var fullGrid: [[OldFullSkillModel?]] = []
     var gridConnections: [GridConnection] = []
 
-    init(skills: [FullSkillModel], skillCategories: [SkillCategoryModel], personal: Bool, allowPurchase: Bool) {
+    init(skills: [OldFullSkillModel], skillCategories: [SkillCategoryModel], personal: Bool, allowPurchase: Bool) {
         self.skills = skills
         self.skillCategories = skillCategories
         self.personal = personal
@@ -29,8 +29,8 @@ class SkillGrid {
         gridCategories.sort { $0.skillCategoryId < $1.skillCategoryId }
     }
 
-    private func calculateFullGrid() -> [[FullSkillModel?]] {
-        var grid: [[FullSkillModel?]] = Array(repeating: [], count: 4)
+    private func calculateFullGrid() -> [[OldFullSkillModel?]] {
+        var grid: [[OldFullSkillModel?]] = Array(repeating: [], count: 4)
 
         for category in gridCategories {
             for branch in category.branches {
@@ -46,7 +46,7 @@ class SkillGrid {
     }
 
     private func calculateWidthAndHeightOfGridCategories() {
-        var skillsCategorized: [Int: [FullSkillModel]] = [:]
+        var skillsCategorized: [Int: [OldFullSkillModel]] = [:]
 
         for skill in skills {
             let key = Int(skill.skillCategoryId)
@@ -87,7 +87,7 @@ struct GridSkill: Identifiable {
         return skill.id
     }
     
-    let skill: FullSkillModel
+    let skill: OldFullSkillModel
     let gridX: Int
     let gridY: Int
     var expanded: Bool = false
@@ -130,12 +130,12 @@ struct GridConnection {
 
 class SkillBranch {
     let categoryId: Int
-    let allSkills: [FullSkillModel]
-    let skills: [FullSkillModel]
+    let allSkills: [OldFullSkillModel]
+    let skills: [OldFullSkillModel]
     var width: Int
-    var grid: [[FullSkillModel?]]
+    var grid: [[OldFullSkillModel?]]
 
-    init(skills: [FullSkillModel], allSkills: [FullSkillModel], categoryId: Int) {
+    init(skills: [OldFullSkillModel], allSkills: [OldFullSkillModel], categoryId: Int) {
         self.categoryId = categoryId
         self.allSkills = allSkills
         self.skills = skills.sorted(by: { $0.xpCost.intValueDefaultZero < $1.xpCost.intValueDefaultZero })
@@ -176,7 +176,7 @@ class SkillBranch {
         }
     }
 
-    private func addSkillRecursively(skill: FullSkillModel?, previousCost: Int) {
+    private func addSkillRecursively(skill: OldFullSkillModel?, previousCost: Int) {
         guard let skill = skill else { return }
         if skillInGrid(skill) || skill.skillCategoryId != categoryId { return }
 
@@ -197,7 +197,7 @@ class SkillBranch {
         }
     }
 
-    func skillInGrid(_ skill: FullSkillModel) -> Bool {
+    func skillInGrid(_ skill: OldFullSkillModel) -> Bool {
         for row in grid {
             if row.contains(where: { $0?.id == skill.id }) {
                 return true
@@ -206,7 +206,7 @@ class SkillBranch {
         return false
     }
 
-    func getSkill(_ skillId: Int) -> FullSkillModel? {
+    func getSkill(_ skillId: Int) -> OldFullSkillModel? {
         return allSkills.first(where: { $0.id == skillId })
     }
 
@@ -229,16 +229,16 @@ class SkillBranch {
 }
 
 class SkillGridCategory {
-    let allSkills: [FullSkillModel]
-    var skills: [FullSkillModel]
+    let allSkills: [OldFullSkillModel]
+    var skills: [OldFullSkillModel]
     let skillCategoryId: Int
     let skillCategoryName: String
 
-    var zeroCost: [FullSkillModel] = []
-    var oneCost: [FullSkillModel] = []
-    var twoCost: [FullSkillModel] = []
-    var threeCost: [FullSkillModel] = []
-    var fourCost: [FullSkillModel] = []
+    var zeroCost: [OldFullSkillModel] = []
+    var oneCost: [OldFullSkillModel] = []
+    var twoCost: [OldFullSkillModel] = []
+    var threeCost: [OldFullSkillModel] = []
+    var fourCost: [OldFullSkillModel] = []
 
     var branches: [SkillBranch] = []
 
@@ -249,7 +249,7 @@ class SkillGridCategory {
 
     var width: Int
 
-    init(skills: [FullSkillModel], skillCategoryId: Int, skillCategoryName: String, allSkills: [FullSkillModel]) {
+    init(skills: [OldFullSkillModel], skillCategoryId: Int, skillCategoryName: String, allSkills: [OldFullSkillModel]) {
         self.allSkills = allSkills
         self.skills = skills
         self.skillCategoryId = skillCategoryId
@@ -280,7 +280,7 @@ class SkillGridCategory {
             isEdgeCaseLeft = false
             isEdgeCaseRight = false
 
-            var skillList: [FullSkillModel] = []
+            var skillList: [OldFullSkillModel] = []
             buildBranchRec(skill: skill, list: &skillList)
 
             if !skillList.isEmpty {
@@ -302,7 +302,7 @@ class SkillGridCategory {
         }
     }
 
-    private func buildBranchRec(skill: FullSkillModel?, list: inout [FullSkillModel], isPrereq: Bool = false) {
+    private func buildBranchRec(skill: OldFullSkillModel?, list: inout [OldFullSkillModel], isPrereq: Bool = false) {
         guard let skill = skill else { return }
 
         let isInExisting = branchesAlreadyContain(skillId: skill.id)
@@ -336,7 +336,7 @@ class SkillGridCategory {
         }
     }
 
-    private func getSkill(skillId: Int) -> FullSkillModel? {
+    private func getSkill(skillId: Int) -> OldFullSkillModel? {
         return allSkills.first(where: { $0.id == skillId })
     }
 

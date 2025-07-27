@@ -19,7 +19,7 @@ struct HomeTabView: View {
     @State var loadingPreregs = false
     
     @State var player: PlayerModel?
-    @State var character: FullCharacterModel?
+    @State var character: OldFullCharacterModel?
     @State var events: [EventModel] = []
     @State var currentEvent: EventModel?
     @State var awards: [AwardModel] = []
@@ -147,7 +147,7 @@ struct HomeTabView: View {
 struct IntrigueView: View {
     @ObservedObject var _dm = OldDataManager.shared
     
-    @Binding var character: FullCharacterModel?
+    @Binding var character: OldFullCharacterModel?
     @Binding var intrigue: IntrigueModel?
 
     var body: some View {
@@ -183,7 +183,7 @@ struct EventsView: View {
     @Binding var loadingPreregs: Bool
     @Binding var eventPreregs: [Int : [EventPreregModel]]
     @Binding var player: PlayerModel?
-    @Binding var character: FullCharacterModel?
+    @Binding var character: OldFullCharacterModel?
     @Binding var loadingCharacter: Bool
 
     var body: some View {
@@ -321,7 +321,7 @@ struct CurrentCharacterView: View {
     let grWidth: CGFloat
     
     @Binding var loadingCharacter: Bool
-    @Binding var character: FullCharacterModel?
+    @Binding var character: OldFullCharacterModel?
     @Binding var player: PlayerModel?
 
     var body: some View {

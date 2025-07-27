@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct FullPlayerModel: CustomCodeable, Identifiable {
+    let id: Int
+    // TODO
+}
+
 struct PlayerModel: CustomCodeable, Identifiable {
     let id: Int
     let username: String

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ViewNPCStuffView: View {
     
-    static func Offline(characterModel: FullCharacterModel, skills: [FullSkillModel]) -> ViewNPCStuffView {
+    static func Offline(characterModel: OldFullCharacterModel, skills: [OldFullSkillModel]) -> ViewNPCStuffView {
         return ViewNPCStuffView(character: characterModel, skills: skills)
     }
     
@@ -17,8 +17,8 @@ struct ViewNPCStuffView: View {
     
     let offline: Bool
     let characterModel: CharacterModel
-    var offlineSkills: [FullSkillModel]
-    @State var fullModel: FullCharacterModel? = nil
+    var offlineSkills: [OldFullSkillModel]
+    @State var fullModel: OldFullCharacterModel? = nil
     @State var loadingFullModel: Bool = false
     @State var firstLoad: Bool = true
     
@@ -29,7 +29,7 @@ struct ViewNPCStuffView: View {
         self.offlineSkills = []
     }
     
-    private init(character: FullCharacterModel, skills: [FullSkillModel]) {
+    private init(character: OldFullCharacterModel, skills: [OldFullSkillModel]) {
         self.offline = true
         self.characterModel = character.baseModel
         self._fullModel = globalState(character)

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum EventRegType: String {
+enum EventRegType: String, Codable {
     case notPrereged = "NONE"
     case free = "FREE"
     case basic = "BASIC"

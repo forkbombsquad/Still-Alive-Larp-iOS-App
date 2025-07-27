@@ -43,13 +43,13 @@ class OldLocalDataHandler {
         return player
     }
 
-    func storeCharacter(_ character: FullCharacterModel) {
+    func storeCharacter(_ character: OldFullCharacterModel) {
         guard let json = character.toData() else { return }
         UserDefaults.standard.set(json, forKey: Keys.characterKey)
     }
 
-    func getCharacter() -> FullCharacterModel? {
-        guard let json = UserDefaults.standard.data(forKey: Keys.characterKey), let character: FullCharacterModel = json.toJsonObject() else { return nil }
+    func getCharacter() -> OldFullCharacterModel? {
+        guard let json = UserDefaults.standard.data(forKey: Keys.characterKey), let character: OldFullCharacterModel = json.toJsonObject() else { return nil }
         return character
     }
 
@@ -88,24 +88,24 @@ class OldLocalDataHandler {
         return UIImage(data: data)
     }
 
-    func storeSkills(_ skills: [FullSkillModel]) {
+    func storeSkills(_ skills: [OldFullSkillModel]) {
         let fslm = FullSkillListModel(skills: skills)
         guard let json = fslm.toData() else { return }
         UserDefaults.standard.set(json, forKey: Keys.skillsKey)
     }
 
-    func getSkills() -> [FullSkillModel]? {
+    func getSkills() -> [OldFullSkillModel]? {
         guard let json = UserDefaults.standard.data(forKey: Keys.skillsKey), let skillM: FullSkillListModel = json.toJsonObject() else { return nil }
         return skillM.skills
     }
     
-    func storeNPCs(_ npcs: [FullCharacterModel]) {
+    func storeNPCs(_ npcs: [OldFullCharacterModel]) {
         let fclm = FullCharacterListModel(characters: npcs)
         guard let json = fclm.toData() else { return }
         UserDefaults.standard.set(json, forKey: Keys.npcKey)
     }
     
-    func getNPCs() -> [FullCharacterModel]? {
+    func getNPCs() -> [OldFullCharacterModel]? {
         guard let json = UserDefaults.standard.data(forKey: Keys.npcKey), let npcM: FullCharacterListModel = json.toJsonObject() else { return nil }
         return npcM.characters
     }

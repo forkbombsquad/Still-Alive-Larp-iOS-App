@@ -14,6 +14,7 @@ struct CharacterSkillModel: CustomCodeable {
     let xpSpent: Int
     let fsSpent: Int
     let ppSpent: Int
+    let date: String
 }
 
 struct CharacterSkillListModel: CustomCodeable {

@@ -11,6 +11,7 @@ struct SkillListView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
     enum FilterType: String, CaseIterable {
+        // TODO move this out of here
         case none = "No Filter"
         case combat = "Combat"
         case profession = "Profession"
@@ -33,7 +34,7 @@ struct SkillListView: View {
         case typeDesc = "Type Desc"
     }
 
-    @State var skills: [FullSkillModel]
+    @State var skills: [OldFullSkillModel]
     @State var searchText: String = ""
     @State var filterType: FilterType = .none
     @State var sortType: SortType = .az
@@ -79,8 +80,8 @@ struct SkillListView: View {
         return searchText.trimmed != "" || filterType != .none
     }
 
-    func getFilteredSkills() -> [FullSkillModel] {
-        var filteredSkills = [FullSkillModel]()
+    func getFilteredSkills() -> [OldFullSkillModel] {
+        var filteredSkills = [OldFullSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: filterType) {
@@ -90,7 +91,7 @@ struct SkillListView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [FullSkillModel]) -> [FullSkillModel] {
+    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
         switch sortType {
         case .az:
             return skills.sorted { f, s in
@@ -124,7 +125,7 @@ struct SkillListView: View {
 struct SkillCellView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
-    @State var skill: FullSkillModel
+    @State var skill: OldFullSkillModel
 
     var body: some View {
         CardView {

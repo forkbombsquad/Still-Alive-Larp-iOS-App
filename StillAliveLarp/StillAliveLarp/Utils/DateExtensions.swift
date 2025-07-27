@@ -14,5 +14,13 @@ extension Date {
         format.dateFormat = "yyyy/MM/dd"
         return format.string(from: self)
     }
+    
+    func isAfter(_ other: Date) -> Bool {
+        return self > other
+    }
+
+    func isBefore(_ other: Date) -> Bool {
+        return self < other
+    }
 
 }

@@ -12,7 +12,7 @@ struct SelectSkillForClassXpReducitonView: View {
 
     let character: CharacterModel
     @State var loadingSkills: Bool = true
-    @State var skills: [FullSkillModel] = []
+    @State var skills: [OldFullSkillModel] = []
     @State var loadingXpReduction: Bool = false
 
     @State var searchText: String = ""
@@ -73,8 +73,8 @@ struct SelectSkillForClassXpReducitonView: View {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills() -> [FullSkillModel] {
-        var filteredSkills = [FullSkillModel]()
+    func getFilteredSkills() -> [OldFullSkillModel] {
+        var filteredSkills = [OldFullSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -84,7 +84,7 @@ struct SelectSkillForClassXpReducitonView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [FullSkillModel]) -> [FullSkillModel] {
+    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
         return skills.filter({ $0.xpCost.intValueDefaultZero > 0 }).sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }
@@ -94,9 +94,9 @@ struct SelectSkillForClassXpReducitonView: View {
 struct XpReductionSkillCellView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
-    let skill: FullSkillModel
+    let skill: OldFullSkillModel
     @Binding var loadingXpReduction: Bool
-    let onTap: (_ skill: FullSkillModel) -> Void
+    let onTap: (_ skill: OldFullSkillModel) -> Void
 
     var body: some View {
         CardView {
