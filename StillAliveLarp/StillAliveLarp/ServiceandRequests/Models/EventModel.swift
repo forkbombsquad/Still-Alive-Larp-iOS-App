@@ -9,7 +9,47 @@ import Foundation
 
 struct FullEventModel: CustomCodeable, Identifiable {
     let id: Int
-    // TODO
+    let title: String
+    let description: String
+    let date: String
+    let startTime: String
+    let endTime: String
+    var isStarted: Bool
+    var isFinished: Bool
+    var attendees: [EventAttendeeModel]
+    var preregs: [EventPreregModel]
+    var intrigue: IntrigueModel?
+    
+    init(event: EventModel, attendees: [EventAttendeeModel], preregs: [EventPreregModel], intrigue: IntrigueModel?) {
+        self.id = event.id
+        self.title = event.title
+        self.description = event.description
+        self.date = event.date
+        self.startTime = event.startTime
+        self.endTime = event.endTime
+        self.isStarted = event.isStarted.boolValueDefaultFalse
+        self.isFinished = event.isFinished.boolValueDefaultFalse
+        self.attendees = attendees
+        self.preregs = preregs
+        self.intrigue = intrigue
+    }
+    
+    func isOngoing() -> Bool {
+        return isStarted && !isFinished
+    }
+    
+    func isToday() -> Bool {
+        return Calendar.current.isDate(Date(), inSameDayAs: date.yyyyMMddtoDate())
+    }
+    
+    func isInFuture() -> Bool {
+        return date.yyyyMMddtoDate().isAfter(Date())
+    }
+    
+    func isRelevant() -> Bool {
+        return (isOngoing() || isToday() || isInFuture()) && !isFinished
+    }
+    
 }
 
 struct EventModel: CustomCodeable, Identifiable {

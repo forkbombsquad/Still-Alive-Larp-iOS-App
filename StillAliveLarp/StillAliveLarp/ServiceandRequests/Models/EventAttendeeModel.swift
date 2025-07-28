@@ -14,6 +14,7 @@ struct EventAttendeeModel: CustomCodeable, Identifiable {
     let eventId: Int
     let isCheckedIn: String
     let asNpc: String
+    let npcId: Int
 }
 
 struct EventAttendeeListModel: CustomCodeable {
@@ -27,4 +28,5 @@ struct EventAttendeeCreateModel: CustomCodeable {
     let eventId: Int
     let isCheckedIn: String
     let asNpc: String
+    let npcId: Int
 }

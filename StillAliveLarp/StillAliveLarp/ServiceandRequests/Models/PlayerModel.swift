@@ -9,7 +9,46 @@ import Foundation
 
 struct FullPlayerModel: CustomCodeable, Identifiable {
     let id: Int
-    // TODO
+    let username: String
+    let fullName: String
+    let startDate: String
+    let experience: Int
+    let freeTier1Skills: Int
+    let prestigePoints: Int
+    let isCheckedIn: Bool
+    let isCheckedInAsNpc: Bool
+    let lastCheckIn: String
+    let numEventsAttended: Int
+    let numNpcEventsAttended: Int
+    let isAdmin: Bool
+    let characters: [FullCharacterModel]
+    let awards: [AwardModel]
+    let eventAttendees: [EventAttendeeModel]
+    let preregs: [EventPreregModel]
+    let profileImage: ProfileImageModel
+    
+    init(player: PlayerModel, characters: [FullCharacterModel], awards: [AwardModel], eventAttendees: [EventAttendeeModel], preregs: [EventPreregModel], profileImage: ProfileImageModel) {
+        self.id = player.id
+        self.username = player.username
+        self.fullName = player.fullName
+        self.startDate = player.startDate
+        self.experience = player.experience.intValueDefaultZero
+        self.freeTier1Skills = player.freeTier1Skills.intValueDefaultZero
+        self.prestigePoints = player.prestigePoints.intValueDefaultZero
+        self.isCheckedIn = player.isCheckedIn.boolValueDefaultFalse
+        self.isCheckedInAsNpc = player.isCheckedInAsNpc.boolValueDefaultFalse
+        self.lastCheckIn = player.lastCheckIn
+        self.numEventsAttended = player.numEventsAttended.intValueDefaultZero
+        self.numNpcEventsAttended = player.numNpcEventsAttended.intValueDefaultZero
+        self.isAdmin = player.isAdmin.boolValueDefaultFalse
+        self.characters = characters
+        self.awards = awards
+        self.eventAttendees = eventAttendees
+        self.preregs = preregs
+        self.profileImage = profileImage
+    }
+    
+    // TODO still need to do
 }
 
 struct PlayerModel: CustomCodeable, Identifiable {

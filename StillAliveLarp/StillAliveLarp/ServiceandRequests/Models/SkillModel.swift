@@ -276,6 +276,17 @@ struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
     private let inf50Mod: Int
     private let inf75Mod: Int
     
+    init(skill: FullSkillModel, charSkillModel: CharacterSkillModel?, xpReduction: SpecialClassXpReductionModel?, combatXpMod: Int, professionXpMod: Int, talentXpMod: Int, inf50Mod: Int, inf75Mod: Int) {
+        self.skill = skill
+        self.charSkillModel = charSkillModel
+        self.xpReduction = xpReduction
+        self.combatXpMod = combatXpMod
+        self.professionXpMod = professionXpMod
+        self.talentXpMod = talentXpMod
+        self.inf50Mod = inf50Mod
+        self.inf75Mod = inf75Mod
+    }
+    
     var id: Int {
         return skill.id
     }

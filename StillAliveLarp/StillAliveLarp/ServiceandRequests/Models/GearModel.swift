@@ -22,6 +22,99 @@ struct GearModel: CustomCodeable, Identifiable {
             gj.isPrimaryFirearm()
         }
     }
+    
+    func getGearOrganized() -> [String : [GearJsonModel]] {
+        let gear = jsonModels
+        if let g = gear {
+            var firearms = [GearJsonModel]()
+            var melee = [GearJsonModel]()
+            var clothing = [GearJsonModel]()
+            var accessory = [GearJsonModel]()
+            var bag = [GearJsonModel]()
+            var other = [GearJsonModel]()
+            for jg in g {
+                switch jg.gearType {
+                case Constants.GearTypes.firearm: firearms.append(jg)
+                case Constants.GearTypes.meleeWeapon: melee.append(jg)
+                case Constants.GearTypes.clothing: clothing.append(jg)
+                case Constants.GearTypes.accessory: accessory.append(jg)
+                case Constants.GearTypes.bag: bag.append(jg)
+                case Constants.GearTypes.other: other.append(jg)
+                default: continue
+                }
+            }
+            
+            // Sorting firearms
+            firearms = firearms.sorted {
+                let lhsPrimary = $0.isPrimaryFirearm() ? 0 : 1
+                let rhsPrimary = $1.isPrimaryFirearm() ? 0 : 1
+                if lhsPrimary != rhsPrimary {
+                    return lhsPrimary < rhsPrimary
+                }
+
+                let lhsOrder = subtypeOrder($0.primarySubtype)
+                let rhsOrder = subtypeOrder($1.primarySubtype)
+                return lhsOrder < rhsOrder
+            }
+
+            // Sorting melee
+            melee = melee.sorted {
+                subtypeOrder($0.primarySubtype) < subtypeOrder($1.primarySubtype)
+            }
+
+            // Sorting accessory
+            accessory = accessory.sorted {
+                subtypeOrder($0.primarySubtype) < subtypeOrder($1.primarySubtype)
+            }
+
+            // Sorting bag
+            bag = bag.sorted {
+                subtypeOrder($0.primarySubtype) < subtypeOrder($1.primarySubtype)
+            }
+
+            // Create gear map
+            return [
+                Constants.GearTypes.firearm: firearms,
+                Constants.GearTypes.meleeWeapon: melee,
+                Constants.GearTypes.clothing: clothing,
+                Constants.GearTypes.accessory: accessory,
+                Constants.GearTypes.bag: bag,
+                Constants.GearTypes.other: other
+            ]
+
+            
+        } else {
+            return [:]
+        }
+        
+    }
+    
+    private func subtypeOrder(_ subtype: String) -> Int {
+        switch subtype {
+        case Constants.GearPrimarySubtype.lightFirearm: return 0
+        case Constants.GearPrimarySubtype.mediumFirearm: return 1
+        case Constants.GearPrimarySubtype.heavyFirearm: return 2
+        case Constants.GearPrimarySubtype.advancedFirearm: return 3
+        case Constants.GearPrimarySubtype.militaryGradeFirearm: return 4
+
+        case Constants.GearPrimarySubtype.superLightMeleeWeapon: return 0
+        case Constants.GearPrimarySubtype.lightMeleeWeapon: return 1
+        case Constants.GearPrimarySubtype.mediumMeleeWeapon: return 2
+        case Constants.GearPrimarySubtype.heavyMeleeWeapon: return 3
+
+        case Constants.GearPrimarySubtype.blacklightFlashlight: return 0
+        case Constants.GearPrimarySubtype.flashlight: return 1
+        case Constants.GearPrimarySubtype.other: return 2
+
+        case Constants.GearPrimarySubtype.smallBag: return 0
+        case Constants.GearPrimarySubtype.mediumBag: return 1
+        case Constants.GearPrimarySubtype.largeBag: return 2
+        case Constants.GearPrimarySubtype.extraLargeBag: return 3
+
+        default: return Int.max
+        }
+    }
+
 }
 
 struct GearListModel: CustomCodeable {

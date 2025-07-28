@@ -13,6 +13,10 @@ extension Array {
         return !self.isEmpty
     }
     
+    func sumOf<T: Numeric>(_ transform: (Element) -> T) -> T {
+        return map(transform).reduce(0, +)
+    }
+    
 }
 
 extension Array where Element: Equatable {
