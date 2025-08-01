@@ -6,6 +6,7 @@
 //
 
 import Foundation
+// TODO remove this boi completely
 
 class CharacterManager {
 

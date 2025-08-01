@@ -8,6 +8,8 @@
 import Foundation
 
 class PlayerManager {
+    
+    // TODO remove this boi completely
 
     static func forceReset() {
         shared.player = nil

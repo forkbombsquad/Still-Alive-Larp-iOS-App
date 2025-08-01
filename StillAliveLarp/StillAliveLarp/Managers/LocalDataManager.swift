@@ -65,7 +65,7 @@ class LocalDataManager {
         UserDefaults.standard.set(value, forKey: getUnPUserDefaultsKey(key))
     }
     
-    private func getUnPRelatedObject(key: String) -> String? {
+    func getUnPRelatedObject(key: String) -> String? {
         return UserDefaults.standard.string(forKey: getUnPUserDefaultsKey(key))
     }
     
@@ -83,6 +83,10 @@ class LocalDataManager {
     
     private func clear(_ key: DMT) {
         clear(key.getLocalDataKey())
+    }
+    
+    func clearUnPRelatedObject(key: String) {
+        UserDefaults.standard.removeObject(forKey: getUnPUserDefaultsKey(key))
     }
     
     private func store(_ obj: CustomCodeable, key: String) {

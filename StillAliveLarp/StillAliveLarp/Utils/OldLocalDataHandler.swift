@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+// TODO remove this boi completely
+
 class OldLocalDataHandler {
 
     struct Keys {

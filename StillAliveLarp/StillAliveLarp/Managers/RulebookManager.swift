@@ -9,6 +9,8 @@ import Foundation
 import SwiftSoup
 import OrderedCollections
 
+// TODO remove this completely
+
 class RulebookManager {
 
     private struct Tags {

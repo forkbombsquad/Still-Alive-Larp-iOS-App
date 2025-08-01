@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO remove this boi completely
 class AnnouncementManager {
 
     static let shared = AnnouncementManager()

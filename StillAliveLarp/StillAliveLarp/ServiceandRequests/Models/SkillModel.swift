@@ -144,16 +144,6 @@ struct SkillModel: CustomCodeable {
     let skillCategoryId: Int
 }
 
-struct SkillBarcodeModel: CustomCodeable {
-    let id: Int
-    let name: String
-
-    init(_ fullSkillModel: OldFullSkillModel) {
-        self.id = fullSkillModel.id
-        self.name = fullSkillModel.name
-    }
-}
-
 struct SkillListModel: CustomCodeable {
     let results: [SkillModel]
 }
@@ -570,8 +560,7 @@ struct FullSkillModel: CustomCodeable, Identifiable {
     }
     
     func fullCharacterModifiedSkillModel() -> FullCharacterModifiedSkillModel {
-        // TODO
-        return FullCharacterModifiedSkillModel(id: id)
+        return FullCharacterModifiedSkillModel(skill: self, charSkillModel: nil, xpReduction: nil, combatXpMod: 0, professionXpMod: 0, talentXpMod: 0, inf50Mod: 50, inf75Mod: 75)
     }
     
     func getTypeText() -> String {
@@ -594,9 +583,6 @@ struct FullSkillModel: CustomCodeable, Identifiable {
         return str
     }
     
-    
-    
-    
 }
 
 struct OldFullSkillModel: SkillModelProtocol {
@@ -611,10 +597,6 @@ struct OldFullSkillModel: SkillModelProtocol {
     let skillCategoryId: Int
     var prereqs: [OldFullSkillModel]
     var postreqs: [Int] = []
-
-    var barcodeModel: SkillBarcodeModel {
-        return SkillBarcodeModel(self)
-    }
 
     init(id: Int, xpCost: String, prestigeCost: String, name: String, description: String, minInfection: String, skillTypeId: Int, skillCategoryId: Int, prereqs: [OldFullSkillModel]) {
         self.id = id

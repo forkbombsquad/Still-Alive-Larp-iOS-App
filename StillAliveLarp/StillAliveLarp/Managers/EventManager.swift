@@ -9,6 +9,8 @@ import Foundation
 
 class EventManager {
 
+    // TODO remove this boi completely
+    
     static let shared = EventManager()
 
     private init() {}

@@ -442,11 +442,20 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     }
     
     func deleteSkillsDESTRUCTIVE(completion: @escaping (_ success: Bool) -> Void) {
-        // TODO
+        CharacterSkillService.deleteSkills(characterId: id) { _ in
+            completion(true)
+        } failureCase: { error in
+            completion(false)
+        }
+
     }
     
     func deleteCharacterDESTRUCTIVE(completion: @escaping (_ success: Bool) -> Void) {
-        // TODO
+        CharacterService.deleteCharacter(id: id) { _ in
+            completion(true)
+        } failureCase: { error in
+            completion(false)
+        }
     }
     
     func getAllXpSpent() -> Int {

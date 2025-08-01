@@ -41,6 +41,7 @@
 		B22324BD2E3417330087786E /* LocalDataManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */; };
 		B22324BF2E3D006C0087786E /* LoadingLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */; };
 		B22324C12E3D3F8B0087786E /* CampStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C02E3D3F870087786E /* CampStatusModel.swift */; };
+		B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C22E3D5B970087786E /* CampStatusService.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -236,6 +237,7 @@
 		B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManagerModels.swift; sourceTree = "<group>"; };
 		B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingLayoutView.swift; sourceTree = "<group>"; };
 		B22324C02E3D3F870087786E /* CampStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampStatusModel.swift; sourceTree = "<group>"; };
+		B22324C22E3D5B970087786E /* CampStatusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampStatusService.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -659,6 +661,7 @@
 		B2A6A7E92914630D0025040B /* ServiceandRequests */ = {
 			isa = PBXGroup;
 			children = (
+				B22324C22E3D5B970087786E /* CampStatusService.swift */,
 				B22324B62E33DFB90087786E /* UpdateTrackerService.swift */,
 				B23728AB2DC1BBCC00495777 /* ServiceUtils.swift */,
 				B2DFB0C129563C4D00132B08 /* MockData */,
@@ -965,6 +968,7 @@
 				B2A0D4EC29E5D50F00A235B4 /* SkillListView.swift in Sources */,
 				B2F9837729F07AB300512839 /* EventManagementView.swift in Sources */,
 				B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */,
+				B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */,
 				B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */,
 				B222249B291E9806003BCA0A /* CardView.swift in Sources */,
 				B228C27B29F83B470064686D /* BioView.swift in Sources */,

@@ -8,6 +8,8 @@
 import Foundation
 
 class SkillManager {
+    
+    // TODO remove this boi completely
 
     static let shared = SkillManager()
 

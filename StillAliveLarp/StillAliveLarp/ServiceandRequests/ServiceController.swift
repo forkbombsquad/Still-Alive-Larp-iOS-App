@@ -59,12 +59,27 @@ struct ServiceController {
         case delete = "DELETE"
     }
 
-    static func makeRequest<T>(_ endpoint: ServiceEndpoints.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
-        if sendToken {
-            AuthManager.shared.getAuthToken { token in
-                var newHeaders = headers ?? [:]
-                newHeaders["Authorization"] = "Bearer \(token ?? "")"
-                ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
+    static func makeRequest<T>(_ endpoint: ServiceEndpoints.Endpoint, addToEndOfUrl: String? = nil, contentType: ContentType = .json, headers: [String: String]? = nil, params: [String: Any]? = nil, bodyParams: [String: Any]? = nil, bodyJson: Encodable? = nil, responseObject: T.Type, sendToken: Bool = true, sendUserAndPass: Bool = false, sendPlayerToken: Bool = true, overrideDefaultErrorBehavior: Bool = false, success: @escaping (_ success: ServiceSuccess<T>) -> Void, failureCase: @escaping FailureCase) {
+        if sendToken || sendPlayerToken {
+            if sendToken {
+                AuthManager.shared.getAuthToken { token in
+                    var newHeaders = headers ?? [:]
+                    newHeaders["Authorization"] = "Bearer \(token ?? "")"
+                    if sendPlayerToken {
+                        AuthManager.shared.getPlayerToken { playerToken in
+                            newHeaders["ptoken"] = "Bearer \(playerToken ?? "")"
+                            ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, sendPlayerToken: false, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
+                        }
+                    } else {
+                        ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, sendPlayerToken: false, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
+                    }
+                }
+            } else if sendPlayerToken {
+                AuthManager.shared.getPlayerToken { playerToken in
+                    var newHeaders = headers ?? [:]
+                    newHeaders["ptoken"] = "Bearer \(playerToken ?? "")"
+                    ServiceController.makeRequest(endpoint, addToEndOfUrl: addToEndOfUrl, contentType: contentType, headers: newHeaders, params: params, bodyParams: bodyParams, bodyJson: bodyJson, responseObject: responseObject, sendToken: false, sendUserAndPass: sendUserAndPass, sendPlayerToken: false, overrideDefaultErrorBehavior: overrideDefaultErrorBehavior, success: success, failureCase: failureCase)
+                }
             }
         } else {
             var failure: FailureCase = failureCase

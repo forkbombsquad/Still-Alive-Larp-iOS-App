@@ -133,8 +133,8 @@ class DataManager: ObservableObject {
     }
     
     func setCurrentPlayerId(_ playerId: Int) {
-        // TODO store the player id in LocalDataManager
         currentPlayerId = playerId
+        LocalDataManager.shared.storePlayerId(playerId)
     }
     
     func setCurrentPlayerId(_ player: PlayerModel) {
@@ -200,8 +200,7 @@ class DataManager: ObservableObject {
     @Published var featureFlags: [FeatureFlagModel] = []
     @Published var intrigues: [Int: IntrigueModel] = [:]
     @Published var researchProjects: [ResearchProjectModel] = []
-    // TODO
-    //    @Published var campStatus: CampStatusModel? = nil
+    @Published var campStatus: CampStatusModel? = nil
     
     
     //
@@ -256,8 +255,7 @@ class DataManager: ObservableObject {
         Task {
             updateLoadingText("Force Clearing Data...")
             await loadingActor.setFirstLoad(true)
-            // TODO
-            //        LocalDataManager.shared.storeUpdateTracker(UpdateTrackerModel.empty())
+            LocalDataManager.shared.storeUpdateTracker(UpdateTrackerModel.empty())
             loadDownloadIfNecessary()
         }
         

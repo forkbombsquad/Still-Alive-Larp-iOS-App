@@ -73,4 +73,11 @@ struct CharacterService {
         }, failureCase: failureCase)
     }
 
+    static func deleteCharacter(id: Int, onSuccess: @escaping (_ characterModel: CharacterModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.deleteCharacters, addToEndOfUrl: id.stringValue, responseObject: CharacterModel.self, overrideDefaultErrorBehavior: true, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+
+    
 }

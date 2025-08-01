@@ -14,5 +14,11 @@ struct AnnouncementService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllAnnouncements(onSuccess: @escaping (_ announcements: AnnouncementFullListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allAnnouncements, responseObject: AnnouncementFullListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
 }

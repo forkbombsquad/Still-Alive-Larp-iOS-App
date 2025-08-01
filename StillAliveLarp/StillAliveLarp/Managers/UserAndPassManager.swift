@@ -7,57 +7,66 @@
 
 import Foundation
 
-// TODO this boi needs to be updated
 class UserAndPassManager {
-
-    static func forceReset() {
-        UserDefaults.standard.removeObject(forKey: "temp\(shared.ukey)")
-        UserDefaults.standard.removeObject(forKey: "temp\(shared.pkey)")
-        UserDefaults.standard.removeObject(forKey: shared.ukey)
-        UserDefaults.standard.removeObject(forKey: shared.pkey)
-    }
+    
+    fileprivate typealias UPM = UserAndPassManager
 
     static let shared = UserAndPassManager()
 
-    private let rememberKey = "remkey"
-    private let ukey = "emanresu"
-    private let pkey = "taxkey"
+    private static let rememberKey = "remkey"
+    private static let ukey = "emanresu"
+    private static let pkey = "taxkey"
+    
+    private static let tempukey = "temp\(UserAndPassManager.ukey)"
+    private static let temppkey = "temp\(UserAndPassManager.pkey)"
 
     private init() {}
-
-    func setTemp(_ u: String, p: String) {
-        UserDefaults.standard.set(u, forKey: "temp\(ukey)")
-        UserDefaults.standard.set(p, forKey: "temp\(pkey)")
+    
+    func setTemp(u: String, p: String) {
+        LocalDataManager.shared.setUnPRelatedObject(key: UPM.tempukey, value: u)
+        LocalDataManager.shared.setUnPRelatedObject(key: UPM.temppkey, value: p)
     }
-
-    func setUAndP(_ u: String, p: String, remember: Bool) {
-        UserDefaults.standard.set(u, forKey: ukey)
-        UserDefaults.standard.set(p, forKey: pkey)
-        UserDefaults.standard.set(remember, forKey: rememberKey)
+    
+    func clearTemp() {
+        LocalDataManager.shared.clearUnPRelatedObject(key: UPM.tempukey)
+        LocalDataManager.shared.clearUnPRelatedObject(key: UPM.temppkey)
     }
-
+    
+    private func clear() {
+        LocalDataManager.shared.clearUnPRelatedObject(key: UPM.ukey)
+        LocalDataManager.shared.clearUnPRelatedObject(key: UPM.pkey)
+        LocalDataManager.shared.clearUnPRelatedObject(key: UPM.rememberKey)
+    }
+    
+    func clearAll() {
+        clear()
+        clearTemp()
+    }
+    
+    func setUandP(u: String, p: String, remember: Bool) {
+        LocalDataManager.shared.setUnPRelatedObject(key: UPM.ukey, value: u)
+        LocalDataManager.shared.setUnPRelatedObject(key: UPM.pkey, value: p)
+        LocalDataManager.shared.setUnPRelatedObject(key: UPM.rememberKey, value: remember.stringValue)
+    }
+    
     func getU() -> String? {
-        UserDefaults.standard.string(forKey: ukey)
+        return LocalDataManager.shared.getUnPRelatedObject(key: UPM.ukey)
     }
-
+    
     func getP() -> String? {
-        UserDefaults.standard.string(forKey: pkey)
+        return LocalDataManager.shared.getUnPRelatedObject(key: UPM.pkey)
     }
-
-    func remember() -> Bool {
-        UserDefaults.standard.bool(forKey: rememberKey)
+    
+    func getRemember() -> Bool {
+        return (LocalDataManager.shared.getUnPRelatedObject(key: UPM.rememberKey) ?? "").boolValueDefaultFalse
     }
-
+    
     func getTempU() -> String? {
-        let u = UserDefaults.standard.string(forKey: "temp\(ukey)")
-        UserDefaults.standard.removeObject(forKey: "temp\(ukey)")
-        return u
+        return LocalDataManager.shared.getUnPRelatedObject(key: UPM.tempukey)
     }
-
+    
     func getTempP() -> String? {
-        let p = UserDefaults.standard.string(forKey: "temp\(pkey)")
-        UserDefaults.standard.removeObject(forKey: "temp\(pkey)")
-        return p
+        return LocalDataManager.shared.getUnPRelatedObject(key: UPM.temppkey)
     }
 
 }

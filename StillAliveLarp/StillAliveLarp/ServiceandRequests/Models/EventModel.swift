@@ -62,10 +62,6 @@ struct EventModel: CustomCodeable, Identifiable {
     var isStarted: String
     var isFinished: String
 
-    var barcodeModel: EventBarcodeModel {
-        return EventBarcodeModel(self)
-    }
-
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(date.yyyyMMddtoDate())
     }
@@ -82,26 +78,6 @@ struct EventModel: CustomCodeable, Identifiable {
             return "Ongoing"
         }
         return ""
-    }
-}
-
-struct EventBarcodeModel: CustomCodeable, Identifiable {
-    let id: Int
-    let title: String
-    let date: String
-    let startTime: String
-    let endTime: String
-    var isStarted: String
-    var isFinished: String
-
-    init(_ event: EventModel) {
-        self.id = event.id
-        self.title = event.title
-        self.date = event.date
-        self.startTime = event.startTime
-        self.endTime = event.endTime
-        self.isStarted = event.isStarted
-        self.isFinished = event.isFinished
     }
 }
 

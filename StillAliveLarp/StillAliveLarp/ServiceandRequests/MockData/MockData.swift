@@ -15,6 +15,7 @@ protocol MockData {
     var oauthToken: OAuthTokenResponse { get }
     var playerList: PlayerListModel { get }
     var announcementsList: AnnouncementsListModel { get }
+    var allAnnouncements: AnnouncementFullListModel { get }
     var announcement: AnnouncementModel { get }
     var characterListFullModel: CharacterListFullModel { get }
     var skills: SkillListModel { get }
@@ -35,6 +36,7 @@ protocol MockData {
     var rulebook: Rulebook { get }
     var skillCategories: SKillCategoryListModel { get }
     var updateTracker: UpdateTrackerModel { get }
+    var campStatus: CampStatusModel { get }
 }
 
 extension MockData {
@@ -227,7 +229,7 @@ extension MockData {
         switch request.endpoint {
             case .playerSignIn, .player, .playerCreate, .awardPlayer, .updateP, .updatePAdmin, .updatePlayer, .deletePlayer:
                 return player()
-            case .authToken:
+            case .authToken, .playerAuthToken:
                 return oauthToken
             case .announcementsAll:
                 return announcementsList
@@ -299,6 +301,10 @@ extension MockData {
                 return skillCategories
             case .updateTracker:
                 return updateTracker
+        case .allAnnouncements:
+            return allAnnouncements
+        case .campStatus:
+            return campStatus
         }
     }
     

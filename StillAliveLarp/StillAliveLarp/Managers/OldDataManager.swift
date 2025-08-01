@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO remove this completely
+
 class OldDataManager: ObservableObject {
 
     enum DataManagerType {
