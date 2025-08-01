@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO this boi needs to be updated
 class UserAndPassManager {
 
     static func forceReset() {

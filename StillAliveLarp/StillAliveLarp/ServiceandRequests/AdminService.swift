@@ -9,13 +9,28 @@ import Foundation
 
 struct AdminService {
 
-    enum PlayerAwardType: String, CaseIterable {
+    protocol AwardType {
+        func getDisplayText(pluralize: Bool) -> String
+    }
+    
+    enum PlayerAwardType: String, CaseIterable, AwardType {
         case xp = "XP"
         case prestigePoints = "PP"
         case freeTier1Skills = "FREE-T1-SKILL"
+        
+        func getDisplayText(pluralize: Bool) -> String {
+            switch self {
+            case .xp:
+                return "Experience Point\(pluralize ? "s" : "")"
+            case .prestigePoints:
+                return "Prestige Point\(pluralize ? "s" : "")"
+            case .freeTier1Skills:
+                return "Free Tier-1 Skill\(pluralize ? "s" : "")"
+            }
+        }
     }
 
-    enum CharAwardType: String, CaseIterable {
+    enum CharAwardType: String, CaseIterable, AwardType {
         case infection = "INFECTION"
         case materialCasings = "MATERIAL_CASINGS"
         case materialWood = "MATERIAL_WOOD"
@@ -27,6 +42,33 @@ struct AdminService {
         case ammoMega = "AMMO_MEGA"
         case ammoRival = "AMMO_RIVAL"
         case ammoRocket = "AMMO_ROCKET"
+        
+        func getDisplayText(pluralize: Bool) -> String {
+            switch self {
+            case .infection:
+                return "Infection Rating"
+            case .materialCasings:
+                return "Bullet Casing\(pluralize ? "s" : "")"
+            case .materialWood:
+                return "Wood"
+            case .materialCloth:
+                return "Cloth"
+            case .materialMetal:
+                return "Metal"
+            case .materialTech:
+                return "Tech Suppl\(pluralize ? "ies" : "y")"
+            case .materialMed:
+                return "Medical Suppl\(pluralize ? "ies" : "y")"
+            case .ammoBullet:
+                return "Bullet\(pluralize ? "s" : "")"
+            case .ammoMega:
+                return "Mega\(pluralize ? "s" : "")"
+            case .ammoRival:
+                return "Rival\(pluralize ? "s" : "")"
+            case .ammoRocket:
+                return "Rocket\(pluralize ? "s" : "")"
+            }
+        }
     }
 
     static func awardPlayer(_ award: AwardCreateModel, onSuccess: @escaping (_ updatedPlayer: PlayerModel) -> Void, failureCase: @escaping FailureCase) {

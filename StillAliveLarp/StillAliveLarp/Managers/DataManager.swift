@@ -13,26 +13,26 @@ class DataManager: ObservableObject {
     
     enum DataManagerPassedDataKey {
         case barcode,
-        selectedEvent,
-        selectedPlayer,
-        selectedCharacter,
-        awardsList,
-        characterList,
-        destinationView,
-        viewTitle,
-        playerList,
-        eventList,
-        additionalDestinationView,
-        contactRequestList,
-        selectedContactRequest,
-        featureFlagList,
-        selectedFeatureFlag,
-        researchProjectList,
-        skillList,
-        action,
-        rulebook,
-        image,
-        campStatus
+             selectedEvent,
+             selectedPlayer,
+             selectedCharacter,
+             awardsList,
+             characterList,
+             destinationView,
+             viewTitle,
+             playerList,
+             eventList,
+             additionalDestinationView,
+             contactRequestList,
+             selectedContactRequest,
+             featureFlagList,
+             selectedFeatureFlag,
+             researchProjectList,
+             skillList,
+             action,
+             rulebook,
+             image,
+             campStatus
     }
     
     enum DataManagerType: String, CaseIterable {
@@ -201,7 +201,7 @@ class DataManager: ObservableObject {
     @Published var intrigues: [Int: IntrigueModel] = [:]
     @Published var researchProjects: [ResearchProjectModel] = []
     // TODO
-//    @Published var campStatus: CampStatusModel? = nil
+    //    @Published var campStatus: CampStatusModel? = nil
     
     
     //
@@ -210,7 +210,7 @@ class DataManager: ObservableObject {
     
     @Published var skills: [FullSkillModel] = []
     @Published var events: [FullEventModel] = []
-    @Published var characters: [OldFullCharacterModel] = []
+    @Published var characters: [FullCharacterModel] = []
     @Published var players: [FullPlayerModel] = []
     @Published var rulebook: Rulebook? = nil
     @Published var treatingWounds: UIImage? = nil
@@ -219,10 +219,10 @@ class DataManager: ObservableObject {
     // MARK: - Editable In Place Variables
     //
     
-    @Published var characterToEdit: OldFullCharacterModel? = nil
+    @Published var characterToEdit: FullCharacterModel? = nil
     @Published var gearToEdit: GearJsonModel? = nil
     // TODO
-//    @Published var fortificationToEdit: CampFortification? = nil
+    //    @Published var fortificationToEdit: CampFortification? = nil
     
     //
     // MARK: Utils
@@ -257,10 +257,10 @@ class DataManager: ObservableObject {
             updateLoadingText("Force Clearing Data...")
             await loadingActor.setFirstLoad(true)
             // TODO
-    //        LocalDataManager.shared.storeUpdateTracker(UpdateTrackerModel.empty())
+            //        LocalDataManager.shared.storeUpdateTracker(UpdateTrackerModel.empty())
             loadDownloadIfNecessary()
         }
-
+        
     }
     
     private func loadDownloadIfNecessary() {
@@ -269,11 +269,24 @@ class DataManager: ObservableObject {
         } failureCase: { error in
             self.loadOffline()
         }
-
+        
     }
     
     private func handleUpdates(_ updateTracker: UpdateTrackerModel) {
         // TODO
+    }
+    
+    private func generateLoadingText() -> String {
+        var text = "Loading:\n"
+        for (index, update) in updatesNeeded.enumerated() {
+            if index > 0 {
+                // Two per line
+                text += (index % 2 == 0) ? "\n" : ", "
+            }
+            text += update.rawValue.replacingOccurrences(of: "_", with: " ").capitalizingFirstLetterOfEachWord()
+        }
+        text += "..."
+        return text
     }
     
     private func serviceFinished(type: DataManagerType, succeeded: Bool, localUpdatesNeeded: [DataManagerType]) {
@@ -304,24 +317,60 @@ class DataManager: ObservableObject {
         return playerIsCurrentPlayer(player.id)
     }
     
-    // TODO loading layout
-    func handleLoadingTextAndHidingViews(/*loadingLayout: LoadingLayout, */ thingsToHideWhileLoading: [any View] = [], runIfLoading: () -> Void = {}, runIfNotLoading: () -> Void) {
-        
+    func getTitlePotentiallyOffline(_ baseText: String) -> String {
+        return offlineMode ? "\(baseText)\n[Offline]" : baseText
     }
     
-    /*
-     
-     fun handleLoadingTextAndHidingViews(loadingLayout: LoadingLayout, thingsToHideWhileLoading: List<View> = listOf(), runIfLoading: () -> Unit = {}, runIfNotLoading: () -> Unit) {
-         if (loading) {
-             loadingLayout.setLoadingText(loadingText)
-             thingsToHideWhileLoading.forEach { it.isGone = true }
-             runIfLoading()
-         } else {
-             loadingLayout.setLoading(false)
-             thingsToHideWhileLoading.forEach { it.isGone = false }
-             runIfNotLoading()
-         }
-     }
-     */
+    func getSkillsAsFCMSM() -> [FullCharacterModifiedSkillModel] {
+        return skills.map { $0.fullCharacterModifiedSkillModel() }
+    }
+    
+    func getCurrentPlayer() -> FullPlayerModel? {
+        return players.first(where: { $0.id == currentPlayerId })
+    }
+    
+    func getPlayerForCharacter(_ character: FullCharacterModel) -> FullPlayerModel {
+        return players.first(where: { $0.id == character.playerId })!
+    }
+    
+    func getActiveCharacter() -> FullCharacterModel? {
+        return getCurrentPlayer()?.getActiveCharacter()
+    }
+    
+    func getAllCharacters(_ type: CharacterType) -> [FullCharacterModel] {
+        return getAllCharacters([type])
+    }
+    
+    func getAllCharacters(_ types: [CharacterType]) -> [FullCharacterModel] {
+        return characters.filter { types.contains($0.characterType()) }
+    }
+    
+    func getAllCharacters() -> [FullCharacterModel] {
+        return characters
+    }
+    
+    func getCharacter(_ id: Int) -> FullCharacterModel? {
+        return characters.first(where: { $0.id == id })
+    }
+    
+    func getOngoingEvent() -> FullEventModel? {
+        return events.first(where: { $0.isOngoing() })
+    }
+    
+    private func getEventToday() -> FullEventModel? {
+        return events.first(where: { $0.isToday() })
+    }
+    
+    func getOngoingOrTodayEvent() -> FullEventModel? {
+        return getOngoingEvent() ?? getEventToday()
+    }
+    
+    func getRelevantEvents() -> [FullEventModel] {
+        return events.filter({ $0.isRelevant() })
+    }
+    
+    func getCharactersWhoNeedBiosApproved() -> [FullCharacterModel] {
+        return characters.filter({ !$0.approvedBio && $0.bio.isNotEmpty })
+    }
     
 }

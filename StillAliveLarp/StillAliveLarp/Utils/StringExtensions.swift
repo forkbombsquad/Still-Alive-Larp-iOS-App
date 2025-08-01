@@ -144,4 +144,14 @@ extension String {
         self.buildJsonLine(key: key, value: value.stringDictionary, indentAmount: indentAmount, indentValue: indentValue, addNewline: addNewline, addComma: addComma)
     }
     
+    func capitalizingFirstLetterOfEachWord() -> String {
+        return self
+            .lowercased()
+            .split(separator: " ")
+            .map { word in
+                word.prefix(1).uppercased() + word.dropFirst()
+            }
+            .joined(separator: " ")
+    }
+    
 }

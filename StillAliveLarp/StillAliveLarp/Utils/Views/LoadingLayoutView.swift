@@ -12,6 +12,20 @@ struct LoadingLayoutView<Content: View>: View {
     @Binding var loadingText: String
     let content: () -> Content
     
+    init(dataManager: DataManager, loadType: DataManager.DataManagerLoadType = .downloadIfNecessary, onStepFinished: @escaping () -> Void = {}, onFinishedLoad: @escaping () -> Void = {}, content: @escaping () -> Content) {
+        isLoading = true
+        dataManager.load(loadType: loadType) {
+            onStepFinished()
+        } finished: {
+            onFinishedLoad()
+            runOnMainThread {
+                isLoading = false
+            }
+        }
+        self.loadingText = dataManager.loadingText
+        self.content = content
+    }
+    
     var body: some View {
         Group {
             if isLoading {

@@ -27,3 +27,7 @@ struct AnnouncementSubModel: CustomCodeable {
 struct AnnouncementsListModel: CustomCodeable {
     let announcements: [AnnouncementSubModel]
 }
+
+struct AnnouncementFullListModel: CustomCodeable {
+    let announcements: [AnnouncementModel]
+}
