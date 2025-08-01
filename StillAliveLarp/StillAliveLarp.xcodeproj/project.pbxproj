@@ -39,6 +39,7 @@
 		B22324B72E33DFC30087786E /* UpdateTrackerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B62E33DFB90087786E /* UpdateTrackerService.swift */; };
 		B22324B92E33E6C30087786E /* LocalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324B82E33E6BD0087786E /* LocalDataManager.swift */; };
 		B22324BD2E3417330087786E /* LocalDataManagerModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */; };
+		B22324BF2E3D006C0087786E /* LoadingLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -173,7 +174,7 @@
 		B2F9837B29F0833800512839 /* ManageEventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9837A29F0833800512839 /* ManageEventView.swift */; };
 		B2F9838429F1728C00512839 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = B2F9838329F1728C00512839 /* CodeScanner */; };
 		B2F9838829F1747D00512839 /* CheckInPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838729F1747D00512839 /* CheckInPlayerView.swift */; };
-		B2F9838A29F176EB00512839 /* PlayerCheckInBarcodeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838929F176EB00512839 /* PlayerCheckInBarcodeModel.swift */; };
+		B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838929F176EB00512839 /* CheckInOutBarcodeModel.swift */; };
 		B2F9838C29F18F4500512839 /* GenerateCheckInBarcodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838B29F18F4500512839 /* GenerateCheckInBarcodeView.swift */; };
 		B2F9838E29F1906300512839 /* BarcodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838D29F1906300512839 /* BarcodeGenerator.swift */; };
 		B2F9839029F2F09D00512839 /* EventAttendeeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */; };
@@ -232,6 +233,7 @@
 		B22324B62E33DFB90087786E /* UpdateTrackerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateTrackerService.swift; sourceTree = "<group>"; };
 		B22324B82E33E6BD0087786E /* LocalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManager.swift; sourceTree = "<group>"; };
 		B22324BC2E34172E0087786E /* LocalDataManagerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManagerModels.swift; sourceTree = "<group>"; };
+		B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingLayoutView.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -363,7 +365,7 @@
 		B2F9837829F07C7200512839 /* CreateEditEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateEditEventView.swift; sourceTree = "<group>"; };
 		B2F9837A29F0833800512839 /* ManageEventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageEventView.swift; sourceTree = "<group>"; };
 		B2F9838729F1747D00512839 /* CheckInPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInPlayerView.swift; sourceTree = "<group>"; };
-		B2F9838929F176EB00512839 /* PlayerCheckInBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCheckInBarcodeModel.swift; sourceTree = "<group>"; };
+		B2F9838929F176EB00512839 /* CheckInOutBarcodeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInOutBarcodeModel.swift; sourceTree = "<group>"; };
 		B2F9838B29F18F4500512839 /* GenerateCheckInBarcodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCheckInBarcodeView.swift; sourceTree = "<group>"; };
 		B2F9838D29F1906300512839 /* BarcodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeGenerator.swift; sourceTree = "<group>"; };
 		B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAttendeeModel.swift; sourceTree = "<group>"; };
@@ -586,6 +588,7 @@
 				B294A41B2DD02EAB002877B9 /* GearCell.swift */,
 				B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */,
 				B235A4F02DD788C800AF96DC /* LoadingBlock.swift */,
+				B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -625,7 +628,7 @@
 				B23552B729E9C9B800183748 /* CharacterSkill.swift */,
 				B23552CA29EB1F0E00183748 /* ErrorModel.swift */,
 				B2F9837029F0663C00512839 /* EventModel.swift */,
-				B2F9838929F176EB00512839 /* PlayerCheckInBarcodeModel.swift */,
+				B2F9838929F176EB00512839 /* CheckInOutBarcodeModel.swift */,
 				B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */,
 				B2750B3C29F9780600AA5F5B /* ContactRequestModel.swift */,
 				B2750B4C29F9B05D00AA5F5B /* IntrigueModel.swift */,
@@ -955,6 +958,7 @@
 				B2E135B029FAE55D0038DE31 /* CheckOutPlayerView.swift in Sources */,
 				B2F9837529F069B500512839 /* EventManager.swift in Sources */,
 				B2F9837129F0663C00512839 /* EventModel.swift in Sources */,
+				B22324BF2E3D006C0087786E /* LoadingLayoutView.swift in Sources */,
 				B2A0D4EC29E5D50F00A235B4 /* SkillListView.swift in Sources */,
 				B2F9837729F07AB300512839 /* EventManagementView.swift in Sources */,
 				B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */,
@@ -1065,7 +1069,7 @@
 				B2750B5529FAD48300AA5F5B /* GenerateCheckoutBarcodeView.swift in Sources */,
 				B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */,
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
-				B2F9838A29F176EB00512839 /* PlayerCheckInBarcodeModel.swift in Sources */,
+				B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
 				B2222499291E971D003BCA0A /* AnnouncementsView.swift in Sources */,
 				B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */,

@@ -273,7 +273,11 @@ class DataManager: ObservableObject {
     }
     
     private func handleUpdates(_ updateTracker: UpdateTrackerModel) {
-        
+        // TODO
+    }
+    
+    private func serviceFinished(type: DataManagerType, succeeded: Bool, localUpdatesNeeded: [DataManagerType]) {
+        // TODO
     }
     
     private func populateLocalData(_ updatesDownloaded: Bool) {
@@ -287,5 +291,37 @@ class DataManager: ObservableObject {
     static func forceReset() {
         shared = DataManager()
     }
+    
+    //
+    // MARK: - Other Utils
+    //
+    
+    func playerIsCurrentPlayer(_ id: Int) -> Bool {
+        return id == currentPlayerId
+    }
+    
+    func playerIsCurrentPlayer(_ player: FullPlayerModel) -> Bool {
+        return playerIsCurrentPlayer(player.id)
+    }
+    
+    // TODO loading layout
+    func handleLoadingTextAndHidingViews(/*loadingLayout: LoadingLayout, */ thingsToHideWhileLoading: [any View] = [], runIfLoading: () -> Void = {}, runIfNotLoading: () -> Void) {
+        
+    }
+    
+    /*
+     
+     fun handleLoadingTextAndHidingViews(loadingLayout: LoadingLayout, thingsToHideWhileLoading: List<View> = listOf(), runIfLoading: () -> Unit = {}, runIfNotLoading: () -> Unit) {
+         if (loading) {
+             loadingLayout.setLoadingText(loadingText)
+             thingsToHideWhileLoading.forEach { it.isGone = true }
+             runIfLoading()
+         } else {
+             loadingLayout.setLoading(false)
+             thingsToHideWhileLoading.forEach { it.isGone = false }
+             runIfNotLoading()
+         }
+     }
+     */
     
 }

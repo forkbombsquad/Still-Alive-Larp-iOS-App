@@ -99,7 +99,7 @@ struct GenerateCheckInBarcodeView: View {
             let char = OldDataManager.shared.character
             let gear = OldDataManager.shared.selectedCharacterGear?.first
             
-            let barcode = PlayerCheckInBarcodeModel(player: player.barcodeModel, character: useChar ? char?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+            let barcode = CheckInOutBarcodeModel(player: player.barcodeModel, character: useChar ? char?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
             runOnMainThread {
                 OldDataManager.shared.checkinBarcodeModel = barcode
                 self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)

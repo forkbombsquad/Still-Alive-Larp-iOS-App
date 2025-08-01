@@ -208,13 +208,13 @@ extension MockData {
         return skillCategories.results.first(where: { $0.id == id })!
     }
     
-    func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> PlayerCheckInBarcodeModel {
+    func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> CheckInOutBarcodeModel {
         let player = playerList.players.first(where: { $0.id == playerId })!
         let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
         let event = events.events.first(where: { $0.id == eventId })!
         let gear = gearList.charGear.first(where: { $0.characterId == characterId })
         
-        return PlayerCheckInBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+        return CheckInOutBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
     }
     
     func playerCheckOutBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventAttendeeId: Int = 1, eventId: Int = 1) -> PlayerCheckOutBarcodeModel {

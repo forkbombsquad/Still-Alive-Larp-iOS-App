@@ -27,7 +27,7 @@ struct BarcodeGenerator {
         return UIImage(cgImage: cgImage)
     }
 
-    static func generateCheckInBarcode(_ model: PlayerCheckInBarcodeModel) -> UIImage {
+    static func generateCheckInBarcode(_ model: CheckInOutBarcodeModel) -> UIImage {
         return generateQrCodeFromModel(model)
     }
 

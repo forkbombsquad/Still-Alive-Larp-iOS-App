@@ -12,7 +12,7 @@ struct CheckInPlayerView: View {
     @ObservedObject var _dm = OldDataManager.shared
 
     @State var isScanning: Bool = true
-    @State var playerCheckInModel: PlayerCheckInBarcodeModel?
+    @State var playerCheckInModel: CheckInOutBarcodeModel?
 
     @State var loading: Bool = false
     @State var loadingText = ""
@@ -39,7 +39,7 @@ struct CheckInPlayerView: View {
                             return
                         }
                         globalTestPrint("BARCODE DATA: \(String(data: json, encoding: .utf8) ?? "")")
-                        guard let model: PlayerCheckInBarcodeModel = json.toJsonObject() else {
+                        guard let model: CheckInOutBarcodeModel = json.toJsonObject() else {
                             self.scannerFailed("Unable to parse data")
                             return
                         }
@@ -141,7 +141,7 @@ struct CheckInPlayerView: View {
         }
     }
     
-    private func saveGear(_ model: PlayerCheckInBarcodeModel, onCompletion: @escaping () -> Void) {
+    private func saveGear(_ model: CheckInOutBarcodeModel, onCompletion: @escaping () -> Void) {
         self.loading = true
         self.loadingText = "Organizing Gear..."
         let character = model.character!
@@ -180,7 +180,7 @@ struct CheckInPlayerView: View {
         }
     }
     
-    private func checkInPlayer(_ model: PlayerCheckInBarcodeModel) {
+    private func checkInPlayer(_ model: CheckInOutBarcodeModel) {
         self.loadingText = "Checking in player..."
         // DO NOT set the char id. The service will do that later
         let eventAttendee = EventAttendeeCreateModel(playerId: model.player.id, eventId: model.event.id, isCheckedIn: "TRUE", asNpc: model.character == nil ? "TRUE" : "FALSE")

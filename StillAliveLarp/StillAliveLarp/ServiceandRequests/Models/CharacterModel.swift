@@ -89,11 +89,11 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
                 FullCharacterModifiedSkillModel(skill: baseFullSkill,
                                                 charSkillModel: charSkill,
                                                 xpReduction: xpRed,
-                                                combatXpMod: costOfCombatSkills(pskills),
-                                                professionXpMod: costOfProfessionSkills(pskills),
-                                                talentXpMod: costOfTalentSkills(pskills),
-                                                inf50Mod: costOf50InfectSkills(pskills),
-                                                inf75Mod: costOf75InfectSkills(pskills)
+                                                combatXpMod: FullCharacterModel.costOfCombatSkills(pskills),
+                                                professionXpMod: FullCharacterModel.costOfProfessionSkills(pskills),
+                                                talentXpMod: FullCharacterModel.costOfTalentSkills(pskills),
+                                                inf50Mod: FullCharacterModel.costOf50InfectSkills(pskills),
+                                                inf75Mod: FullCharacterModel.costOf75InfectSkills(pskills)
                                                )
                 )
         }
@@ -143,23 +143,175 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     }
     
     func attemptToPurchaseSkill(skill: FullCharacterModifiedSkillModel, completion: @escaping (_ success: Bool) -> Void) {
-        // TODO
+        if allPurchaseableSkills().first(where: { $0.id == skill.id }) != nil {
+            // Skill Could be purchased
+            askToPurchase(skill: skill) { cscm in
+                if let charSkillCreateModel = cscm {
+                    switch characterType() {
+                    case .standard:
+                        // Standard chars
+                        CharacterSkillService.takeSkill(charSkillCreateModel, playerId: playerId) {
+                            _ in
+                            AlertManager.shared.showOkAlert("Skill Successfully Purchased!", message: "\(fullName) now possesses the skill \(skill.name).") {
+                                completion(true)
+                            }
+                        } failureCase: { error in
+                            completion(false)
+                        }
+
+                    case .npc, .planner:
+                        CharacterSkillService.takePlannedCharacterSkill(charSkillCreateModel) { _ in
+                            AlertManager.shared.showOkAlert("Skill Successfully \(characterType() == .planner ? "Planned!" : "Added To NPC!")", message: "\(fullName) now possesses the skill \(skill.name)") {
+                                completion(true)
+                            }
+                        } failureCase: { error in
+                            completion(false)
+                        }
+
+                    case .hidden:
+                        completion(false)
+                    }
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            // Skill cannot be purchased
+            completion(false)
+        }
     }
     
-    private func askToPurchase(skill: FullCharacterModifiedSkillModel, completion: @escaping (_ char: CharacterSkillCreateModel) -> Void) {
-        // TODO
+    private func askToPurchase(skill: FullCharacterModifiedSkillModel, completion: @escaping (_ cscm: CharacterSkillCreateModel?) -> Void) {
+        var freeSkillPrompt = ""
+        var purchaseTitle = ""
+        var purchaseText = ""
+        switch characterType() {
+        case .standard:
+            freeSkillPrompt = "Use 1 Free Tier-1 Skill?"
+            purchaseText = "Purchase \(skill.name)?"
+            purchaseTitle = "Confirm Purchase?"
+        case .npc:
+            freeSkillPrompt = "Use NPC 1 Free Tier-1 Skill?"
+            purchaseText = "Purchase \(skill.name) For NPC?"
+            purchaseTitle = "Confirm NPC Purchase?"
+        case .planner:
+            freeSkillPrompt = "Plan to use 1 Free Tier-1 Skill?"
+            purchaseText = "Plan to purchase \(skill.name)?"
+            purchaseTitle = "Confirm Planned Purchase?"
+        case .hidden:
+            completion(nil)
+            return
+        }
+        if skill.canUseFreeSkill() {
+            promptTOUseFt1s(title: freeSkillPrompt) { useFt1s in
+                promptToPurchase(title: purchaseTitle, purchaseText: purchaseText, useFreeSkill: useFt1s, skill: skill, completion: completion)
+            }
+        } else {
+            promptToPurchase(title: purchaseTitle, purchaseText: purchaseText, useFreeSkill: false, skill: skill, completion: completion)
+        }
     }
     
     private func promptTOUseFt1s(title: String, completion: @escaping (_ useFt1s: Bool) -> Void) {
-        // TODO
+        AlertManager.shared.showDynamicAlert(model: CustomAlertModel(title: title, textFields: [], checkboxes: [], verticalButtons: [], buttons: [AlertButton(title: "Use Xp", onPress: {
+            completion(false)
+        }), AlertButton(title: "Use Free Tier-1 Skill", onPress: {
+            completion(true)
+        })]))
     }
     
-    private func promptToPurchase(title: String, purchaseText: String, useFreeSkill: Bool, skill: FullCharacterModifiedSkillModel, completion: @escaping (_ charSkill: CharacterSkillCreateModel) -> Void) {
-        // TODO
+    private func promptToPurchase(title: String, purchaseText: String, useFreeSkill: Bool, skill: FullCharacterModifiedSkillModel, completion: @escaping (_ charSkill: CharacterSkillCreateModel?) -> Void) {
+        var message = "\(purchaseText) using:\n"
+        message += "\(useFreeSkill ? "1 Free Tier-1 Skill Point" : "\(skill.modXpCost()) Experience Point\(skill.modXpCost().pluralizeString)")"
+        
+        if skill.usesPrestige() {
+            message += " and \(skill.prestigeCost()) Prestige Point"
+        }
+        message += "?"
+        
+        AlertManager.shared.showOkCancelAlert(title, message: message) {
+            completion(
+                CharacterSkillCreateModel(characterId: id, skillId: skill.id, xpSpent: useFreeSkill ? 0 : skill.modXpCost(), fsSpent: useFreeSkill ? 1 : 0, ppSpent: skill.prestigeCost())
+            )
+        } onCancelAction: {
+            completion(nil)
+        }
     }
     
     func allPurchaseableSkills(searchText: String = "", filter: SkillListView.FilterType = .none) -> [FullCharacterModifiedSkillModel] {
-        // TODO
+        let charSkills = allNonPurchasedSkills()
+        let player = DataManager.shared.getPlayerForCharacter(self)
+        
+        // Remove all skills you don't have prereqs for
+        var newSkillList = charSkills.filter { skillToKeep in
+            hasAllPrereqsForSkill(skill: skillToKeep)
+        }
+        
+        // Planned and NPC charactesr don't require prestige points
+        if characterType() != .planner && characterType() != .npc {
+            newSkillList = newSkillList.filter { skillToKeep in
+                skillToKeep.prestigeCost() <= player.prestigePoints
+            }
+        }
+        
+        // Remove choose one skills that can't be chosen
+        let cskills = getPurchasedChooseOneSkills()
+        if cskills.isEmpty {
+            // Has none
+            // Remove all level 2 cskills is they don't have a level 1
+            newSkillList = newSkillList.filter { skillToKeep in
+                !skillToKeep.id.equalsAnyOf(Constants.SpecificSkillIds.allLevel2SpecialistSkills)
+            }
+        } else if cskills.count == 2 {
+            // Has 2
+            // Remove all cskills if a character already has 2
+            newSkillList = newSkillList.filter({ skillToKeep in
+                !skillToKeep.id.equalsAnyOf(Constants.SpecificSkillIds.allSpecalistSkills)
+            })
+        } else if cskills.count == 1 {
+            // Has 1
+            // Remoe only the non relevant ones
+            var idsToRemove = [Int]()
+            switch cskills.first?.id ?? 0 {
+            case Constants.SpecificSkillIds.expertCombat:
+                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertCombat
+            case Constants.SpecificSkillIds.expertTalent:
+                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertTalent
+            case Constants.SpecificSkillIds.expertProfession:
+                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertProfession
+            default:
+                break
+            }
+            
+            // Remove the cskills in the list to remove
+            newSkillList = newSkillList.filter({ skillToKeep in
+                !skillToKeep.id.equalsAnyOf(idsToRemove)
+            })
+        }
+        
+        // Planned and NPC characters don't requrie xp, free skills, or infection
+        if characterType() != .npc && characterType() != .planner {
+            // Filter out skills you don't have enough xp, fs or int for
+            newSkillList = newSkillList.filter { skillToKeep in
+                var keep = true
+                if infection < skillToKeep.modInfectionCost() {
+                    keep = false
+                }
+                if keep {
+                    if skillToKeep.canUseFreeSkill() && player.freeTier1Skills > 0 {
+                        keep = true
+                    } else if player.experience >= skillToKeep.modXPCost() {
+                        keep = true
+                    } else {
+                        keep = false
+                    }
+                }
+                return keep
+            }
+        }
+        
+        return newSkillList.filter { skillToKeep in
+            skillToKeep.includeInFilter(searchText: searchText, filterType: filter)
+        }
     }
     
     func couldPurchaseSkill(skill: FullCharacterModifiedSkillModel) -> Bool {
@@ -182,7 +334,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         }
     }
     
-    private func costOfCombatSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
+    private static func costOfCombatSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
         for pskill in purchasedSkills {
             if pskill.id.equalsAnyOf(Constants.SpecificSkillIds.allCombatReducingSkills) {
                 return -1
@@ -194,7 +346,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return 0
     }
     
-    private func costOfProfessionSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
+    private static func costOfProfessionSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
         for pskill in purchasedSkills {
             if pskill.id.equalsAnyOf(Constants.SpecificSkillIds.allProfessionReducingSkills) {
                 return -1
@@ -206,7 +358,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return 0
     }
     
-    private func costOfTalentSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
+    private static func costOfTalentSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
         for pskill in purchasedSkills {
             if pskill.id.equalsAnyOf(Constants.SpecificSkillIds.allTalentReducingSkills) {
                 return -1
@@ -218,11 +370,11 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return 0
     }
     
-    private func costOf50InfectSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
+    private static func costOf50InfectSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
         return purchasedSkills.first(where: { $0.id == Constants.SpecificSkillIds.adaptable }) != nil ? 25 : 50
     }
     
-    private func costOf75InfectSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
+    private static func costOf75InfectSkills(_ purchasedSkills: [FullSkillModel]) -> Int {
         return purchasedSkills.first(where: { $0.id == Constants.SpecificSkillIds.extremelyAdaptable }) != nil ? 50 : 75
     }
     
@@ -286,6 +438,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         let sortedAwards = awards.sorted {
             return $0.date.yyyyMMddtoDate() > $1.date.yyyyMMddtoDate() // descending
         }
+        return sortedAwards
     }
     
     func deleteSkillsDESTRUCTIVE(completion: @escaping (_ success: Bool) -> Void) {
@@ -387,14 +540,6 @@ struct OldFullCharacterModel: CustomCodeable {
         self.skills = []
     }
 
-    var baseModel: CharacterModel {
-        CharacterModel(self)
-    }
-
-    var barcodeModel: CharacterBarcodeModel {
-        return CharacterBarcodeModel(self)
-    }
-
     func getIntrigueSkills() -> [Int] {
         var intrigueSkills = [Int]()
         let filteredSkills = skills.filter { sk in
@@ -473,46 +618,6 @@ struct OldFullCharacterModel: CustomCodeable {
         return barSkills
     }
 
-}
-
-struct CharacterBarcodeModel: CustomCodeable {
-    let id: Int
-    let fullName: String
-    let infection: String
-    let bullets: String
-    let megas: String
-    let rivals: String
-    let rockets: String
-    let bulletCasings: String
-    let clothSupplies: String
-    let woodSupplies: String
-    let metalSupplies: String
-    let techSupplies: String
-    let medicalSupplies: String
-    let armor: String
-    let unshakableResolveUses: String
-    let mysteriousStrangerUses: String
-    let playerId: Int
-
-    init(_ characterModel: OldFullCharacterModel) {
-        self.id = characterModel.id
-        self.fullName = characterModel.fullName
-        self.infection = characterModel.infection
-        self.bullets = characterModel.bullets
-        self.megas = characterModel.megas
-        self.rivals = characterModel.rivals
-        self.rockets = characterModel.rockets
-        self.bulletCasings = characterModel.bulletCasings
-        self.clothSupplies = characterModel.clothSupplies
-        self.woodSupplies = characterModel.woodSupplies
-        self.metalSupplies = characterModel.metalSupplies
-        self.techSupplies = characterModel.techSupplies
-        self.medicalSupplies = characterModel.medicalSupplies
-        self.armor = characterModel.armor
-        self.unshakableResolveUses = characterModel.unshakableResolveUses
-        self.mysteriousStrangerUses = characterModel.mysteriousStrangerUses
-        self.playerId = characterModel.playerId
-    }
 }
 
 struct CharacterModel: CustomCodeable, Identifiable {

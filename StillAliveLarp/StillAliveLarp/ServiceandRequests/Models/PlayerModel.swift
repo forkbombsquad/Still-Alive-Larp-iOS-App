@@ -48,7 +48,70 @@ struct FullPlayerModel: CustomCodeable, Identifiable {
         self.profileImage = profileImage
     }
     
-    // TODO still need to do
+    func getActiveCharacter() -> FullCharacterModel? {
+        return characters.first(where: { $0.characterType() == .standard && $0.isAlive })
+    }
+    
+    func getInactiveCharacters() -> [FullCharacterModel] {
+        return characters.filter({ $0.characterType() == .standard && !$0.isAlive })
+    }
+    
+    func getPlannedCharacters() -> [FullCharacterModel] {
+        return characters.filter({ $0.characterType() == .planner })
+    }
+    
+    func getAwardsSorted() -> [AwardModel] {
+        return awards.sorted { (a, b) -> Bool in
+            return a.date > b.date
+        }
+    }
+    
+    func getCheckInBarcodeModel(useChar: Bool, event: FullEventModel) -> CheckInOutBarcodeModel {
+        let activeChar = getActiveCharacter()
+        if useChar && activeChar != nil {
+            return CheckInOutBarcodeModel(playerId: id, characterId: activeChar?.id, eventId: event.id)
+        } else {
+            return CheckInOutBarcodeModel(playerId: id, eventId: event.id)
+        }
+    }
+    
+    func getCheckOutBarcodeModel(eventAttendee: EventAttendeeModel) -> CheckInOutBarcodeModel {
+        if characters.first(where: { $0.id == eventAttendee.characterId }) != nil {
+            return CheckInOutBarcodeModel(playerId: eventAttendee.playerId, characterId: eventAttendee.characterId, eventId: eventAttendee.eventId)
+        } else {
+            return CheckInOutBarcodeModel(playerId: eventAttendee.playerId, eventId: eventAttendee.eventId)
+        }
+    }
+    
+    func baseModel() -> PlayerModel {
+        return PlayerModel(self)
+    }
+    
+    func baseModelWithModifications(xpChange: Int, ft1sChange: Int, ppChange: Int) -> PlayerModel {
+        return PlayerModel(id: id,
+                           username: username,
+                           fullName: fullName,
+                           startDate: startDate,
+                           experience: (experience + xpChange).stringValue,
+                           freeTier1Skills: (freeTier1Skills + ft1sChange).stringValue,
+                           prestigePoints: (prestigePoints + ppChange).stringValue,
+                           isCheckedIn: isCheckedIn.stringValue,
+                           isCheckedInAsNpc: isCheckedInAsNpc.stringValue,
+                           lastCheckIn: lastCheckIn,
+                           numEventsAttended: numEventsAttended.stringValue,
+                           numNpcEventsAttended: numNpcEventsAttended.stringValue,
+                           isAdmin: isAdmin.stringValue)
+    }
+    
+    func getUniqueCharacterNameRec(name: String, incrementalCount: Int? = nil) -> String {
+        let fName = "\(name)\((incrementalCount == nil) ? "" : "\(incrementalCount!)")"
+        if characters.first(where: { $0.fullName == fName }) == nil {
+            return fName
+        } else {
+            return getUniqueCharacterNameRec(name: name, incrementalCount: incrementalCount == nil ? 1 : incrementalCount! + 1)
+        }
+    }
+    
 }
 
 struct PlayerModel: CustomCodeable, Identifiable {
@@ -65,10 +128,6 @@ struct PlayerModel: CustomCodeable, Identifiable {
     let numEventsAttended: String
     let numNpcEventsAttended: String
     let isAdmin: String
-
-    var barcodeModel: PlayerBarcodeModel {
-        return PlayerBarcodeModel(self)
-    }
 }
 
 struct PlayerCreateModel: CustomCodeable {
@@ -89,22 +148,4 @@ struct PlayerCreateModel: CustomCodeable {
 
 struct PlayerListModel: CustomCodeable {
     var players: [PlayerModel]
-}
-
-struct PlayerBarcodeModel: CustomCodeable, Identifiable {
-    let id: Int
-    let fullName: String
-    let isCheckedIn: String
-    let lastCheckIn: String
-    let numEventsAttended: String
-    let numNpcEventsAttended: String
-
-    init(_ playerModel: PlayerModel) {
-        self.id = playerModel.id
-        self.fullName = playerModel.fullName
-        self.isCheckedIn = playerModel.isCheckedIn
-        self.lastCheckIn = playerModel.lastCheckIn
-        self.numEventsAttended = playerModel.numEventsAttended
-        self.numNpcEventsAttended = playerModel.numNpcEventsAttended
-    }
 }

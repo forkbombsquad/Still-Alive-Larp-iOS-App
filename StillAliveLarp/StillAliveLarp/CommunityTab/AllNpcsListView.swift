@@ -26,7 +26,8 @@ struct AllNpcsListView: View {
         self._dm = _dm
         self.offline = true
         self.allowEdit = allowEdit
-        self._npcs = globalState(fullCharacterModels.map({ $0.baseModel }))
+        // TODO
+//        self._npcs = globalState(fullCharacterModels.map({ $0.baseModel }))
         self._fullNpcModelsOffline = globalState(fullCharacterModels)
         self._offlineSkills = globalState(skills)
         

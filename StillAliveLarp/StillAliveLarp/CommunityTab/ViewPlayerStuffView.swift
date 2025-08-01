@@ -66,9 +66,10 @@ struct ViewPlayerStuffView: View {
                                 NavArrowView(title: "Bio", loading: $loadingCharacter) { _ in
                                     BioView(allowEdit: false)
                                 }
-                                NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in
-                                    GearView(character: character.baseModel, allowEdit: false)
-                                }
+                                // TODO
+//                                NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in
+//                                    GearView(character: character.baseModel, allowEdit: false)
+//                                }
                             } else {
                                 NavArrowView(title: "Gear", loading: $loadingCharacter) { _ in }
                             }

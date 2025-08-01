@@ -132,7 +132,7 @@ class OldDataManager: ObservableObject {
     @Published var selectedEvent: EventModel? = nil
     @Published var selectedChar: CharacterModel? = nil
     @Published var selectedContactRequest: ContactRequestModel? = nil
-    @Published var checkinBarcodeModel: PlayerCheckInBarcodeModel? = nil
+    @Published var checkinBarcodeModel: CheckInOutBarcodeModel? = nil
     @Published var checkoutBarcodeModel: PlayerCheckOutBarcodeModel? = nil
 
     @Published var announcements: [AnnouncementSubModel]? = nil
