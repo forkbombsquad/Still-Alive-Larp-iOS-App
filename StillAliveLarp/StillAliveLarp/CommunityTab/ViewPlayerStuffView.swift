@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ViewPlayerStuffView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     private let playerModel: PlayerModel
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")

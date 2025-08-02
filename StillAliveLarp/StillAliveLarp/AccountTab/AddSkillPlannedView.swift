@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddPlannedSkillView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     typealias slk = SkillListView
 

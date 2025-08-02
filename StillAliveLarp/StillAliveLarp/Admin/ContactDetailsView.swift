@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContactDetailsView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var contactRequest: ContactRequestModel
     @State var loading = false

@@ -14,6 +14,12 @@ struct SpecialClassXpReductionService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllXpReductions(onSuccess: @escaping (_ xpReductions: SpecialClassXpReductionListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.getAllXpReductions, responseObject: SpecialClassXpReductionListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
     static func deleteXpReductions(characterId: Int, onSuccess: @escaping (_ xpReductions: SpecialClassXpReductionListModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.deleteXpRedsForChar, addToEndOfUrl: "\(characterId)", responseObject: SpecialClassXpReductionListModel.self, overrideDefaultErrorBehavior: true, success: { success in

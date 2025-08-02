@@ -131,12 +131,6 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
-    static func getAllContactRequests(onSuccess: @escaping (_ contactRequestList: ContactRequestListModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.allContactRequests, responseObject: ContactRequestListModel.self, success: { success in
-            onSuccess(success.jsonObject)
-        }, failureCase: failureCase)
-    }
-
     static func updatePAdmin(_ newP: String, playerId: Int, onSuccess: @escaping (_ player: PlayerModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.updatePAdmin, addToEndOfUrl: "\(playerId)", headers: ["p": newP], responseObject: PlayerModel.self, success: { success in
             onSuccess(success.jsonObject)
@@ -151,12 +145,6 @@ struct AdminService {
 
     static func updateIntrigue(_ intrigue: IntrigueModel, onSuccess: @escaping (_ intrigue: IntrigueModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.updateIntrigue, bodyJson: intrigue, responseObject: IntrigueModel.self, success: { success in
-            onSuccess(success.jsonObject)
-        }, failureCase: failureCase)
-    }
-
-    static func getAllIntrigues(onSuccess: @escaping (_ intrigue: IntrigueListModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.getAllIntrigue, responseObject: IntrigueListModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

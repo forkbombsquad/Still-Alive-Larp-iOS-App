@@ -154,7 +154,7 @@
 		B2E135BE29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135BD29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift */; };
 		B2E135C029FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135BF29FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift */; };
 		B2E5F2D92AD07FBB004D61F5 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = B2E5F2D82AD07FBB004D61F5 /* SwiftSoup */; };
-		B2E5F2DB2AD0807C004D61F5 /* RulebookManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */; };
+		B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */; };
 		B2E5F2DD2AD09634004D61F5 /* ViewRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */; };
 		B2F292D52C120A7700B5BE85 /* DownloadedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */; };
 		B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */; };
@@ -348,7 +348,7 @@
 		B2E135BB29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCharacterForClassXpReducitonView.swift; sourceTree = "<group>"; };
 		B2E135BD29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSkillForClassXpReducitonView.swift; sourceTree = "<group>"; };
 		B2E135BF29FD8F7E0038DE31 /* SpecialClassXpReductionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialClassXpReductionsView.swift; sourceTree = "<group>"; };
-		B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulebookManager.swift; sourceTree = "<group>"; };
+		B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulebookUtils.swift; sourceTree = "<group>"; };
 		B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRulesView.swift; sourceTree = "<group>"; };
 		B2F292D42C120A7700B5BE85 /* DownloadedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadedImageView.swift; sourceTree = "<group>"; };
 		B2F292E32C120F6100B5BE85 /* ImageDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDownloader.swift; sourceTree = "<group>"; };
@@ -516,7 +516,7 @@
 				B2A0D4E229E5B29E00A235B4 /* SkillManager.swift */,
 				B2F9837429F069B500512839 /* EventManager.swift */,
 				B20FF4632A267FD600B13F1D /* OldDataManager.swift */,
-				B2E5F2DA2AD0807C004D61F5 /* RulebookManager.swift */,
+				B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -920,7 +920,7 @@
 			files = (
 				B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
-				B2E5F2DB2AD0807C004D61F5 /* RulebookManager.swift in Sources */,
+				B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */,
 				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,
 				B2F9837929F07C7200512839 /* CreateEditEventView.swift in Sources */,
 				B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */,

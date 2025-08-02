@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ManageNPCView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @Binding var npcs: [CharacterModel]
     let npc: CharacterModel

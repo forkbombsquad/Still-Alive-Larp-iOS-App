@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccountTabView: View {
 
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var loading: Bool = false
     @State private var loadingProfileImage: Bool = false

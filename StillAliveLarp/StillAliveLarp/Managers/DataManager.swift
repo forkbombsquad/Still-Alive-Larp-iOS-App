@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftSoup
 
 class DataManager: ObservableObject {
     
@@ -74,19 +75,16 @@ class DataManager: ObservableObject {
     // MARK: - Settings
     //
     
+    @Published var actionState: Int? = 0
     @Published private(set) var debugMode: Bool = false
     @Published private(set) var offlineMode: Bool = false
     @Published private(set) var currentPlayerId: Int = -1
     @Published private var updateCallbacks: [String: () -> Void] = [:]
     @Published private var passedData: [String: Any] = [:]
     
-    @Published private var currentUpdateTracker: UpdateTrackerModel = UpdateTrackerModel.empty()
-    @Published private var updatesNeeded: [DataManagerType] = []
-    @Published private var updatesCompleted: [DataManagerType] = []
-    @Published private var finishedCount: Int = 0
-    
     @Published var loadingText: String = ""
     let loadingActor = LoadingActor()
+    let finishedCountActor = FinishedCountActor()
     
     actor LoadingActor {
         private var firstLoad: Bool = true
@@ -118,10 +116,71 @@ class DataManager: ObservableObject {
         func getFirstLoad() -> Bool {
             return firstLoad
         }
+        
+        func callStepCallbacks() {
+            
+        }
+        
+        func callCallbacks() {
+            
+        }
+        
+        func clearStepCallbacks() {
+            stepCallbacks.removeAll()
+        }
+        
+        func clearCallbacks() {
+            callbacks.removeAll()
+        }
+        
     }
     
-    actor finishedCountActor {
+    actor FinishedCountActor {
+        private var currentUpdateTracker: UpdateTrackerModel = UpdateTrackerModel.empty()
+        private var updatesNeeded: [DataManagerType] = []
+        private var updatesCompleted: [DataManagerType] = []
+        private var finishedCount: Int = 0
         
+        func setCurrentUpdateTracker(_ value: UpdateTrackerModel) {
+            currentUpdateTracker = value
+        }
+        
+        func getCurrentUpdateTracker() -> UpdateTrackerModel {
+            return currentUpdateTracker
+        }
+        
+        func removeFromUpdatesNeededAndAddToCompleted(_ value: DataManagerType) {
+            updatesNeeded.removeAll(where: { $0 == value })
+            updatesCompleted.append(value)
+        }
+        
+        func setUpdatesNeeded(_ value: [DataManagerType]) {
+            updatesNeeded = value
+        }
+        
+        func getUpdatesNeeded() -> [DataManagerType] {
+            return updatesNeeded
+        }
+        
+        func setUpdatesCompleted(_ value: [DataManagerType]) {
+            updatesCompleted = value
+        }
+        
+        func getUpdatesComplerted() -> [DataManagerType] {
+            return updatesCompleted
+        }
+        
+        func getFinishedCount() -> Int {
+            return finishedCount
+        }
+        
+        func incrementFinishedCount() {
+            finishedCount += 1
+        }
+        
+        func setFinishedCount(_ value: Int) {
+            finishedCount = value
+        }
     }
     
     //
@@ -160,7 +219,7 @@ class DataManager: ObservableObject {
     }
     
     func setPassedData<T: View>(_ view: T, dataKey: DataManagerPassedDataKey, data: Any) {
-        passedData["\(getViewName(view))\(dataKey)"]
+        passedData["\(getViewName(view))\(dataKey)"] = data
     }
     
     func clearPassedData<T: View>(_ view: T.Type, dataKey: DataManagerPassedDataKey) {
@@ -220,8 +279,7 @@ class DataManager: ObservableObject {
     
     @Published var characterToEdit: FullCharacterModel? = nil
     @Published var gearToEdit: GearJsonModel? = nil
-    // TODO
-    //    @Published var fortificationToEdit: CampFortification? = nil
+    @Published var fortificationToEdit: CampFortification? = nil
     
     //
     // MARK: Utils
@@ -263,20 +321,301 @@ class DataManager: ObservableObject {
     
     private func loadDownloadIfNecessary() {
         UpdateTrackerService.getUpdateTracker { updateTrackerModel in
-            self.handleUpdates(updateTrackerModel)
+            Task {
+                await self.handleUpdates(updateTrackerModel)
+            }
         } failureCase: { error in
             self.loadOffline()
         }
         
     }
     
-    private func handleUpdates(_ updateTracker: UpdateTrackerModel) {
-        // TODO
+    private func handleUpdates(_ updateTracker: UpdateTrackerModel) async {
+        await finishedCountActor.setUpdatesNeeded(LocalDataManager.shared.determineWhichTypesNeedUpdates(updateTracker))
+        await finishedCountActor.setUpdatesCompleted([])
+        await finishedCountActor.setCurrentUpdateTracker(updateTracker)
+        await finishedCountActor.setFinishedCount(0)
+        if await finishedCountActor.getUpdatesNeeded().isEmpty {
+            populateLocalData(false)
+        } else {
+            Task {
+                await updateLoadingText(generateLoadingText())
+                await loadingActor.callStepCallbacks()
+                let updatesNeededCopy = await finishedCountActor.getUpdatesNeeded()
+                for updateType in updatesNeededCopy {
+                    switch updateType {
+                    case .updateTracker:
+                        continue
+                    case .announcements:
+                        AnnouncementService.getAllAnnouncements { announcements in
+                            LocalDataManager.shared.storeAnnouncements(announcements.announcements)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+                    case .awards:
+                        AwardService.getAllAwards { awardList in
+                            LocalDataManager.shared.storeAwards(awards: awardList.awards)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .characters:
+                        CharacterService.getAllFullCharacters { characterList in
+                            LocalDataManager.shared.storeCharacters(characterList.characters)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .gear:
+                        GearService.getAllGear { gearListModel in
+                            LocalDataManager.shared.storeGear(gearListModel.charGear)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .characterSkills:
+                        CharacterSkillService.getAllCharacterSkills { charSkills in
+                            LocalDataManager.shared.storeCharacterSkills(charSkills.charSkills)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .contactRequests:
+                        ContactService.getAllContactRequests { contactRequestList in
+                            LocalDataManager.shared.storeContactRequests(contactRequestList.contactRequests)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .events:
+                        EventService.getAllEvents { eventList in
+                            LocalDataManager.shared.storeEvents(eventList.events)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .eventAttendees:
+                        EventAttendeeService.getAllEventAttendees { attendeeList in
+                            LocalDataManager.shared.storeEventAttendees(attendeeList.eventAttendees)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .preregs:
+                        EventPreregService.getAllPreregs { preregList in
+                            LocalDataManager.shared.storePreregs(preregList.eventPreregs)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .featureFlags:
+                        FeatureFlagService.getAllFeatureFlags { featureFlags in
+                            LocalDataManager.shared.storeFeatureFlags(featureFlags.results)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .intrigues:
+                        IntrigueService.getAllIntrigues { intrigue in
+                            LocalDataManager.shared.storeIntrigues(intrigue.intrigues)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .players:
+                        PlayerService.getAllPlayers { playerList in
+                            LocalDataManager.shared.storePlayers(playerList.players)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .profileImages:
+                        ProfileImageService.getAllProfileImages { profileImages in
+                            LocalDataManager.shared.storeProfileImages(profileImages.profileImages)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .researchProjects:
+                        ResearchProjectService.getAllResearchProjects { projectList in
+                            LocalDataManager.shared.storeResearchProjects(projectList.researchProjects)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .skills:
+                        SkillService.getAllSkills { skillListModel in
+                            LocalDataManager.shared.storeSkills(skillListModel.results)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .skillCategories:
+                        SkillCategoryService.getAllSkillCategories { skillCategories in
+                            LocalDataManager.shared.storeSkillCategories(skillCategories.results)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .skillPrereqs:
+                        SkillPrereqService.getAllSkillPrereqs { skillPrereqListModel in
+                            LocalDataManager.shared.storeSkillPrereqs(skillPrereqListModel.skillPrereqs)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .xpReductions:
+                        SpecialClassXpReductionService.getAllXpReductions { xpReductions in
+                            LocalDataManager.shared.storeXpReductions(xpReductions.specialClassXpReductions)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    case .rulebook:
+                        guard let url = URL(string: Constants.urls.rulebook) else {
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                            continue
+                        }
+                        do {
+                            let html = try String(contentsOf: url)
+                            OldLocalDataHandler.shared.storeRulebook(html)
+                            let rb = RulebookUtils.parseDocAsRulebook(document: try SwiftSoup.parse(html), version: updateTracker.rulebookVersion)
+                            LocalDataManager.shared.storeRulebook(rb)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } catch {
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+                    case .treatingWounds:
+                        ImageDownloader().downloadReturningImage(key: .treatingWounds) { imageData in
+                            if let data = imageData {
+                                LocalDataManager.shared.storeTreatingWounds(data)
+                                Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                            } else {
+                                Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                            }
+                        }
+                    case .campStatus:
+                        CampStatusService.getCampStatus { campStatusModel in
+                            LocalDataManager.shared.storeCampStatus(campStatusModel)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
+                    }
+                }
+            }
+            
+        }
     }
     
-    private func generateLoadingText() -> String {
+    private func generateLoadingText() async -> String {
         var text = "Loading:\n"
-        for (index, update) in updatesNeeded.enumerated() {
+        for (index, update) in await finishedCountActor.getUpdatesNeeded().enumerated() {
             if index > 0 {
                 // Two per line
                 text += (index % 2 == 0) ? "\n" : ", "
@@ -287,12 +626,87 @@ class DataManager: ObservableObject {
         return text
     }
     
-    private func serviceFinished(type: DataManagerType, succeeded: Bool, localUpdatesNeeded: [DataManagerType]) {
-        // TODO
+    private func serviceFinished(type: DataManagerType, succeeded: Bool, localUpdatesNeeded: [DataManagerType]) async {
+        if succeeded {
+            await finishedCountActor.removeFromUpdatesNeededAndAddToCompleted(type)
+        }
+        await finishedCountActor.incrementFinishedCount()
+        await updateLoadingText(generateLoadingText())
+        await loadingActor.callStepCallbacks()
+        if await finishedCountActor.getFinishedCount() == localUpdatesNeeded.count {
+            updateLoadingText("Building Local Data Models...")
+            await loadingActor.callStepCallbacks()
+            LocalDataManager.shared.updatesSucceeded(await finishedCountActor.getCurrentUpdateTracker(), successfulUpdates: await finishedCountActor.getUpdatesComplerted())
+            populateLocalData(true)
+        }
     }
     
     private func populateLocalData(_ updatesDownloaded: Bool) {
-        // TODO
+        if debugMode {
+            Task {
+                if await loadingActor.getFirstLoad() || updatesDownloaded {
+                    let md = getMockData()
+                    
+                    updateLoadingText("Populating Mock Data In Memory...")
+                    await loadingActor.callStepCallbacks()
+                    await loadingActor.setFirstLoad(false)
+                    
+                    // Normal Models
+                    self.announcements = md.allAnnouncements.announcements
+                    self.contactRequests = md.contacts.contactRequests
+                    self.featureFlags = md.featureFlagList.results
+                    self.intrigues = md.intriguesByEvent()
+                    self.researchProjects = md.researchProjects.researchProjects
+                    self.campStatus = md.campStatus
+                    
+                    // Built Models
+                    self.skills = md.fullSkills()
+                    self.events = md.fullEvents()
+                    self.characters = md.fullCharacters()
+                    self.players = md.fullPlayers()
+                    self.rulebook = md.rulebook
+                    self.treatingWounds = UIImage(data: LocalDataManager.shared.getTreatingWounds() ?? Data())
+                    self.currentPlayerId = md.player().id
+                }
+                updateLoadingText("")
+                await loadingActor.setLoading(false)
+                await loadingActor.callStepCallbacks()
+                await loadingActor.callCallbacks()
+                await loadingActor.clearCallbacks()
+                await loadingActor.clearStepCallbacks()
+            }
+        } else {
+            Task {
+                if await loadingActor.getFirstLoad() || updatesDownloaded {
+                    updateLoadingText("Populating Data In Memory...")
+                    await loadingActor.callStepCallbacks()
+                    await loadingActor.setFirstLoad(false)
+                    
+                    // Normal Models
+                    self.announcements = LocalDataManager.shared.getAnnouncements()
+                    self.contactRequests = LocalDataManager.shared.getContactRequests()
+                    self.featureFlags = LocalDataManager.shared.getFeatureFlags()
+                    self.intrigues = LocalDataManager.shared.getIntrigues()
+                    self.researchProjects = LocalDataManager.shared.getResearchProjects()
+                    self.campStatus = LocalDataManager.shared.getCampStatus()
+                    
+                    // Built Models
+                    self.skills = LocalDataManager.shared.getFullSkills()
+                    self.events = LocalDataManager.shared.getFullEvents()
+                    self.characters = LocalDataManager.shared.getFullCharacters()
+                    self.players = LocalDataManager.shared.getFullPlayers()
+                    self.rulebook = LocalDataManager.shared.getRulebook()
+                    self.treatingWounds = UIImage(data: LocalDataManager.shared.getTreatingWounds() ?? Data())
+                    self.currentPlayerId = LocalDataManager.shared.getPlayerId()
+                }
+                updateLoadingText("")
+                await loadingActor.setLoading(false)
+                await loadingActor.callStepCallbacks()
+                await loadingActor.callCallbacks()
+                await loadingActor.clearCallbacks()
+                await loadingActor.clearStepCallbacks()
+            }
+        }
     }
     
     private func updateLoadingText(_ new: String) {
@@ -369,6 +783,12 @@ class DataManager: ObservableObject {
     
     func getCharactersWhoNeedBiosApproved() -> [FullCharacterModel] {
         return characters.filter({ !$0.approvedBio && $0.bio.isNotEmpty })
+    }
+    
+    func popToRoot() {
+        runOnMainThread {
+            self.actionState = 0
+        }
     }
     
 }

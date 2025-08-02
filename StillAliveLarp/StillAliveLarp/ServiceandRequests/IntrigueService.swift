@@ -15,4 +15,10 @@ struct IntrigueService {
         }, failureCase: failureCase)
     }
 
+    static func getAllIntrigues(onSuccess: @escaping (_ intrigue: IntrigueListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.getAllIntrigue, responseObject: IntrigueListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+    
 }

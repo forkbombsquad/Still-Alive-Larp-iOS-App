@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllResearchProjectsListView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @State var researchProjects: [ResearchProjectModel]
     @State var loading = false

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillManagementView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     static func Offline(character: OldFullCharacterModel) -> SkillManagementView {
         return SkillManagementView(offline: true, allowEdit: false, character: character)

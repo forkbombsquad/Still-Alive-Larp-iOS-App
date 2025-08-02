@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AwardCharacterView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     @State var characters: [CharacterModel]
 
     var body: some View {

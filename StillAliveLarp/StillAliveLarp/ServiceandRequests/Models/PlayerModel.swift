@@ -25,9 +25,9 @@ struct FullPlayerModel: CustomCodeable, Identifiable {
     let awards: [AwardModel]
     let eventAttendees: [EventAttendeeModel]
     let preregs: [EventPreregModel]
-    let profileImage: ProfileImageModel
+    let profileImage: ProfileImageModel?
     
-    init(player: PlayerModel, characters: [FullCharacterModel], awards: [AwardModel], eventAttendees: [EventAttendeeModel], preregs: [EventPreregModel], profileImage: ProfileImageModel) {
+    init(player: PlayerModel, characters: [FullCharacterModel], awards: [AwardModel], eventAttendees: [EventAttendeeModel], preregs: [EventPreregModel], profileImage: ProfileImageModel?) {
         self.id = player.id
         self.username = player.username
         self.fullName = player.fullName
@@ -128,6 +128,38 @@ struct PlayerModel: CustomCodeable, Identifiable {
     let numEventsAttended: String
     let numNpcEventsAttended: String
     let isAdmin: String
+    
+    init(id: Int, username: String, fullName: String, startDate: String, experience: String, freeTier1Skills: String, prestigePoints: String, isCheckedIn: String, isCheckedInAsNpc: String, lastCheckIn: String, numEventsAttended: String, numNpcEventsAttended: String, isAdmin: String) {
+        self.id = id
+        self.username = username
+        self.fullName = fullName
+        self.startDate = startDate
+        self.experience = experience
+        self.freeTier1Skills = freeTier1Skills
+        self.prestigePoints = prestigePoints
+        self.isCheckedIn = isCheckedIn
+        self.isCheckedInAsNpc = isCheckedInAsNpc
+        self.lastCheckIn = lastCheckIn
+        self.numEventsAttended = numEventsAttended
+        self.numNpcEventsAttended = numNpcEventsAttended
+        self.isAdmin = isAdmin
+    }
+    
+    init(_ player: FullPlayerModel) {
+        self.id = player.id
+        self.username = player.username
+        self.fullName = player.fullName
+        self.startDate = player.startDate
+        self.experience = player.experience.stringValue
+        self.freeTier1Skills = player.freeTier1Skills.stringValue
+        self.prestigePoints = player.prestigePoints.stringValue
+        self.isCheckedIn = player.isCheckedIn.stringValue
+        self.isCheckedInAsNpc = player.isCheckedInAsNpc.stringValue
+        self.lastCheckIn = player.lastCheckIn
+        self.numEventsAttended = player.numEventsAttended.stringValue
+        self.numNpcEventsAttended = player.numNpcEventsAttended.stringValue
+        self.isAdmin = player.isAdmin.stringValue
+    }
 }
 
 struct PlayerCreateModel: CustomCodeable {

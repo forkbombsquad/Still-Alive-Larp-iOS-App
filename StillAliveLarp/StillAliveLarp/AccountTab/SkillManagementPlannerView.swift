@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillManagementPlannerView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterModel
     @State var fullCharacterModel: OldFullCharacterModel? = nil

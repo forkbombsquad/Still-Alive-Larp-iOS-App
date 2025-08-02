@@ -1,5 +1,5 @@
 //
-//  RulebookManager.swift
+//  RulebookUtils.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 10/6/23.
@@ -9,9 +9,7 @@ import Foundation
 import SwiftSoup
 import OrderedCollections
 
-// TODO remove this completely
-
-class RulebookManager {
+class RulebookUtils {
 
     private struct Tags {
         static let HEADING = "h1"
@@ -24,40 +22,8 @@ class RulebookManager {
         static let TABLEHEAD = "th"
         static let TABLEDETAIL = "td"
     }
-
-    static let shared = RulebookManager()
-
-    private init() {}
-
-    func getOfflineVersion() -> Rulebook? {
-        guard let rulebookString = OldLocalDataHandler.shared.getRulebook() else { return nil }
-        return parseDocAsRulebook(document: try? SwiftSoup.parse(rulebookString), version: OldLocalDataHandler.shared.getRulebookVersion() ?? "Unknown Version")
-    }
-
-    func getOnlineVersion(callback: @escaping (_ rulebook: Rulebook?) -> Void) {
-        // check version
-        VersionService.getVersions { versions in
-            let savedRulesVersion = OldLocalDataHandler.shared.getRulebookVersion()
-            if savedRulesVersion != versions.rulebookVersion || OldLocalDataHandler.shared.getRulebook() == nil {
-                // Download
-                OldLocalDataHandler.shared.storeRulebookVersion(versions.rulebookVersion)
-                self.downloadPage(version: versions.rulebookVersion) { rulebook in
-                    callback(rulebook)
-                } onFailure: {
-                    callback(nil)
-                }
-
-            } else {
-                // Load from local data
-                callback(self.getOfflineVersion())
-            }
-        } failureCase: { error in
-            callback(nil)
-        }
-
-    }
-
-    private func parseDocAsRulebook(document: Document?, version: String) -> Rulebook {
+    
+    static func parseDocAsRulebook(document: Document?, version: String) -> Rulebook {
         let content = try? document?.getElementById("AppContent")
         let elements = content?.children().array() ?? []
         let rulebook = Rulebook(version: version)
@@ -217,20 +183,6 @@ class RulebookManager {
 
         return rulebook
 
-    }
-
-    private func downloadPage(version: String, onSuccess: (_ rulebook: Rulebook) -> Void, onFailure: () -> Void) {
-        guard let url = URL(string: Constants.urls.rulebook) else {
-            onFailure()
-            return
-        }
-        do {
-            let html = try String(contentsOf: url)
-            OldLocalDataHandler.shared.storeRulebook(html)
-            onSuccess(parseDocAsRulebook(document: try SwiftSoup.parse(html), version: version))
-        } catch {
-            onFailure()
-        }
     }
 
 }

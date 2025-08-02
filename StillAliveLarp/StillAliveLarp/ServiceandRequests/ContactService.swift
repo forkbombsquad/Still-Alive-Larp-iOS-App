@@ -15,4 +15,10 @@ struct ContactService {
         }, failureCase: failureCase)
     }
 
+    static func getAllContactRequests(onSuccess: @escaping (_ contactRequestList: ContactRequestListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allContactRequests, responseObject: ContactRequestListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+    
 }

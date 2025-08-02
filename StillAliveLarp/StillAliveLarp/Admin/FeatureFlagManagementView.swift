@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FeatureFlagManagementView: View {
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @Binding var featureFlags: [FeatureFlagModel]
     @State var loading: Bool = false

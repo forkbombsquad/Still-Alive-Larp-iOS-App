@@ -10,7 +10,7 @@ import CodeScanner
 
 struct AdminView: View {
 
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var loadingPlayers: Bool = true
     @State var allPlayers = [PlayerModel]()
@@ -166,7 +166,7 @@ struct AdminView: View {
 }
 
 struct EventToolsView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var events: [EventModel]
     @Binding var loadingEvents: Bool
@@ -193,7 +193,7 @@ struct EventToolsView: View {
 }
 
 struct PlayerCharacterManagementView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var npcs: [CharacterModel]
@@ -227,7 +227,7 @@ struct PlayerCharacterManagementView: View {
 }
 
 struct MiscAdminView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var loadingCharacters: Bool

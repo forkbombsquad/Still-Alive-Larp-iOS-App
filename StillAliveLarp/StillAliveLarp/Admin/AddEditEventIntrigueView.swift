@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddEditEventIntrigueView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let event: EventModel
     @State var loadingIntrigue: Bool = true

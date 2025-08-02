@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeTabBarView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     var body: some View {
         TabView {

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct AwardCharacterFormView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     typealias stat = AwardCharacterFormView
 

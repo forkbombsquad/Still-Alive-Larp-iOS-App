@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddEditGearView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let gearToEdit: GearJsonModel?
     let characterName: String

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var username: String = ""
     @State private var password: String = ""
@@ -18,14 +18,11 @@ struct MainView: View {
     @State var loading = false
     @State var loadingText = ""
 
-    @State var player: PlayerModel?
-    @State var character: OldFullCharacterModel?
-
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: OldDataManager.$shared.actionState) {
+                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: DataManager.$shared.actionState) {
                         EmptyView()
                     }
                     Image("StillAliveLogo_Black")
@@ -57,6 +54,7 @@ struct MainView: View {
                                     .padding(.trailing, 8)
 
                                 LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.4, height: 90, buttonText: "Log In", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
+                                    DataManager.shared.setOfflineMode(false)
                                     self.loading = true
                                     self.loadingText = "Checking Creds..."
                                     VersionService.getVersions { versions in
@@ -73,12 +71,12 @@ struct MainView: View {
                                                 })
                                         } else {
                                             loadingText = "Fetching Player Info..."
-                                            UserAndPassManager.shared.setUAndP(username, p: password, remember: rememberMe)
+                                            UserAndPassManager.shared.setUandP(u: username, p: password, remember: rememberMe)
                                             PlayerService.signInPlayer { player in
                                                 runOnMainThread {
                                                     self.loading = false
-                                                    OldDataManager.shared.actionState = 1
-                                                    PlayerManager.shared.setPlayer(player)
+                                                    DataManager.shared.setCurrentPlayerId(player.id)
+                                                    DataManager.shared.actionState = 1
                                                 }
 
 
@@ -112,17 +110,17 @@ struct MainView: View {
                                     .tint(.midRed)
                                     .controlSize(.large)
                             }
-
-                            if player != nil {
-                                NavigationLink(destination: OfflineAccountView()) {
-                                    Text("Offline Mode")
-                                        .font(.system(size: 20, weight: .bold))
-                                        .frame(width: gr.size.width, height: 90)
-                                        .background(Color.midRed)
-                                        .cornerRadius(15)
-                                        .foregroundColor(.white)
-                                        .tint(.midRed)
-                                        .controlSize(.large)
+                            
+                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
+                                loading = true
+                                DataManager.shared.setOfflineMode(true)
+                                DataManager.shared.load {
+                                    runOnMainThread {
+                                        if DataManager.shared.currentPlayerId != nil {
+                                            self.loading = false
+                                            DataManager.shared.actionState = 1
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -136,15 +134,13 @@ struct MainView: View {
             .onAppear {
                 self.username = getPrefilledUser()
                 self.password = getPrefilledPass()
-                self.player = OldLocalDataHandler.shared.getPlayer()
-                self.character = OldLocalDataHandler.shared.getCharacter()
             }
         }.navigationViewStyle(.stack)
     }
 
     private func getPrefilledUser() -> String {
         var u = UserAndPassManager.shared.getTempU()
-        if u == nil && UserAndPassManager.shared.remember() {
+        if u == nil && UserAndPassManager.shared.getRemember() {
             u = UserAndPassManager.shared.getU()
         }
         return u ?? ""
@@ -152,7 +148,7 @@ struct MainView: View {
 
     private func getPrefilledPass() -> String {
         var p = UserAndPassManager.shared.getTempP()
-        if p == nil && UserAndPassManager.shared.remember() {
+        if p == nil && UserAndPassManager.shared.getRemember() {
             p = UserAndPassManager.shared.getP()
         }
         return p ?? ""
@@ -160,8 +156,8 @@ struct MainView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
+    let dm = DataManager.shared
+    dm.setDebugMode(true)
     dm.loadMockData()
-    return MainView(_dm: dm)
+//    return MainView(_dm: dm)
 }

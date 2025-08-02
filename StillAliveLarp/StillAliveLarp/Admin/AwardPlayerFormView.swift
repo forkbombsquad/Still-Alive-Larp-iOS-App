@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct AwardPlayerFormView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     private static let xp = "XP"
     private static let pp = "Prestige Points"

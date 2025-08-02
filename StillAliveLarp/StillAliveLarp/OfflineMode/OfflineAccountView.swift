@@ -15,7 +15,7 @@ struct OfflineAccountView: View {
         self.skills = SkillManager.shared.getSkillsOffline()
         self.gear = OldLocalDataHandler.shared.getGear()?.first
         self.npcs = OldLocalDataHandler.shared.getNPCs() ?? []
-        self.rulebook = RulebookManager.shared.getOfflineVersion()
+        self.rulebook = RulebookUtils.shared.getOfflineVersion()
         self.skillCategories = OldLocalDataHandler.shared.getSkillCategories() ?? []
         self.treatingWoundsDiagram = OldLocalDataHandler.shared.getImage(.treatingWounds)
     }

@@ -41,8 +41,7 @@ class LocalDataManager {
     static let localDataVersion = "1.0.0.0"
     
     static func clearAllLocalData() {
-        // TODO
-        // UserAndPassManager.shared.clearAll()
+         UserAndPassManager.shared.clearAll()
         for key in LDMKeys.allKeys {
             shared.clear(key)
         }
@@ -388,14 +387,13 @@ class LocalDataManager {
         return get(DMT.rulebook)
     }
     
-    // TODO
-//    func storeCampStatus(_ campStatus: CampStatusModel) {
-//        store(campStatus, DMT.campStatus)
-//    }
-//    
-//    func getCampStatus() -> CampStatusModel? {
-//        return get(DMT.campStatus)
-//    }
+    func storeCampStatus(_ campStatus: CampStatusModel) {
+        store(campStatus, key: DMT.campStatus)
+    }
+    
+    func getCampStatus() -> CampStatusModel? {
+        return get(DMT.campStatus)
+    }
     
     func storeTreatingWounds(_ treatingWounds: Data) {
         store(LDImageDataModel(imageData: treatingWounds), key: DMT.treatingWounds)
@@ -488,39 +486,75 @@ class LocalDataManager {
     }
     
     private func buildAndStoreFullSkills(_ skills: [SkillModel], _ skillCategories: [SkillCategoryModel], _ skillPrereqs: LDSkillPrereqModels) {
-        // TODO
+        var fullSkills = [FullSkillModel]()
+        for skill in skills {
+            let prereqMods = skillPrereqs.byBaseSkill[skill.id] ?? []
+            let prereqs = skills.filter({ $0.id.equalsAnyOf(prereqMods.map({ p in p.prereqSkillId })) })
+            
+            let postreqMods = skillPrereqs.byPrereqSkill[skill.id] ?? []
+            let postreqs = skills.filter({ $0.id.equalsAnyOf(postreqMods.map({ p in p.baseSkillId })) })
+            
+            fullSkills.append(FullSkillModel(skillModel: skill, prereqs: prereqs, postreqs: postreqs, category: skillCategories.first(where: { $0.id == skill.skillCategoryId })!))
+        }
+        store(fullSkills, key: LDMKeys.fullSkillsKey)
     }
     
-    private func getFullSkills() -> [FullSkillModel] {
-        // TODO
-        return []
+    func getFullSkills() -> [FullSkillModel] {
+        return get(LDMKeys.fullSkillsKey) ?? []
     }
     
-    private func buildAndStoreFullEvents(_ events: [EventModel], _ attendees: LDEventAttendeeModels, _ prereqs: LDPreregModels, _ intrigues: [Int : IntrigueModel]) {
-        // TODO
+    private func buildAndStoreFullEvents(_ events: [EventModel], _ attendees: LDEventAttendeeModels, _ preregs: LDPreregModels, _ intrigues: [Int : IntrigueModel]) {
+        var fullEvents = [FullEventModel]()
+        for event in events {
+            fullEvents.append(FullEventModel(event: event, attendees: attendees.byEvent[event.id] ?? [], preregs: preregs.byEvent[event.id] ?? [], intrigue: intrigues[event.id]))
+        }
+        store(fullEvents, key: LDMKeys.fullEventsKey)
     }
     
-    private func getFullEvents() -> [FullEventModel] {
-        // TODO
-        return []
+    func getFullEvents() -> [FullEventModel] {
+        return get(LDMKeys.fullEventsKey) ?? []
     }
     
     private func buildAndStoreFullCharacters(characters: [CharacterModel], fullSkills: [FullSkillModel], characterSkills: [Int : [CharacterSkillModel]], gear: [Int : GearModel], awards: LDAwardModels, attendees: LDEventAttendeeModels, preregs: LDPreregModels, xpReductions: [Int : [SpecialClassXpReductionModel]]) {
-        // TODO
+        var fullChars = [FullCharacterModel]()
+        for character in characters {
+            let charSkills = characterSkills[character.id] ?? []
+            let gearC = gear[character.id]
+            let awardsC = awards.characterAwards[character.id] ?? []
+            let attendeesC = attendees.byCharacter[character.id] ?? []
+            let preregsC = preregs.byCharacter[character.id] ?? []
+            let xpRed = xpReductions[character.id] ?? []
+            fullChars.append(FullCharacterModel(character: character,
+                                                allSkills: fullSkills,
+                                                charSkills: charSkills,
+                                                gear: gearC,
+                                                awards: awardsC,
+                                                eventAttendees: attendeesC,
+                                                preregs: preregsC,
+                                                xpReductions: xpRed))
+        }
+        store(fullChars, key: LDMKeys.fullCharactersKey)
     }
     
-    private func getFullCharacters() -> [OldFullCharacterModel] {
-        // TODO
-        return []
+    func getFullCharacters() -> [FullCharacterModel] {
+        return get(LDMKeys.fullCharactersKey) ?? []
     }
     
-    private func buildAndStoreFullPlayers(players: [PlayerModel], characters: [OldFullCharacterModel], awards: LDAwardModels, attendees: LDEventAttendeeModels, preregs: LDPreregModels, profileImages: [Int : ProfileImageModel]) {
-        // TODO
+    private func buildAndStoreFullPlayers(players: [PlayerModel], characters: [FullCharacterModel], awards: LDAwardModels, attendees: LDEventAttendeeModels, preregs: LDPreregModels, profileImages: [Int : ProfileImageModel]) {
+        var fullPlayers = [FullPlayerModel]()
+        for player in players {
+            fullPlayers.append(FullPlayerModel(player: player,
+                                               characters: characters.filter({ $0.playerId == player.id }),
+                                               awards: awards.playerAwards[player.id] ?? [],
+                                               eventAttendees: attendees.byPlayer[player.id] ?? [],
+                                               preregs: preregs.byPlayer[player.id] ?? [],
+                                               profileImage: profileImages[player.id]))
+        }
+        store(fullPlayers, key: LDMKeys.fullPlayersKey)
     }
     
-    private func getFullPlayers() -> [FullPlayerModel] {
-        // TODO
-        return []
+    func getFullPlayers() -> [FullPlayerModel] {
+        return get(LDMKeys.fullPlayersKey) ?? []
     }
     
 }

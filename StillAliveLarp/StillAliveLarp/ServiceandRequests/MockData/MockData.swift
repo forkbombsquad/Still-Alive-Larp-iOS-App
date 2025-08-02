@@ -32,6 +32,7 @@ protocol MockData {
     var gearList: GearListModel { get }
     var featureFlagList: FeatureFlagListModel { get }
     var profileImageModel: ProfileImageModel { get }
+    var profileImageList: ProfileImageListModel { get }
     var researchProjects: ResearchProjectListModel { get }
     var rulebook: Rulebook { get }
     var skillCategories: SKillCategoryListModel { get }
@@ -47,6 +48,14 @@ extension MockData {
     
     func player(id: Int) -> PlayerModel {
         return playerList.players.first(where: { $0.id == id } )!
+    }
+    
+    func fullPlayers() -> [FullPlayerModel] {
+        var fps = [FullPlayerModel]()
+        for player in playerList.players {
+            fps.append(FullPlayerModel(player: player, characters: fullCharacters().filter({ $0.playerId == player.id }), awards: awards.awards.filter({ $0.playerId == player.id }), eventAttendees: eventAttendees.eventAttendees.filter({ $0.playerId == player.id }), preregs: preregs.eventPreregs.filter({ $0.playerId == player.id }), profileImage: profileImageModel))
+        }
+        return fps
     }
     
     func characterList() -> [CharacterSubModel] {
@@ -65,16 +74,10 @@ extension MockData {
         return characterListFullModel.characters.first(where: { $0.playerId == playerId } )!
     }
     
-    func fullCharacters() -> [OldFullCharacterModel] {
-        var fcs = [OldFullCharacterModel]()
-        let fs = fullSkills()
+    func fullCharacters() -> [FullCharacterModel] {
+        var fcs = [FullCharacterModel]()
         for character in characterListFullModel.characters {
-            var fc = OldFullCharacterModel(character)
-            let csl = characterSkillList.charSkills
-            for charSkill in csl.filter({ $0.characterId == character.id }) {
-                guard let skill = fs.first(where: { $0.id == charSkill.skillId }) else { continue }
-                fc.skills.append(skill)
-            }
+            let fc = FullCharacterModel(character: character, allSkills: fullSkills(), charSkills: characterSkillList.charSkills.filter({ $0.characterId == character.id }), awards: awards.awards.filter({ $0.characterId == character.id }), eventAttendees: eventAttendees.eventAttendees.filter({ $0.characterId == character.id }), preregs: preregs.eventPreregs.filter({ $0.getCharId() == character.id }), xpReductions: xpReductions.specialClassXpReductions.filter({ $0.characterId == character.id }))
             fcs.append(fc)
         }
         return fcs
@@ -88,16 +91,10 @@ extension MockData {
         return skills.results.first(where: { $0.id == id} )!
     }
     
-    func fullSkills() -> [OldFullSkillModel] {
-        var fs = [OldFullSkillModel]()
+    func fullSkills() -> [FullSkillModel] {
+        var fs = [FullSkillModel]()
         for skill in skills.results {
-            fs.append(OldFullSkillModel(skill))
-        }
-        for (index, skill) in fs.enumerated() {
-            for prereq in prereqs.skillPrereqs.filter({ $0.baseSkillId == skill.id }) {
-                guard let pskill = fs.first(where: { $0.id == prereq.prereqSkillId }) else { continue }
-                fs[index].prereqs.append(pskill)
-            }
+            fs.append(FullSkillModel(skillModel: skill, prereqs: skills.results.filter({ $0.id.equalsAnyOf(prereqs.skillPrereqs.filter({ preq in preq.baseSkillId == skill.id }).map({ preq in preq.baseSkillId })) }), postreqs: skills.results.filter({ $0.id.equalsAnyOf(prereqs.skillPrereqs.filter({ preq in preq.prereqSkillId == skill.id }).map({ preq in preq.prereqSkillId })) }), category: SkillCategoryModel(id: skill.skillCategoryId, name: skillCategories.results.first(where: { $0.id == skill.skillCategoryId })?.name ?? "")))
         }
         return fs
     }
@@ -120,6 +117,14 @@ extension MockData {
     
     func event(id: Int) -> EventModel {
         return events.events.first(where: { $0.id == id })!
+    }
+    
+    func fullEvents() -> [FullEventModel] {
+        var fe = [FullEventModel]()
+        for event in events.events {
+            fe.append(FullEventModel(event: event, attendees: eventAttendees.eventAttendees.filter({ $0.eventId == event.id }), preregs: preregs.eventPreregs.filter({ $0.eventId == event.id }), intrigue: intrigue()))
+        }
+        return fe
     }
     
     func eventAttendee(_ index: Int = 0) -> EventAttendeeModel {
@@ -148,6 +153,14 @@ extension MockData {
     
     func intrigue(id: Int) -> IntrigueModel {
         return intrigues.intrigues.first(where: { $0.id == id })!
+    }
+    
+    func intriguesByEvent() -> [Int : IntrigueModel] {
+        var ints = [Int : IntrigueModel]()
+        for intrigue in intrigues.intrigues {
+            ints[intrigue.eventId] = intrigue
+        }
+        return ints
     }
     
     func xpReduction(_ index: Int = 0) -> SpecialClassXpReductionModel {
@@ -211,18 +224,12 @@ extension MockData {
     }
     
     func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> CheckInOutBarcodeModel {
-        let player = playerList.players.first(where: { $0.id == playerId })!
-        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
-        let event = events.events.first(where: { $0.id == eventId })!
-        let gear = gearList.charGear.first(where: { $0.characterId == characterId })
-        
-        return CheckInOutBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+        return CheckInOutBarcodeModel(playerId: playerId, characterId: characterId, eventId: eventId)
     }
     
-    func playerCheckOutBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventAttendeeId: Int = 1, eventId: Int = 1) -> PlayerCheckOutBarcodeModel {
-        let player = playerList.players.first(where: { $0.id == playerId })!
-        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
-        return PlayerCheckOutBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, eventAttendeeId: eventAttendeeId, eventId: eventId, relevantSkills: char?.getRelevantBarcodeSkills() ?? [])
+    func playerCheckOutBarcodeModel(eventAttendeeId: Int = 1) -> CheckInOutBarcodeModel {
+        let attendee = eventAttendee(id: eventAttendeeId)
+        return CheckInOutBarcodeModel(playerId: attendee.playerId, characterId: attendee.characterId, eventId: attendee.eventId)
     }
     
     func getResponse(_ request: MockRequest) -> Codable {
@@ -305,6 +312,18 @@ extension MockData {
             return allAnnouncements
         case .campStatus:
             return campStatus
+        case .allFullCharacters:
+            return fullCharacters()
+        case .getAllCharacterSkills, .deleteCharacterSkill:
+            return characterSkillList
+        case .allEventAttendees:
+            return eventAttendees
+        case .getAllXpReductions:
+            return xpReductions
+        case .allPreregs:
+            return preregs
+        case .getAllProfileImages:
+            return profileImageList
         }
     }
     
@@ -320,10 +339,18 @@ fileprivate struct MockData1: MockData {
     ])
 
     var profileImageModel = ProfileImageModel(id: 0, playerId: 1, image: "TEST")
+    var profileImageList = ProfileImageListModel(profileImages: [
+        ProfileImageModel(id: 0, playerId: 1, image: "TEST"),
+        ProfileImageModel(id: 1, playerId: 2, image: "TEST 2")
+    ])
 
     var oauthToken = OAuthTokenResponse(access_token: "TestAccessToken")
 
     var announcementsList = AnnouncementsListModel(announcements: [AnnouncementSubModel(id: 1)])
+    var allAnnouncements = AnnouncementFullListModel(announcements: [
+        AnnouncementModel(id: 1, title: "Test Announcement", text: "This is a test announcment with mock data yo.", date: "2022/12/23"),
+        AnnouncementModel(id: 2, title: "Test Announcement 2", text: "This is a test announcment with mock data yo but it's different than the first one.", date: "2023/12/23")
+    ])
     var announcement = AnnouncementModel(id: 1, title: "Test Announcement", text: "This is a test announcment with mock data yo.", date: "2022/12/23")
     
     var characterListFullModel = CharacterListFullModel(characters: [
@@ -496,14 +523,14 @@ fileprivate struct MockData1: MockData {
     ])
 
     var eventAttendees = EventAttendeeListModel(eventAttendees: [
-        EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 2, playerId: 2, characterId: 2, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 3, playerId: 3, characterId: 3, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 4, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 5, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 6, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 7, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 8, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE")
+        EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 2, playerId: 2, characterId: 2, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 3, playerId: 3, characterId: 3, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 4, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 5, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 6, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 7, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 8, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE", npcId: -1)
     ])
 
     var contacts = ContactRequestListModel(contactRequests: [
@@ -554,6 +581,8 @@ fileprivate struct MockData1: MockData {
         ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE"),
         ResearchProjectModel(id: 2, name: "Curing the Infection", description: "This probably won't happen. No one is even working on it.", milestones: 0, complete: "FALSE")
     ])
+    
+    var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])])
     
     var rulebook = Rulebook(version: "2.1.0", headings: [
         Heading(title: "Section 1", textsAndTables: [
@@ -639,7 +668,7 @@ fileprivate struct MockData1: MockData {
     private func freeSkillsForCharacter(incrementingId: inout Int, characterId: Int) -> [CharacterSkillModel] {
         var cs = [CharacterSkillModel]()
         for skill in skills.results.filter({ $0.xpCost == "0" }) {
-            cs.append(CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skill.id, xpSpent: 0, fsSpent: 0, ppSpent: 0))
+            cs.append(CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skill.id, xpSpent: 0, fsSpent: 0, ppSpent: 0, date: "2025/06/01"))
             incrementingId += 1
         }
         return cs
@@ -662,7 +691,7 @@ fileprivate struct MockData1: MockData {
             xpCost = max(xpCost + relevantSpecialization, 1)
         }
         
-        let csm = CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skillId, xpSpent: xpCost, fsSpent: fsCost, ppSpent: ppCost)
+        let csm = CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skillId, xpSpent: xpCost, fsSpent: fsCost, ppSpent: ppCost, date: "2025/06/01")
         
         incrementingId += 1
         

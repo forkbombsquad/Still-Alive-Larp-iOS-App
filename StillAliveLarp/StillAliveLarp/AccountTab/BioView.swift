@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct BioView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     static func Offline(character: OldFullCharacterModel) -> BioView {
         return BioView(character: character, allowEdit: false, offline: true)

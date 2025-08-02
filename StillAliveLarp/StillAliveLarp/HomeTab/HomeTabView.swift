@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     @State private var firstLoad = true
     
     @State var loadingEvents = false
@@ -145,7 +145,7 @@ struct HomeTabView: View {
 }
 
 struct IntrigueView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @Binding var character: OldFullCharacterModel?
     @Binding var intrigue: IntrigueModel?
@@ -174,7 +174,7 @@ struct IntrigueView: View {
 }
 
 struct EventsView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var currentEventIndex: Int = 0
     @Binding var loadingEvents: Bool
@@ -316,7 +316,7 @@ struct EventsView: View {
 }
 
 struct CurrentCharacterView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let grWidth: CGFloat
     
@@ -358,7 +358,7 @@ struct CurrentCharacterView: View {
 }
 
 struct AwardsView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var loadingAwards: Bool
     @Binding var awards: [AwardModel]

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SkillListView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     enum FilterType: String, CaseIterable {
         // TODO move this out of here
@@ -123,7 +123,7 @@ struct SkillListView: View {
 }
 
 struct SkillCellView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var skill: OldFullSkillModel
 

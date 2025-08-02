@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AnnouncementsView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State private var currentAnnouncementIndex: Int = 0
     @State private var currentAnnouncement: AnnouncementModel?

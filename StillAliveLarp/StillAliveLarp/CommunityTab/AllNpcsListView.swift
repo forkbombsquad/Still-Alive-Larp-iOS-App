@@ -13,7 +13,7 @@ struct AllNpcsListView: View {
         return AllNpcsListView(fullCharacterModels: npcs, skills: skills, allowEdit: false)
     }
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let offline: Bool
     let allowEdit: Bool

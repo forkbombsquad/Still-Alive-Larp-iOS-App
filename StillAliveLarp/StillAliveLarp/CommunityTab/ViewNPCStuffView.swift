@@ -13,7 +13,7 @@ struct ViewNPCStuffView: View {
         return ViewNPCStuffView(character: characterModel, skills: skills)
     }
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let offline: Bool
     let characterModel: CharacterModel

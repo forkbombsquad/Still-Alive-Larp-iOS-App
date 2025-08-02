@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllPlayersListView: View {
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let allPlayers: [PlayerModel]
     

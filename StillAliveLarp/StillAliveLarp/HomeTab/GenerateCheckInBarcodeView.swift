@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GenerateCheckInBarcodeView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let useChar: Bool
 

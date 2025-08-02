@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityTabView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @State var allPlayers: [PlayerModel] = []
     @State var loadingAllPlayers: Bool = true

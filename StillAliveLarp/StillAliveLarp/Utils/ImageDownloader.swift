@@ -27,6 +27,18 @@ class ImageDownloader {
             }
         }
     }
+    
+    func downloadReturningImage(key: ImageKey, onCompletion: @escaping (_ imageData: Data?) -> Void) {
+        downloadPage(urlString: key.baseUrl) { imagePath in
+            guard let imagePath = imagePath else {
+                onCompletion(nil)
+                return
+            }
+            self.downloadFromUrlForImage(path: imagePath, key: key) { img in
+                onCompletion(img)
+            }
+        }
+    }
 
     func download(key: ImageKey, onCompletion: @escaping (_ success: Bool) -> Void) {
         downloadPage(urlString: key.baseUrl) { imagePath in
@@ -52,6 +64,20 @@ class ImageDownloader {
             }
             OldLocalDataHandler.shared.storeImageData(data, key: key.rawValue)
             onCompletion(true)
+        }
+    }
+    
+    private func downloadFromUrlForImage(path: String, key: ImageKey, onCompletion: @escaping (_ imageData: Data?) -> Void) {
+        guard let url = URL(string: path) else {
+            onCompletion(nil)
+            return
+        }
+        downloadImage(from: url) { data in
+            guard let data = data else {
+                onCompletion(nil)
+                return
+            }
+            onCompletion(data)
         }
     }
 

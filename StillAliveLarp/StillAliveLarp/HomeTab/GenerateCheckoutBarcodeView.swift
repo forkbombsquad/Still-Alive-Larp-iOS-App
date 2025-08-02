@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GenerateCheckoutBarcodeView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var loading = false
     @State var uiImage: UIImage? = nil

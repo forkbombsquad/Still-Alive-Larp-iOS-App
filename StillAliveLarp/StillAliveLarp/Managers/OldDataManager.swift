@@ -586,7 +586,7 @@ class OldDataManager: ObservableObject {
                 case .rulebook:
                     self.loadingRulebook = true
                     if self.rulebook == nil || forceDownloadIfApplicable {
-                        RulebookManager.shared.getOnlineVersion { rulebook in
+                        RulebookUtils.shared.getOnlineVersion { rulebook in
                             runOnMainThread {
                                 self.rulebook = rulebook
                                 self.loadingRulebook = false

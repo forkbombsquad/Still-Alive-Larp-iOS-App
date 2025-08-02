@@ -12,7 +12,7 @@ struct EditProfileImageView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @State private var loading: Bool = false
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")

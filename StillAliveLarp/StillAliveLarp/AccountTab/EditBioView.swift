@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditBioView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     init() {
         self._bio = State(initialValue: OldDataManager.shared.character?.bio ?? "")

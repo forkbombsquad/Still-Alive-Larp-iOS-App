@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CharacterPlannerListView: View {
     
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     let player: PlayerModel
     

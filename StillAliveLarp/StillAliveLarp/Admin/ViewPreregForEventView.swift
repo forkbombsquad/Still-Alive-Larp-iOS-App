@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ViewPreregForEventView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     
     @State var loadingPlayers = true
     @State var loadingCharacters = true

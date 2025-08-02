@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FeatureFlagCell: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let flag: FeatureFlagModel
     

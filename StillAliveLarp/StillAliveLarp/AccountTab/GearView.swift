@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GearView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
     @Environment(\.presentationMode) var presentationMode
     
     static func Offline(_ character: OldFullCharacterModel, gear: GearModel) -> GearView {

@@ -9,7 +9,7 @@ import SwiftUI
 import CodeScanner
 
 struct CheckOutPlayerView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @State var loadingText = ""
 
@@ -399,7 +399,7 @@ struct CheckOutPlayerView: View {
 }
 
 struct CharacterCheckoutBarcodeView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -504,7 +504,7 @@ struct CharacterCheckoutBarcodeView: View {
 }
 
 struct CharacterAmmoCheckoutView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var bullets: String
     @Binding var megas: String
@@ -523,7 +523,7 @@ struct CharacterAmmoCheckoutView: View {
 }
 
 struct CharacterSuppliesCheckoutView: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var bulletCasings: String
     @Binding var clothSupplies: String
@@ -546,7 +546,7 @@ struct CharacterSuppliesCheckoutView: View {
 }
 
 struct TextFieldWithKey: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var text: String
     let key: String
@@ -564,7 +564,7 @@ struct TextFieldWithKey: View {
 }
 
 struct CustomTextField: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     @Binding var text: String
     let placeholder: String
@@ -581,7 +581,7 @@ struct CustomTextField: View {
 }
 
 fileprivate struct PickerViewWithKey: View {
-    @ObservedObject var _dm = OldDataManager.shared
+    @ObservedObject var _dm = DataManager.shared
 
     let key: String
     @Binding var selectedOption: String

@@ -30,6 +30,7 @@ class ServiceEndpoints {
         case charactersForPlayerWithType = "characters/all_with_type_for_player_id/"
         case character = "characters/"
         case allCharacters = "characters/all_with_type/1"
+        case allFullCharacters = "characters/all/"
         case allCharactersWithType = "characters/all_with_type/"
         case characterCreate = "characters/create/"
         case allNPCCharacters = "characters/all_with_type/2"
@@ -45,6 +46,8 @@ class ServiceEndpoints {
         case awards = "award/all/"
         case takeSkill = "char-skill/create_with_player_id/"
         case getAllSkillsForChar = "char-skill/all_for_char/"
+        case getAllCharacterSkills = "char-skill/all/"
+        case deleteCharacterSkill = "char-skill/delete-skill/"
         case updateCharacter = "characters/update/"
         case updateBio = "characters/update_bio/"
         case allEvents = "event/all/"
@@ -63,13 +66,16 @@ class ServiceEndpoints {
         case updateIntrigue = "intrigue/update/"
         case getAllIntrigue = "intrigue/all/"
         case eventAttendeesForPlayer = "event-attendee/all_for_player/"
+        case allEventAttendees = "event-attendee/all/"
         case updatePlayer = "players/update/"
         case eventAttendeeUpdate = "event-attendee/update/"
         case giveXpReduction = "xp-red/take_class/"
         case getXpReductionsForChar = "xp-red/all_for_char/"
+        case getAllXpReductions = "xp-red/all/"
         case prereg = "prereg/create/"
         case updatePrereg = "prereg/update/"
         case allPreregsForEvent = "prereg/all_for_event/"
+        case allPreregs = "prereg/all/"
         case version = "app-version/"
         case deletePlayer = "players/delete/"
         case deleteCharacters = "characters/delete/"
@@ -89,6 +95,7 @@ class ServiceEndpoints {
         case deleteFeatureFlag = "feature-flag/delete/"
         case getAllFeatureFlags = "feature-flag/all/"
         case getProfileImage = "profile/player/"
+        case getAllProfileImages = "profile/all/"
         case createProfileImage = "profile/create/"
         case updateProfileImage = "profile/update/"
         case deleteProfileImage = "profile/delete/"
@@ -104,13 +111,13 @@ class ServiceEndpoints {
 
         var requestType: ServiceController.RequestType {
             switch self {
-            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent, .getAllSkillCategories, .updateTracker, .allAnnouncements, .campStatus:
+            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent, .getAllSkillCategories, .updateTracker, .allAnnouncements, .campStatus, .allFullCharacters, .getAllCharacterSkills, .getAllXpReductions, .allPreregs, .getAllProfileImages, .allEventAttendees:
                     return .get
             case .authToken, .playerCreate, .characterCreate, .awardPlayer, .awardChar, .takeSkill, .announcementCreate, .createEvent, .checkInPlayer, .createContact, .createIntrigue, .giveXpReduction, .prereg, .createGear, .createFeatureFlag, .createProfileImage, .createResearchProject, .createPlannedCharacter, .createPlannedCharacterSkill, .playerAuthToken:
                     return .post
             case .updateCharacter, .eventUpdate, .checkInCharacter, .giveCharCheckInRewards, .updateBio, .updateContact, .updateP, .updatePAdmin, .updateIntrigue, .updatePlayer, .eventAttendeeUpdate, .updatePrereg, .updateGear, .updateFeatureFlag, .updateProfileImage, .updateResearchProject:
                     return .put
-            case .deletePlayer, .deleteCharacters, .deleteEventPreregs, .deleteXpRedsForChar, .deleteAwards, .deleteSkills, .deleteEventAttendee, .deleteGear, .deleteFeatureFlag, .deleteProfileImage:
+            case .deletePlayer, .deleteCharacters, .deleteEventPreregs, .deleteXpRedsForChar, .deleteAwards, .deleteSkills, .deleteEventAttendee, .deleteGear, .deleteFeatureFlag, .deleteProfileImage, .deleteCharacterSkill:
                     return .delete
             }
         }
