@@ -17,6 +17,10 @@ extension Array {
         return map(transform).reduce(0, +)
     }
     
+    func indexIsInBounds(_ index: Int) -> Bool {
+        return index >= 0 && index < self.count
+    }
+    
 }
 
 extension Array where Element: Equatable {

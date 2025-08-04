@@ -102,7 +102,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     
     func isNpcAndNotAttendingEvent(eventId: Int) -> Bool {
         guard characterType() == .npc else { return false }
-        return DataManager.shared.events.first(where: { $0.id == eventId })?.attendees.first(where: { $0.npcId == self.id }) == nil
+        return DM.events.first(where: { $0.id == eventId })?.attendees.first(where: { $0.npcId == self.id }) == nil
     }
     
     func baseModel() -> CharacterModel {
@@ -239,7 +239,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     
     func allPurchaseableSkills(searchText: String = "", filter: SkillListView.FilterType = .none) -> [FullCharacterModifiedSkillModel] {
         let charSkills = allNonPurchasedSkills()
-        let player = DataManager.shared.getPlayerForCharacter(self)
+        let player = DM.getPlayerForCharacter(self)
         
         // Remove all skills you don't have prereqs for
         var newSkillList = charSkills.filter { skillToKeep in
@@ -328,6 +328,12 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return skill.prereqs().allSatisfy({ $0.id.equalsAnyOf(purchasedIds) })
     }
     
+    func getPurchasedIntrigueSkills() -> [Int] {
+        return allPurchasedSkills().filter { sk in
+            sk.id.equalsAnyOf(Constants.SpecificSkillIds.investigatorTypeSkills)
+        }.map { $0.id }
+    }
+    
     func getPurchasedChooseOneSkills() -> [FullCharacterModifiedSkillModel] {
         return allPurchasedSkills().filter { skill in
             skill.id.equalsAnyOf(Constants.SpecificSkillIds.allSpecalistSkills)
@@ -395,7 +401,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     private func getLastAttendedEvent() -> FullEventModel? {
         guard eventAttendees.isNotEmpty else { return nil }
         // Step 1: Build a map from event IDs to Event objects
-        let eventMap = Dictionary(uniqueKeysWithValues: DataManager.shared.events.map { ($0.id, $0) })
+        let eventMap = Dictionary(uniqueKeysWithValues: DM.events.map { ($0.id, $0) })
         let eventsWithAttendees = eventAttendees.compactMap { eventMap[$0.eventId] }
 
         // Step 3: Find the one with the latest date

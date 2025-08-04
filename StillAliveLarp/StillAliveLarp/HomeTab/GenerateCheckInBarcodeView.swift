@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GenerateCheckInBarcodeView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let useChar: Bool
 
@@ -32,7 +33,7 @@ struct GenerateCheckInBarcodeView: View {
                             }
                             
                         } else {
-                            if let image = uiImage, let barcodeModel = OldDataManager.shared.checkinBarcodeModel {
+                            if let image = uiImage, let barcodeModel = OldDM.checkinBarcodeModel {
                                 Text("Check In\n\(barcodeModel.player.fullName)")
                                     .font(.system(size: 32, weight: .bold))
                                     .multilineTextAlignment(.center)
@@ -70,15 +71,15 @@ struct GenerateCheckInBarcodeView: View {
         .onAppear {
             self.loading = true
             self.loadingText = "Loading Events and Player Model..."
-            OldDataManager.shared.load([.events, .player]) {
+            OldDM.load([.events, .player]) {
                 runOnMainThread {
                     if useChar {
                         self.loadingText = "Loading Character..."
-                        OldDataManager.shared.load([.character]) {
+                        OldDM.load([.character]) {
                             runOnMainThread {
                                 self.loadingText = "Loading Gear..."
-                                OldDataManager.shared.selectedChar = OldDataManager.shared.character?.baseModel
-                                OldDataManager.shared.load([.selectedCharacterGear]) {
+                                OldDM.selectedChar = OldDM.character?.baseModel
+                                OldDM.load([.selectedCharacterGear]) {
                                     self.generateBarcode()
                                 }
                             }
@@ -94,14 +95,14 @@ struct GenerateCheckInBarcodeView: View {
     
     private func generateBarcode() {
         loadingText = "Generating Barcode..."
-        if let events = OldDataManager.shared.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })), let player = OldDataManager.shared.player {
+        if let events = OldDM.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })), let player = OldDM.player {
             
-            let char = OldDataManager.shared.character
-            let gear = OldDataManager.shared.selectedCharacterGear?.first
+            let char = OldDM.character
+            let gear = OldDM.selectedCharacterGear?.first
             
             let barcode = CheckInOutBarcodeModel(player: player.barcodeModel, character: useChar ? char?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
             runOnMainThread {
-                OldDataManager.shared.checkinBarcodeModel = barcode
+                OldDM.checkinBarcodeModel = barcode
                 self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
                 self.loading = false
                 self.loadingText = ""
@@ -115,9 +116,7 @@ struct GenerateCheckInBarcodeView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.character = md.fullCharacters()[1]
     dm.player = md.player(id: 2)

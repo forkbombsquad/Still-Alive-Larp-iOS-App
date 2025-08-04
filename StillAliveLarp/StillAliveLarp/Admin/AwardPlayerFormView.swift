@@ -9,7 +9,8 @@ import SwiftUI
 import Combine
 
 struct AwardPlayerFormView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     private static let xp = "XP"
     private static let pp = "Prestige Points"
@@ -98,9 +99,7 @@ struct AwardPlayerFormView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return AwardPlayerFormView(_dm: dm, player: md.player())
 }

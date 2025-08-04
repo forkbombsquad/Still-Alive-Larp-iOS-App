@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GearView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     @Environment(\.presentationMode) var presentationMode
     
     static func Offline(_ character: OldFullCharacterModel, gear: GearModel) -> GearView {
@@ -99,11 +100,11 @@ struct GearView: View {
                     runOnMainThread {
                         firstLoad = false
                         loading = true
-                        OldDataManager.shared.selectedChar = character
-                        OldDataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
+                        OldDM.selectedChar = character
+                        OldDM.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
                             runOnMainThread {
                                 self.loading = false
-                                self.gear = OldDataManager.shared.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
+                                self.gear = OldDM.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
                                 self.gearJsonModels = self.gear?.jsonModels ?? []
                             }
                         }
@@ -274,9 +275,7 @@ struct GearSubview: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.loadingSelectedCharacterGear = false
     dm.selectedCharacterGear = [md.gear(characterId: 2)]

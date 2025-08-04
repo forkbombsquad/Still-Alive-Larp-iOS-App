@@ -8,37 +8,42 @@
 import SwiftUI
 
 struct LoadingLayoutView<Content: View>: View {
-    @Binding var isLoading: Bool
-    @Binding var loadingText: String
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+    
+    let loadType: DataManager.DataManagerLoadType = .downloadIfNecessary
+    let onStepFinished: () -> Void
+    let onFinishedLoad: () -> Void
     let content: () -> Content
     
-    init(dataManager: DataManager, loadType: DataManager.DataManagerLoadType = .downloadIfNecessary, onStepFinished: @escaping () -> Void = {}, onFinishedLoad: @escaping () -> Void = {}, content: @escaping () -> Content) {
-        isLoading = true
-        dataManager.load(loadType: loadType) {
-            onStepFinished()
-        } finished: {
-            onFinishedLoad()
-            runOnMainThread {
-                isLoading = false
-            }
-        }
-        self.loadingText = dataManager.loadingText
+    init(loadType: DataManager.DataManagerLoadType = .downloadIfNecessary, onStepFinished: @escaping () -> Void = {}, onFinishedLoad: @escaping () -> Void = {}, content: @escaping () -> Content) {
+        self.loadType = loadType
+        self.onStepFinished = onStepFinished
+        self.onFinishedLoad = onFinishedLoad
         self.content = content
     }
     
     var body: some View {
         Group {
-            if isLoading {
-                LoadingLayout(loadingText: $loadingText)
+            if DM.isLoadingMirror {
+                LoadingLayout()
             } else {
                 content()
+            }
+        }.onAppear {
+            DM.load(loadType: loadType) {
+                onStepFinished()
+            } finished: {
+                onFinishedLoad()
             }
         }
     }
 }
 
 struct LoadingLayout: View {
-    @Binding var loadingText: String
+    
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     var body: some View {
         CardView {
@@ -46,7 +51,7 @@ struct LoadingLayout: View {
                 .frame(alignment: .center)
                 .font(.system(size: 24, weight: .bold))
                 .padding(8)
-            Text(loadingText)
+            Text(DM.loadingText)
                 .frame(alignment: .center)
                 .font(.system(size: 18))
                 .padding([.bottom, .horizontal], 8)
@@ -56,5 +61,5 @@ struct LoadingLayout: View {
 }
 
 #Preview {
-    LoadingLayout(loadingText: .constant("Players, Characters, Profile Images"))
+    LoadingLayout()
 }

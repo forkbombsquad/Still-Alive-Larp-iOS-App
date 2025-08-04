@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SkillManagementPlannerView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: CharacterModel
     @State var fullCharacterModel: OldFullCharacterModel? = nil
@@ -108,9 +109,7 @@ struct SkillManagementPlannerView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return SkillManagementView(_dm: dm, character: md.fullCharacters().first!, allowEdit: true)
 }

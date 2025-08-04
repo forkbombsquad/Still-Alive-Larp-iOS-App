@@ -7,19 +7,19 @@ struct FeatureFlag {
     var name: String
     
     func isActive() -> Bool {
-        return OldDataManager.shared.featureFlags.first(where: { ffm in
+        return OldDM.featureFlags.first(where: { ffm in
             ffm.name.lowercased() == name.lowercased()
         })?.isActiveIos ?? false
     }
     
     func isActiveAndroid() -> Bool {
-        return OldDataManager.shared.featureFlags.first(where: { ffm in
+        return OldDM.featureFlags.first(where: { ffm in
             ffm.name.lowercased() == name.lowercased()
         })?.isActiveAndroid ?? false
     }
     
     func isActiveBoth() -> Bool {
-        let ff = OldDataManager.shared.featureFlags.first(where: { ffm in
+        let ff = OldDM.featureFlags.first(where: { ffm in
             ffm.name.lowercased() == name.lowercased()
         })
         return ff?.isActiveIos ?? false && ff?.isActiveAndroid ?? false

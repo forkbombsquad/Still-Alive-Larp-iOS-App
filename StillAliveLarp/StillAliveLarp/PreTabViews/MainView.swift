@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var username: String = ""
     @State private var password: String = ""
@@ -22,7 +23,7 @@ struct MainView: View {
         NavigationView {
             VStack {
                 ScrollView {
-                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: DataManager.$shared.actionState) {
+                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: $DM.actionState) {
                         EmptyView()
                     }
                     Image("StillAliveLogo_Black")
@@ -54,14 +55,14 @@ struct MainView: View {
                                     .padding(.trailing, 8)
 
                                 LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.4, height: 90, buttonText: "Log In", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
-                                    DataManager.shared.setOfflineMode(false)
+                                    DM.setOfflineMode(false)
                                     self.loading = true
                                     self.loadingText = "Checking Creds..."
                                     VersionService.getVersions { versions in
                                         let currentVersion = getBuildNumber()
                                         if (currentVersion < versions.iosVersion) {
                                             self.loading = false
-                                            AlertManager.shared.showCustomOrCancelAlert(
+                                            alertManager.showCustomOrCancelAlert(
                                                 "Update Required!",
                                                 message: "Your version of the Still Alive Larp App is outdated. Please visit the App Store to update in order to use online features! \n\nCurrent Build Number: \(currentVersion)\nTarget Build Number: \(versions.iosVersion)",
                                                 customButtonText: "Open App Store", onCustomButtonPress: {
@@ -75,8 +76,8 @@ struct MainView: View {
                                             PlayerService.signInPlayer { player in
                                                 runOnMainThread {
                                                     self.loading = false
-                                                    DataManager.shared.setCurrentPlayerId(player.id)
-                                                    DataManager.shared.actionState = 1
+                                                    DM.setCurrentPlayerId(player.id)
+                                                    DM.actionState = 1
                                                 }
 
 
@@ -113,12 +114,12 @@ struct MainView: View {
                             
                             LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
                                 loading = true
-                                DataManager.shared.setOfflineMode(true)
-                                DataManager.shared.load {
+                                DM.setOfflineMode(true)
+                                DM.load {
                                     runOnMainThread {
-                                        if DataManager.shared.currentPlayerId != nil {
+                                        if DM.getCurrentPlayer() != nil {
                                             self.loading = false
-                                            DataManager.shared.actionState = 1
+                                            DM.actionState = 1
                                         }
                                     }
                                 }
@@ -156,8 +157,6 @@ struct MainView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
-    dm.setDebugMode(true)
-    dm.loadMockData()
-//    return MainView(_dm: dm)
+    DataManager.shared.setDebugMode(true)
+    return MainView()
 }

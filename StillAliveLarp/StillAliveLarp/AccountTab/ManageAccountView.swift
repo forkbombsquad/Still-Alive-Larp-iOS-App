@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ManageAccountView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loading = false
     @State var loadingText = ""
@@ -40,7 +41,7 @@ struct ManageAccountView: View {
     }
 
     private func deleteCharSkills() {
-        if let charId = OldDataManager.shared.character?.id {
+        if let charId = OldDM.character?.id {
             self.loadingText = "Deleting Skills"
             CharacterSkillService.deleteSkills(characterId: charId) { _ in
                 self.deleteCharGear()
@@ -53,7 +54,7 @@ struct ManageAccountView: View {
     }
 
     private func deleteCharGear() {
-        if let charId = OldDataManager.shared.character?.id {
+        if let charId = OldDM.character?.id {
             self.loadingText = "Deleting Gear"
             GearService.deleteGear(characterId: charId) { _ in
                 self.deleteSpecialClassXpReductions()
@@ -67,7 +68,7 @@ struct ManageAccountView: View {
 
     private func deleteSpecialClassXpReductions() {
         self.loadingText = "Deleting Xp Reductions"
-        if let charId = OldDataManager.shared.character?.id {
+        if let charId = OldDM.character?.id {
             SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
                 self.deleteEventAttendees()
             } failureCase: { error in
@@ -116,7 +117,7 @@ struct ManageAccountView: View {
 
     private func deleteProfileImages() {
         self.loadingText = "Deleting Profile Images"
-        ProfileImageService.deleteProfileImage(OldDataManager.shared.player?.id ?? -1) { profileImage in
+        ProfileImageService.deleteProfileImage(OldDM.player?.id ?? -1) { profileImage in
             self.deletePlayer()
         } failureCase: { error in
             self.deletePlayer()
@@ -138,15 +139,13 @@ struct ManageAccountView: View {
         AlertManager.shared.showSuccessAlert("Your account and all associated data has been deleted!") {
             forceResetAllPlayerData()
             runOnMainThread {
-                OldDataManager.shared.popToRoot()
+                OldDM.popToRoot()
             }
         }
     }
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return ManageAccountView(_dm: dm, loading: false)
 }

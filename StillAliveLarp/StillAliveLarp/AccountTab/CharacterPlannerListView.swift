@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CharacterPlannerListView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let player: PlayerModel
     
@@ -65,11 +66,11 @@ struct CharacterPlannerListView: View {
         .onAppear {
             self.loadingText = "Loading Planned Characters..."
             self.loading = true
-            OldDataManager.shared.player = player
-            OldDataManager.shared.load([.allCharacters, .plannedCharacters]) {
+            OldDM.player = player
+            OldDM.load([.allCharacters, .plannedCharacters]) {
                 runOnMainThread {
-                    self.allRegularCharacters = OldDataManager.shared.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
-                    self.allPlannedCharacters = OldDataManager.shared.allPlannedCharacters
+                    self.allRegularCharacters = OldDM.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
+                    self.allPlannedCharacters = OldDM.allPlannedCharacters
                     self.loading = false
                 }
             }
@@ -181,10 +182,10 @@ struct CharacterPlannerListView: View {
     
     private func reload() {
         self.loadingText = "Loading New Planned Character..."
-        OldDataManager.shared.player = player
-        OldDataManager.shared.load([.plannedCharacters], forceDownloadIfApplicable: true) {
+        OldDM.player = player
+        OldDM.load([.plannedCharacters], forceDownloadIfApplicable: true) {
             runOnMainThread {
-                self.allPlannedCharacters = OldDataManager.shared.allPlannedCharacters
+                self.allPlannedCharacters = OldDM.allPlannedCharacters
                 self.loading = false
             }
         }
@@ -192,9 +193,7 @@ struct CharacterPlannerListView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return CharacterPlannerListView(_dm: dm, player: md.player())
 }

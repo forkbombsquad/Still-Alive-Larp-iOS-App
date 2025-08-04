@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CharacterStatusView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     static func Offline(character: OldFullCharacterModel) -> CharacterStatusView {
         return CharacterStatusView(offline: true, character: character)
@@ -16,7 +17,7 @@ struct CharacterStatusView: View {
     
     init() {
         self.offline = false
-        self._character = globalState(OldDataManager.shared.charForSelectedPlayer)
+        self._character = globalState(OldDM.charForSelectedPlayer)
     }
     
     private init (offline: Bool, character: OldFullCharacterModel?) {
@@ -39,7 +40,7 @@ struct CharacterStatusView: View {
                     Divider()
                     if let character = character {
                         KeyValueView(key: "Name", value: character.fullName)
-                        if let playerName = OldDataManager.shared.selectedPlayer?.fullName {
+                        if let playerName = OldDM.selectedPlayer?.fullName {
                             KeyValueView(key: "Player", value: playerName)
                         }
                         KeyValueView(key: "Start Date", value: character.startDate.yyyyMMddToMonthDayYear())
@@ -60,7 +61,8 @@ struct CharacterStatusView: View {
 }
 
 struct CharacterBulletsSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: OldFullCharacterModel
 
@@ -77,7 +79,8 @@ struct CharacterBulletsSubView: View {
 }
 
 struct CharacterMaterialsSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: OldFullCharacterModel
 
@@ -96,7 +99,8 @@ struct CharacterMaterialsSubView: View {
 }
 
 struct CharacterSkillAndArmorSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: OldFullCharacterModel
 
@@ -146,9 +150,7 @@ struct CharacterSkillAndArmorSubView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     var csv = CharacterStatusView()
     csv._dm = dm

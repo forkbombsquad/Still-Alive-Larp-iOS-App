@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct EditBioView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     init() {
-        self._bio = State(initialValue: OldDataManager.shared.character?.bio ?? "")
+        self._bio = State(initialValue: OldDM.character?.bio ?? "")
     }
 
     @State var bio: String
@@ -37,13 +38,13 @@ struct EditBioView: View {
                             Text("Bio\n(Optional, but if your bio is approved, you will earn 1 additional experience)").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                         }
                     LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Submit Update") {
-                        if let character = OldDataManager.shared.character {
+                        if let character = OldDM.character {
                             self.loading = true
                             var char = character.baseModel
                             char.bio = self.bio
 
                             CharacterService.updateBio(char) { characterModel in
-                                OldDataManager.shared.load([.character], forceDownloadIfApplicable: true)
+                                OldDM.load([.character], forceDownloadIfApplicable: true)
                                 AlertManager.shared.showOkAlert("Success", message: "\(character.fullName)'s bio was approved!") {
                                     runOnMainThread {
                                         self.mode.wrappedValue.dismiss()
@@ -66,9 +67,7 @@ struct EditBioView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.character = md.fullCharacters()[1]
     var ebv = EditBioView()

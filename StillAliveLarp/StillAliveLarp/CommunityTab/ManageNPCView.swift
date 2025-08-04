@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ManageNPCView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     @Binding var npcs: [CharacterModel]
     let npc: CharacterModel
@@ -98,9 +99,7 @@ struct ManageNPCView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return ManageNPCView(_dm: dm, npcs: .constant(md.characterListFullModel.characters), npc: md.character())
 }

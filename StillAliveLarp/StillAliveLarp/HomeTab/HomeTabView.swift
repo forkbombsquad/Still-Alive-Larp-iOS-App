@@ -8,24 +8,10 @@
 import SwiftUI
 
 struct HomeTabView: View {
-    @ObservedObject var _dm = DataManager.shared
-    @State private var firstLoad = true
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
-    @State var loadingEvents = false
-    @State var loadingEventAttendees = false
-    @State var loadingIntrigues = false
-    @State var loadingCharacter = false
-    @State var loadingAwards = false
-    @State var loadingPreregs = false
-    
-    @State var player: PlayerModel?
-    @State var character: OldFullCharacterModel?
-    @State var events: [EventModel] = []
-    @State var currentEvent: EventModel?
-    @State var awards: [AwardModel] = []
-    @State var intrigue: IntrigueModel?
-    @State var eventAttendees: [EventAttendeeModel] = []
-    @State var preregs: [Int : [EventPreregModel]] = [:]
+    @State var showAllEvents = false
 
     var body: some View {
         NavigationView {
@@ -33,30 +19,29 @@ struct HomeTabView: View {
             GeometryReader { gr in
                     ScrollView(showsIndicators: false) {
                         PullToRefresh(coordinateSpaceName: "pullToRefresh_HomeTab", spinnerOffsetY: -100, pullDownDistance: 150) {
-                            self.refreshEverything()
+                            DM.load(loadType: .forceDownload)
                         }
                         VStack {
-                            Text("Home")
-                                .font(.system(size: 32, weight: .bold))
-                            AnnouncementsView()
-                            if showIntrigueSection() && !loadingIntrigues && !loadingCharacter {
-                                IntrigueView(character: $character, intrigue: $intrigue)
-                            }
-                            if showCheckoutSection() {
-                                CardWithTitleView(title: "Checkout") {
-                                    NavArrowViewRed(title: "Checkout", loading: $loadingEventAttendees, content: {
-                                        GenerateCheckoutBarcodeView()
-                                    })
+                            Text(DM.getTitlePotentiallyOffline("Home"))
+                                .font(.stillAliveTitleFont)
+                            LoadingLayoutView {
+                                VStack {
+                                    AnnouncementsView()
+                                    // TODO check these show sections to make sure logic is right
+                                    if showIntrigueSection() {
+                                        // TODO Intrigue
+                                    }
+                                    if showCheckoutSection() {
+                                        // TODO checkout
+                                    }
+                                    if showCurrentCharSection() {
+                                        // TODO current char
+                                    }
+                                    if showEventsSection() {
+                                        // TODO events
+                                    }
+                                    // TODO awards
                                 }
-                            }
-                            if showCurrentCharSection() {
-                                CurrentCharacterView(grWidth: gr.size.width, loadingCharacter: $loadingCharacter, character: $character, player: $player)
-                            }
-                            if loadingEvents || events.isNotEmpty {
-                                EventsView(loadingEvents: $loadingEvents, events: $events, currentEvent: $currentEvent, loadingPreregs: $loadingPreregs, eventPreregs: $preregs, player: $player, character: $character, loadingCharacter: $loadingCharacter)
-                            }
-                            if loadingAwards || awards.isNotEmpty {
-                                AwardsView(loadingAwards: $loadingAwards, awards: $awards)
                             }
                         }
                     }.coordinateSpace(name: "pullToRefresh_HomeTab")
@@ -64,279 +49,174 @@ struct HomeTabView: View {
             }
             .padding(16)
             .background(Color.lightGray)
-            .onAppear {
-                if firstLoad {
-                    firstLoad = false
-                    self.refreshEverything()
-                }
-            }
         }.navigationViewStyle(.stack)
     }
 
     func showIntrigueSection() -> Bool {
-        return player?.isCheckedIn.boolValueDefaultFalse ?? false &&
-        !(player?.isCheckedInAsNpc.boolValueDefaultFalse ?? false) &&
-        (character?.getIntrigueSkills() ?? []).isNotEmpty &&
-        intrigue != nil
-    }
-
-    private func getCurrentEvent() -> EventModel? {
-        return events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse})
+        let show = DM.getOngoingOrTodayEvent()?.intrigue != nil
+        if let char = DM.getActiveCharacter() {
+            return char.getPurchasedIntrigueSkills().isNotEmpty && show
+        } else {
+            let npcId = DM.getOngoingOrTodayEvent()?.attendees.first(where: { $0.playerId == (DM.getCurrentPlayer()?.id ?? -1) })?.npcId ?? -1
+            let npc = DM.getAllCharacters(.npc).first(where: { $0.id == npcId })
+            if let npc = npc {
+                return npc.getPurchasedIntrigueSkills().isNotEmpty && show
+            }
+        }
+        return false
     }
 
     func showCheckoutSection() -> Bool {
-        return getCurrentEvent() == nil && player?.isCheckedIn.boolValueDefaultFalse == true && !loadingCharacter
+        return DM.getOngoingEvent() != nil && DM.getCurrentPlayer()?.isCheckedIn ?? false
     }
 
     func showCurrentCharSection() -> Bool {
-        var value = true
-        if let player = player {
-            if player.isCheckedIn.boolValueDefaultFalse {
-                if !loadingCharacter && character == nil {
-                    value = false
-                }
-            }
-        }
-        return value
+        return !(DM.getCurrentPlayer()?.isCheckedIn ?? true)
     }
 
     func showEventsSection() -> Bool {
-        return loadingEvents || events.isNotEmpty
+        return showAllEvents ? DM.events.isNotEmpty : DM.getRelevantEvents().isNotEmpty
     }
 
-    func refreshEverything() {
-        runOnMainThread {
-            self.loadingEvents = true
-            self.loadingEventAttendees = true
-            self.loadingIntrigues = true
-            self.loadingCharacter = true
-            self.loadingAwards = true
-            self.loadingPreregs = true
-            
-            OldDataManager.shared.load([.player, .character, .announcements, .events, .awards, .skills, .eventAttendees, .featureFlags], forceDownloadIfApplicable: true) {
-                runOnMainThread {
-                    let dm = OldDataManager.shared
-                    self.loadingEvents = false
-                    self.loadingEventAttendees = false
-                    self.loadingCharacter = false
-                    self.loadingAwards = false
-                    
-                    self.player = dm.player
-                    self.character = dm.character
-                    self.events = dm.events ?? []
-                    self.currentEvent = dm.currentEvent
-                    self.awards = dm.awards ?? []
-                    self.eventAttendees = dm.eventAttendeesForPlayer ?? []
-                    
-                    OldDataManager.shared.load([.eventPreregs, .intrigue], forceDownloadIfApplicable: true) {
-                        runOnMainThread {
-                            self.preregs = OldDataManager.shared.eventPreregs
-                            self.intrigue = OldDataManager.shared.intrigue
-                            self.loadingPreregs = false
-                            self.loadingIntrigues = false
+}
+
+struct AnnouncementsView: View {
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+
+    @State private var currentAnnouncementIndex: Int = 0
+
+    var body: some View {
+        CardWithTitleView(title: DM.getTitlePotentiallyOffline("Announcements")) {
+            VStack {
+                if DM.announcements.isEmpty {
+                    Text("No announcements found!")
+                } else {
+                    let announcement = DM.announcements[currentAnnouncementIndex]
+                    Text(announcement.title)
+                        .font(.system(size: 16, weight: .bold))
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(announcement.date.yyyyMMddToMonthDayYear())
+                        .font(.system(size: 16))
+                        .lineLimit(nil)
+                        .padding(.top, 8)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(announcement.text)
+                        .font(.system(size: 16))
+                        .lineLimit(nil)
+                        .padding(.top, 8)
+                        .fixedSize(horizontal: false, vertical: true)
+                    HStack {
+                        if currentAnnouncementIndex > 0 {
+                            Image(systemName: "arrow.left.circle")
+                                .font(.system(size: 44))
+                                .foregroundColor(.midRed)
+                                .padding(.top, 8)
+                                .onTapGesture {
+                                    self.goToPreviousAnnouncement()
+                                }
+                        }
+                        Spacer()
+                        if currentAnnouncementIndex < DM.announcements.count - 1 {
+                            Image(systemName: "arrow.right.circle")
+                                .font(.system(size: 44))
+                                .foregroundColor(.midRed)
+                                .padding(.top, 8)
+                                .onTapGesture {
+                                    self.goToNextAnnouncement()
+                                }
                         }
                     }
                 }
             }
         }
-        
+    }
+
+    private func goToPreviousAnnouncement() {
+        currentAnnouncementIndex -= 1
+    }
+
+    private func goToNextAnnouncement() {
+        currentAnnouncementIndex += 1
     }
 
 }
 
 struct IntrigueView: View {
-    @ObservedObject var _dm = DataManager.shared
-    
-    @Binding var character: OldFullCharacterModel?
-    @Binding var intrigue: IntrigueModel?
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     var body: some View {
         VStack {
-            if let character = character, let intrigue = intrigue {
-                CardWithTitleView(title: "Intrigue") {
-                    Text("The following information is only given to those with one or both of the following skills: Investigator, Interrogator. You are free to share this information with others or keep it to yourself.")
-                    let intrigueSkills = character.getIntrigueSkills()
-                    if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.investigator }) {
-                        Divider().padding([.leading, .trailing], 16)
-                        Text("Fact 1 (Investigator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
-                        Text(intrigue.investigatorMessage)
-                    }
-                    if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.interrogator }) {
-                        Divider().padding([.leading, .trailing], 16)
-                        Text("Fact 2 (Interrogator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
-                        Text(intrigue.interrogatorMessage)
-                    }
+            CardWithTitleView(title: DM.getTitlePotentiallyOffline("Intrigue")) {
+                Text("The following information is only given to those with one or both of the following skills: Investigator, Interrogator. You are free to share this information with others or keep it to yourself.")
+                let intrigueSkills = getIntrigueSkillIds()
+                let intrigue = getCurrentIntrigue()
+                if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.investigator }) {
+                    Divider().padding([.leading, .trailing], 16)
+                    Text("Fact 1 (Investigator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
+                    Text(intrigue?.investigatorMessage ?? "")
+                }
+                if intrigueSkills.contains(where: { $0 == Constants.SpecificSkillIds.interrogator }) {
+                    Divider().padding([.leading, .trailing], 16)
+                    Text("Fact 2 (Interrogator)").font(.system(size: 14, weight: .bold)).multilineTextAlignment(.center)
+                    Text(intrigue?.interrogatorMessage ?? "")
                 }
             }
         }
+    }
+    
+    func getIntrigueSkillIds() -> [Int] {
+        if let char = DM.getActiveCharacter() {
+            return char.getPurchasedIntrigueSkills()
+        } else {
+            let npcId = DM.getOngoingOrTodayEvent()?.attendees.first(where: { $0.playerId == (DM.getCurrentPlayer()?.id ?? -1) })?.npcId ?? -1
+            let npc = DM.getAllCharacters(.npc).first(where: { $0.id == npcId })
+            if let npc = npc {
+                return npc.getPurchasedIntrigueSkills()
+            }
+        }
+        return []
+    }
+    
+    func getCurrentIntrigue() -> IntrigueModel? {
+        return DM.getOngoingOrTodayEvent()?.intrigue
     }
 
 }
 
-struct EventsView: View {
-    @ObservedObject var _dm = DataManager.shared
-
-    @State var currentEventIndex: Int = 0
-    @Binding var loadingEvents: Bool
-    @Binding var events: [EventModel]
-    @Binding var currentEvent: EventModel?
-    @Binding var loadingPreregs: Bool
-    @Binding var eventPreregs: [Int : [EventPreregModel]]
-    @Binding var player: PlayerModel?
-    @Binding var character: OldFullCharacterModel?
-    @Binding var loadingCharacter: Bool
-
+struct CheckoutView: View {
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+    
     var body: some View {
-        if loadingEvents {
-            CardWithTitleView(title: "Events") {
-                ProgressView().padding(.bottom, 8)
-                Text("Loading Events...")
-            }
-        } else if let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })) {
-            CardWithTitleView(title: "Event Today!") {
-                VStack {
-                    Text(event.title)
-                        .font(.system(size: 16, weight: .bold))
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .padding(.top, 8)
-                    Text("\(event.date.yyyyMMddToMonthDayYear())\n\(event.startTime) to \(event.endTime)")
-                        .font(.system(size: 16))
-                        .lineLimit(nil)
-                        .padding(.top, 8)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(event.description)
-                        .font(.system(size: 16))
-                        .lineLimit(nil)
-                        .padding(.top, 8)
-                        .fixedSize(horizontal: false, vertical: true)
-                    if event.isStarted.boolValueDefaultFalse && !event.isFinished.boolValueDefaultFalse {
-                        if !(player?.isCheckedIn.boolValueDefaultFalse ?? false) {
-                            if let character = character {
-                                NavArrowViewGreen(title: "Check In as \(character.fullName)", loading: $loadingCharacter) {
-                                    GenerateCheckInBarcodeView(useChar: true)
-                                }
-                            }
-                            NavArrowViewBlue(title: "Check In as NPC") {
-                                GenerateCheckInBarcodeView(useChar: false)
-                            }
-                        } else {
-                            Text("\(loadingCharacter ? "Loading Check In Information..." : "Checked in as \(player?.isCheckedInAsNpc.boolValueDefaultFalse == true ? "NPC" : (character?.fullName ?? ""))")")
-                                .font(.system(size: 14, weight: .bold))
-                                .padding(.top, 8)
-                        }
-                    }
-                }
-            }
-        } else {
-            CardWithTitleView(title: "Events") {
-                VStack {
-                    if let currentEvent = currentEvent {
-                        Text(currentEvent.title)
-                            .font(.system(size: 16, weight: .bold))
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .padding(.top, 8)
-                            .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
-                        Text("\(currentEvent.date.yyyyMMddToMonthDayYear())\nfrom \(currentEvent.startTime) to \(currentEvent.endTime)")
-                            .font(.system(size: 16))
-                            .lineLimit(nil)
-                            .padding(.top, 8)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
-                        Text(currentEvent.description)
-                            .font(.system(size: 16))
-                            .lineLimit(nil)
-                            .padding(.top, 8)
-                            .fixedSize(horizontal: false, vertical: true)
-                        
-                        if currentEvent.isInFuture() {
-                            let prereg = (eventPreregs[currentEvent.id] ?? []).first(where: { $0.playerId == player?.id })
-                            NavArrowViewBlue(title: loadingPreregs ? "Loading Preregs..." : (prereg != nil ? "Edit Your Pre-Registartion" : "Pre-Register for this event"), loading: $loadingPreregs) {
-                                PreregView(event: currentEvent, prereg: prereg, player: player, character: character?.baseModel).onDisappear {
-                                    runOnMainThread {
-                                        self.loadingPreregs = true
-                                        OldDataManager.shared.load([.eventPreregs], forceDownloadIfApplicable: true) {
-                                            runOnMainThread {
-                                                self.eventPreregs = OldDataManager.shared.eventPreregs
-                                                self.loadingPreregs = false
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if let prereg = prereg {
-                                Text("You are pre-registered for this event as:\n\n\(prereg.getCharId() == nil ? "NPC" : character?.fullName ?? "") - \(prereg.regType)")
-                                    .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
-                            }
-                        }
-                        HStack {
-                            if currentEventIndex > 0 {
-                                Image(systemName: "arrow.left.circle")
-                                    .font(.system(size: 44))
-                                    .foregroundColor(.midRed)
-                                    .padding(.top, 8)
-                                    .onTapGesture {
-                                        self.goToPreviousEvent()
-                                    }
-                            }
-                            Spacer()
-                            if currentEventIndex < events.count - 1 {
-                                Image(systemName: "arrow.right.circle")
-                                    .font(.system(size: 44))
-                                    .foregroundColor(.midRed)
-                                    .padding(.top, 8)
-                                    .onTapGesture {
-                                        self.goToNextEvent()
-                                    }
-                            }
-                        }
-                    }
+        VStack {
+            CardWithTitleView(title: DM.getTitlePotentiallyOffline("Checkout")) {
+                NavArrowViewRed(title: "Checkout From Event:\n\(DM.events.first(where: { event in event.id == DM.getCurrentPlayer()!.eventAttendees.first(where: { attendee in attendee.isCheckedIn.boolValueDefaultFalse })?.eventId })?.title ?? "")") {
+                    GenerateCheckoutBarcodeView()
                 }
             }
         }
     }
-
-    private func goToPreviousEvent() {
-        changeEvent(-1)
-    }
-
-    private func goToNextEvent() {
-        changeEvent(1)
-    }
-
-    private func changeEvent(_ byAmount: Int) {
-        currentEventIndex += byAmount
-        currentEvent = events[currentEventIndex]
-    }
-
 }
 
 struct CurrentCharacterView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let grWidth: CGFloat
-    
-    @Binding var loadingCharacter: Bool
-    @Binding var character: OldFullCharacterModel?
-    @Binding var player: PlayerModel?
 
     var body: some View {
-        CardWithTitleView(title: "Current Character") {
+        CardWithTitleView(title: DM.getTitlePotentiallyOffline("Current Character")) {
             VStack {
-                if loadingCharacter {
-                    ProgressView().padding(.bottom, 8)
-                    Text("Loading Character Information...")
-                } else if let currentCharacter = character {
+                if let currentCharacter = DM.getActiveCharacter() {
                     Text(currentCharacter.fullName)
                         .font(.system(size: 16, weight: .bold))
                         .lineLimit(nil)
                         .padding(.top, 8)
                         .fixedSize(horizontal: false, vertical: true)
-                } else if player != nil {
+                } else if DM.getCurrentPlayer() != nil {
                     Text("You don't have any living characters!")
                         .font(.system(size: 16))
                         .lineLimit(nil)
@@ -357,25 +237,184 @@ struct CurrentCharacterView: View {
     }
 }
 
+struct EventsView: View {
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+    
+    @Binding var showAllEvents: Bool
+    @State private var selectedEventIndex = 0
+    
+    let grWidth: CGFloat
+
+    var body: some View {
+        if let event = DM.getOngoingOrTodayEvent(), let player = DM.getCurrentPlayer() {
+            CardWithTitleView(title: DM.getTitlePotentiallyOffline("Event Today!")) {
+                VStack {
+                    Text(event.title)
+                        .font(.system(size: 16, weight: .bold))
+                        .lineLimit(nil)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .padding(.top, 8)
+                    Text("\(event.date.yyyyMMddToMonthDayYear())\n\(event.startTime) to \(event.endTime)")
+                        .font(.system(size: 16))
+                        .lineLimit(nil)
+                        .padding(.top, 8)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(event.description)
+                        .font(.system(size: 16))
+                        .lineLimit(nil)
+                        .padding(.top, 8)
+                        .fixedSize(horizontal: false, vertical: true)
+                    if event.isOngoing() {
+                        if player.isCheckedIn, let attendee = event.attendees.first(where: { $0.playerId == player.id }) {
+                            if let character = player.characters.first(where: { $0.id == attendee.characterId }) {
+                                Text("Checked in as \(character.fullName)")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .padding(.top, 8)
+                            } else if let npc = DM.getCharacter(attendee.npcId) {
+                                VStack {
+                                    Text("Checked in as \(npc.fullName)")
+                                        .font(.system(size: 14, weight: .bold))
+                                        .padding(.top, 8)
+                                    NavArrowView(title: "View Info For \(npc.fullName)") { _ in
+                                        // TODO ViewNpcStuffView
+                                        EmptyView()
+                                    }
+                                }
+                                
+                            }
+                        } else {
+                            if let character = player.getActiveCharacter() {
+                                NavArrowViewGreen(title: "Check In as \(character.fullName)") {
+                                    GenerateCheckInBarcodeView(useChar: true)
+                                }
+                            }
+                            NavArrowViewBlue(title: "Check In as NPC") {
+                                GenerateCheckInBarcodeView(useChar: false)
+                            }
+                        }
+                    }
+                }
+            }
+        } else if let player = DM.getCurrentPlayer() {
+            CardWithTitleView(title: DM.getTitlePotentiallyOffline("Events")) {
+                VStack {
+                    let events = showAllEvents ? DM.events : DM.getRelevantEvents()
+                    if events.indexIsInBounds(selectedEventIndex) {
+                        let event = events[selectedEventIndex]
+                        Text(event.title)
+                            .font(.system(size: 16, weight: .bold))
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .padding(.top, 8)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                        Text("\(event.date.yyyyMMddToMonthDayYear())\nfrom \(event.startTime) to \(event.endTime)")
+                            .font(.system(size: 16))
+                            .lineLimit(nil)
+                            .padding(.top, 8)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                        Text(event.description)
+                            .font(.system(size: 16))
+                            .lineLimit(nil)
+                            .padding(.top, 8)
+                            .fixedSize(horizontal: false, vertical: true)
+                        
+                        if event.isRelevant() {
+                            let prereg = event.preregs.first(where: { $0.playerId == player.id })
+                            NavArrowViewBlue(title: prereg != nil ? "Edit Your Pre-Registartion" : "Pre-Register For This Event") {
+                                // TODO prereg view
+//                                PreregView(event: currentEvent, prereg: prereg, player: player, character: character?.baseModel).onDisappear {
+//                                    runOnMainThread {
+//                                        self.loadingPreregs = true
+//                                        OldDM.load([.eventPreregs], forceDownloadIfApplicable: true) {
+//                                            runOnMainThread {
+//                                                self.eventPreregs = OldDM.eventPreregs
+//                                                self.loadingPreregs = false
+//                                            }
+//                                        }
+//                                    }
+//                                }
+                            }
+                            if let prereg = prereg {
+                                let char = player.characters.first(where: { $0.id == prereg.getCharId() })
+                                let regType = prereg.eventRegType.getAttendingText()
+                                Text("You are pre-registered for this event as:\n\n\(prereg.getCharId() == nil ? "NPC" : char?.fullName ?? "") - \(prereg.regType)")
+                                    .multilineTextAlignment(.center)
+                                    .frame(alignment: .center)
+                            }
+                        }
+                        HStack {
+                            if selectedEventIndex > 0 {
+                                Image(systemName: "arrow.left.circle")
+                                    .font(.system(size: 44))
+                                    .foregroundColor(.midRed)
+                                    .padding(.top, 8)
+                                    .onTapGesture {
+                                        self.goToPreviousEvent()
+                                    }
+                            }
+                            Spacer()
+                            LoadingButtonView(.constant(false), width: grWidth * 0.2, buttonText: showAllEvents ? "Show Only\nRelevant\nEvents" : "Show\nAll\nEvents") {
+                                runOnMainThread {
+                                    selectedEventIndex = 0
+                                    showAllEvents = !showAllEvents
+                                }
+                            }
+                            .padding(.top, 8)
+                            Spacer()
+                            if selectedEventIndex < events.count - 1 {
+                                Image(systemName: "arrow.right.circle")
+                                    .font(.system(size: 44))
+                                    .foregroundColor(.midRed)
+                                    .padding(.top, 8)
+                                    .onTapGesture {
+                                        self.goToNextEvent()
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private func goToPreviousEvent() {
+        selectedEventIndex -= 1
+    }
+
+    private func goToNextEvent() {
+        selectedEventIndex += 1
+    }
+
+}
+
 struct AwardsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var loadingAwards: Bool
     @Binding var awards: [AwardModel]
 
     var body: some View {
-        CardWithTitleView(title: "Awards") {
+        CardWithTitleView(title: DM.getTitlePotentiallyOffline("Awards")) {
             VStack {
-                if loadingAwards {
-                    ProgressView().padding(.bottom, 8)
-                    Text("Loading Awards...")
-                } else if awards.isNotEmpty {
+                if let player = DM.getCurrentPlayer(), player.awards.isNotEmpty {
                    ForEach(awards) { award in
                        VStack {
                            HStack {
+                               if let character = player.characters.first(where: { $0.id == award.characterId }) {
+                                   Text(character.fullName)
+                                       .font(.system(size: 16, weight: .bold))
+                               } else {
+                                   Text(player.fullName)
+                                       .font(.system(size: 16, weight: .bold))
+                               }
                                Text("\(award.date.yyyyMMddToMonthDayYear())")
                                Spacer()
-                               Text("\(award.amount) \(award.awardType)")
+                               Text(award.getDisplayText())
                            }.padding([.top, .bottom], 8)
                            Text("\(award.reason)")
                            if award != awards.last {
@@ -396,19 +435,6 @@ struct AwardsView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    dm.loadingPlayer = false
-    dm.loadingCharacter = false
-    dm.loadingIntrigue = false
-    dm.loadingEvents = false
-    dm.loadingAwards = false
-    dm.loadingAnnouncements = false
-    dm.player = md.player(id: 2)
-    dm.character = md.fullCharacters()[1]
-    var htv = HomeTabView()
-    htv._dm = dm
-    return htv
+    DataManager.shared.setDebugMode(true)
+    return HomeTabView()
 }

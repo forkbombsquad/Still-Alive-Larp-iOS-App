@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct BioView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     static func Offline(character: OldFullCharacterModel) -> BioView {
         return BioView(character: character, allowEdit: false, offline: true)
@@ -17,7 +18,7 @@ struct BioView: View {
     init(allowEdit: Bool) {
         self.allowEdit = allowEdit
         self.offline = false
-        self._character = globalState(OldDataManager.shared.charForSelectedPlayer)
+        self._character = globalState(OldDM.charForSelectedPlayer)
     }
     
     private init(character: OldFullCharacterModel, allowEdit: Bool, offline: Bool) {
@@ -57,9 +58,7 @@ struct BioView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.charForSelectedPlayer = md.fullCharacters()[1]
     var bv = BioView(allowEdit: true)

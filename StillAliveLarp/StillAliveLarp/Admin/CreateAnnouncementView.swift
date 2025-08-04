@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CreateAnnouncementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var title: String = ""
     @State private var message: String = ""
@@ -79,8 +80,6 @@ struct CreateAnnouncementView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return CreateAnnouncementView(_dm: dm)
 }

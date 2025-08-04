@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AllPlayersListView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let allPlayers: [PlayerModel]
     
@@ -40,9 +41,7 @@ struct AllPlayersListView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return AllPlayersListView(_dm: dm, allPlayers: md.playerList.players)
 }

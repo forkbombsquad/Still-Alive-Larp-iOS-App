@@ -13,7 +13,8 @@ struct AllNpcsListView: View {
         return AllNpcsListView(fullCharacterModels: npcs, skills: skills, allowEdit: false)
     }
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let offline: Bool
     let allowEdit: Bool
@@ -94,9 +95,7 @@ struct AllNpcsListView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return AllNpcsListView(_dm: dm, npcs: md.characterListFullModel.characters, allowEdit: false)
 }

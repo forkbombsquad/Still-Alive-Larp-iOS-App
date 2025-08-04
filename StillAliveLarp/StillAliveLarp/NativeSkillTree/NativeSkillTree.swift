@@ -567,11 +567,11 @@ struct NativeSkillTree: View {
                     AlertManager.shared.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
                         let charSkill = CharacterSkillCreateModel(characterId: char.id, skillId: skl.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: ppSpent)
                         CharacterSkillService.takeSkill(charSkill, playerId: player.id) { _ in
-                            OldDataManager.shared.load([.player, .character], forceDownloadIfApplicable: true) {
+                            OldDM.load([.player, .character], forceDownloadIfApplicable: true) {
                                 runOnMainThread {
                                     AlertManager.shared.showOkAlert("\(skl.name) Purchased!") {}
-                                    self.player = OldDataManager.shared.player
-                                    self.character = OldDataManager.shared.character
+                                    self.player = OldDM.player
+                                    self.character = OldDM.character
                                     self.availableSKills = getAvailableSkills() ?? []
                                     self.isPurchasing = false
                                     self.forceRefresh()

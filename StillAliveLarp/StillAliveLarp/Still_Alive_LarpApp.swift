@@ -9,15 +9,16 @@ import SwiftUI
 
 @main
 struct Still_Alive_LarpApp: App {
-
-    @StateObject var alertManager = AlertManager.shared
-    @ObservedObject var dataManager = OldDataManager.shared
+    
+    @StateObject private var alertManager = AlertManager.shared
+    @StateObject private var dataManager = DataManager.shared
 
     var body: some Scene {
         WindowGroup {
             CustomAlertContainerView {
                 MainView()
                     .environmentObject(alertManager)
+                    .environmentObject(dataManager)
                     .alert(isPresented: $alertManager.isShowingAlert) {
                         alertManager.alert ?? Alert(title: Text(""))
                     }

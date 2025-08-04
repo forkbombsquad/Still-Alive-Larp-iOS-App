@@ -28,7 +28,6 @@
 		B2222492291DB13B003BCA0A /* AnnouncementManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2222491291DB13B003BCA0A /* AnnouncementManager.swift */; };
 		B2222494291DBB47003BCA0A /* CustomCodeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2222493291DBB47003BCA0A /* CustomCodeable.swift */; };
 		B2222496291DBB95003BCA0A /* DataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2222495291DBB95003BCA0A /* DataExtensions.swift */; };
-		B2222499291E971D003BCA0A /* AnnouncementsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2222498291E971D003BCA0A /* AnnouncementsView.swift */; };
 		B222249B291E9806003BCA0A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222249A291E9806003BCA0A /* CardView.swift */; };
 		B222249D291E9B4C003BCA0A /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222249C291E9B4C003BCA0A /* PlayerManager.swift */; };
 		B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B222249E291E9F99003BCA0A /* CharacterService.swift */; };
@@ -42,6 +41,8 @@
 		B22324BF2E3D006C0087786E /* LoadingLayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */; };
 		B22324C12E3D3F8B0087786E /* CampStatusModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C02E3D3F870087786E /* CampStatusModel.swift */; };
 		B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C22E3D5B970087786E /* CampStatusService.swift */; };
+		B22324C72E40092B0087786E /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C62E4009270087786E /* FontExtensions.swift */; };
+		B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C82E40F0460087786E /* CharacterPanel.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -224,7 +225,6 @@
 		B2222491291DB13B003BCA0A /* AnnouncementManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementManager.swift; sourceTree = "<group>"; };
 		B2222493291DBB47003BCA0A /* CustomCodeable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCodeable.swift; sourceTree = "<group>"; };
 		B2222495291DBB95003BCA0A /* DataExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensions.swift; sourceTree = "<group>"; };
-		B2222498291E971D003BCA0A /* AnnouncementsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnouncementsView.swift; sourceTree = "<group>"; };
 		B222249A291E9806003BCA0A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B222249C291E9B4C003BCA0A /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		B222249E291E9F99003BCA0A /* CharacterService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterService.swift; sourceTree = "<group>"; };
@@ -238,6 +238,8 @@
 		B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingLayoutView.swift; sourceTree = "<group>"; };
 		B22324C02E3D3F870087786E /* CampStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampStatusModel.swift; sourceTree = "<group>"; };
 		B22324C22E3D5B970087786E /* CampStatusService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampStatusService.swift; sourceTree = "<group>"; };
+		B22324C62E4009270087786E /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
+		B22324C82E40F0460087786E /* CharacterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPanel.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 		B21691E628FDE449006AA921 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				B22324C62E4009270087786E /* FontExtensions.swift */,
 				B235A4FB2DD7B87F00AF96DC /* CGRectExtensions.swift */,
 				B23552D029EB268A00183748 /* Views */,
 				B23552C729EB02AC00183748 /* Alerts */,
@@ -593,6 +596,7 @@
 				B294A41F2DD24AE4002877B9 /* StyledPickerView.swift */,
 				B235A4F02DD788C800AF96DC /* LoadingBlock.swift */,
 				B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */,
+				B22324C82E40F0460087786E /* CharacterPanel.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -706,7 +710,6 @@
 			isa = PBXGroup;
 			children = (
 				B222248C291DA33F003BCA0A /* HomeTabView.swift */,
-				B2222498291E971D003BCA0A /* AnnouncementsView.swift */,
 				B23552BB29E9D14E00183748 /* CreateCharacterView.swift */,
 				B2F9838B29F18F4500512839 /* GenerateCheckInBarcodeView.swift */,
 				B2750B5429FAD48300AA5F5B /* GenerateCheckoutBarcodeView.swift */,
@@ -944,6 +947,7 @@
 				B235A4F82DD7A82900AF96DC /* SkillCategoryService.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
 				B235529229E8480600183748 /* AwardPlayerView.swift in Sources */,
+				B22324C72E40092B0087786E /* FontExtensions.swift in Sources */,
 				B294A4202DD24AE4002877B9 /* StyledPickerView.swift in Sources */,
 				B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */,
 				B235A4FC2DD7B88400AF96DC /* CGRectExtensions.swift in Sources */,
@@ -968,6 +972,7 @@
 				B2A0D4EC29E5D50F00A235B4 /* SkillListView.swift in Sources */,
 				B2F9837729F07AB300512839 /* EventManagementView.swift in Sources */,
 				B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */,
+				B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */,
 				B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */,
 				B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */,
 				B222249B291E9806003BCA0A /* CardView.swift in Sources */,
@@ -1079,7 +1084,6 @@
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
-				B2222499291E971D003BCA0A /* AnnouncementsView.swift in Sources */,
 				B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
 			);

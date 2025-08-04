@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CreateCharacterView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var fullName: String = ""
     @State private var bio: String = ""
@@ -45,10 +46,10 @@ struct CreateCharacterView: View {
                         let valResult = validateFields()
                         if !valResult.hasError {
                             self.loading = true
-                            let char = CreateCharacterModel(fullName: fullName, startDate: Date().yyyyMMddFormatted, isAlive: "TRUE", deathDate: "", infection: "0", bio: bio, approvedBio: "FALSE", bullets: "20", megas: "0", rivals: "0", rockets: "0", bulletCasings: "0", clothSupplies: "0", woodSupplies: "0", metalSupplies: "0", techSupplies: "0", medicalSupplies: "0", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: OldDataManager.shared.player?.id ?? -1, characterTypeId: Constants.CharacterTypes.standard)
+                            let char = CreateCharacterModel(fullName: fullName, startDate: Date().yyyyMMddFormatted, isAlive: "TRUE", deathDate: "", infection: "0", bio: bio, approvedBio: "FALSE", bullets: "20", megas: "0", rivals: "0", rockets: "0", bulletCasings: "0", clothSupplies: "0", woodSupplies: "0", metalSupplies: "0", techSupplies: "0", medicalSupplies: "0", armor: CharacterModel.ArmorType.none.rawValue, unshakableResolveUses: "0", mysteriousStrangerUses: "0", playerId: OldDM.player?.id ?? -1, characterTypeId: Constants.CharacterTypes.standard)
 
                             CharacterService.createCharacter(char) { characterModel in
-                                OldDataManager.shared.load([.player, .character], forceDownloadIfApplicable: true)
+                                OldDM.load([.player, .character], forceDownloadIfApplicable: true)
                                 AlertManager.shared.showSuccessAlert("Character named \(characterModel.fullName) created!") {
                                     runOnMainThread {
                                         self.mode.wrappedValue.dismiss()
@@ -80,8 +81,6 @@ struct CreateCharacterView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return CreateCharacterView(_dm: dm)
 }

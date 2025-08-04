@@ -10,7 +10,8 @@ import CodeScanner
 
 struct AdminView: View {
 
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loadingPlayers: Bool = true
     @State var allPlayers = [PlayerModel]()
@@ -40,7 +41,7 @@ struct AdminView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 150) {
+                    PullToRefresh(coordinateSpaceName: "pullToRefresh_AdminTab", spinnerOffsetY: -100, pullDownDistance: 150) {
                         self.reloadData()
                     }
                     VStack {
@@ -63,7 +64,7 @@ struct AdminView: View {
                             .padding(.top, 8)
                         MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, researchProjects: $researchProjects, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests, loadingResearchProjects: $loadingResearchProjects)
                     }
-                }
+                }.coordinateSpace(name: "pullToRefresh_AdminTab")
             }
         }.padding(16)
         .background(Color.lightGray)
@@ -111,7 +112,7 @@ struct AdminView: View {
                 runOnMainThread {
                     self.loadingEvents = false
                     self.events = events.reversed()
-                    OldDataManager.shared.events = events
+                    OldDM.events = events
                 }
             }
             AdminService.getAllContactRequests { contactRequestList in
@@ -124,16 +125,16 @@ struct AdminView: View {
                     self.loadingContacts = false
                 }
             }
-            OldDataManager.shared.load([.researchProjects], forceDownloadIfApplicable: true) {
+            OldDM.load([.researchProjects], forceDownloadIfApplicable: true) {
                 runOnMainThread {
-                    self.researchProjects = OldDataManager.shared.researchProjects
+                    self.researchProjects = OldDM.researchProjects
                     self.loadingResearchProjects = false
                 }
             }
-            OldDataManager.shared.load([.featureFlags], forceDownloadIfApplicable: true)
-            OldDataManager.shared.load([.npcs], forceDownloadIfApplicable: true) {
+            OldDM.load([.featureFlags], forceDownloadIfApplicable: true)
+            OldDM.load([.npcs], forceDownloadIfApplicable: true) {
                 runOnMainThread {
-                    self.npcs = OldDataManager.shared.npcs
+                    self.npcs = OldDM.npcs
                     self.loadingNPCs = false
                 }
             }
@@ -166,7 +167,8 @@ struct AdminView: View {
 }
 
 struct EventToolsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var events: [EventModel]
     @Binding var loadingEvents: Bool
@@ -193,7 +195,8 @@ struct EventToolsView: View {
 }
 
 struct PlayerCharacterManagementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var npcs: [CharacterModel]
@@ -227,7 +230,8 @@ struct PlayerCharacterManagementView: View {
 }
 
 struct MiscAdminView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var allCharacters: [CharacterModel]
     @Binding var loadingCharacters: Bool
@@ -245,7 +249,7 @@ struct MiscAdminView: View {
             NavArrowView(title: "Manage Research Projects") { _ in
                 AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true).onDisappear {
                     runOnMainThread {
-                        self.researchProjects = OldDataManager.shared.researchProjects
+                        self.researchProjects = OldDM.researchProjects
                     }
                 }
             }
@@ -267,8 +271,6 @@ struct MiscAdminView: View {
 
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return AdminView(_dm: dm)
 }

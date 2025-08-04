@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct EventManagementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var events: [EventModel]
 
@@ -47,9 +48,7 @@ struct EventManagementView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return EventManagementView(_dm: dm, events: .constant(md.events.events))
 }

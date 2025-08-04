@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CreateEditEventView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     init(events: Binding<[EventModel]>) {
         self._events = events
@@ -165,9 +166,7 @@ struct CreateEditEventView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     var cev = CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
     cev._dm = dm

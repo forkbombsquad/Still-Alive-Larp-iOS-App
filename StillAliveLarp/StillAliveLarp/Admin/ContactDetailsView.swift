@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContactDetailsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var contactRequest: ContactRequestModel
     @State var loading = false
@@ -63,9 +64,7 @@ struct ContactDetailsView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return ContactDetailsView(_dm: dm, contactRequest: .constant(md.contact()))
 }

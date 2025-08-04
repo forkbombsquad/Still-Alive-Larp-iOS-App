@@ -79,12 +79,15 @@ class DataManager: ObservableObject {
     @Published private(set) var debugMode: Bool = false
     @Published private(set) var offlineMode: Bool = false
     @Published private(set) var currentPlayerId: Int = -1
-    @Published private var updateCallbacks: [String: () -> Void] = [:]
-    @Published private var passedData: [String: Any] = [:]
+    // TODO remove if not needed
+//    @Published private var updateCallbacks: [String: () -> Void] = [:]
+//    @Published private var passedData: [String: Any] = [:]
     
     @Published var loadingText: String = ""
     let loadingActor = LoadingActor()
     let finishedCountActor = FinishedCountActor()
+    
+    @Published var isLoadingMirror: Bool = false
     
     actor LoadingActor {
         private var firstLoad: Bool = true
@@ -97,7 +100,6 @@ class DataManager: ObservableObject {
             let prevLoading = loading
             stepCallbacks.append(step)
             callbacks.append(finished)
-            loading = true
             return prevLoading
         }
         
@@ -118,11 +120,11 @@ class DataManager: ObservableObject {
         }
         
         func callStepCallbacks() {
-            
+            stepCallbacks.forEach { $0() }
         }
         
         func callCallbacks() {
-            
+            callbacks.forEach { $0() }
         }
         
         func clearStepCallbacks() {
@@ -187,6 +189,14 @@ class DataManager: ObservableObject {
     // MARK: - Settings Utils
     //
     
+    func setLoading(_ loading: Bool, loadingText: String? = nil) async {
+        await loadingActor.setLoading(loading)
+        self.isLoadingMirror = loading
+        if let loadingText = loadingText {
+            self.loadingText = loadingText
+        }
+    }
+    
     func setOfflineMode(_ offline: Bool) {
         offlineMode = offline
     }
@@ -200,50 +210,52 @@ class DataManager: ObservableObject {
         setCurrentPlayerId(player.id)
     }
     
-    func setUpdateCallback<T: View>(_ view: T, _ callback: @escaping () -> Void) {
-        updateCallbacks[getViewName(view)] = callback
-    }
+    // TODO remove if not needed
     
-    func clearUpdateCallback<T: View>(_ view: T.Type) {
-        updateCallbacks.removeValue(forKey: getViewName(view))
-    }
-    
-    func callUpdateCallback<T: View>(_ view: T.Type) {
-        updateCallbacks[getViewName(view)]?()
-    }
-    
-    func callUpdateCallbacks<T: View>(_ views: [T.Type]) {
-        for view in views {
-            callUpdateCallback(view)
-        }
-    }
-    
-    func setPassedData<T: View>(_ view: T, dataKey: DataManagerPassedDataKey, data: Any) {
-        passedData["\(getViewName(view))\(dataKey)"] = data
-    }
-    
-    func clearPassedData<T: View>(_ view: T.Type, dataKey: DataManagerPassedDataKey) {
-        passedData.removeValue(forKey: "\(getViewName(view))\(dataKey)")
-    }
-    
-    func getPassedData<T: View, K>(_ view: T.Type, dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
-        guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { return nil }
-        if clear {
-            clearPassedData(view, dataKey: dataKey)
-        }
-        return data
-    }
-    
-    func getPassedData<T: View, K>(_ views: [T.Type], dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
-        for view in views {
-            guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { continue }
-            if clear {
-                clearPassedData(view, dataKey: dataKey)
-            }
-            return data
-        }
-        return nil
-    }
+//    func setUpdateCallback<T: View>(_ view: T, _ callback: @escaping () -> Void) {
+//        updateCallbacks[getViewName(view)] = callback
+//    }
+//    
+//    func clearUpdateCallback<T: View>(_ view: T.Type) {
+//        updateCallbacks.removeValue(forKey: getViewName(view))
+//    }
+//    
+//    func callUpdateCallback<T: View>(_ view: T.Type) {
+//        updateCallbacks[getViewName(view)]?()
+//    }
+//    
+//    func callUpdateCallbacks<T: View>(_ views: [T.Type]) {
+//        for view in views {
+//            callUpdateCallback(view)
+//        }
+//    }
+//    
+//    func setPassedData<T: View>(_ view: T, dataKey: DataManagerPassedDataKey, data: Any) {
+//        passedData["\(getViewName(view))\(dataKey)"] = data
+//    }
+//    
+//    func clearPassedData<T: View>(_ view: T.Type, dataKey: DataManagerPassedDataKey) {
+//        passedData.removeValue(forKey: "\(getViewName(view))\(dataKey)")
+//    }
+//    
+//    func getPassedData<T: View, K>(_ view: T.Type, dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
+//        guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { return nil }
+//        if clear {
+//            clearPassedData(view, dataKey: dataKey)
+//        }
+//        return data
+//    }
+//    
+//    func getPassedData<T: View, K>(_ views: [T.Type], dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
+//        for view in views {
+//            guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { continue }
+//            if clear {
+//                clearPassedData(view, dataKey: dataKey)
+//            }
+//            return data
+//        }
+//        return nil
+//    }
     
     func setDebugMode(_ debug: Bool) {
         debugMode = debug
@@ -285,13 +297,14 @@ class DataManager: ObservableObject {
     // MARK: Utils
     //
     
-    func load(loadType: DataManagerLoadType = .downloadIfNecessary, stepFinished: @escaping () -> Void = {}, finished: @escaping () -> Void) {
+    func load(loadType: DataManagerLoadType = .downloadIfNecessary, stepFinished: @escaping () -> Void = {}, finished: @escaping () -> Void = {}) {
         var modLoadType = loadType
         if (offlineMode || debugMode) {
             modLoadType = .offline
         }
         Task {
             let previousLoading = await loadingActor.add(step: stepFinished, finished: finished)
+            await setLoading(true)
             if !previousLoading {
                 switch modLoadType {
                 case .offline:
@@ -669,7 +682,8 @@ class DataManager: ObservableObject {
                     self.currentPlayerId = md.player().id
                 }
                 updateLoadingText("")
-                await loadingActor.setLoading(false)
+                await setLoading(false)
+                
                 await loadingActor.callStepCallbacks()
                 await loadingActor.callCallbacks()
                 await loadingActor.clearCallbacks()
@@ -700,7 +714,7 @@ class DataManager: ObservableObject {
                     self.currentPlayerId = LocalDataManager.shared.getPlayerId()
                 }
                 updateLoadingText("")
-                await loadingActor.setLoading(false)
+                await setLoading(false)
                 await loadingActor.callStepCallbacks()
                 await loadingActor.callCallbacks()
                 await loadingActor.clearCallbacks()

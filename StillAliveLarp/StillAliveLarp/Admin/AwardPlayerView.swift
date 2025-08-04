@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct AwardPlayerView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var players: [PlayerModel]
 
@@ -34,9 +35,7 @@ struct AwardPlayerView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return AwardPlayerView(_dm: dm, players: md.playerList.players)
 }

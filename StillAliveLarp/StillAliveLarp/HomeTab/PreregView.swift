@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct PreregView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loadingSubmit = false
     
@@ -111,9 +112,7 @@ struct PreregView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return PreregView(_dm: dm, event: md.events.events.first!, prereg: nil, player: md.player(id: 2), character: md.character(id: 2))
 }

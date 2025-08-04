@@ -13,7 +13,8 @@ fileprivate func createTextView(_ text: String) -> some View {
 }
 
 struct ViewRulesView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var searchText: String = ""
     let rulebook: Rulebook?
@@ -99,7 +100,8 @@ struct ViewRulesView: View {
 }
 
 struct HeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let heading: Heading
     let width: CGFloat
@@ -133,7 +135,8 @@ struct HeadingView: View {
 }
 
 struct SubHeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let subHeading: SubHeading
     let width: CGFloat
@@ -163,7 +166,8 @@ struct SubHeadingView: View {
 }
 
 struct SubSubHeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let subSubHeading: SubSubHeading
     let width: CGFloat
@@ -191,7 +195,8 @@ struct SubSubHeadingView: View {
 
 struct CustomTableView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let cols: [[String]]
     let rows: [[String]]
@@ -271,9 +276,7 @@ struct CustomTableView: View {
 
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return ViewRulesView(_dm: dm, rulebook: md.rulebook)
 }

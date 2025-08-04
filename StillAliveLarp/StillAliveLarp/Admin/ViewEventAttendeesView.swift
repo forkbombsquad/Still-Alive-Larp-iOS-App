@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ViewEventAttendeesView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let eventModel: EventModel
     
@@ -62,11 +63,11 @@ struct ViewEventAttendeesView: View {
         .onAppear {
             self.loadingEventAttendees = true
             self.loadingPlayers = true
-            OldDataManager.shared.selectedEvent = eventModel
-            OldDataManager.shared.load([.allPlayers, .eventAttendeesForSelectedEvent]) {
+            OldDM.selectedEvent = eventModel
+            OldDM.load([.allPlayers, .eventAttendeesForSelectedEvent]) {
                 runOnMainThread {
-                    self.allPlayers = OldDataManager.shared.allPlayers ?? []
-                    self.eventAttendees = OldDataManager.shared.eventAttendeesForEvent
+                    self.allPlayers = OldDM.allPlayers ?? []
+                    self.eventAttendees = OldDM.eventAttendeesForEvent
                     self.loadingEventAttendees = false
                     self.loadingPlayers = false
                 }
@@ -88,9 +89,7 @@ struct ViewEventAttendeesView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.eventAttendeesForEvent = md.eventAttendees.eventAttendees
     return ViewEventAttendeesView(_dm: dm, eventModel: md.event())

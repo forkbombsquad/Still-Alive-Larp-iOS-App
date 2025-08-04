@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SelectEventForPreregView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let events: [EventModel]
 
@@ -51,9 +52,7 @@ struct SelectEventForPreregView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     var sev = SelectEventForPreregView(events: md.events.events)
     sev._dm = dm

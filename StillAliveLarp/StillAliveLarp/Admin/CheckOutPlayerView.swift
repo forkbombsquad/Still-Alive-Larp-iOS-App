@@ -9,7 +9,8 @@ import SwiftUI
 import CodeScanner
 
 struct CheckOutPlayerView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loadingText = ""
 
@@ -399,7 +400,8 @@ struct CheckOutPlayerView: View {
 }
 
 struct CharacterCheckoutBarcodeView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -504,7 +506,8 @@ struct CharacterCheckoutBarcodeView: View {
 }
 
 struct CharacterAmmoCheckoutView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var bullets: String
     @Binding var megas: String
@@ -523,7 +526,8 @@ struct CharacterAmmoCheckoutView: View {
 }
 
 struct CharacterSuppliesCheckoutView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var bulletCasings: String
     @Binding var clothSupplies: String
@@ -546,7 +550,8 @@ struct CharacterSuppliesCheckoutView: View {
 }
 
 struct TextFieldWithKey: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var text: String
     let key: String
@@ -564,7 +569,8 @@ struct TextFieldWithKey: View {
 }
 
 struct CustomTextField: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var text: String
     let placeholder: String
@@ -581,7 +587,8 @@ struct CustomTextField: View {
 }
 
 fileprivate struct PickerViewWithKey: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let key: String
     @Binding var selectedOption: String
@@ -602,9 +609,7 @@ fileprivate struct PickerViewWithKey: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return CheckOutPlayerView(_dm: dm, isScanning: false, playerCheckOutModel: md.playerCheckOutBarcodeModel(playerId: 3, characterId: 3, eventAttendeeId: 3, eventId: 1))
 }

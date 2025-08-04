@@ -9,7 +9,8 @@ import SwiftUI
 import CodeScanner
 
 struct CheckInPlayerView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var isScanning: Bool = true
     @State var playerCheckInModel: CheckInOutBarcodeModel?
@@ -261,7 +262,8 @@ struct CheckInPlayerView: View {
 }
 
 struct RelevantSkillsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let relevantSkills: [SkillBarcodeModel]
     let primaryFirearm: GearJsonModel?
@@ -416,7 +418,8 @@ struct RelevantSkillsView: View {
 }
 
 struct PlayerBarcodeView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let player: PlayerBarcodeModel
     let isCheckout: Bool
@@ -434,7 +437,8 @@ struct PlayerBarcodeView: View {
 }
 
 struct CharacterBarcodeView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -457,7 +461,8 @@ struct CharacterBarcodeView: View {
 }
 
 struct CharacterBarcodeFirstSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: CharacterBarcodeModel
     let relevantSkills: [SkillBarcodeModel]
@@ -497,7 +502,8 @@ struct CharacterBarcodeFirstSubView: View {
 }
 
 struct CharacterBarcodeSecondSubView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let character: CharacterBarcodeModel
 
@@ -515,9 +521,7 @@ struct CharacterBarcodeSecondSubView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     let bm = md.playerCheckInBarcodeModel(playerId: 2, characterId: 2, eventId: 2)
     return CheckInPlayerView(_dm: dm, isScanning: false, playerCheckInModel: bm, gearModified: true, gearJsonModels: bm.gear?.jsonModels ?? [])

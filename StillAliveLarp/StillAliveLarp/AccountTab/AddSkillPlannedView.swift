@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct AddPlannedSkillView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     typealias slk = SkillListView
 
@@ -95,13 +96,13 @@ struct AddPlannedSkillView: View {
                                                     CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
                                                         runOnMainThread {
                                                             self.charSkills = charSkills.charSkills
-                                                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                             self.loading = false
                                                             self.purchasingSkill = false
                                                         }
                                                     } failureCase: { error in
                                                         runOnMainThread {
-                                                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                             self.loading = false
                                                             self.purchasingSkill = false
                                                         }
@@ -133,13 +134,13 @@ struct AddPlannedSkillView: View {
                                                     CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
                                                         runOnMainThread {
                                                             self.charSkills = charSkills.charSkills
-                                                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                             self.loading = false
                                                             self.purchasingSkill = false
                                                         }
                                                     } failureCase: { error in
                                                         runOnMainThread {
-                                                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                             self.loading = false
                                                             self.purchasingSkill = false
                                                         }
@@ -170,13 +171,13 @@ struct AddPlannedSkillView: View {
                                             CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
                                                 runOnMainThread {
                                                     self.charSkills = charSkills.charSkills
-                                                    self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                     self.loading = false
                                                     self.purchasingSkill = false
                                                 }
                                             } failureCase: { error in
                                                 runOnMainThread {
-                                                    self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
                                                     self.loading = false
                                                     self.purchasingSkill = false
                                                 }
@@ -202,17 +203,17 @@ struct AddPlannedSkillView: View {
         .background(Color.lightGray)
         .onAppear() {
             self.loading = true
-            OldDataManager.shared.load([.skills]) {
+            OldDM.load([.skills]) {
                 runOnMainThread {
                     CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
                         runOnMainThread {
                             self.charSkills = charSkills.charSkills
-                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                             self.loading = false
                         }
                     } failureCase: { error in
                         runOnMainThread {
-                            self.skills = getAvailableSkills(OldDataManager.shared.skills ?? [])
+                            self.skills = getAvailableSkills(OldDM.skills ?? [])
                             self.loading = false
                         }
                     }
@@ -361,9 +362,7 @@ struct AddPlannedSkillView: View {
 
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return AddPlannedSkillView(_dm: dm, character: md.fullCharacters().first!)
 }

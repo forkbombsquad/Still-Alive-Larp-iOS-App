@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SkillListView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     enum FilterType: String, CaseIterable {
         // TODO move this out of here
@@ -123,7 +124,8 @@ struct SkillListView: View {
 }
 
 struct SkillCellView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var skill: OldFullSkillModel
 
@@ -165,9 +167,7 @@ struct SkillCellView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return SkillListView(_dm: dm, skills: md.fullSkills())
 }

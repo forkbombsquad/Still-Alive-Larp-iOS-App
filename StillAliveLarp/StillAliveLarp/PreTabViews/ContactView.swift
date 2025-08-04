@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContactView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var fullName: String = ""
     @State private var emailAddress: String = ""
@@ -98,8 +99,6 @@ struct ContactView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return ContactView(_dm: dm)
 }

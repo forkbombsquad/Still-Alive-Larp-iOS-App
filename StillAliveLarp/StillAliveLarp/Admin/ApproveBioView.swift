@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ApproveBioView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var character: CharacterModel
     @State var loading = false
@@ -91,9 +92,7 @@ struct ApproveBioView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     return ApproveBioView(_dm: dm, character: .constant(md.character(2)))
 }

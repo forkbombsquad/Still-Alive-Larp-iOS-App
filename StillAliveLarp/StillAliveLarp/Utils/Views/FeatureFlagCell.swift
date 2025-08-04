@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct FeatureFlagCell: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let flag: FeatureFlagModel
     
@@ -58,8 +59,6 @@ struct FeatureFlagCell: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     return FeatureFlagCell(_dm: dm, flag: dm.featureFlags.first!, loading: .constant(false), onEditPress: {})
 }

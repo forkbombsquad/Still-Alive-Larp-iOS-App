@@ -8,25 +8,26 @@
 import SwiftUI
 
 struct HomeTabBarView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     var body: some View {
         TabView {
             HomeTabView().tabItem {
                 Image("home-outline").renderingMode(.template)
-                Text("Home")
+                Text(DM.getTitlePotentiallyOffline("Home"))
             }
             RulesTabView().tabItem {
                 Image("book-open-page-variant-outline").renderingMode(.template)
-                Text("Rules")
+                Text(DM.getTitlePotentiallyOffline("Rules"))
             }
             CommunityTabView().tabItem {
                 Image("account-group-outline").renderingMode(.template)
-                Text("Community")
+                Text(DM.getTitlePotentiallyOffline("Community"))
             }
             AccountTabView().tabItem {
                 Image("account-outline").renderingMode(.template)
-                Text("My Account")
+                Text(DM.getTitlePotentiallyOffline("My Account"))
             }
         }
         .navigationBarBackButtonHidden(true)
@@ -35,8 +36,6 @@ struct HomeTabBarView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return HomeTabBarView(_dm: dm)
+    DataManager.shared.setDebugMode(true)
+    return HomeTabBarView()
 }

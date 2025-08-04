@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct GenerateCheckoutBarcodeView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loading = false
     @State var uiImage: UIImage? = nil
@@ -28,7 +29,7 @@ struct GenerateCheckoutBarcodeView: View {
                                 Spacer()
                             }
                         } else {
-                            if let image = uiImage, let barcodeModel = OldDataManager.shared.checkoutBarcodeModel {
+                            if let image = uiImage, let barcodeModel = OldDM.checkoutBarcodeModel {
                                 Text("Check Out\n\(barcodeModel.player.fullName)")
                                     .font(.system(size: 32, weight: .bold))
                                     .multilineTextAlignment(.center)
@@ -48,7 +49,7 @@ struct GenerateCheckoutBarcodeView: View {
                                     .padding([.bottom], 16)
                             }
                             LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Done") {
-                                OldDataManager.shared.load([.player, .character, .intrigue, .events], forceDownloadIfApplicable: true)
+                                OldDM.load([.player, .character, .intrigue, .events], forceDownloadIfApplicable: true)
                                 runOnMainThread {
                                     self.mode.wrappedValue.dismiss()
                                 }
@@ -65,19 +66,19 @@ struct GenerateCheckoutBarcodeView: View {
         .navigationBarBackButtonHidden(true)
         .onAppear {
             self.loading = true
-            OldDataManager.shared.load([.eventAttendees]) {
-                if let ea = OldDataManager.shared.eventAttendeesForPlayer?.first(where: { $0.isCheckedIn.boolValueDefaultFalse }) {
+            OldDM.load([.eventAttendees]) {
+                if let ea = OldDM.eventAttendeesForPlayer?.first(where: { $0.isCheckedIn.boolValueDefaultFalse }) {
                     runOnMainThread {
                         var charBarcode: CharacterBarcodeModel?
                         var relevantSkills = [SkillBarcodeModel]()
 
                         if (!ea.asNpc.boolValueDefaultFalse) {
-                            charBarcode = OldDataManager.shared.character?.barcodeModel
-                            relevantSkills = OldDataManager.shared.character?.getRelevantBarcodeSkills() ?? []
+                            charBarcode = OldDM.character?.barcodeModel
+                            relevantSkills = OldDM.character?.getRelevantBarcodeSkills() ?? []
                         }
 
-                        OldDataManager.shared.checkoutBarcodeModel = PlayerCheckOutBarcodeModel(player: OldDataManager.shared.player!.barcodeModel, character: charBarcode, eventAttendeeId: ea.id, eventId: ea.eventId, relevantSkills: relevantSkills)
-                        if let bc = OldDataManager.shared.checkoutBarcodeModel {
+                        OldDM.checkoutBarcodeModel = PlayerCheckOutBarcodeModel(player: OldDM.player!.barcodeModel, character: charBarcode, eventAttendeeId: ea.id, eventId: ea.eventId, relevantSkills: relevantSkills)
+                        if let bc = OldDM.checkoutBarcodeModel {
                             uiImage = BarcodeGenerator.generateCheckOutBarcode(bc)
                         }
                         self.loading = false
@@ -89,9 +90,7 @@ struct GenerateCheckoutBarcodeView: View {
 }
 
 #Preview {
-    let dm = OldDataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
     dm.character = md.fullCharacters()[1]
     dm.player = md.player(id: 2)
