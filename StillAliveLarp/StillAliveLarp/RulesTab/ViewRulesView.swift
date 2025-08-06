@@ -9,7 +9,7 @@ import SwiftUI
 
 @ViewBuilder
 fileprivate func createTextView(_ text: String) -> some View {
-    Text("    " + text).font(.system(size: 16)).padding(.bottom, 16).padding(.horizontal, 8).multilineTextAlignment(.leading).frame(maxWidth: .infinity, alignment: .leading)
+    AttributedTextView(attributedString: ("    " + text).htmlString()).font(.system(size: 16)).padding(.bottom, 16).padding(.horizontal, 8).multilineTextAlignment(.leading).frame(maxWidth: .infinity, alignment: .leading)
 }
 
 struct ViewRulesView: View {
@@ -22,8 +22,7 @@ struct ViewRulesView: View {
     @State var filter: String = "No Filter"
     var allFilters: [String]
     
-    init(_dm: OldDataManager = OldDataManager.shared, rulebook: Rulebook?) {
-        self._dm = _dm
+    init(rulebook: Rulebook?) {
         self.rulebook = rulebook
         allFilters = ["No Filter"]
         allFilters.append(contentsOf: rulebook?.getAllFilterableHeadingNames() ?? [])
@@ -33,8 +32,8 @@ struct ViewRulesView: View {
     var body: some View {
         GeometryReader { gr in
             VStack {
-                Text("Rulebook v\(rulebook?.version ?? "unknown version")")
-                    .font(.system(size: 36, weight: .bold))
+                Text(DM.getTitlePotentiallyOffline("Rulebook v\(rulebook?.version ?? "unknown version")"))
+                    .font(.stillAliveTitleFont)
                     .frame(alignment: .center)
                 Menu("Filter\n(\(sanitizeFilter()))") {
                     ForEach(allFilters, id: \.self) { filter in
@@ -109,7 +108,7 @@ struct HeadingView: View {
     var body: some View {
         BlackCardView2pxPadding {
             VStack {
-                Text(heading.title)
+                AttributedTextView(attributedString: heading.title.htmlString())
                     .multilineTextAlignment(.center)
                     .font(.system(size: 36))
                     .underline()
@@ -143,7 +142,7 @@ struct SubHeadingView: View {
 
     var body: some View {
         VStack {
-            Text(subHeading.title)
+            AttributedTextView(attributedString: subHeading.title.htmlString())
                 .multilineTextAlignment(.leading)
                 .font(.system(size: 32))
                 .italic()
@@ -174,7 +173,7 @@ struct SubSubHeadingView: View {
 
     var body: some View {
         VStack {
-            Text(subSubHeading.title)
+            AttributedTextView(attributedString: subSubHeading.title.htmlString())
                 .multilineTextAlignment(.leading)
                 .font(.system(size: 22))
                 .underline()
@@ -203,8 +202,7 @@ struct CustomTableView: View {
     var minWidths: [Int] = []
     var minHeights: [Int] = []
     
-    init(_dm: OldDataManager = OldDataManager.shared, table: Table) {
-        self._dm = _dm
+    init(table: Table) {
         self.cols = table.convertToColumns()
         self.rows = table.convertToRows()
         for col in cols {
@@ -258,10 +256,7 @@ struct CustomTableView: View {
         let height: Int
 
         var body: some View {
-            let cleanedText = text.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
-            
-            Text(cleanedText)
-                .fontWeight(isHeader || text.contains("<b>") ? .bold : .regular)
+            AttributedTextView(attributedString: text.htmlString())
                 .multilineTextAlignment(.center)
                 .frame(height: CGFloat(height))
                 .frame(width: CGFloat(width))
@@ -278,5 +273,5 @@ struct CustomTableView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return ViewRulesView(_dm: dm, rulebook: md.rulebook)
+    return ViewRulesView(rulebook: md.rulebook)
 }

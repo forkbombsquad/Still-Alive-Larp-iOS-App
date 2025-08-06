@@ -51,7 +51,7 @@ class RulebookUtils {
                         currentHeading = nil
                     }
                     currentHeading = Heading()
-                    currentHeading?.title = (try? element.text()) ?? ""
+                    currentHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
                 case Tags.SUBHEADING:
                     if let cssh = currentSubSubHeading {
                         if currentSubHeading == nil {
@@ -66,7 +66,7 @@ class RulebookUtils {
                         currentSubHeading = nil
                     }
                     currentSubHeading = SubHeading()
-                    currentSubHeading?.title = (try? element.text()) ?? ""
+                    currentSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
                 case Tags.SUBSUBHEADING:
                     if let cssh = currentSubSubHeading {
                         if currentSubHeading == nil {
@@ -77,14 +77,14 @@ class RulebookUtils {
                         currentSubSubHeading = nil
                     }
                     currentSubSubHeading = SubSubHeading()
-                    currentSubSubHeading?.title = (try? element.text()) ?? ""
+                    currentSubSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
                 case Tags.TEXT:
                     if currentSubSubHeading != nil {
-                        currentSubSubHeading?.addTextOrTable((try? element.text()) ?? "")
+                        currentSubSubHeading?.addTextOrTable(globalStyleHtmlForRulebook((try? element.html()) ?? ""))
                     } else if currentSubHeading != nil {
-                        currentSubHeading?.addTextOrTable((try? element.text()) ?? "")
+                        currentSubHeading?.addTextOrTable(globalStyleHtmlForRulebook((try? element.html()) ?? ""))
                     } else {
-                        currentHeading?.addTextOrTable((try? element.text()) ?? "")
+                        currentHeading?.addTextOrTable(globalStyleHtmlForRulebook((try? element.html()) ?? ""))
                     }
                 case Tags.TABLE:
                     let table = Table()
@@ -95,7 +95,7 @@ class RulebookUtils {
                             for tableElement in tableRow.children().array() {
                                 switch tableElement.tagName() {
                                     case Tags.TABLEHEAD:
-                                        keys.append((try? tableElement.text()) ?? "")
+                                        keys.append(globalStyleHtmlForRulebook((try? tableElement.html()) ?? ""))
                                 case Tags.TABLEDETAIL:
                                     if firstTd {
                                         var count = 0
@@ -103,12 +103,11 @@ class RulebookUtils {
                                             if table.contents[keys[count]] == nil {
                                                 table.contents[keys[count]] = [String]()
                                             }
-                                            var tcell = (try? tableCell.outerHtml()) ?? ""
+                                            var tcell = globalStyleHtmlForRulebook((try? tableCell.outerHtml()) ?? "")
                                             tcell = tcell.replacingOccurrences(of: "<td>", with: "")
                                                 .replacingOccurrences(of: "</td>", with: "")
                                                 .replacingOccurrences(of: "<small>", with: "")
                                                 .replacingOccurrences(of: "</small>", with: "")
-                                                .replacingOccurrences(of: "<br>", with: "\n")
                                             table.contents[keys[count]]?.append(tcell)
                                             count += 1
                                         }
@@ -142,9 +141,9 @@ class RulebookUtils {
 
                         var txt = ""
                         if count == 1 {
-                            txt = (try? li.children().first()?.children().first()?.text()) ?? ""
+                            txt = globalStyleHtmlForRulebook((try? li.children().first()?.children().first()?.html()) ?? "")
                         } else {
-                            txt = (try? li.text()) ?? ""
+                            txt = globalStyleHtmlForRulebook((try? li.html()) ?? "")
                         }
 
                         if table.contents[keys[count]] == nil {

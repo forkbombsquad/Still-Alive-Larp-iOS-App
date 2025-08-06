@@ -14,7 +14,7 @@ struct BarcodeGenerator {
     private static let errorImage = UIImage(systemName: "xmark.circle") ?? UIImage()
 
     static func generateQrCodeFromModel(_ model: CustomCodeable) -> UIImage {
-        guard let data = model.toJsonString()?.compress() else {
+        guard let data = model.toJsonString()?.data(using: .utf8) else {
             return errorImage
         }
         let context = CIContext()
@@ -31,7 +31,7 @@ struct BarcodeGenerator {
         return generateQrCodeFromModel(model)
     }
 
-    static func generateCheckOutBarcode(_ model: PlayerCheckOutBarcodeModel) -> UIImage {
+    static func generateCheckOutBarcode(_ model: CheckInOutBarcodeModel) -> UIImage {
         return generateQrCodeFromModel(model)
     }
 

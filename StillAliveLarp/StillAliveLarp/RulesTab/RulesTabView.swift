@@ -34,14 +34,12 @@ struct RulesTabView: View {
         //                                NativeSkillTree(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
                                     }
                                     NavArrowView(title: "Core Rulebook") { _ in
-                                        // TODO
-        //                                ViewRulesView(rulebook: OldDM.rulebook)
+                                        ViewRulesView(rulebook: DM.rulebook)
                                     }
                                     NavArrowView(title: "Treating Wounds Flowchart") { _ in
-                                        // TODO
-        //                                if let image = OldLocalDataHandler.shared.getImage(.treatingWounds) {
-        //                                    DownloadedImageView(image: image)
-        //                                }
+                                        if let image = DM.treatingWounds {
+                                            DownloadedImageView(image: image)
+                                        }
                                     }
                                 }
                             }

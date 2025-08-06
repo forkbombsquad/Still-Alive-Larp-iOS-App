@@ -59,3 +59,14 @@ func getViewName<T: View>(_ view: T.Type) -> String {
 func getViewName<T: View>(_ view: T) -> String {
     return String(describing: type(of: view))
 }
+
+func globalStyleHtmlForRulebook(_ html: String) -> String {
+    html
+        .replacingHtmlTagWithTag("skill", with: "b")
+        .replacingHtmlTagWithTagAndInnerValue("combat", with: "font", innerValue: "color='#910016'")
+        .replacingHtmlTagWithTagAndInnerValue("profession", with: "font", innerValue: "color='#0D8017'")
+        .replacingHtmlTagWithTagAndInnerValue("talent", with: "font", innerValue: "color='#007AFF'")
+        .replacingHtmlTagWithTag("item", with: "i")
+        .replacingHtmlTagWithTag("condition", with: "u")
+}
+

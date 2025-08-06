@@ -11,11 +11,9 @@ struct GenerateCheckInBarcodeView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
+    let player: FullPlayerModel
     let useChar: Bool
-
-    @State var loading: Bool = false
-    @State var loadingText: String = "Loading"
-    @State var uiImage: UIImage? = nil
+    let event: FullEventModel
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -24,42 +22,26 @@ struct GenerateCheckInBarcodeView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        if loading {
-                            HStack {
-                                Spacer()
-                                ProgressView().controlSize(.large).padding(.bottom, 8)
-                                Text(loadingText)
-                                Spacer()
-                            }
-                            
-                        } else {
-                            if let image = uiImage, let barcodeModel = OldDM.checkinBarcodeModel {
-                                Text("Check In\n\(barcodeModel.player.fullName)")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
-                                    .padding([.bottom], 16)
-                                KeyValueView(key: "Checking In As", value: barcodeModel.character?.fullName ?? "NPC")
-                                Image(uiImage: image)
-                                    .interpolation(.none)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .padding(.top, 16)
-                            } else {
-                                Text("Error Loading Barcode")
-                                    .font(.system(size: 32, weight: .bold))
-                                    .multilineTextAlignment(.center)
-                                    .frame(alignment: .center)
-                                    .padding([.bottom], 16)
-                            }
-                            LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Done") {
-                                runOnMainThread {
-                                    NotificationCenter.default.post(name: Constants.Notifications.refreshHomescreen, object: nil)
-                                    self.mode.wrappedValue.dismiss()
-                                }
-                            }
+                        let image = BarcodeGenerator.generateCheckInBarcode(player.getCheckInBarcodeModel(useChar: useChar, event: event))
+                        Text("Check In\n\(player.fullName)")
+                            .font(.system(size: 32, weight: .bold))
+                            .multilineTextAlignment(.center)
+                            .frame(alignment: .center)
+                            .padding([.bottom], 16)
+                        KeyValueView(key: "Checking In As", value: useChar ? "\(player.getActiveCharacter()?.fullName ?? "NPC")" : "NPC")
+                        Image(uiImage: image)
+                            .interpolation(.none)
+                            .resizable()
+                            .scaledToFit()
                             .padding(.top, 16)
+                        LoadingButtonView(.constant(false), width: gr.size.width - 32, buttonText: "Done") {
+                            runOnMainThread {
+                                DM.load()
+                                self.mode.wrappedValue.dismiss()
+                            }
                         }
+                        .padding(.top, 16)
+                        
                     }
                 }
             }
@@ -68,59 +50,12 @@ struct GenerateCheckInBarcodeView: View {
         .padding(16)
         .background(Color.lightGray)
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            self.loading = true
-            self.loadingText = "Loading Events and Player Model..."
-            OldDM.load([.events, .player]) {
-                runOnMainThread {
-                    if useChar {
-                        self.loadingText = "Loading Character..."
-                        OldDM.load([.character]) {
-                            runOnMainThread {
-                                self.loadingText = "Loading Gear..."
-                                OldDM.selectedChar = OldDM.character?.baseModel
-                                OldDM.load([.selectedCharacterGear]) {
-                                    self.generateBarcode()
-                                }
-                            }
-                        }
-                        
-                    } else {
-                        self.generateBarcode()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func generateBarcode() {
-        loadingText = "Generating Barcode..."
-        if let events = OldDM.events, let event = (events.first(where: { $0.isToday() }) ?? events.first(where: { $0.isStarted.boolValueDefaultFalse && !$0.isFinished.boolValueDefaultFalse })), let player = OldDM.player {
-            
-            let char = OldDM.character
-            let gear = OldDM.selectedCharacterGear?.first
-            
-            let barcode = CheckInOutBarcodeModel(player: player.barcodeModel, character: useChar ? char?.barcodeModel : nil, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
-            runOnMainThread {
-                OldDM.checkinBarcodeModel = barcode
-                self.uiImage = BarcodeGenerator.generateCheckInBarcode(barcode)
-                self.loading = false
-                self.loadingText = ""
-            }
-        } else {
-            AlertManager.shared.showOkAlert("Something Went Wrong!", message: "Error Generating Barcode. Please Try Again Later.") {
-                self.mode.wrappedValue.dismiss()
-            }
-        }
     }
 }
 
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    dm.character = md.fullCharacters()[1]
-    dm.player = md.player(id: 2)
-    dm.checkinBarcodeModel = md.playerCheckInBarcodeModel(playerId: 2, characterId: 2, eventId: 2)
-    return GenerateCheckInBarcodeView(_dm: dm, useChar: true, loading: false)
+    return GenerateCheckInBarcodeView(player: md.fullPlayers().first!, useChar: true, event: md.fullEvents().first!)
 }
 

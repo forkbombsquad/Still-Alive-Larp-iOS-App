@@ -48,10 +48,6 @@ struct Constants {
         static let hidden = 4
     }
 
-    struct Notifications {
-        static let refreshHomescreen = NSNotification.Name("Refresh Homescreen")
-    }
-
     struct urls {
         static let skillTreeImage = "https://stillalivelarp.com/skilltree"
         static let skillTreeImageDark = "https://stillalivelarp.com/skilltree/dark"

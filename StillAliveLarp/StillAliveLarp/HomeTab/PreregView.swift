@@ -13,10 +13,10 @@ struct PreregView: View {
 
     @State var loadingSubmit = false
     
-    let event: EventModel
+    let event: FullEventModel
     let prereg: EventPreregModel?
-    let player: PlayerModel?
-    let character: CharacterModel?
+    let player: FullPlayerModel
+    let character: FullCharacterModel?
 
     @State private var selectedChar: String = "NPC"
     @State var regType: String = EventRegType.premium.getAttendingText()
@@ -35,7 +35,7 @@ struct PreregView: View {
                                 .frame(alignment: .center)
                                 .padding([.bottom], 16)
                             Divider()
-                            KeyValueView(key: "Player", value: player?.fullName ?? "")
+                            KeyValueView(key: "Player", value: player.fullName)
                             
                             StyledPickerView(title: "Character", selection: $selectedChar, options: character == nil ? ["NPC"] : ["NPC", character!.fullName]) { _ in }
                             Divider()
@@ -52,12 +52,13 @@ struct PreregView: View {
                         loadingSubmit = true
                         if prereg == nil {
                             // create
-                            let preregModel = EventPreregCreateModel(playerId: player?.id ?? -1, characterId: selectedChar == "NPC" ? nil : character?.id ?? -1, eventId: event.id, regType: getEventRegType())
+                            let preregModel = EventPreregCreateModel(playerId: player.id, characterId: selectedChar == "NPC" ? nil : character?.id ?? -1, eventId: event.id, regType: getEventRegType())
                             EventPreregService.preregPlayer(preregModel) { _ in
                                 runOnMainThread {
                                     self.loadingSubmit = false
                                     AlertManager.shared.showSuccessAlert("Preregistration Created") {
                                         runOnMainThread {
+                                            DM.load()
                                             self.mode.wrappedValue.dismiss()
                                         }
                                     }
@@ -73,6 +74,7 @@ struct PreregView: View {
                                     self.loadingSubmit = false
                                     AlertManager.shared.showSuccessAlert("Preregistration Updated") {
                                         runOnMainThread {
+                                            DM.load()
                                             self.mode.wrappedValue.dismiss()
                                         }
                                     }
@@ -114,5 +116,5 @@ struct PreregView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return PreregView(_dm: dm, event: md.events.events.first!, prereg: nil, player: md.player(id: 2), character: md.character(id: 2))
+    return PreregView(event: md.fullEvents().first!, prereg: nil, player: md.fullPlayers().first!, character: md.fullCharacters().first!)
 }

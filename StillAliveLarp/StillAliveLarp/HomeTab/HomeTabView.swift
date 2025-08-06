@@ -24,23 +24,23 @@ struct HomeTabView: View {
                         VStack {
                             Text(DM.getTitlePotentiallyOffline("Home"))
                                 .font(.stillAliveTitleFont)
+                                .frame(alignment: .center)
                             LoadingLayoutView {
                                 VStack {
                                     AnnouncementsView()
-                                    // TODO check these show sections to make sure logic is right
                                     if showIntrigueSection() {
-                                        // TODO Intrigue
+                                        IntrigueView()
                                     }
                                     if showCheckoutSection() {
-                                        // TODO checkout
+                                        CheckoutView()
                                     }
                                     if showCurrentCharSection() {
-                                        // TODO current char
+                                        CurrentCharacterView(grWidth: gr.size.width)
                                     }
                                     if showEventsSection() {
-                                        // TODO events
+                                        EventsView(showAllEvents: $showAllEvents, grWidth: gr.size.width)
                                     }
-                                    // TODO awards
+                                    AwardsView()
                                 }
                             }
                         }
@@ -193,8 +193,10 @@ struct CheckoutView: View {
     var body: some View {
         VStack {
             CardWithTitleView(title: DM.getTitlePotentiallyOffline("Checkout")) {
-                NavArrowViewRed(title: "Checkout From Event:\n\(DM.events.first(where: { event in event.id == DM.getCurrentPlayer()!.eventAttendees.first(where: { attendee in attendee.isCheckedIn.boolValueDefaultFalse })?.eventId })?.title ?? "")") {
-                    GenerateCheckoutBarcodeView()
+                let player = DM.getCurrentPlayer()!
+                let attendee = player.eventAttendees.first(where: { attendee in attendee.isCheckedIn.boolValueDefaultFalse })!
+                NavArrowViewRed(title: "Checkout From Event:\n\(DM.events.first(where: { event in event.id == attendee.eventId })?.title ?? "")") {
+                    GenerateCheckoutBarcodeView(player: DM.getCurrentPlayer()!, attendee: attendee)
                 }
             }
         }
@@ -277,8 +279,7 @@ struct EventsView: View {
                                         .font(.system(size: 14, weight: .bold))
                                         .padding(.top, 8)
                                     NavArrowView(title: "View Info For \(npc.fullName)") { _ in
-                                        // TODO ViewNpcStuffView
-                                        EmptyView()
+                                        ViewNPCStuffView(npc: npc)
                                     }
                                 }
                                 
@@ -286,11 +287,11 @@ struct EventsView: View {
                         } else {
                             if let character = player.getActiveCharacter() {
                                 NavArrowViewGreen(title: "Check In as \(character.fullName)") {
-                                    GenerateCheckInBarcodeView(useChar: true)
+                                    GenerateCheckInBarcodeView(player: player, useChar: true, event: event)
                                 }
                             }
                             NavArrowViewBlue(title: "Check In as NPC") {
-                                GenerateCheckInBarcodeView(useChar: false)
+                                GenerateCheckInBarcodeView(player: player, useChar: false, event: event)
                             }
                         }
                     }
@@ -325,18 +326,7 @@ struct EventsView: View {
                         if event.isRelevant() {
                             let prereg = event.preregs.first(where: { $0.playerId == player.id })
                             NavArrowViewBlue(title: prereg != nil ? "Edit Your Pre-Registartion" : "Pre-Register For This Event") {
-                                // TODO prereg view
-//                                PreregView(event: currentEvent, prereg: prereg, player: player, character: character?.baseModel).onDisappear {
-//                                    runOnMainThread {
-//                                        self.loadingPreregs = true
-//                                        OldDM.load([.eventPreregs], forceDownloadIfApplicable: true) {
-//                                            runOnMainThread {
-//                                                self.eventPreregs = OldDM.eventPreregs
-//                                                self.loadingPreregs = false
-//                                            }
-//                                        }
-//                                    }
-//                                }
+                                PreregView(event: event, prereg: prereg, player: player, character: player.getActiveCharacter())
                             }
                             if let prereg = prereg {
                                 let char = player.characters.first(where: { $0.id == prereg.getCharId() })
@@ -395,14 +385,12 @@ struct AwardsView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @Binding var loadingAwards: Bool
-    @Binding var awards: [AwardModel]
-
     var body: some View {
         CardWithTitleView(title: DM.getTitlePotentiallyOffline("Awards")) {
             VStack {
                 if let player = DM.getCurrentPlayer(), player.awards.isNotEmpty {
-                   ForEach(awards) { award in
+                    let awards = player.getAwardsSorted()
+                    ForEach(awards) { award in
                        VStack {
                            HStack {
                                if let character = player.characters.first(where: { $0.id == award.characterId }) {

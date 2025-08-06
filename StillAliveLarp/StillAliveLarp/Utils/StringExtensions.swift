@@ -154,4 +154,23 @@ extension String {
             .joined(separator: " ")
     }
     
+    func replacingHtmlTag(_ tag: String, with replacement: String = "") -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: replacement)
+            .replacingOccurrences(of: "</\(tag)>", with: replacement)
+    }
+
+    func replacingHtmlTagWithTag(_ tag: String, with replacement: String = "") -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: "<\(replacement)>")
+            .replacingOccurrences(of: "</\(tag)>", with: "</\(replacement)>")
+    }
+
+    func replacingHtmlTagWithTagAndInnerValue(_ tag: String, with replacement: String = "", innerValue: String) -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: "<\(replacement) \(innerValue)>")
+            .replacingOccurrences(of: "</\(tag)>", with: "</\(replacement)>")
+    }
+    
+    func htmlString() -> NSAttributedString {
+        return NSAttributedString(htmlString: self) ?? NSAttributedString(string: "")
+    }
+
 }
