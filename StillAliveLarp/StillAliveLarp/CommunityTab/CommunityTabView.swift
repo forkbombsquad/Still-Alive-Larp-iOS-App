@@ -23,16 +23,14 @@ struct CommunityTabView: View {
                     LoadingLayoutView {
                         VStack {
                             NavArrowView(title: "All Players") { _ in
-                                // TODO
-//                                AllPlayersListView(allPlayers: allPlayers)
+                                PlayersListView(title: "All Players", destination: .viewPlayer, players: DM.players)
                             }
                             NavArrowView(title: "Camp Status") { _ in
                                 // TODO
                                 // Camp Status View
                             }
                             NavArrowView(title: "All NPCs") { _ in
-                                // TODO
-//                                AllNpcsListView(npcs: allNpcs, allowEdit: false)
+                                NPCListView(npcs: DM.getAllCharacters(.npc), title: "All NPCs", destination: .view)
                             }
                             NavArrowView(title: "Research Projects") { _ in
                                 // TODO

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO delete this
+
 struct ViewPlayerStuffView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager

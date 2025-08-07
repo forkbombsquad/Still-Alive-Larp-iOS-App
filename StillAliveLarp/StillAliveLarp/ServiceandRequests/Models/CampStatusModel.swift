@@ -27,12 +27,16 @@ struct CampStatusModel: CustomCodeable {
     }
 }
 
-struct CampFortification: CustomCodeable {
+struct CampFortification: CustomCodeable, Identifiable {
+    var id: Int { ring }
+    
     var ring: Int
     var fortifications: [Fortification]
 }
 
-struct Fortification: CustomCodeable {
+struct Fortification: CustomCodeable, Identifiable {
+    var id = UUID()
+    
     var type: String
     var health: Int
     

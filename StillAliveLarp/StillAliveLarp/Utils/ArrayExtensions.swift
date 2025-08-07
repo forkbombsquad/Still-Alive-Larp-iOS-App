@@ -47,6 +47,22 @@ extension Array where Element == PlayerModel {
 
 }
 
+extension Array where Element == FullPlayerModel {
+
+    var alphabetized: [FullPlayerModel] {
+        return self.sorted { $0.fullName < $1.fullName }
+    }
+
+}
+
+extension Array where Element == FullCharacterModel {
+
+    var alphabetized: [FullCharacterModel] {
+        return self.sorted { $0.fullName < $1.fullName }
+    }
+
+}
+
 extension Array where Element == OldFullCharacterModel {
 
     var alphabetized: [OldFullCharacterModel] {

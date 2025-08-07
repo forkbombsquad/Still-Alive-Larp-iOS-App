@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO delete file
+
 struct AllPlayersListView: View {
     
     @EnvironmentObject var alertManager: AlertManager

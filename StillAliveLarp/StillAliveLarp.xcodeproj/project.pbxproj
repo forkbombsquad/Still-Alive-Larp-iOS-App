@@ -136,6 +136,12 @@
 		B2A0D4EE29E7174B00A235B4 /* SkillPrereqService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4ED29E7174B00A235B4 /* SkillPrereqService.swift */; };
 		B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A0D4EF29E7177300A235B4 /* SkillPrereqModel.swift */; };
 		B2A6A7ED291464D90025040B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A6A7EC291464D90025040B /* AuthManager.swift */; };
+		B2B712332E44E34F00B2AA3F /* PlayersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B712322E44E34F00B2AA3F /* PlayersListView.swift */; };
+		B2B712352E44E53E00B2AA3F /* ViewPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */; };
+		B2B712372E44E84900B2AA3F /* NPCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B712362E44E84900B2AA3F /* NPCListView.swift */; };
+		B2B712392E44EBA600B2AA3F /* ViewCampStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B712382E44EBA600B2AA3F /* ViewCampStatusView.swift */; };
+		B2B7123B2E44ECE600B2AA3F /* FortificationRingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7123A2E44ECE200B2AA3F /* FortificationRingCell.swift */; };
+		B2B7123D2E44EE8700B2AA3F /* FortificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7123C2E44EE8300B2AA3F /* FortificationCell.swift */; };
 		B2C6CE8D2AD6EC960088DA6D /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = B2C6CE8C2AD6EC960088DA6D /* OrderedCollections */; };
 		B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */; };
 		B2D68235296880DC005FDCCE /* CharacterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D68234296880DC005FDCCE /* CharacterManager.swift */; };
@@ -335,6 +341,12 @@
 		B2A0D4ED29E7174B00A235B4 /* SkillPrereqService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPrereqService.swift; sourceTree = "<group>"; };
 		B2A0D4EF29E7177300A235B4 /* SkillPrereqModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillPrereqModel.swift; sourceTree = "<group>"; };
 		B2A6A7EC291464D90025040B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		B2B712322E44E34F00B2AA3F /* PlayersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayersListView.swift; sourceTree = "<group>"; };
+		B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPlayerView.swift; sourceTree = "<group>"; };
+		B2B712362E44E84900B2AA3F /* NPCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NPCListView.swift; sourceTree = "<group>"; };
+		B2B712382E44EBA600B2AA3F /* ViewCampStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCampStatusView.swift; sourceTree = "<group>"; };
+		B2B7123A2E44ECE200B2AA3F /* FortificationRingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FortificationRingCell.swift; sourceTree = "<group>"; };
+		B2B7123C2E44EE8300B2AA3F /* FortificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FortificationCell.swift; sourceTree = "<group>"; };
 		B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagManagementView.swift; sourceTree = "<group>"; };
 		B2D68234296880DC005FDCCE /* CharacterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterManager.swift; sourceTree = "<group>"; };
 		B2D682362968879C005FDCCE /* PlayerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerStatsView.swift; sourceTree = "<group>"; };
@@ -437,7 +449,7 @@
 		B21691BB28FDDC5D006AA921 /* StillAliveLarp */ = {
 			isa = PBXGroup;
 			children = (
-				B235A4F22DD7A4F200AF96DC /* NativeSkillTree */,
+				B22324CE2E44E22C0087786E /* Shared */,
 				B228C29029F846F20064686D /* CommunityTab */,
 				B258D9AD29F31D18003BE368 /* OfflineMode */,
 				B2F9836D29F043F200512839 /* PreTabViews */,
@@ -529,6 +541,17 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		B22324CE2E44E22C0087786E /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				B235A4F22DD7A4F200AF96DC /* NativeSkillTree */,
+				B2B712322E44E34F00B2AA3F /* PlayersListView.swift */,
+				B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */,
+				B2B712362E44E84900B2AA3F /* NPCListView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		B228C29029F846F20064686D /* CommunityTab */ = {
 			isa = PBXGroup;
 			children = (
@@ -539,6 +562,7 @@
 				B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */,
 				B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */,
 				B235A4FD2DD7D58300AF96DC /* ManageNPCView.swift */,
+				B2B712382E44EBA600B2AA3F /* ViewCampStatusView.swift */,
 			);
 			path = CommunityTab;
 			sourceTree = "<group>";
@@ -588,6 +612,8 @@
 		B23552D029EB268A00183748 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2B7123C2E44EE8300B2AA3F /* FortificationCell.swift */,
+				B2B7123A2E44ECE200B2AA3F /* FortificationRingCell.swift */,
 				B22324CC2E43B11E0087786E /* AttributedTextView.swift */,
 				B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */,
 				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
@@ -961,6 +987,7 @@
 				B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */,
 				B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */,
 				B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */,
+				B2B712392E44EBA600B2AA3F /* ViewCampStatusView.swift in Sources */,
 				B222249D291E9B4C003BCA0A /* PlayerManager.swift in Sources */,
 				B25D45B72A12B73200C3048C /* EventPreregService.swift in Sources */,
 				B2750B4529F98C5700AA5F5B /* ManageAccountView.swift in Sources */,
@@ -979,6 +1006,7 @@
 				B2A0D4EC29E5D50F00A235B4 /* SkillListView.swift in Sources */,
 				B2F9837729F07AB300512839 /* EventManagementView.swift in Sources */,
 				B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */,
+				B2B712352E44E53E00B2AA3F /* ViewPlayerView.swift in Sources */,
 				B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */,
 				B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */,
 				B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */,
@@ -999,6 +1027,7 @@
 				B2750B3D29F9780600AA5F5B /* ContactRequestModel.swift in Sources */,
 				B2E135B829FD7DA80038DE31 /* SpecialClassXpReduction.swift in Sources */,
 				B2750B4B29F9904300AA5F5B /* ChangePlayerPasswordView.swift in Sources */,
+				B2B712372E44E84900B2AA3F /* NPCListView.swift in Sources */,
 				B23728AC2DC1BBCC00495777 /* ServiceUtils.swift in Sources */,
 				B23552C429E9EEA500183748 /* Constants.swift in Sources */,
 				B2D682372968879C005FDCCE /* PlayerStatsView.swift in Sources */,
@@ -1010,6 +1039,7 @@
 				B21F1C162DD57C040004B391 /* ViewEventAttendeesView.swift in Sources */,
 				B235528C29E83A0E00183748 /* AdminView.swift in Sources */,
 				B23552C229E9ECAC00183748 /* IntExtensions.swift in Sources */,
+				B2B712332E44E34F00B2AA3F /* PlayersListView.swift in Sources */,
 				B294A41C2DD02EAB002877B9 /* GearCell.swift in Sources */,
 				B228C28F29F840770064686D /* EditBioView.swift in Sources */,
 				B2E135BC29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift in Sources */,
@@ -1078,6 +1108,7 @@
 				B235528E29E83ADD00183748 /* PlayerService.swift in Sources */,
 				B233D7702A1D4E8F002B9BBA /* VersionService.swift in Sources */,
 				B2750B5329F9B67300AA5F5B /* AddEditEventIntrigueView.swift in Sources */,
+				B2B7123B2E44ECE600B2AA3F /* FortificationRingCell.swift in Sources */,
 				B293AEF529154F0400D2447C /* ServiceController.swift in Sources */,
 				B2F9837329F066CC00512839 /* EventService.swift in Sources */,
 				B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */,
@@ -1094,6 +1125,7 @@
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
 				B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
+				B2B7123D2E44EE8700B2AA3F /* FortificationCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

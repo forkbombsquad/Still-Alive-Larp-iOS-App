@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AllNpcsListView: View {
     
+    // TODO delete this 
+    
     static func Offline(npcs: [OldFullCharacterModel], skills: [OldFullSkillModel]) -> AllNpcsListView {
         return AllNpcsListView(fullCharacterModels: npcs, skills: skills, allowEdit: false)
     }
