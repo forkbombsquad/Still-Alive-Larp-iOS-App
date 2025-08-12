@@ -31,7 +31,11 @@ struct CharacterPanel: View {
             }
             if show[.skillTree]! {
                 NavArrowView(title: "\(fromAccount ? "Manage Skills (Tree)" : "Manage Skills (Tree)")") { _ in
-                    // TODO
+                    if fromAccount {
+                        NativeSkillTree.initAsPersonal(currentPlayer: player, character: character!, isInOfflineMode: DM.offlineMode)
+                    } else {
+                        NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: player, character: character!)
+                    }
                 }
             }
             if show[.skillList]! {
