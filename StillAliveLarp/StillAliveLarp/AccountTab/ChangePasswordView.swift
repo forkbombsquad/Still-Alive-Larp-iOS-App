@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO redo
 struct ChangePasswordView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -31,34 +32,35 @@ struct ChangePasswordView: View {
                     PasswordField(hintText: "New Password", password: $password)
                     PasswordField(hintText: "Confirm New Password", password: $confirmPassword)
                     LoadingButtonView($loading, width: gr.size.width - 32, height: 60, buttonText: "Submit") {
-                        if checkOldPass() {
-                            if checkPasswordsMatch() {
-                                let valResult = validateFields()
-                                if !valResult.hasError {
-                                    self.loading = true
-                                    PlayerService.updateP(self.password, playerId: OldDM.player?.id ?? -1) { player in
-                                        runOnMainThread {
-                                            UserAndPassManager.shared.setUAndP(player.username, p: password, remember: true)
-                                            AlertManager.shared.showOkAlert("Password Successfuly Updated") {
-                                                runOnMainThread {
-                                                    self.loading = false
-                                                    self.mode.wrappedValue.dismiss()
-                                                }
-                                            }
-                                        }
-                                    } failureCase: { error in
-                                        self.loading = false
-                                    }
-
-                                } else {
-                                    AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
-                                }
-                            } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
-                            }
-                        } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
-                        }
+                        // TODO redo
+//                        if checkOldPass() {
+//                            if checkPasswordsMatch() {
+//                                let valResult = validateFields()
+//                                if !valResult.hasError {
+//                                    self.loading = true
+//                                    PlayerService.updateP(self.password, playerId: OldDM.player?.id ?? -1) { player in
+//                                        runOnMainThread {
+//                                            UserAndPassManager.shared.setUAndP(player.username, p: password, remember: true)
+//                                            AlertManager.shared.showOkAlert("Password Successfuly Updated") {
+//                                                runOnMainThread {
+//                                                    self.loading = false
+//                                                    self.mode.wrappedValue.dismiss()
+//                                                }
+//                                            }
+//                                        }
+//                                    } failureCase: { error in
+//                                        self.loading = false
+//                                    }
+//
+//                                } else {
+//                                    AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+//                                }
+//                            } else {
+//                                AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+//                            }
+//                        } else {
+//                            AlertManager.shared.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
+//                        }
                     }
                     .padding(.top, 16)
                     .padding(.trailing, 0)
@@ -87,5 +89,5 @@ struct ChangePasswordView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    return ChangePasswordView(_dm: dm)
+    return ChangePasswordView()
 }

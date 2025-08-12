@@ -7,13 +7,15 @@
 
 import SwiftUI
 
+// TODO redo this view
+
 struct SelectSkillForClassXpReducitonView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
     let character: CharacterModel
     @State var loadingSkills: Bool = true
-    @State var skills: [OldFullSkillModel] = []
+    @State var skills: [FullCharacterModifiedSkillModel] = []
     @State var loadingXpReduction: Bool = false
 
     @State var searchText: String = ""
@@ -40,7 +42,7 @@ struct SelectSkillForClassXpReducitonView: View {
                             self.loadingXpReduction = true
                             AdminService.giveXpReduction(character.id, skillId: skill.id) { xpReduction in
                                 runOnMainThread {
-                                    AlertManager.shared.showOkAlert("Successfully Added Skill Xp Reduction", message: "\(skill.name) now costs \(max(1, (skill.xpCost.intValueDefaultZero - xpReduction.xpReduction.intValueDefaultZero)))xp for \(character.fullName)") {
+                                    AlertManager.shared.showOkAlert("Successfully Added Skill Xp Reduction", message: "\(skill.name) now costs \(max(1, (skill.baseXpCost() - xpReduction.xpReduction.intValueDefaultZero)))xp for \(character.fullName)") {
                                         runOnMainThread {
                                             self.mode.wrappedValue.dismiss()
                                             self.loadingXpReduction = false
@@ -61,21 +63,21 @@ struct SelectSkillForClassXpReducitonView: View {
             }
         }
         .background(Color.lightGray)
-        .onAppear {
-            self.loadingSkills = true
-            SkillManager.shared.getSkills() { skills in
-                self.skills = skills
-                self.loadingSkills = false
-            }
-        }
+//        .onAppear {
+//            self.loadingSkills = true
+//            SkillManager.shared.getSkills() { skills in
+//                self.skills = skills
+//                self.loadingSkills = false
+//            }
+//        }
     }
 
     func shouldDoFiltering() -> Bool {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills() -> [OldFullSkillModel] {
-        var filteredSkills = [OldFullSkillModel]()
+    func getFilteredSkills() -> [FullCharacterModifiedSkillModel] {
+        var filteredSkills = [FullCharacterModifiedSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -85,8 +87,8 @@ struct SelectSkillForClassXpReducitonView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
-        return skills.filter({ $0.xpCost.intValueDefaultZero > 0 }).sorted { f, s in
+    func getSortedSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
+        return skills.filter({ $0.baseXpCost() > 0 }).sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }
     }
@@ -96,9 +98,9 @@ struct XpReductionSkillCellView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let skill: OldFullSkillModel
+    let skill: FullCharacterModifiedSkillModel
     @Binding var loadingXpReduction: Bool
-    let onTap: (_ skill: OldFullSkillModel) -> Void
+    let onTap: (_ skill: FullCharacterModifiedSkillModel) -> Void
 
     var body: some View {
         CardView {
@@ -109,21 +111,22 @@ struct XpReductionSkillCellView: View {
                     Spacer()
                     Text(skill.getTypeText())
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(skill.getTypeColor())
+                    // TODO
+//                        .foregroundColor(skill.getTypeColor())
                 }
                 HStack {
-                    Text("\(skill.xpCost)xp").font(.system(size: 16))
+                    Text("\(skill.modXpCost())xp").font(.system(size: 16))
                     Spacer()
-                    if skill.prestigeCost.intValueDefaultZero > 0 {
-                        Text("\(skill.prestigeCost)pp").font(.system(size: 16))
+                    if skill.prestigeCost() > 0 {
+                        Text("\(skill.prestigeCost())pp").font(.system(size: 16))
                     }
-                    if skill.minInfection.intValueDefaultZero > 0  {
+                    if skill.baseInfectionCost() > 0  {
                         Spacer()
-                        Text("\(skill.minInfection)% Inf Threshold").font(.system(size: 16))
+                        Text("\(skill.modInfectionCost())% Inf Threshold").font(.system(size: 16))
                     }
                 }
 
-                if skill.prereqs.count > 0 {
+                if skill.prereqs().count > 0 {
                     Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
                     Text("Prerequisites").font(.system(size: 14, weight: .bold))
                     Text(skill.getPrereqNames()).padding(.top, 8).multilineTextAlignment(.center)
@@ -141,9 +144,9 @@ struct XpReductionSkillCellView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return SelectSkillForClassXpReducitonView(_dm: dm, character: md.character())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return SelectSkillForClassXpReducitonView(character: md.character())
+//}
 

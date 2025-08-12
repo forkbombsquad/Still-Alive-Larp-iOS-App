@@ -16,7 +16,7 @@ struct CommunityTabView: View {
             VStack {
                 ScrollView {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh_CommunityTab", spinnerOffsetY: -100, pullDownDistance: 150) {
-                        DM.load(loadType: .forceDownload)
+                        DM.load()
                     }
                     Text(DM.getTitlePotentiallyOffline("Community"))
                         .font(.stillAliveTitleFont)
@@ -26,15 +26,15 @@ struct CommunityTabView: View {
                                 PlayersListView(title: "All Players", destination: .viewPlayer, players: DM.players)
                             }
                             NavArrowView(title: "Camp Status") { _ in
-                                // TODO
-                                // Camp Status View
+                                if let cs = DM.campStatus {
+                                    ViewCampStatusView(campStatus: cs)
+                                }
                             }
                             NavArrowView(title: "All NPCs") { _ in
                                 NPCListView(npcs: DM.getAllCharacters(.npc), title: "All NPCs", destination: .view)
                             }
                             NavArrowView(title: "Research Projects") { _ in
-                                // TODO
-//                                AllResearchProjectsListView(researchProjects: allResearchProjects, allowEdit: false)
+                                AllResearchProjectsListView(researchProjects: DM.researchProjects, allowEdit: false)
                             }
                         }
                     }

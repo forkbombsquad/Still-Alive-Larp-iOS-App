@@ -7,26 +7,14 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct CharacterStatusView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    static func Offline(character: OldFullCharacterModel) -> CharacterStatusView {
-        return CharacterStatusView(offline: true, character: character)
-    }
-    
-    init() {
-        self.offline = false
-        self._character = globalState(OldDM.charForSelectedPlayer)
-    }
-    
-    private init (offline: Bool, character: OldFullCharacterModel?) {
-        self.offline = offline
-        self._character = globalState(character)
-    }
-    
     let offline: Bool
-    @State var character: OldFullCharacterModel? = nil
+    @State var character: FullCharacterModel? = nil
 
     var body: some View {
         VStack(alignment: .center) {
@@ -40,9 +28,9 @@ struct CharacterStatusView: View {
                     Divider()
                     if let character = character {
                         KeyValueView(key: "Name", value: character.fullName)
-                        if let playerName = OldDM.selectedPlayer?.fullName {
-                            KeyValueView(key: "Player", value: playerName)
-                        }
+//                        if let playerName = OldDM.selectedPlayer?.fullName {
+//                            KeyValueView(key: "Player", value: playerName)
+//                        }
                         KeyValueView(key: "Start Date", value: character.startDate.yyyyMMddToMonthDayYear())
                         KeyValueView(key: "Infection Rating", value: "\(character.infection)%", showDivider: false)
                         CharacterBulletsSubView(character: character)
@@ -64,15 +52,15 @@ struct CharacterBulletsSubView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let character: OldFullCharacterModel
+    let character: FullCharacterModel
 
     var body: some View {
         VStack {
             Spacer().frame(height: 48)
-            KeyValueView(key: "Bullets", value: character.bullets)
-            KeyValueView(key: "Megas", value: character.megas)
-            KeyValueView(key: "Rivals", value: character.rivals)
-            KeyValueView(key: "Rockets", value: character.rockets, showDivider: false)
+            KeyValueView(key: "Bullets", value: character.bullets.stringValue)
+            KeyValueView(key: "Megas", value: character.megas.stringValue)
+            KeyValueView(key: "Rivals", value: character.rivals.stringValue)
+            KeyValueView(key: "Rockets", value: character.rockets.stringValue, showDivider: false)
         }
     }
 
@@ -82,17 +70,17 @@ struct CharacterMaterialsSubView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let character: OldFullCharacterModel
+    let character: FullCharacterModel
 
     var body: some View {
         VStack {
             Spacer().frame(height: 48)
-            KeyValueView(key: "Bullet Casings", value: character.bulletCasings)
-            KeyValueView(key: "Cloth Supplies", value: character.clothSupplies)
-            KeyValueView(key: "Wood Supplies", value: character.woodSupplies)
-            KeyValueView(key: "Metal Supplies", value: character.metalSupplies)
-            KeyValueView(key: "Tech Supplies", value: character.techSupplies)
-            KeyValueView(key: "Medical Supplies", value: character.medicalSupplies, showDivider: false)
+            KeyValueView(key: "Bullet Casings", value: character.bulletCasings.stringValue)
+            KeyValueView(key: "Cloth Supplies", value: character.clothSupplies.stringValue)
+            KeyValueView(key: "Wood Supplies", value: character.woodSupplies.stringValue)
+            KeyValueView(key: "Metal Supplies", value: character.metalSupplies.stringValue)
+            KeyValueView(key: "Tech Supplies", value: character.techSupplies.stringValue)
+            KeyValueView(key: "Medical Supplies", value: character.medicalSupplies.stringValue, showDivider: false)
         }
     }
 
@@ -102,19 +90,19 @@ struct CharacterSkillAndArmorSubView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let character: OldFullCharacterModel
+    let character: FullCharacterModel
 
     var body: some View {
         VStack {
-            let myst = hasMysteriousStrangerTypes()
-            let unsh = hasUnshakableResolve()
+            let myst = character.mysteriousStrangerCount() > 0
+            let unsh = character.hasUnshakableResolve()
             if myst || unsh {
                 Spacer().frame(height: 48)
                 if myst {
-                    KeyValueView(key: "Mysterious Stranger Uses (max \(mysteriousStrangerCount()))", value: character.mysteriousStrangerUses)
+                    KeyValueView(key: "Mysterious Stranger Uses (max \(character.mysteriousStrangerCount())", value: character.mysteriousStrangerUses.stringValue)
                 }
                 if unsh {
-                    KeyValueView(key: "Unshakable Resolve Uses (max 1)", value: character.mysteriousStrangerUses)
+                    KeyValueView(key: "Unshakable Resolve Uses (max 1)", value: character.unshakableResolveUses.stringValue)
                 }
             }
             Spacer().frame(height: 48)
@@ -122,38 +110,11 @@ struct CharacterSkillAndArmorSubView: View {
         }
     }
 
-    func hasMysteriousStrangerTypes() -> Bool {
-        for sk in character.skills {
-            guard sk.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) else { continue }
-            return true
-        }
-        return false
-    }
-
-    func mysteriousStrangerCount() -> Int {
-        var count = 0
-        for sk in character.skills {
-            guard sk.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) else { continue }
-            count += 1
-        }
-        return count
-    }
-
-    func hasUnshakableResolve() -> Bool {
-        for sk in character.skills {
-            guard sk.id == Constants.SpecificSkillIds.unshakableResolve else { continue }
-            return true
-        }
-        return false
-    }
-
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    var csv = CharacterStatusView()
-    csv._dm = dm
-    return csv
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return CharacterStatusView()
+//}
 

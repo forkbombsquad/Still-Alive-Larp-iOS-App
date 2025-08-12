@@ -100,5 +100,5 @@ struct ContactView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    return ContactView(_dm: dm)
+    return ContactView()
 }

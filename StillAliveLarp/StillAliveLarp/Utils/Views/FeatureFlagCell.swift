@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO redo view
 struct FeatureFlagCell: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -58,7 +59,7 @@ struct FeatureFlagCell: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return FeatureFlagCell(_dm: dm, flag: dm.featureFlags.first!, loading: .constant(false), onEditPress: {})
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return FeatureFlagCell(flag: dm.featureFlags.first!, loading: .constant(false), onEditPress: {})
+//}

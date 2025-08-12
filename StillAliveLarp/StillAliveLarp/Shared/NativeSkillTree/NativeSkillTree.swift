@@ -8,6 +8,27 @@ import SwiftUI
 
 struct NativeSkillTree: View {
     
+    static func initAsBase(allSkills: [FullCharacterModifiedSkillModel], currentPlayer: FullPlayerModel) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: allSkills, personal: false, allowPurchase: false, player: currentPlayer, character: nil)
+    }
+    
+    static func initAsPersonal(currentPlayer: FullPlayerModel, character: FullCharacterModel, isInOfflineMode: Bool) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: [], personal: true, allowPurchase: !isInOfflineMode, player: currentPlayer, character: character)
+    }
+    
+    static func initAsPlannedPersonal(currentPlayer: FullPlayerModel, plannedCharacter: FullCharacterModel, isInOfflineMode: Bool) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: [], personal: true, allowPurchase: !isInOfflineMode, player: currentPlayer, character: plannedCharacter)
+    }
+    
+    static func initAsOtherPlayerPersonal(currentPlayer: FullPlayerModel, character: FullCharacterModel) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: [], personal: true, allowPurchase: false, player: currentPlayer, character: character)
+    }
+    
+    static func initAsNPCPersonal(currentPlayer: FullPlayerModel, npc: FullCharacterModel) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: [], personal: true, allowPurchase: false, player: currentPlayer, character: npc)
+    }
+    
+    
     private let collapsedWidth: CGFloat = 300
     private let expandedWidth: CGFloat = 500
     
@@ -30,61 +51,12 @@ struct NativeSkillTree: View {
     
     @GestureState private var pinchAnchor: CGPoint? = nil
 
-    let skillGrid: SkillGrid
-    private let personal: Bool
-    private let allowPurchase: Bool
-
-    @State var trueGrid: [GridSkill]
-    @State var player: PlayerModel?
-    @State var character: OldFullCharacterModel?
-    @State var xpReductions: [SpecialClassXpReductionModel]
-    @State var availableSKills: [CharacterModifiedSkillModel] = []
-    @State var gridCategories: [SkillGridCategory] = []
+    @StateObject var skillGrid: SkillGrid
+    @State var availableSkills: [FullCharacterModifiedSkillModel] = []
     
-    init(skillGrid: SkillGrid) {
-        self.skillGrid = skillGrid
-        self._trueGrid = globalState(skillGrid.trueGrid)
-        self.personal = false
-        self.allowPurchase = false
-        self._player = globalState(nil)
-        self._character = globalState(nil)
-        self._xpReductions = globalState([])
-        self._availableSKills = globalState([])
-        self._gridCategories = globalState(calcGridCategories())
-    }
-    
-    init(skillGrid: SkillGrid, character: OldFullCharacterModel) {
-        self.skillGrid = skillGrid
-        self._trueGrid = globalState(skillGrid.trueGrid)
-        self.personal = true
-        self.allowPurchase = false
-        self._player = globalState(nil)
-        self._character = globalState(character)
-        self._xpReductions = globalState([])
-        self._availableSKills = globalState([])
-        self._gridCategories = globalState(calcGridCategories())
-    }
-    
-    init(skillGrid: SkillGrid, player: PlayerModel, character: OldFullCharacterModel, xpReductions: [SpecialClassXpReductionModel]) {
-        self.skillGrid = skillGrid
-        self._trueGrid = globalState(skillGrid.trueGrid)
-        self.personal = true
-        self.allowPurchase = true
-        self._player = globalState(player)
-        self._character = globalState(character)
-        self._xpReductions = globalState(xpReductions)
-        self._availableSKills = globalState(getAvailableSkills() ?? [])
-        self._gridCategories = globalState(calcGridCategories())
-    }
-    
-    private func calcGridCategories() -> [SkillGridCategory] {
-        var cats = skillGrid.gridCategories.sorted(by: { $0.skillCategoryId < $1.skillCategoryId })
-        let xpCat = SkillGridCategory(skills: [], skillCategoryId: -1, skillCategoryName: "Tier - XP Cost", allSkills: [])
-        xpCat.width = 1
-        if cats.count > 0 {
-            cats.insert(xpCat, at: 1)
-        }
-        return cats
+    private init(allSkills: [FullCharacterModifiedSkillModel], personal: Bool, allowPurchase: Bool, player: FullPlayerModel, character: FullCharacterModel?) {
+        self._skillGrid = globalStateObject(SkillGrid(personal: personal, allowPurchase: allowPurchase, player: player, character: character, skills: allSkills))
+        self.availableSkills = character?.allPurchaseableSkills() ?? []
     }
     
     var body: some View {
@@ -97,9 +69,9 @@ struct NativeSkillTree: View {
                 let finalX = drawCategories(context)
                 drawLines(context, finalX: finalX)
             } symbols: {
-                ForEach(trueGrid) { skill in
-                    let skillIsPurchased: Bool = character == nil ? true : character!.skills.contains(where: { $0.id == skill.skill.id })
-                    let skillCouldBePurchased = (character == nil ? false : availableSKills.contains(where: { $0.id == skill.skill.id })) && allowPurchase
+                ForEach(skillGrid.trueGrid) { skill in
+                    let skillIsPurchased: Bool = skillGrid.character == nil ? true : skillGrid.character!.allPurchasedSkills().contains(where: { $0.id == skill.skill.id })
+                    let skillCouldBePurchased = (skillGrid.character == nil ? false : availableSkills.contains(where: { $0.id == skill.skill.id })) && skillGrid.allowPurchase
                     CanvasSkillCell(expanded: skill.expanded, skill: skill.skill, allowPurchase: !skillIsPurchased && skillCouldBePurchased, purchaseState: skillIsPurchased ? .purchased : (skillCouldBePurchased ? .couldPurchase : .cantPurchase), loadingPurchase: self.isPurchasing, collapsedWidth: collapsedWidth, expandedWidth: expandedWidth, loadingText: loadingText)
                 }
             }
@@ -113,9 +85,9 @@ struct NativeSkillTree: View {
         }.background {
             // Hidden views for measurements
             VStack {
-                ForEach(trueGrid) { skill in
-                    let skillIsPurchased: Bool = character == nil ? true : character!.skills.contains(where: { $0.id == skill.skill.id })
-                    let skillCouldBePurchased = (character == nil ? false : availableSKills.contains(where: { $0.id == skill.skill.id })) && allowPurchase
+                ForEach(skillGrid.trueGrid) { skill in
+                    let skillIsPurchased: Bool = skillGrid.character == nil ? true : skillGrid.character!.allPurchasedSkills().contains(where: { $0.id == skill.skill.id })
+                    let skillCouldBePurchased = (skillGrid.character == nil ? false : availableSkills.contains(where: { $0.id == skill.skill.id })) && skillGrid.allowPurchase
                     SkillCellMeasurer(skill: skill.skill, expanded: skill.expanded, allowPurchase: !skillIsPurchased && skillCouldBePurchased, purchaseState: skillIsPurchased ? .purchased : (skillCouldBePurchased ? .couldPurchase : .cantPurchase), loadingPurchase: self.isPurchasing, collapsedWidth: collapsedWidth, expandedWidth: expandedWidth)
                 }
             }
@@ -131,15 +103,15 @@ struct NativeSkillTree: View {
     
     private func drawConnectionLines(_ context: SwiftUICore.GraphicsContext) {
         let exSkill = expandedSkill
-        let exXpCost = exSkill?.skill.xpCost.intValueDefaultZero ?? 0
+        let exXpCost = exSkill?.skill.baseXpCost() ?? 0
         let exId = exSkill?.skill.id ?? -1
         let xEx = exSkill?.gridX ?? 999999
         let yEx = exSkill?.gridY ?? 999999
         
-        for gridSkill in trueGrid.sorted(by: { $0.skill.skillCategoryId < $1.skill.skillCategoryId }) {
-            if gridSkill.skill.prereqs.isNotEmpty {
-                for prereq in gridSkill.skill.prereqs {
-                    if let pr = trueGrid.first(where: { $0.skill.id == prereq.id }) {
+        for gridSkill in skillGrid.trueGrid.sorted(by: { $0.skill.category.id < $1.skill.category.id }) {
+            if gridSkill.skill.prereqs().isNotEmpty {
+                for prereq in gridSkill.skill.prereqs() {
+                    if let pr = skillGrid.trueGrid.first(where: { $0.skill.id == prereq.id }) {
                         
                         let startXOffset = ((prereq.id == exId) ? expandedWidth : collapsedWidth) / 2
                         
@@ -173,7 +145,7 @@ struct NativeSkillTree: View {
         let xEx = exSkill?.gridX ?? 999999
         let yEx = exSkill?.gridY ?? 999999
         
-        for gridSkill in trueGrid.sorted(by: { $0.skill.skillCategoryId < $1.skill.skillCategoryId }) {
+        for gridSkill in skillGrid.trueGrid.sorted(by: { $0.skill.category.id < $1.skill.category.id }) {
             
             if let symbol = context.resolveSymbol(id: gridSkill.skill.id) {
                 
@@ -189,13 +161,13 @@ struct NativeSkillTree: View {
         var heightDelta: CGFloat = 0
         if let exSkill = expandedSkill {
             let expandedHeight = skillSizes[exSkill.skill.id]?.height ?? 0
-            let index = max(exSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+            let index = max(exSkill.skill.baseXpCost() - 1, 0)
             let baseHeight = tallestHeightRows[index] ?? 0
             heightDelta = expandedHeight - baseHeight
         }
-        let exSkillCat = expandedSkill?.skill.skillCategoryId ?? 999999
+        let exSkillCat = expandedSkill?.skill.category.id ?? 999999
         var prevX: CGFloat = 0
-        for gridCategory in gridCategories {
+        for gridCategory in skillGrid.gridCategories {
             let w = gridCategory.width.cgFloat
             var x = prevX
             x += w * collapsedWidth
@@ -236,7 +208,7 @@ struct NativeSkillTree: View {
             y += (vertPadding * 3 * diamondNum.cgFloat)
             if let exSkill = expandedSkill {
                 let expandedHeight = skillSizes[exSkill.skill.id]?.height ?? 0
-                let index = max(exSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+                let index = max(exSkill.skill.baseXpCost() - 1, 0)
                 let baseHeight = tallestHeightRows[index] ?? 0
                 let heightDelta = expandedHeight - baseHeight
 
@@ -286,90 +258,6 @@ struct NativeSkillTree: View {
         context.stroke(getHorizontalDashedLinePath(3, finalX: finalX), with: .color(.white), style: StrokeStyle(lineWidth: 5, dash: [16, 5]))
         context.stroke(getHorizontalDashedLinePath(4, finalX: finalX), with: .color(.white), style: StrokeStyle(lineWidth: 5, dash: [16, 5]))
     }
-    
-    private func getAvailableSkills() -> [CharacterModifiedSkillModel]? {
-        guard allowPurchase, let player = player, let character = character else { return nil }
-        let allSkills = skillGrid.skills
-        let charSkills = character.skills
-
-        // Remove already-owned skills
-        var newSkillList = allSkills.filter { skill in
-            !charSkills.contains(where: { $0.id == skill.id })
-        }
-
-        // Filter for prerequisite fulfillment
-        newSkillList = newSkillList.filter { skill in
-            skill.prereqs.allSatisfy { prereq in
-                charSkills.contains(where: { $0.id == prereq.id })
-            }
-        }
-
-        // Check prestige points
-        newSkillList = newSkillList.filter { skill in
-            skill.prestigeCost.intValueDefaultZero <= player.prestigePoints.intValueDefaultZero
-        }
-
-        // Filter choose-one skills
-        let cskills = character.getChooseOneSkills()
-        if cskills.isEmpty {
-            newSkillList = newSkillList.filter {
-                !Constants.SpecificSkillIds.allLevel2SpecialistSkills.contains($0.id)
-            }
-        } else if cskills.count == 2 {
-            newSkillList = newSkillList.filter {
-                !Constants.SpecificSkillIds.allSpecalistSkills.contains($0.id)
-            }
-        } else if let cskill = cskills.first {
-            let idsToRemove: [Int]
-            switch cskill.id {
-            case Constants.SpecificSkillIds.expertCombat:
-                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertCombat
-            case Constants.SpecificSkillIds.expertProfession:
-                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertProfession
-            case Constants.SpecificSkillIds.expertTalent:
-                idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertTalent
-            default:
-                idsToRemove = []
-            }
-            newSkillList = newSkillList.filter { !idsToRemove.contains($0.id) }
-        }
-
-        // XP / infection mods
-        let combatXpMod = character.costOfCombatSkills()
-        let professionXpMod = character.costOfProfessionSkills()
-        let talentXpMod = character.costOfTalentSkills()
-        let inf50Mod = character.costOf50InfectSkills()
-        let inf75Mod = character.costOf75InfectSkills()
-
-        // Convert to modified skill list
-        let modSkillList = newSkillList.map { skill in
-            CharacterModifiedSkillModel(
-                skill,
-                modXpCost: skill.getModCost(
-                    combatMod: combatXpMod,
-                    professionMod: professionXpMod,
-                    talentMod: talentXpMod,
-                    xpReductions: xpReductions
-                ),
-                modInfCost: skill.getInfModCost(inf50Mod: inf50Mod, inf75Mod: inf75Mod)
-            )
-        }
-
-        // Final XP/INF filter
-        let msl = modSkillList.filter { modSkill in
-            let xp = player.experience.intValueDefaultZero
-            let inf = character.infection.intValueDefaultZero
-            let modXp = Int(modSkill.modXpCost) ?? Int.max
-            let modInf = Int(modSkill.modInfCost) ?? Int.max
-
-            if modInf > inf { return false }
-            if modXp > xp {
-                return modSkill.canUseFreeSkill && (player.freeTier1Skills.intValueDefaultZero) > 0
-            }
-            return true
-        }
-        return msl
-    }
 
     
     private func getHorizontalDashedLinePath(_ lineNum: Int, finalX: CGFloat) -> Path {
@@ -377,7 +265,7 @@ struct NativeSkillTree: View {
         y += (vertPadding * 3 * lineNum.cgFloat)
         if let exSkill = expandedSkill {
             let expandedHeight = skillSizes[exSkill.skill.id]?.height ?? 0
-            let index = max(exSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+            let index = max(exSkill.skill.baseXpCost() - 1, 0)
             let baseHeight = tallestHeightRows[index] ?? 0
             let heightDelta = expandedHeight - baseHeight
 
@@ -393,9 +281,10 @@ struct NativeSkillTree: View {
     }
     
     private func forceRefresh() {
-        DispatchQueue.main.async {
-            self.trueGrid = trueGrid
-        }
+        // TODO
+//        DispatchQueue.main.async {
+//            self.trueGrid = trueGrid
+//        }
     }
     
     private func getTappedOnSkill(x: CGFloat, y: CGFloat) -> Int? {
@@ -403,7 +292,7 @@ struct NativeSkillTree: View {
     }
     
     private func tappedOnPurchase(_ gridSkill: GridSkill, x: CGFloat, y: CGFloat) -> Bool {
-        guard allowPurchase else { return false }
+        guard skillGrid.allowPurchase else { return false }
         let height = skillSizes[gridSkill.skill.id]?.height ?? 0
         let buttonHeight: CGFloat = 90
         let buttonWidth: CGFloat = expandedWidth - 64
@@ -420,7 +309,7 @@ struct NativeSkillTree: View {
         let xEx = self.expandedSkill?.gridX ?? 99999
         let yEy = self.expandedSkill?.gridY ?? 99999
         let width = gridSkill.expanded ? expandedWidth : collapsedWidth
-        let index = max(gridSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+        let index = max(gridSkill.skill.baseXpCost() - 1, 0)
         let height = tallestHeightRows[index] ?? 0
         return CGRect(x: getGridX(gridSkill, xEx), y: getGridY(gridSkill, yEy), width: width, height: height)
     }
@@ -433,8 +322,8 @@ struct NativeSkillTree: View {
         if gridSkill.gridX > xEx {
             x += expandedWidth - collapsedWidth
         }
-        x += horPadding * gridSkill.skill.skillCategoryId.cgFloat
-        if gridSkill.skill.skillCategoryId > 1 {
+        x += horPadding * gridSkill.skill.category.id.cgFloat
+        if gridSkill.skill.category.id > 1 {
             x += horPadding + horPadding + collapsedWidth
         }
         return x
@@ -442,7 +331,7 @@ struct NativeSkillTree: View {
     
     private func getGridY(_ gridSkill: GridSkill, _ yEx: Int) -> CGFloat {
         let gridY = gridSkill.gridY.cgFloat
-        let index = max(gridSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+        let index = max(gridSkill.skill.baseXpCost() - 1, 0)
         var y = gridY * ((tallestHeightRows[index] ?? 0) * 2)
         y += (gridY * vertPadding * 3)
         y += vertPadding
@@ -452,7 +341,7 @@ struct NativeSkillTree: View {
         }
         if let exSkill = expandedSkill {
             let expandedHeight = skillSizes[exSkill.skill.id]?.height ?? 0
-            let index = max(exSkill.skill.xpCost.intValueDefaultZero - 1, 0)
+            let index = max(exSkill.skill.baseXpCost() - 1, 0)
             let baseHeight = tallestHeightRows[index] ?? 0
             let heightDelta = expandedHeight - baseHeight
 
@@ -466,7 +355,7 @@ struct NativeSkillTree: View {
     private func calcTallestHeightRows() {
         for skill in skillGrid.skills {
             let size = skillSizes[skill.id] ?? .zero
-            let index = max(skill.xpCost.intValueDefaultZero - 1, 0)
+            let index = max(skill.baseXpCost() - 1, 0)
             if tallestHeightRows[index] == nil || tallestHeightRows[index] ?? 0 > size.height {
                 tallestHeightRows[index] = size.height
             }
@@ -529,84 +418,86 @@ struct NativeSkillTree: View {
     }
     
     private func handleTap(x: CGFloat, y: CGFloat) {
-        if !isPurchasing, let expandedSkill = expandedSkill, expandedSkill.expanded, tappedOnPurchase(expandedSkill, x: x, y: y) {
-            self.isPurchasing = true
-            self.loadingText = "Purchasing..."
-            Task {
-                let dots = ["", ".", "..", "..."]
-                var i = 0
-                while isPurchasing {
-                    await MainActor.run {
-                        self.loadingText = "Purchasing" + dots[i % dots.count]
-                    }
-                    try? await Task.sleep(nanoseconds: 250000000) // 0.25 seconds
-                    i += 1
-                }
-            }
-            if let player = player, let char = character, let skl = availableSKills.first(where: { $0.id == expandedSkill.skill.id }) {
-                var xpSpent = 0
-                var fsSpent = 0
-                var ppSpent = 0
-
-                var msgStr = "It will cost you "
-
-                if skl.canUseFreeSkill, Int(player.freeTier1Skills) ?? 0 > 0 {
-                    msgStr += "1 Free Tier-1 Skill point (you have \(player.freeTier1Skills) FT1S)"
-                    fsSpent = 1
-                } else {
-                    msgStr += "\(skl.modXpCost)xp (you have \(player.experience)xp)"
-                    xpSpent = Int(skl.modXpCost) ?? 0
-                }
-
-                if skl.usesPrestige {
-                    msgStr += " and \(skl.prestigeCost) Prestige point (you have \(player.prestigePoints)pp)"
-                    ppSpent = 1
-                }
-                
-                runOnMainThread {
-                    AlertManager.shared.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
-                        let charSkill = CharacterSkillCreateModel(characterId: char.id, skillId: skl.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: ppSpent)
-                        CharacterSkillService.takeSkill(charSkill, playerId: player.id) { _ in
-                            OldDM.load([.player, .character], forceDownloadIfApplicable: true) {
-                                runOnMainThread {
-                                    AlertManager.shared.showOkAlert("\(skl.name) Purchased!") {}
-                                    self.player = OldDM.player
-                                    self.character = OldDM.character
-                                    self.availableSKills = getAvailableSkills() ?? []
-                                    self.isPurchasing = false
-                                    self.forceRefresh()
-                                }
-                            }
-                        } failureCase: { error in
-                            runOnMainThread {
-                                self.isPurchasing = false
-                            }
-                        }
-
-                    } onCancelAction: {
-                        runOnMainThread {
-                            self.isPurchasing = false
-                        }
-                    }
-                }
-                
-            }
-        } else if let tappedSkillIndex = getTappedOnSkill(x: x, y: y) {
-            let oldState = trueGrid[tappedSkillIndex].expanded
-            for index in trueGrid.indices {
-                trueGrid[index].expanded = false
-            }
-            trueGrid[tappedSkillIndex].expanded = !oldState
-            self.expandedSkill = !oldState ? trueGrid[tappedSkillIndex] : nil
-            
-            forceRefresh()
-        } else {
-            for index in trueGrid.indices {
-                trueGrid[index].expanded = false
-            }
-            self.expandedSkill = nil
-            forceRefresh()
-        }
+        // TODO redo this
+//        if !isPurchasing, let expandedSkill = expandedSkill, expandedSkill.expanded, tappedOnPurchase(expandedSkill, x: x, y: y) {
+//            self.isPurchasing = true
+//            self.loadingText = "Purchasing..."
+//            Task {
+//                let dots = ["", ".", "..", "..."]
+//                var i = 0
+//                while isPurchasing {
+//                    await MainActor.run {
+//                        self.loadingText = "Purchasing" + dots[i % dots.count]
+//                    }
+//                    try? await Task.sleep(nanoseconds: 250000000) // 0.25 seconds
+//                    i += 1
+//                }
+//            }
+//            if let player = player, let char = character, let skl = availableSkills.first(where: { $0.id == expandedSkill.skill.id }) {
+//                // TODO redo this
+//                var xpSpent = 0
+//                var fsSpent = 0
+//                var ppSpent = 0
+//
+//                var msgStr = "It will cost you "
+//
+//                if skl.canUseFreeSkill, Int(player.freeTier1Skills) ?? 0 > 0 {
+//                    msgStr += "1 Free Tier-1 Skill point (you have \(player.freeTier1Skills) FT1S)"
+//                    fsSpent = 1
+//                } else {
+//                    msgStr += "\(skl.modXpCost)xp (you have \(player.experience)xp)"
+//                    xpSpent = Int(skl.modXpCost) ?? 0
+//                }
+//
+//                if skl.usesPrestige {
+//                    msgStr += " and \(skl.prestigeCost) Prestige point (you have \(player.prestigePoints)pp)"
+//                    ppSpent = 1
+//                }
+//                
+//                runOnMainThread {
+//                    AlertManager.shared.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
+//                        let charSkill = CharacterSkillCreateModel(characterId: char.id, skillId: skl.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: ppSpent)
+//                        CharacterSkillService.takeSkill(charSkill, playerId: player.id) { _ in
+//                            OldDM.load([.player, .character], forceDownloadIfApplicable: true) {
+//                                runOnMainThread {
+//                                    AlertManager.shared.showOkAlert("\(skl.name) Purchased!") {}
+//                                    self.player = OldDM.player
+//                                    self.character = OldDM.character
+//                                    self.availableSkills = getAvailableSkills() ?? []
+//                                    self.isPurchasing = false
+//                                    self.forceRefresh()
+//                                }
+//                            }
+//                        } failureCase: { error in
+//                            runOnMainThread {
+//                                self.isPurchasing = false
+//                            }
+//                        }
+//
+//                    } onCancelAction: {
+//                        runOnMainThread {
+//                            self.isPurchasing = false
+//                        }
+//                    }
+//                }
+//                
+//            }
+//        } else if let tappedSkillIndex = getTappedOnSkill(x: x, y: y) {
+//            let oldState = trueGrid[tappedSkillIndex].expanded
+//            for index in trueGrid.indices {
+//                trueGrid[index].expanded = false
+//            }
+//            trueGrid[tappedSkillIndex].expanded = !oldState
+//            self.expandedSkill = !oldState ? trueGrid[tappedSkillIndex] : nil
+//            
+//            forceRefresh()
+//        } else {
+//            for index in trueGrid.indices {
+//                trueGrid[index].expanded = false
+//            }
+//            self.expandedSkill = nil
+//            forceRefresh()
+//        }
     }
 
 }

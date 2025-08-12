@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct ViewEventAttendeesView: View {
     
     @EnvironmentObject var alertManager: AlertManager
@@ -61,17 +63,17 @@ struct ViewEventAttendeesView: View {
         .padding(16)
         .background(Color.lightGray)
         .onAppear {
-            self.loadingEventAttendees = true
-            self.loadingPlayers = true
-            OldDM.selectedEvent = eventModel
-            OldDM.load([.allPlayers, .eventAttendeesForSelectedEvent]) {
-                runOnMainThread {
-                    self.allPlayers = OldDM.allPlayers ?? []
-                    self.eventAttendees = OldDM.eventAttendeesForEvent
-                    self.loadingEventAttendees = false
-                    self.loadingPlayers = false
-                }
-            }
+//            self.loadingEventAttendees = true
+//            self.loadingPlayers = true
+//            OldDM.selectedEvent = eventModel
+//            OldDM.load([.allPlayers, .eventAttendeesForSelectedEvent]) {
+//                runOnMainThread {
+//                    self.allPlayers = OldDM.allPlayers ?? []
+//                    self.eventAttendees = OldDM.eventAttendeesForEvent
+//                    self.loadingEventAttendees = false
+//                    self.loadingPlayers = false
+//                }
+//            }
         }
     }
     
@@ -91,6 +93,5 @@ struct ViewEventAttendeesView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    dm.eventAttendeesForEvent = md.eventAttendees.eventAttendees
-    return ViewEventAttendeesView(_dm: dm, eventModel: md.event())
+    return ViewEventAttendeesView(eventModel: md.event())
 }

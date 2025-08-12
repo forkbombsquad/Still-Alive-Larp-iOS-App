@@ -7,7 +7,10 @@
 
 import SwiftUI
 
+// TODO rename to ViewOrManageResearchProjectsView
+// TODO move this to shared folder
 struct AllResearchProjectsListView: View {
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -25,32 +28,41 @@ struct AllResearchProjectsListView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
+                    if allowEdit {
+                        PullToRefresh(coordinateSpaceName: "pullToRefresh_ResearchProjects", spinnerOffsetY: -100, pullDownDistance: 150) {
+                            DM.load()
+                        }
+                    }
                     VStack {
-                        Text("Research Projects")
-                            .font(.system(size: 32, weight: .bold))
+                        Text(DM.getTitlePotentiallyOffline("\(allowEdit ? "Manage " : "")Research Projects"))
+                            .font(.stillAliveTitleFont)
                             .frame(alignment: .center)
                         if loading {
                             LoadingBlock()
                         } else {
-                            if allowEdit {
-                                ArrowViewButtonGreen(title: "Add New", loading: self.$loading) {
-                                    if !self.loading {
-                                        self.displayProjectMessage(nil)
+                            LoadingLayoutView {
+                                VStack {
+                                    if allowEdit {
+                                        ArrowViewButtonGreen(title: "Add New", loading: self.$loading) {
+                                            if !self.loading {
+                                                self.displayProjectMessage(nil)
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            LazyVStack(spacing: 8) {
-                                ForEach(researchProjects) { rp in
-                                    ResearchProjectCell(researchProject: rp, loading: self.$loading) {
-                                        if self.allowEdit && !self.loading {
-                                            self.displayProjectMessage(rp)
+                                    LazyVStack(spacing: 8) {
+                                        ForEach(researchProjects) { rp in
+                                            ResearchProjectCell(researchProject: rp, loading: self.$loading) {
+                                                if self.allowEdit && !self.loading {
+                                                    self.displayProjectMessage(rp)
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
+                }.coordinateSpace(name: "pullToRefresh_ResearchProjects")
             }
         }
         .padding(16)
@@ -106,7 +118,10 @@ struct AllResearchProjectsListView: View {
                             // Edit
                             let editedRp = ResearchProjectModel(id: rp.id, name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased())
                             AdminService.updateResearchProject(editedRp) { researchProjectModel in
-                                self.updateLocalAndDataManagerResearchProjects(researchProjectModel)
+                                runOnMainThread {
+                                    self.loading = false
+                                    DM.load()
+                                }
                             } failureCase: { error in
                                 runOnMainThread {
                                     self.loading = false
@@ -117,7 +132,10 @@ struct AllResearchProjectsListView: View {
                             // Create
                             let newRP = ResearchProjectCreateModel(name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased())
                             AdminService.createResearchProject(newRP) { researchProjectModel in
-                                self.updateLocalAndDataManagerResearchProjects(researchProjectModel)
+                                runOnMainThread {
+                                    self.loading = false
+                                    DM.load()
+                                }
                             } failureCase: { error in
                                 runOnMainThread {
                                     self.loading = false
@@ -135,19 +153,10 @@ struct AllResearchProjectsListView: View {
             )
         }
     }
-    
-    private func updateLocalAndDataManagerResearchProjects(_ rp: ResearchProjectModel) {
-        runOnMainThread {
-            self.researchProjects.removeAll(where: { $0.id == rp.id })
-            self.researchProjects.append(rp)
-            OldDM.researchProjects = self.researchProjects
-            self.loading = false
-        }
-    }
 }
 
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AllResearchProjectsListView(_dm: dm, researchProjects: md.researchProjects.researchProjects, allowEdit: false)
+    return AllResearchProjectsListView(researchProjects: md.researchProjects.researchProjects, allowEdit: false)
 }

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct FeatureFlagManagementView: View {
     
     @EnvironmentObject var alertManager: AlertManager
@@ -118,14 +120,14 @@ struct FeatureFlagManagementView: View {
     }
     
     private func reload() {
-        OldDM.load([.featureFlags], forceDownloadIfApplicable: true) {
-            self.loading = false
-        }
+//        OldDM.load([.featureFlags], forceDownloadIfApplicable: true) {
+//            self.loading = false
+//        }
     }
 }
 
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return FeatureFlagManagementView(_dm: dm, featureFlags: .constant(md.featureFlagList.results))
+    return FeatureFlagManagementView(featureFlags: .constant(md.featureFlagList.results))
 }

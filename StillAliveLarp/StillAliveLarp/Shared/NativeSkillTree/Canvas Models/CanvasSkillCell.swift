@@ -14,7 +14,7 @@ enum PurchaseState {
 struct CanvasSkillCell: View {
     
     let expanded: Bool
-    let skill: OldFullSkillModel
+    let skill: FullCharacterModifiedSkillModel
     let allowPurchase: Bool
     let purchaseState: PurchaseState
     let loadingPurchase: Bool
@@ -111,7 +111,7 @@ struct CanvasSkillCell: View {
                         .frame(height: 2)
                         .overlay(Color.darkGray)
                         .padding(.horizontal, 16)
-                    if skill.prereqs.isNotEmpty {
+                    if skill.prereqs().isNotEmpty {
                         
                         Text("Prerequisites")
                             .font(medFont)
@@ -126,7 +126,7 @@ struct CanvasSkillCell: View {
                             .shadow(color: .black, radius: 0.4)
                             .shadow(color: .black, radius: 0.4)
                         LazyVStack {
-                            ForEach(skill.prereqs) { prereq in
+                            ForEach(skill.prereqs()) { prereq in
                                 Text(prereq.name)
                                     .font(smallFontReg)
                                     .foregroundStyle(Color.white)
@@ -181,7 +181,7 @@ struct CanvasSkillCell: View {
     }
     
     private func getSkillBubbleNum() -> Int {
-        return skill.prereqs.count
+        return skill.prereqs().count
     }
     
     func getTopColor() -> Color {
@@ -243,26 +243,30 @@ struct CanvasSkillCell: View {
     }
     
     func getXpRowText() -> String {
-        var xpRow = "\(skill.xpCost)xp"
-        if skill.prestigeCost.intValueDefaultZero > 0 {
-            xpRow += " | \(skill.prestigeCost)pp"
-        }
-        if skill.minInfection.intValueDefaultZero > 0 {
-            xpRow += " | \(skill.minInfection)% Inf Threshold"
-        }
-        return xpRow
+        // TODO redo this
+        return ""
+//        var xpRow = "\(skill.xpC)xp"
+//        if skill.prestigeCost.intValueDefaultZero > 0 {
+//            xpRow += " | \(skill.prestigeCost)pp"
+//        }
+//        if skill.minInfection.intValueDefaultZero > 0 {
+//            xpRow += " | \(skill.minInfection)% Inf Threshold"
+//        }
+//        return xpRow
     }
     
     func skillTopBoxText() -> String? {
-        var str = ""
-        if skill.skillCategoryId == Constants.SpecificSkillCategories.infected {
-            str = "At least \(skill.minInfection)% Infection Rating Required"
-        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.spec {
-            str = "You may only select 1 Tier-\(skill.xpCost) specialization skill"
-        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.prestige {
-            str = "Requires \(skill.prestigeCost) Prestige Point"
-        }
-        return str.isEmpty ? nil : str
+        // TODO redo this
+        return ""
+//        var str = ""
+//        if skill.skillCategoryId == Constants.SpecificSkillCategories.infected {
+//            str = "At least \(skill.minInfection)% Infection Rating Required"
+//        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.spec {
+//            str = "You may only select 1 Tier-\(skill.xpCost) specialization skill"
+//        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.prestige {
+//            str = "Requires \(skill.prestigeCost) Prestige Point"
+//        }
+//        return str.isEmpty ? nil : str
     }
     
 }
@@ -275,11 +279,11 @@ struct CanvasSkillCell: View {
     let infSkill = 40
     let specSkill = 19
     let manyPrereqs = 47
-    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == manyPrereqs })!, allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
+    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == manyPrereqs })!.fullCharacterModifiedSkillModel(), allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
 }
 
 struct SkillCellMeasurer: View {
-    let skill: OldFullSkillModel
+    let skill: FullCharacterModifiedSkillModel
 
     let expanded: Bool
     let allowPurchase: Bool

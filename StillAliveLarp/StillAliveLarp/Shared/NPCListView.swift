@@ -41,6 +41,7 @@ struct NPCListView: View {
                                         ViewNPCStuffView(npc: npc)
                                     case .manage:
                                         // TODO manage npc
+                                        EmptyView()
                                     }
                                 }
                             }
@@ -51,6 +52,7 @@ struct NPCListView: View {
                                         ViewNPCStuffView(npc: npc)
                                     case .manage:
                                         // TODO manage npc
+                                        EmptyView()
                                     }
                                 }
                             }

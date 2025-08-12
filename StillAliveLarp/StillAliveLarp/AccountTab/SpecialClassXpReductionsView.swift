@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO redo view
 struct SpecialClassXpReductionsView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -17,25 +18,25 @@ struct SpecialClassXpReductionsView: View {
         VStack(alignment: .center) {
             ScrollView {
                 VStack(alignment: .center) {
-                    Text("Special Class Xp Reductions For\n\(OldDM.charForSelectedPlayer?.fullName ?? "")")
-                        .font(.system(size: 32, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .frame(alignment: .center)
-                        .padding([.bottom], 16)
+//                    Text("Special Class Xp Reductions For\n\(OldDM.charForSelectedPlayer?.fullName ?? "")")
+//                        .font(.system(size: 32, weight: .bold))
+//                        .multilineTextAlignment(.center)
+//                        .frame(alignment: .center)
+//                        .padding([.bottom], 16)
                     Divider()
                     if loading {
                         ProgressView().padding(.bottom, 8)
                         Text("Loading...")
                     } else {
-                        if !(OldDM.xpReductions ?? []).isEmpty {
-                            ForEach(OldDM.xpReductions ?? []) { xpRed in
-                                if let skill = getSkill(xpRed: xpRed) {
-                                    KeyValueView(key: skill.name, value: "-\(xpRed.xpReduction) (new cost: \(skill.getModCost(combatMod: 0, professionMod: 0, talentMod: 0, xpReduction: xpRed)))")
-                                }
-                            }
-                        } else {
-                            Text("You have no Xp Reductions from classes you've taken. Try taking a Special class with someone who has the Professor skill to reduce the xp cost of specific skills! Don't forget to pay them!")
-                        }
+//                        if !(OldDM.xpReductions ?? []).isEmpty {
+//                            ForEach(OldDM.xpReductions ?? []) { xpRed in
+//                                if let skill = getSkill(xpRed: xpRed) {
+//                                    KeyValueView(key: skill.name, value: "-\(xpRed.xpReduction) (new cost: \(skill.getModCost(combatMod: 0, professionMod: 0, talentMod: 0, xpReduction: xpRed)))")
+//                                }
+//                            }
+//                        } else {
+//                            Text("You have no Xp Reductions from classes you've taken. Try taking a Special class with someone who has the Professor skill to reduce the xp cost of specific skills! Don't forget to pay them!")
+//                        }
                     }
                 }
             }
@@ -45,24 +46,23 @@ struct SpecialClassXpReductionsView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            self.loading = true
-            OldDM.load([.xpReductions], forceDownloadIfApplicable: true) {
-                OldDM.load([.skills]) {
-                    self.loading = false
-                }
-            }
-        }
+//        .onAppear {
+//            self.loading = true
+//            OldDM.load([.xpReductions], forceDownloadIfApplicable: true) {
+//                OldDM.load([.skills]) {
+//                    self.loading = false
+//                }
+//            }
+//        }
     }
 
-    func getSkill(xpRed: SpecialClassXpReductionModel) -> OldFullSkillModel? {
-        return OldDM.skills?.first(where: { $0.id == xpRed.skillId })
-    }
+//    func getSkill(xpRed: SpecialClassXpReductionModel) -> FullCharacterModifiedSkillModel? {
+//        return OldDM.skills?.first(where: { $0.id == xpRed.skillId })
+//    }
 }
 
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    dm.charForSelectedPlayer = md.fullCharacters()[0]
-    return SpecialClassXpReductionsView(_dm: dm, loading: false)
+    return SpecialClassXpReductionsView(loading: false)
 }

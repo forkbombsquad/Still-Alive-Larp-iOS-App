@@ -35,8 +35,10 @@ struct PlayersListView: View {
                                     case .viewPlayer:
                                         ViewPlayerView(player: player)
                                     case .awardPlayer:
+                                        EmptyView()
                                         // TODO AwardPlayerView
                                     case .changePass:
+                                        EmptyView()
                                         // TODO ChangePassView
                                     }
                                 }

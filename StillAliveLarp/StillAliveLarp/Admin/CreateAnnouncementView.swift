@@ -81,5 +81,5 @@ struct CreateAnnouncementView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    return CreateAnnouncementView(_dm: dm)
+    return CreateAnnouncementView()
 }

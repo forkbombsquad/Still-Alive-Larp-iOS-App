@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo
+
 struct CharacterPlannerListView: View {
     
     @EnvironmentObject var alertManager: AlertManager
@@ -34,13 +36,13 @@ struct CharacterPlannerListView: View {
                         if loading {
                             LoadingBlockWithText(loadingText: $loadingText)
                         } else {
-                            LazyVStack(spacing: 8) {
-                                ForEach(allPlannedCharacters) { plannedChar in
-                                    NavArrowViewBlue(title: plannedChar.fullName, loading: $loadingFullCharacter) {
-                                        SkillManagementPlannerView(character: plannedChar)
-                                    }
-                                }
-                            }
+//                            LazyVStack(spacing: 8) {
+//                                ForEach(allPlannedCharacters) { plannedChar in
+//                                    NavArrowViewBlue(title: plannedChar.fullName, loading: $loadingFullCharacter) {
+//                                        SkillManagementPlannerView(character: plannedChar)
+//                                    }
+//                                }
+//                            }
                             ArrowViewButtonGreen(title: "Start A New Plan", loading: $loadingFullCharacter) {
                                 AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
                                     title: "Create a new plan or base one off of an existing Character?",
@@ -63,18 +65,18 @@ struct CharacterPlannerListView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            self.loadingText = "Loading Planned Characters..."
-            self.loading = true
-            OldDM.player = player
-            OldDM.load([.allCharacters, .plannedCharacters]) {
-                runOnMainThread {
-                    self.allRegularCharacters = OldDM.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
-                    self.allPlannedCharacters = OldDM.allPlannedCharacters
-                    self.loading = false
-                }
-            }
-        }
+//        .onAppear {
+//            self.loadingText = "Loading Planned Characters..."
+//            self.loading = true
+//            OldDM.player = player
+//            OldDM.load([.allCharacters, .plannedCharacters]) {
+//                runOnMainThread {
+//                    self.allRegularCharacters = OldDM.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
+//                    self.allPlannedCharacters = OldDM.allPlannedCharacters
+//                    self.loading = false
+//                }
+//            }
+//        }
     }
     
     private func getCharacterChoices() -> [AlertButton] {
@@ -181,19 +183,19 @@ struct CharacterPlannerListView: View {
     }
     
     private func reload() {
-        self.loadingText = "Loading New Planned Character..."
-        OldDM.player = player
-        OldDM.load([.plannedCharacters], forceDownloadIfApplicable: true) {
-            runOnMainThread {
-                self.allPlannedCharacters = OldDM.allPlannedCharacters
-                self.loading = false
-            }
-        }
+//        self.loadingText = "Loading New Planned Character..."
+//        OldDM.player = player
+//        OldDM.load([.plannedCharacters], forceDownloadIfApplicable: true) {
+//            runOnMainThread {
+//                self.allPlannedCharacters = OldDM.allPlannedCharacters
+//                self.loading = false
+//            }
+//        }
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return CharacterPlannerListView(_dm: dm, player: md.player())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return CharacterPlannerListView(player: md.player())
+//}

@@ -142,7 +142,7 @@ struct ServiceController {
                     } else if let rsp = response as? HTTPURLResponse {
                         let d = data ?? Data()
                         
-                        logResponse(rsp, d)
+                        logResponse(rsp, d, skipBody: endpoint == .getAllProfileImages)
 
                         if let jsonObject: T = d.toJsonObject() {
                             success(ServiceSuccess(data: d, response: rsp, jsonObject: jsonObject))
@@ -200,12 +200,14 @@ struct ServiceController {
         globalPrintServiceLogs(requestLog)
     }
     
-    private static func logResponse(_ response: HTTPURLResponse, _ data: Data) {
+    private static func logResponse(_ response: HTTPURLResponse, _ data: Data, skipBody: Bool = false) {
         var responseLog = ""
         responseLog.buildJsonLine(key: "SERVICE CONTROLLER RESPONSE", value: "{", indentValue: 0, addNewline: false, addComma: false)
         responseLog.buildJsonLine(key: "Endpoint", value: "\(response.statusCode.stringValue) \(response.url?.absoluteString ?? "")", indentValue: 1)
         responseLog.buildJsonLine(key: "Headers", value: response.allHeaderFields, indentValue: 1)
-        responseLog.buildJsonLine(key: "Body", value: String(data: data, encoding: .utf8) ?? "", indentValue: 1)
+        if !skipBody {
+            responseLog.buildJsonLine(key: "Body", value: String(data: data, encoding: .utf8) ?? "", indentValue: 1)
+        }
         responseLog += "\n}"
         
         globalPrintServiceLogs(responseLog)

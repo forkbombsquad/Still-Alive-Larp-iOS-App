@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO update view if needed
+
 struct AwardPlayerView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -37,5 +39,5 @@ struct AwardPlayerView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AwardPlayerView(_dm: dm, players: md.playerList.players)
+    return AwardPlayerView(players: md.playerList.players)
 }

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO update view if needed
+
 struct CharacterBioListView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -46,5 +48,5 @@ struct CharacterBioListView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return CharacterBioListView(_dm: dm, charactersWhoNeedBiosApproved: .constant(md.characterListFullModel.characters))
+    return CharacterBioListView(charactersWhoNeedBiosApproved: .constant(md.characterListFullModel.characters))
 }

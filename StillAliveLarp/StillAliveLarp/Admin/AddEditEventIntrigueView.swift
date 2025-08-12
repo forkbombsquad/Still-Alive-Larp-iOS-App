@@ -134,5 +134,5 @@ struct AddEditEventIntrigueView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AddEditEventIntrigueView(_dm: dm, event: md.event(), intrigue: md.intrigue())
+    return AddEditEventIntrigueView(event: md.event(), intrigue: md.intrigue())
 }

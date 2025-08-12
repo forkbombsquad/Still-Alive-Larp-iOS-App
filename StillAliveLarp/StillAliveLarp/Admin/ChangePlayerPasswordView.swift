@@ -88,5 +88,5 @@ struct ChangePlayerPasswordView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return ChangePlayerPasswordView(_dm: dm, player: md.player())
+    return ChangePlayerPasswordView(player: md.player())
 }

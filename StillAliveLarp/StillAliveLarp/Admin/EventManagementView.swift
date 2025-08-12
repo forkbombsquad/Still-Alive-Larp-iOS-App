@@ -50,5 +50,5 @@ struct EventManagementView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return EventManagementView(_dm: dm, events: .constant(md.events.events))
+    return EventManagementView(events: .constant(md.events.events))
 }

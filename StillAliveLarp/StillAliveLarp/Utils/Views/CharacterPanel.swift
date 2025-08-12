@@ -128,7 +128,7 @@ struct CharacterPanel: View {
                 shouldShow[showType] = hasPlannedChars && ((charExists && charIsStandard && charIsAlive) || !charExists)
             }
         }
-        
+        return shouldShow
     }
     
     private enum CharacterPanelShowType: CaseIterable {

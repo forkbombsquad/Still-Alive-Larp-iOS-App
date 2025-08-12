@@ -7,28 +7,11 @@
 
 import SwiftUI
 
+// TODO redo
 struct GearView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     @Environment(\.presentationMode) var presentationMode
-    
-    static func Offline(_ character: OldFullCharacterModel, gear: GearModel) -> GearView {
-        return GearView(character: character.baseModel, gear: gear, offline: true, allowEdit: false)
-    }
-
-    init(character: CharacterModel, allowEdit: Bool) {
-        self.character = character
-        self.offline = false
-        self.allowEdit = allowEdit
-    }
-    
-    private init(character: CharacterModel, gear: GearModel, offline: Bool, allowEdit: Bool) {
-        self.character = character
-        self.offline = offline
-        self.allowEdit = allowEdit
-        self._gear = globalState(gear)
-        self._gearJsonModels = globalState(gear.jsonModels ?? [])
-    }
 
     let character: CharacterModel
     private let offline: Bool
@@ -94,24 +77,24 @@ struct GearView: View {
             }
         }.padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            if !offline {
-                if firstLoad {
-                    runOnMainThread {
-                        firstLoad = false
-                        loading = true
-                        OldDM.selectedChar = character
-                        OldDM.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
-                            runOnMainThread {
-                                self.loading = false
-                                self.gear = OldDM.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
-                                self.gearJsonModels = self.gear?.jsonModels ?? []
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//        .onAppear {
+//            if !offline {
+//                if firstLoad {
+//                    runOnMainThread {
+//                        firstLoad = false
+//                        loading = true
+//                        OldDM.selectedChar = character
+//                        OldDM.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
+//                            runOnMainThread {
+//                                self.loading = false
+//                                self.gear = OldDM.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
+//                                self.gearJsonModels = self.gear?.jsonModels ?? []
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
         .navigationBarBackButtonHidden(true)
         .toolbar { // Custom back button
             ToolbarItem(placement: .navigationBarLeading) {
@@ -274,12 +257,8 @@ struct GearSubview: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    dm.loadingSelectedCharacterGear = false
-    dm.selectedCharacterGear = [md.gear(characterId: 2)]
-    var gv = GearView(character: md.character(id: 2), allowEdit: true)
-    gv._dm = dm
-    return gv
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return GearView(character: md.character(id: 2), allowEdit: true)
+//}

@@ -1,5 +1,7 @@
 struct FeatureFlag {
     
+    // TODO fix this
+    
     // Existing Flags
     static let oldSkillTreeImage = FeatureFlag(name: "oldskilltreeimage")
     static let campStatus = FeatureFlag(name: "campstatus")
@@ -7,22 +9,25 @@ struct FeatureFlag {
     var name: String
     
     func isActive() -> Bool {
-        return OldDM.featureFlags.first(where: { ffm in
-            ffm.name.lowercased() == name.lowercased()
-        })?.isActiveIos ?? false
+        return false
+//        return OldDM.featureFlags.first(where: { ffm in
+//            ffm.name.lowercased() == name.lowercased()
+//        })?.isActiveIos ?? false
     }
     
     func isActiveAndroid() -> Bool {
-        return OldDM.featureFlags.first(where: { ffm in
-            ffm.name.lowercased() == name.lowercased()
-        })?.isActiveAndroid ?? false
+        return false
+//        return OldDM.featureFlags.first(where: { ffm in
+//            ffm.name.lowercased() == name.lowercased()
+//        })?.isActiveAndroid ?? false
     }
     
     func isActiveBoth() -> Bool {
-        let ff = OldDM.featureFlags.first(where: { ffm in
-            ffm.name.lowercased() == name.lowercased()
-        })
-        return ff?.isActiveIos ?? false && ff?.isActiveAndroid ?? false
+        return false
+//        let ff = OldDM.featureFlags.first(where: { ffm in
+//            ffm.name.lowercased() == name.lowercased()
+//        })
+//        return ff?.isActiveIos ?? false && ff?.isActiveAndroid ?? false
     }
     
 }

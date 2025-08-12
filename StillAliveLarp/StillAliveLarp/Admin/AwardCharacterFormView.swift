@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 
+// TODO update view if needed
+
 struct AwardCharacterFormView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -132,5 +134,5 @@ struct AwardCharacterFormView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AwardCharacterFormView(_dm: dm, character: md.character())
+    return AwardCharacterFormView(character: md.character())
 }

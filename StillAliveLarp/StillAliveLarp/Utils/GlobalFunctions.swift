@@ -19,13 +19,14 @@ func getBuildNumber() -> Int {
 }
 
 func forceResetAllPlayerData() {
-    runOnMainThread {
-        OldDataManager.forceReset()
-        OldLocalDataHandler.forceReset()
-        UserAndPassManager.forceReset()
-        PlayerManager.forceReset()
-        CharacterManager.forceReset()
-    }
+    // TODO
+//    runOnMainThread {
+//        OldDataManager.forceReset()
+//        OldLocalDataHandler.forceReset()
+//        UserAndPassManager.forceReset()
+//        PlayerManager.forceReset()
+//        CharacterManager.forceReset()
+//    }
 }
 
 func globalPrintServiceLogs(_ message: String) {
@@ -46,6 +47,10 @@ func getMockData(_ index: Int = 0) -> MockData {
 
 func globalState<T>(_ variable: T) -> State<T> {
     return State(initialValue: variable)
+}
+
+func globalStateObject<T>(_ variable: T) -> StateObject<T> {
+    return StateObject(wrappedValue: variable)
 }
 
 func max(_ x: CGFloat, _ y: CGFloat) -> CGFloat {

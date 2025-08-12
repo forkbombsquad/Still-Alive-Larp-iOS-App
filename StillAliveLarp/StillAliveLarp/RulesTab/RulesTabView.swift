@@ -17,7 +17,7 @@ struct RulesTabView: View {
                 GeometryReader { gr in
                     ScrollView {
                         PullToRefresh(coordinateSpaceName: "pullToRefresh_RulesTab", spinnerOffsetY: -100, pullDownDistance: 150) {
-                            DM.load(loadType: .forceDownload)
+                            DM.load()
                         }
                         VStack {
                             Text(DM.getTitlePotentiallyOffline("Rules and Reference"))

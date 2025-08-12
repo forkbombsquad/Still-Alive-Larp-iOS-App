@@ -39,33 +39,6 @@ class ImageDownloader {
             }
         }
     }
-
-    func download(key: ImageKey, onCompletion: @escaping (_ success: Bool) -> Void) {
-        downloadPage(urlString: key.baseUrl) { imagePath in
-            guard let imagePath = imagePath else {
-                onCompletion(false)
-                return
-            }
-            self.downloadFromUrl(path: imagePath, key: key) { success in
-                onCompletion(success)
-            }
-        }
-    }
-
-    private func downloadFromUrl(path: String, key: ImageKey, onCompletion: @escaping (_ success: Bool) -> Void) {
-        guard let url = URL(string: path) else {
-            onCompletion(false)
-            return
-        }
-        downloadImage(from: url) { data in
-            guard let data = data else {
-                onCompletion(false)
-                return
-            }
-            OldLocalDataHandler.shared.storeImageData(data, key: key.rawValue)
-            onCompletion(true)
-        }
-    }
     
     private func downloadFromUrlForImage(path: String, key: ImageKey, onCompletion: @escaping (_ imageData: Data?) -> Void) {
         guard let url = URL(string: path) else {

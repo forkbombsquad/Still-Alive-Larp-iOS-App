@@ -21,7 +21,7 @@ struct AccountTabView: View {
                     let imgWidth = gr.size.width * 0.75
                     ScrollView {
                         PullToRefresh(coordinateSpaceName: "pullToRefresh_AccountTab", spinnerOffsetY: -100, pullDownDistance: 150) {
-                            DM.load(loadType: .forceDownload)
+                            DM.load()
                         }
                         VStack {
                             Text(DM.getTitlePotentiallyOffline("My Account"))

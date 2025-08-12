@@ -26,7 +26,8 @@ struct SelectCharacterForGearManagementView: View {
                             .padding(.horizontal, 32)
                         ForEach(characters.alphabetized) { character in
                             NavArrowView(title: character.fullName) { _ in
-                                GearView(character: character, allowEdit: true)
+                                // TODO
+//                                GearView(character: character, allowEdit: true)
                             }.navigationViewStyle(.stack)
                         }
                     }
@@ -40,5 +41,5 @@ struct SelectCharacterForGearManagementView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return SelectCharacterForGearManagementView(_dm: dm, characters: md.characterListFullModel.characters)
+    return SelectCharacterForGearManagementView(characters: md.characterListFullModel.characters)
 }

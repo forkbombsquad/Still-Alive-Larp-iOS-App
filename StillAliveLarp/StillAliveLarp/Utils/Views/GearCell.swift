@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO
 struct GearCell<Content: View>: View {
     
     var destinationView: Content?
@@ -79,9 +80,9 @@ private struct GearCellContent: View {
     }
 }
 
-#Preview {
-    let md = getMockData()
-    return GearCell(gearJsonModel: md.gear(characterId: 2).jsonModels!.first!, loading: false) {
-        LoadingButtonView(.constant(false), width: 55, height: 55, buttonText: "OPE", progressViewOffset: 8) {}
-    }
-}
+//#Preview {
+//    let md = getMockData()
+//    return GearCell(gearJsonModel: md.gear(characterId: 2).jsonModels!.first!, loading: false) {
+//        LoadingButtonView(.constant(false), width: 55, height: 55, buttonText: "OPE", progressViewOffset: 8) {}
+//    }
+//}

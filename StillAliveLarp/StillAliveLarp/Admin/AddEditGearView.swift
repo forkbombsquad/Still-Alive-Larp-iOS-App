@@ -183,5 +183,5 @@ struct AddEditGearView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AddEditGearView(_dm: dm, gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
+    return AddEditGearView(gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
 }

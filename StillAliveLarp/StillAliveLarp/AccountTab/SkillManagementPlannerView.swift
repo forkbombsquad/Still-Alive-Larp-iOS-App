@@ -7,22 +7,17 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct SkillManagementPlannerView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let character: CharacterModel
-    @State var fullCharacterModel: OldFullCharacterModel? = nil
+    @State var fullCharacterModel: FullCharacterModel? = nil
     @State var loading: Bool = false
     @State var searchText: String = ""
     
     @State var firstLoad = true
-    
-    // Online
-    init(_dm: OldDataManager = OldDataManager.shared, character: CharacterModel) {
-        self._dm = _dm
-        self.character = character
-    }
 
     var body: some View {
         VStack {
@@ -40,17 +35,17 @@ struct SkillManagementPlannerView: View {
                         .textInputAutocapitalization(.never)
                     Spacer()
                     NavigationLink {
-                        AddPlannedSkillView(character: character).onDisappear {
-                            runOnMainThread {
-                                self.loading = true
-                                CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
-                                    runOnMainThread {
-                                        self.fullCharacterModel = fcm
-                                        self.loading = false
-                                    }
-                                }
-                            }
-                        }
+//                        AddPlannedSkillView(character: character).onDisappear {
+//                            runOnMainThread {
+//                                self.loading = true
+//                                CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
+//                                    runOnMainThread {
+//                                        self.fullCharacterModel = fcm
+//                                        self.loading = false
+//                                    }
+//                                }
+//                            }
+//                        }
                     } label: {
                         VStack {
                             Image(systemName: "plus.app.fill").resizable().frame(width: 22, height: 22)
@@ -62,26 +57,26 @@ struct SkillManagementPlannerView: View {
                         )
                     }
                 }.padding([.leading, .trailing, .top], 16)
-                List() {
-                    ForEach(shouldDoFiltering() ? getFilteredSkills(character.skills) : getSortedSkills(character.skills)) { skill in
-                        SkillCellView(skill: skill)
-                    }
-                }
-                .scrollContentBackground(.hidden)
+//                List() {
+//                    ForEach(shouldDoFiltering() ? getFilteredSkills(character.skills) : getSortedSkills(character.skills)) { skill in
+//                        SkillCellView(skill: skill)
+//                    }
+//                }
+//                .scrollContentBackground(.hidden)
             }
         }
         .background(Color.lightGray)
         .onAppear {
-            if firstLoad {
-                self.firstLoad = false
-                self.loading = true
-                CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
-                    runOnMainThread {
-                        self.fullCharacterModel = fcm
-                        self.loading = false
-                    }
-                }
-            }
+//            if firstLoad {
+//                self.firstLoad = false
+//                self.loading = true
+//                CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
+//                    runOnMainThread {
+//                        self.fullCharacterModel = fcm
+//                        self.loading = false
+//                    }
+//                }
+//            }
         }
     }
 
@@ -89,8 +84,8 @@ struct SkillManagementPlannerView: View {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
-        var filteredSkills = [OldFullSkillModel]()
+    func getFilteredSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
+        var filteredSkills = [FullCharacterModifiedSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -100,7 +95,7 @@ struct SkillManagementPlannerView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
+    func getSortedSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
         return skills.sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }
@@ -108,8 +103,8 @@ struct SkillManagementPlannerView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return SkillManagementView(_dm: dm, character: md.fullCharacters().first!, allowEdit: true)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return SkillManagementView(character: md.fullCharacters().first!, allowEdit: true)
+//}

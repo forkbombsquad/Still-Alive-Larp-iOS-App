@@ -27,7 +27,6 @@ struct PlayerService {
 
     static func signInPlayer(onSuccess: @escaping (_ player: PlayerModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.playerSignIn, responseObject: PlayerModel.self, success: { success in
-            PlayerManager.shared.setPlayer(success.jsonObject)
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

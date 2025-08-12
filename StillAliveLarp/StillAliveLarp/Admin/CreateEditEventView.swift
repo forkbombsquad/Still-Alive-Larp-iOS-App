@@ -168,7 +168,5 @@ struct CreateEditEventView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    var cev = CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
-    cev._dm = dm
-    return cev
+    return CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
 }

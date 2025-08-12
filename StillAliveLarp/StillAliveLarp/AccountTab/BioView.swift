@@ -7,29 +7,15 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct BioView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-    
-    static func Offline(character: OldFullCharacterModel) -> BioView {
-        return BioView(character: character, allowEdit: false, offline: true)
-    }
-
-    init(allowEdit: Bool) {
-        self.allowEdit = allowEdit
-        self.offline = false
-        self._character = globalState(OldDM.charForSelectedPlayer)
-    }
-    
-    private init(character: OldFullCharacterModel, allowEdit: Bool, offline: Bool) {
-        self.allowEdit = allowEdit
-        self.offline = offline
-        self._character = globalState(character)
-    }
 
     let allowEdit: Bool
     let offline: Bool
-    @State var character: OldFullCharacterModel? = nil
+    @State var character: FullCharacterModel? = nil
 
     var body: some View {
         VStack(alignment: .center) {
@@ -44,7 +30,7 @@ struct BioView: View {
                     Text(character?.bio ?? "")
                     if allowEdit && !offline {
                         NavArrowViewRed(title: "Edit Bio") {
-                            EditBioView()
+//                            EditBioView()
                         }
                     }
                 }
@@ -57,11 +43,8 @@ struct BioView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    dm.charForSelectedPlayer = md.fullCharacters()[1]
-    var bv = BioView(allowEdit: true)
-    bv._dm = dm
-    return bv
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return BioView(allowEdit: true)
+//}

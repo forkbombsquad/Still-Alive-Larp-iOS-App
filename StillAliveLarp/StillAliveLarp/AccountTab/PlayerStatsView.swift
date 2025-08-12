@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO
+
 struct PlayerStatsView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -40,9 +42,9 @@ struct PlayerStatsView: View {
                     Divider()
                     if let player = player {
                         KeyValueView(key: "Name", value: player.fullName)
-                        if OldDM.player?.id == player.id {
-                            KeyValueView(key: "Email", value: player.username)
-                        }
+//                        if OldDM.player?.id == player.id {
+//                            KeyValueView(key: "Email", value: player.username)
+//                        }
                         KeyValueView(key: "Start Date", value: player.startDate.yyyyMMddToMonthDayYear())
                         KeyValueView(key: "Experience", value: player.experience)
                         KeyValueView(key: "Free Tier-1 Skills", value: player.freeTier1Skills)
@@ -69,7 +71,5 @@ struct PlayerStatsView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    var psv = PlayerStatsView(player: md.player(2))
-    psv._dm = dm
-    return psv
+    return PlayerStatsView(player: md.player(2))
 }

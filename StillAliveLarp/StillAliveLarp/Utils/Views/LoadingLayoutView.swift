@@ -11,7 +11,9 @@ struct LoadingLayoutView<Content: View>: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    let loadType: DataManager.DataManagerLoadType = .downloadIfNecessary
+    @State private var lastAppearTime: Date? = nil
+    
+    let loadType: DataManager.DataManagerLoadType
     let onStepFinished: () -> Void
     let onFinishedLoad: () -> Void
     let content: () -> Content
@@ -31,6 +33,15 @@ struct LoadingLayoutView<Content: View>: View {
                 content()
             }
         }.onAppear {
+            // Ran into a race condition where changing published variables caused the onAppear to be called too quickly so it would loop endlessly. Restricting it to once per second fixes the issue
+            let now = Date()
+            if let lastTime = lastAppearTime,
+               now.timeIntervalSince(lastTime) < 1 {
+                return
+            }
+
+            lastAppearTime = now
+
             DM.load(loadType: loadType) {
                 onStepFinished()
             } finished: {

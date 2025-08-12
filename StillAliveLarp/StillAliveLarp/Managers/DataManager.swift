@@ -63,6 +63,55 @@ class DataManager: ObservableObject {
         func getLocalDataKey() -> String {
             return rawValue
         }
+        
+        func getName() -> String {
+            switch self {
+            case .updateTracker:
+                return "Update Tracker"
+            case .announcements:
+                return "Announcements"
+            case .awards:
+                return "Awards"
+            case .characters:
+                return "Characters"
+            case .gear:
+                return "Gear"
+            case .characterSkills:
+                return "Character Skills"
+            case .contactRequests:
+                return "Contact Requests"
+            case .events:
+                return "Events"
+            case .eventAttendees:
+                return "Event Attendees"
+            case .preregs:
+                return "Preregistrations"
+            case .featureFlags:
+                return "Feature Flags"
+            case .intrigues:
+                return "Intrigue"
+            case .players:
+                return "Players"
+            case .profileImages:
+                return "Profile Images"
+            case .researchProjects:
+                return "Research Projects"
+            case .skills:
+                return "Skills"
+            case .skillCategories:
+                return "Skill Categories"
+            case .skillPrereqs:
+                return "Skill Prerequisites"
+            case .xpReductions:
+                return "Xp Reductions"
+            case .rulebook:
+                return "Rulebook"
+            case .treatingWounds:
+                return "Treating Wounds Flowchart"
+            case .campStatus:
+                return "Camp Status"
+            }
+        }
     }
     
     enum DataManagerLoadType {
@@ -96,15 +145,15 @@ class DataManager: ObservableObject {
         private var callbacks: [() -> Void] = []
         
         // Returns previous loading state
-        func add(step: @escaping () -> Void, finished: @escaping () -> Void) -> Bool {
-            let prevLoading = loading
+        func add(step: @escaping () -> Void, finished: @escaping () -> Void) {
             stepCallbacks.append(step)
             callbacks.append(finished)
-            return prevLoading
         }
         
-        func setLoading(_ value: Bool) {
+        func setLoading(_ value: Bool) -> Bool {
+            let previous = loading
             loading = value
+            return previous
         }
         
         func getLoading() -> Bool {
@@ -189,12 +238,15 @@ class DataManager: ObservableObject {
     // MARK: - Settings Utils
     //
     
-    func setLoading(_ loading: Bool, loadingText: String? = nil) async {
-        await loadingActor.setLoading(loading)
-        self.isLoadingMirror = loading
-        if let loadingText = loadingText {
-            self.loadingText = loadingText
+    func setLoading(_ loading: Bool, loadingText: String? = nil) async -> Bool {
+        await MainActor.run {
+            self.isLoadingMirror = loading
+            if let loadingText = loadingText {
+                self.loadingText = loadingText
+            }
         }
+        let previous = await loadingActor.setLoading(loading)
+        return previous
     }
     
     func setOfflineMode(_ offline: Bool) {
@@ -303,8 +355,8 @@ class DataManager: ObservableObject {
             modLoadType = .offline
         }
         Task {
-            let previousLoading = await loadingActor.add(step: stepFinished, finished: finished)
-            await setLoading(true)
+            await loadingActor.add(step: stepFinished, finished: finished)
+            let previousLoading = await setLoading(true)
             if !previousLoading {
                 switch modLoadType {
                 case .offline:
@@ -583,7 +635,6 @@ class DataManager: ObservableObject {
                         }
                         do {
                             let html = try String(contentsOf: url)
-                            OldLocalDataHandler.shared.storeRulebook(html)
                             let rb = RulebookUtils.parseDocAsRulebook(document: try SwiftSoup.parse(html), version: updateTracker.rulebookVersion)
                             LocalDataManager.shared.storeRulebook(rb)
                             Task {
@@ -633,7 +684,7 @@ class DataManager: ObservableObject {
                 // Two per line
                 text += (index % 2 == 0) ? "\n" : ", "
             }
-            text += update.rawValue.replacingOccurrences(of: "_", with: " ").capitalizingFirstLetterOfEachWord()
+            text += update.getName()
         }
         text += "..."
         return text
@@ -656,7 +707,7 @@ class DataManager: ObservableObject {
     
     private func populateLocalData(_ updatesDownloaded: Bool) {
         if debugMode {
-            Task {
+            Task { @MainActor in
                 if await loadingActor.getFirstLoad() || updatesDownloaded {
                     let md = getMockData()
                     
@@ -682,15 +733,15 @@ class DataManager: ObservableObject {
                     self.currentPlayerId = md.player().id
                 }
                 updateLoadingText("")
-                await setLoading(false)
                 
                 await loadingActor.callStepCallbacks()
                 await loadingActor.callCallbacks()
                 await loadingActor.clearCallbacks()
                 await loadingActor.clearStepCallbacks()
+                let _ = await setLoading(false)
             }
         } else {
-            Task {
+            Task { @MainActor in
                 if await loadingActor.getFirstLoad() || updatesDownloaded {
                     updateLoadingText("Populating Data In Memory...")
                     await loadingActor.callStepCallbacks()
@@ -714,17 +765,19 @@ class DataManager: ObservableObject {
                     self.currentPlayerId = LocalDataManager.shared.getPlayerId()
                 }
                 updateLoadingText("")
-                await setLoading(false)
                 await loadingActor.callStepCallbacks()
                 await loadingActor.callCallbacks()
                 await loadingActor.clearCallbacks()
                 await loadingActor.clearStepCallbacks()
+                let _ = await setLoading(false)
             }
         }
     }
     
     private func updateLoadingText(_ new: String) {
-        loadingText = new
+        runOnMainThread {
+            self.loadingText = new
+        }
     }
     
     static func forceReset() {

@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO update view if needed
+
 struct ManageNPCView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var alertManager: AlertManager
@@ -20,7 +22,7 @@ struct ManageNPCView: View {
     @State var infection = ""
     @State var isAlive = true
     
-    @State var fullChar: OldFullCharacterModel? = nil
+    @State var fullChar: FullCharacterModel? = nil
     
     var body: some View {
         VStack {
@@ -79,7 +81,8 @@ struct ManageNPCView: View {
                         }
                         NavArrowView(title: "Manage Skills", loading: $loading) { _ in
                             if let char = self.fullChar {
-                                SkillManagementView(character: char, allowEdit: true)
+                                // TODO
+//                                SkillManagementView(character: char, allowEdit: true)
                             }
                         }
                     }
@@ -88,18 +91,18 @@ struct ManageNPCView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            self.loading = true
-            CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fcm in
-                self.fullChar = fcm
-                self.loading = false
-            }
-        }
+//        .onAppear {
+//            self.loading = true
+//            CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fcm in
+//                self.fullChar = fcm
+//                self.loading = false
+//            }
+//        }
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ManageNPCView(_dm: dm, npcs: .constant(md.characterListFullModel.characters), npc: md.character())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ManageNPCView(npcs: .constant(md.characterListFullModel.characters), npc: md.character())
+//}

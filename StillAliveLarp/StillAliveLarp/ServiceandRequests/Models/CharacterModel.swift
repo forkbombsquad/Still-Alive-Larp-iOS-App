@@ -14,10 +14,6 @@ enum CharacterType: Int, CaseIterable {
     case hidden = 4
 }
 
-struct FullCharacterListModel: CustomCodeable {
-    let characters: [OldFullCharacterModel]
-}
-
 struct FullCharacterModel: CustomCodeable, Identifiable {
     let id: Int
     let fullName: String
@@ -102,7 +98,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     
     func isNpcAndNotAttendingEvent(eventId: Int) -> Bool {
         guard characterType() == .npc else { return false }
-        return DM.events.first(where: { $0.id == eventId })?.attendees.first(where: { $0.npcId == self.id }) == nil
+        return DataManager.shared.events.first(where: { $0.id == eventId })?.attendees.first(where: { $0.npcId == self.id }) == nil
     }
     
     func baseModel() -> CharacterModel {
@@ -239,7 +235,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     
     func allPurchaseableSkills(searchText: String = "", filter: SkillListView.FilterType = .none) -> [FullCharacterModifiedSkillModel] {
         let charSkills = allNonPurchasedSkills()
-        let player = DM.getPlayerForCharacter(self)
+        let player = DataManager.shared.getPlayerForCharacter(self)
         
         // Remove all skills you don't have prereqs for
         var newSkillList = charSkills.filter { skillToKeep in
@@ -299,7 +295,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
                 if keep {
                     if skillToKeep.canUseFreeSkill() && player.freeTier1Skills > 0 {
                         keep = true
-                    } else if player.experience >= skillToKeep.modXPCost() {
+                    } else if player.experience >= skillToKeep.modXpCost() {
                         keep = true
                     } else {
                         keep = false
@@ -401,7 +397,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     private func getLastAttendedEvent() -> FullEventModel? {
         guard eventAttendees.isNotEmpty else { return nil }
         // Step 1: Build a map from event IDs to Event objects
-        let eventMap = Dictionary(uniqueKeysWithValues: DM.events.map { ($0.id, $0) })
+        let eventMap = Dictionary(uniqueKeysWithValues: DataManager.shared.events.map { ($0.id, $0) })
         let eventsWithAttendees = eventAttendees.compactMap { eventMap[$0.eventId] }
 
         // Step 3: Find the one with the latest date
@@ -472,167 +468,6 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return allPurchasedSkills().sumOf({ $0.spentPp() })
     }
  
-}
-
-struct OldFullCharacterModel: CustomCodeable {
-    // TODO get rid of this
-    let id: Int
-    let fullName: String
-    let startDate: String
-    let isAlive: String
-    let deathDate: String
-    let infection: String
-    var bio: String
-    var approvedBio: String
-    let bullets: String
-    let megas: String
-    let rivals: String
-    let rockets: String
-    let bulletCasings: String
-    let clothSupplies: String
-    let woodSupplies: String
-    let metalSupplies: String
-    let techSupplies: String
-    let medicalSupplies: String
-    let armor: String
-    let unshakableResolveUses: String
-    let mysteriousStrangerUses: String
-    let playerId: Int
-    let characterTypeId: Int
-    var skills: [OldFullSkillModel]
-
-    init(id: Int, fullName: String, startDate: String, isAlive: String, deathDate: String, infection: String, bio: String, approvedBio: String, bullets: String, megas: String, rivals: String, rockets: String, bulletCasings: String, clothSupplies: String, woodSupplies: String, metalSupplies: String, techSupplies: String, medicalSupplies: String, armor: String, unshakableResolveUses: String, mysteriousStrangerUses: String, playerId: Int, characterTypeId: Int, skills: [OldFullSkillModel]) {
-        self.id = id
-        self.fullName = fullName
-        self.startDate = startDate
-        self.isAlive = isAlive
-        self.deathDate = deathDate
-        self.infection = infection
-        self.bio = bio
-        self.approvedBio = approvedBio
-        self.bullets = bullets
-        self.megas = megas
-        self.rivals = rivals
-        self.rockets = rockets
-        self.bulletCasings = bulletCasings
-        self.clothSupplies = clothSupplies
-        self.woodSupplies = woodSupplies
-        self.metalSupplies = metalSupplies
-        self.techSupplies = techSupplies
-        self.medicalSupplies = medicalSupplies
-        self.armor = armor
-        self.unshakableResolveUses = unshakableResolveUses
-        self.mysteriousStrangerUses = mysteriousStrangerUses
-        self.playerId = playerId
-        self.characterTypeId = characterTypeId
-        self.skills = skills
-    }
-
-    init(_ charModel: CharacterModel) {
-        self.id = charModel.id
-        self.fullName = charModel.fullName
-        self.startDate = charModel.startDate
-        self.isAlive = charModel.isAlive
-        self.deathDate = charModel.deathDate
-        self.infection = charModel.infection
-        self.bio = charModel.bio
-        self.approvedBio = charModel.approvedBio
-        self.bullets = charModel.bullets
-        self.megas = charModel.megas
-        self.rivals = charModel.rivals
-        self.rockets = charModel.rockets
-        self.bulletCasings = charModel.bulletCasings
-        self.clothSupplies = charModel.clothSupplies
-        self.woodSupplies = charModel.woodSupplies
-        self.metalSupplies = charModel.metalSupplies
-        self.techSupplies = charModel.techSupplies
-        self.medicalSupplies = charModel.medicalSupplies
-        self.playerId = charModel.playerId
-        self.armor = charModel.armor
-        self.unshakableResolveUses = charModel.unshakableResolveUses
-        self.mysteriousStrangerUses = charModel.mysteriousStrangerUses
-        self.characterTypeId = charModel.characterTypeId
-        self.skills = []
-    }
-
-    func getIntrigueSkills() -> [Int] {
-        var intrigueSkills = [Int]()
-        let filteredSkills = skills.filter { sk in
-            return sk.id.equalsAnyOf(Constants.SpecificSkillIds.investigatorTypeSkills)
-        }
-        for fs in filteredSkills {
-            intrigueSkills.append(fs.id)
-        }
-        return intrigueSkills
-    }
-
-    func getChooseOneSkills() -> [OldFullSkillModel] {
-        return skills.filter { skill in
-            return skill.id.equalsAnyOf(Constants.SpecificSkillIds.allSpecalistSkills)
-        }
-    }
-
-    func costOfCombatSkills() -> Int {
-        for skill in skills {
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allCombatReducingSkills) {
-                return -1
-            }
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allCombatIncreasingSkills) {
-                return 1
-            }
-        }
-        return 0
-    }
-
-    func costOfProfessionSkills() -> Int {
-        for skill in skills {
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allProfessionReducingSkills) {
-                return -1
-            }
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allProfessionIncreasingSkills) {
-                return 1
-            }
-        }
-        return 0
-    }
-
-    func costOfTalentSkills() -> Int {
-        for skill in skills {
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allTalentReducingSkills) {
-                return -1
-            }
-            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.allTalentIncreasingSkills) {
-                return 1
-            }
-        }
-        return 0
-    }
-
-    func costOf50InfectSkills() -> Int {
-        for skill in skills {
-            guard skill.id == Constants.SpecificSkillIds.adaptable else { continue }
-            return 25
-        }
-        return 50
-    }
-
-    func costOf75InfectSkills() -> Int {
-        for skill in skills {
-            guard skill.id == Constants.SpecificSkillIds.extremelyAdaptable else { continue }
-            return 50
-        }
-        return 75
-    }
-
-    func getRelevantBarcodeSkills() -> [SkillBarcodeModel] {
-        var barSkills = [SkillBarcodeModel]()
-        for skill in skills {
-            guard skill.id.equalsAnyOf(Constants.SpecificSkillIds.barcodeRelevantSkills) else { continue }
-            barSkills.append(skill.barcodeModel)
-        }
-        return barSkills
-    }
-
 }
 
 struct CharacterModel: CustomCodeable, Identifiable {

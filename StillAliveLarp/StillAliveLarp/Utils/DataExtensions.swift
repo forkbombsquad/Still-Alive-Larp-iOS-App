@@ -9,11 +9,11 @@ import Foundation
 
 extension Data {
     
-    func decompress() -> Data? {
-        guard let decompressedData = try? self.gunzipped() else {
+    func decompress() -> String? {
+        guard let base64String = String(data: self, encoding: .utf8), let gzippedData = Data(base64Encoded: base64String), let uncompressedData = try? gzippedData.gunzipped() else {
             return nil
         }
-        return decompressedData
+        return String(data: uncompressedData, encoding: .utf8)
     }
     
     func toJsonObject<T: Decodable>() -> T? {

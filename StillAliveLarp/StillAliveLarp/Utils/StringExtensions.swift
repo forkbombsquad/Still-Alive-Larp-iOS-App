@@ -96,14 +96,6 @@ extension String {
         return base64String.data(using: .utf8)
     }
     
-    func decompress() -> Data? {
-        guard let gzippedData = Data(base64Encoded: self),
-              let decompressedData = try? gzippedData.gunzipped() else {
-            return nil
-        }
-        return decompressedData
-    }
-    
     func repeated(_ times: Int) -> String {
         var str = ""
         for _ in 0..<times {

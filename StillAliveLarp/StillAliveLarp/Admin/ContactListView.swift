@@ -38,5 +38,5 @@ struct ContactListView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return ContactListView(_dm: dm, contactRequests: .constant(md.contacts.contactRequests))
+    return ContactListView(contactRequests: .constant(md.contacts.contactRequests))
 }

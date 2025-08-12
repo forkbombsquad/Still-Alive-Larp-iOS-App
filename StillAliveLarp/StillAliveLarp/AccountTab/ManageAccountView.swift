@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct ManageAccountView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -41,111 +43,111 @@ struct ManageAccountView: View {
     }
 
     private func deleteCharSkills() {
-        if let charId = OldDM.character?.id {
-            self.loadingText = "Deleting Skills"
-            CharacterSkillService.deleteSkills(characterId: charId) { _ in
-                self.deleteCharGear()
-            } failureCase: { error in
-                self.deleteCharGear()
-            }
-        } else {
-            deleteEventAttendees()
-        }
+//        if let charId = OldDM.character?.id {
+//            self.loadingText = "Deleting Skills"
+//            CharacterSkillService.deleteSkills(characterId: charId) { _ in
+//                self.deleteCharGear()
+//            } failureCase: { error in
+//                self.deleteCharGear()
+//            }
+//        } else {
+//            deleteEventAttendees()
+//        }
     }
 
     private func deleteCharGear() {
-        if let charId = OldDM.character?.id {
-            self.loadingText = "Deleting Gear"
-            GearService.deleteGear(characterId: charId) { _ in
-                self.deleteSpecialClassXpReductions()
-            } failureCase: { error in
-                self.deleteSpecialClassXpReductions()
-            }
-        } else {
-            deleteEventAttendees()
-        }
+//        if let charId = OldDM.character?.id {
+//            self.loadingText = "Deleting Gear"
+//            GearService.deleteGear(characterId: charId) { _ in
+//                self.deleteSpecialClassXpReductions()
+//            } failureCase: { error in
+//                self.deleteSpecialClassXpReductions()
+//            }
+//        } else {
+//            deleteEventAttendees()
+//        }
     }
 
     private func deleteSpecialClassXpReductions() {
-        self.loadingText = "Deleting Xp Reductions"
-        if let charId = OldDM.character?.id {
-            SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
-                self.deleteEventAttendees()
-            } failureCase: { error in
-                self.deleteEventAttendees()
-            }
-        } else {
-            deleteEventAttendees()
-        }
+//        self.loadingText = "Deleting Xp Reductions"
+//        if let charId = OldDM.character?.id {
+//            SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
+//                self.deleteEventAttendees()
+//            } failureCase: { error in
+//                self.deleteEventAttendees()
+//            }
+//        } else {
+//            deleteEventAttendees()
+//        }
     }
 
     private func deleteEventAttendees() {
-        self.loadingText = "Deleting Events Attended"
-        EventAttendeeService.deleteAttendees { _ in
-            self.deleteAwards()
-        } failureCase: { error in
-            self.deleteAwards()
-        }
+//        self.loadingText = "Deleting Events Attended"
+//        EventAttendeeService.deleteAttendees { _ in
+//            self.deleteAwards()
+//        } failureCase: { error in
+//            self.deleteAwards()
+//        }
     }
 
     private func deleteAwards() {
-        self.loadingText = "Deleting Awards"
-        AwardService.deleteAwards { _ in
-            self.deletePreregs()
-        } failureCase: { error in
-            self.deletePreregs()
-        }
+//        self.loadingText = "Deleting Awards"
+//        AwardService.deleteAwards { _ in
+//            self.deletePreregs()
+//        } failureCase: { error in
+//            self.deletePreregs()
+//        }
     }
 
     private func deletePreregs() {
-        self.loadingText = "Deleting Preregistrations"
-        EventPreregService.deletePreregs { _ in
-            self.deleteCharacters()
-        } failureCase: { error in
-            self.deleteCharacters()
-        }
+//        self.loadingText = "Deleting Preregistrations"
+//        EventPreregService.deletePreregs { _ in
+//            self.deleteCharacters()
+//        } failureCase: { error in
+//            self.deleteCharacters()
+//        }
     }
 
     private func deleteCharacters() {
-        self.loadingText = "Deleting Characters"
-        CharacterService.deleteCharacters { _ in
-            self.deleteProfileImages()
-        } failureCase: { error in
-            self.deleteProfileImages()
-        }
+//        self.loadingText = "Deleting Characters"
+//        CharacterService.deleteCharacters { _ in
+//            self.deleteProfileImages()
+//        } failureCase: { error in
+//            self.deleteProfileImages()
+//        }
     }
 
     private func deleteProfileImages() {
-        self.loadingText = "Deleting Profile Images"
-        ProfileImageService.deleteProfileImage(OldDM.player?.id ?? -1) { profileImage in
-            self.deletePlayer()
-        } failureCase: { error in
-            self.deletePlayer()
-        }
+//        self.loadingText = "Deleting Profile Images"
+//        ProfileImageService.deleteProfileImage(OldDM.player?.id ?? -1) { profileImage in
+//            self.deletePlayer()
+//        } failureCase: { error in
+//            self.deletePlayer()
+//        }
 
     }
 
     private func deletePlayer() {
-        self.loadingText = "Deleting Player"
-        PlayerService.deletePlayer { _ in
-            self.successDeleting()
-        } failureCase: { error in
-            self.loading = false
-        }
+//        self.loadingText = "Deleting Player"
+//        PlayerService.deletePlayer { _ in
+//            self.successDeleting()
+//        } failureCase: { error in
+//            self.loading = false
+//        }
     }
 
     private func successDeleting() {
-        self.loadingText = ""
-        AlertManager.shared.showSuccessAlert("Your account and all associated data has been deleted!") {
-            forceResetAllPlayerData()
-            runOnMainThread {
-                OldDM.popToRoot()
-            }
-        }
+//        self.loadingText = ""
+//        AlertManager.shared.showSuccessAlert("Your account and all associated data has been deleted!") {
+//            forceResetAllPlayerData()
+//            runOnMainThread {
+//                OldDM.popToRoot()
+//            }
+//        }
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return ManageAccountView(_dm: dm, loading: false)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return ManageAccountView(loading: false)
+//}

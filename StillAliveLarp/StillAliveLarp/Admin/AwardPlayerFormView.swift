@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 
+// TODO update view if needed
+
 struct AwardPlayerFormView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -58,34 +60,34 @@ struct AwardPlayerFormView: View {
                         .textFieldStyle(.roundedBorder)
                         .padding(.trailing, 0)
                     LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Submit") {
-                        var type: AdminService.PlayerAwardType? = nil
-                        switch self.awardType {
-                            case AwardPlayerFormView.xp:
-                                type = .xp
-                            case AwardPlayerFormView.pp:
-                                type = .prestigePoints
-                            case AwardPlayerFormView.fs:
-                                type = .freeTier1Skills
-                            default:
-                                break
-                        }
-                        if let type = type {
-                            let award = AwardCreateModel.CreatePlayerAward(player, awardType: type, reason: reason, amount: amount)
-
-                            self.loading = true
-                            AdminService.awardPlayer(award) { updatedPlayer in
-                                self.loading = false
-                                if PlayerManager.shared.getPlayer()?.id == updatedPlayer.id {
-                                    PlayerManager.shared.updatePlayer(updatedPlayer)
-                                }
-                                runOnMainThread {
-                                    self.mode.wrappedValue.dismiss()
-                                }
-                            } failureCase: { _ in
-                                self.loading = false
-                            }
-
-                        }
+//                        var type: AdminService.PlayerAwardType? = nil
+//                        switch self.awardType {
+//                            case AwardPlayerFormView.xp:
+//                                type = .xp
+//                            case AwardPlayerFormView.pp:
+//                                type = .prestigePoints
+//                            case AwardPlayerFormView.fs:
+//                                type = .freeTier1Skills
+//                            default:
+//                                break
+//                        }
+//                        if let type = type {
+//                            let award = AwardCreateModel.CreatePlayerAward(player, awardType: type, reason: reason, amount: amount)
+//
+//                            self.loading = true
+//                            AdminService.awardPlayer(award) { updatedPlayer in
+//                                self.loading = false
+//                                if PlayerManager.shared.getPlayer()?.id == updatedPlayer.id {
+//                                    PlayerManager.shared.updatePlayer(updatedPlayer)
+//                                }
+//                                runOnMainThread {
+//                                    self.mode.wrappedValue.dismiss()
+//                                }
+//                            } failureCase: { _ in
+//                                self.loading = false
+//                            }
+//
+//                        }
                     }
                     .padding(.trailing, 0)
                 }
@@ -101,5 +103,5 @@ struct AwardPlayerFormView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AwardPlayerFormView(_dm: dm, player: md.player())
+    return AwardPlayerFormView(player: md.player())
 }

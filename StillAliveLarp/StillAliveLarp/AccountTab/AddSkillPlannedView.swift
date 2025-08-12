@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct AddPlannedSkillView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -15,9 +17,9 @@ struct AddPlannedSkillView: View {
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    @State var character: OldFullCharacterModel
+    @State var character: FullCharacterModel
     @State var charSkills: [CharacterSkillModel] = []
-    @State var skills: [CharacterModifiedSkillModel] = []
+    @State var skills: [FullCharacterModifiedSkillModel] = []
     @State var loading: Bool = false
     
     @State var searchText: String = ""
@@ -71,128 +73,129 @@ struct AddPlannedSkillView: View {
                     }.font(.system(size: 16, weight: .bold))
                 }.padding([.leading, .trailing, .top], 16)
                 List() {
-                    ForEach(shouldDoFiltering() ? getFilteredSkills() : getSortedSkills(skills)) { skill in
-                        AddSkillCellView(skill: skill, purchasingSkill: $purchasingSkill, purchaseText: "Plan Skill") { skill in
-                            // Purhase Skill
-                            self.purchasingSkill = true
-                            var xpSpent = skill.modXpCost.intValueDefaultZero
-                            var fsSpent = 0
-                            var messageString = "\(skill.name) planned using "
-
-                            if skill.canUseFreeSkill {
-                                AlertManager.shared.showAlert("Use Free Tier-1 Skill?", button1: Alert.Button.default(Text("Use xp"), action: {
-                                    runOnMainThread {
-                                        messageString += "\(xpSpent) xp"
-                                        if skill.usesPrestige {
-                                            messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
-                                        }
-                                        let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
-                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
-                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
-                                                runOnMainThread {
-                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
-                                                    })
-                                                    self.character = char!
-                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
-                                                        runOnMainThread {
-                                                            self.charSkills = charSkills.charSkills
-                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                            self.loading = false
-                                                            self.purchasingSkill = false
-                                                        }
-                                                    } failureCase: { error in
-                                                        runOnMainThread {
-                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                            self.loading = false
-                                                            self.purchasingSkill = false
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                        } failureCase: { error in
-                                            runOnMainThread {
-                                                self.purchasingSkill = false
-                                            }
-                                        }
-                                    }
-                                }), button2: Alert.Button.default(Text("Use FT1S"), action: {
-                                    runOnMainThread {
-                                        fsSpent = 1
-                                        xpSpent = 0
-                                        messageString += "1 Free Tier-1 Skill point"
-                                        if skill.usesPrestige {
-                                            messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
-                                        }
-                                        let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
-                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
-                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
-                                                runOnMainThread {
-                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
-                                                    })
-                                                    self.character = char!
-                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
-                                                        runOnMainThread {
-                                                            self.charSkills = charSkills.charSkills
-                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                            self.loading = false
-                                                            self.purchasingSkill = false
-                                                        }
-                                                    } failureCase: { error in
-                                                        runOnMainThread {
-                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                            self.loading = false
-                                                            self.purchasingSkill = false
-                                                        }
-                                                    }
-                                                }
-                                            }
-
-                                        } failureCase: { error in
-                                            runOnMainThread {
-                                                self.purchasingSkill = false
-                                            }
-                                        }
-                                    }
-                                }))
-                                
-                            } else {
-                                messageString += "\(xpSpent) xp"
-                                if skill.usesPrestige {
-                                    messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
-                                }
-                                let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
-                                CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
-                                    CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
-                                        runOnMainThread {
-                                            AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
-                                            })
-                                            self.character = char!
-                                            CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
-                                                runOnMainThread {
-                                                    self.charSkills = charSkills.charSkills
-                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                    self.loading = false
-                                                    self.purchasingSkill = false
-                                                }
-                                            } failureCase: { error in
-                                                runOnMainThread {
-                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
-                                                    self.loading = false
-                                                    self.purchasingSkill = false
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                } failureCase: { error in
-                                    runOnMainThread {
-                                        self.purchasingSkill = false
-                                    }
-                                }
-                            }
-                        }
-                    }
+//                    ForEach(shouldDoFiltering() ? getFilteredSkills() : getSortedSkills(skills)) { skill in
+//                        // TODO
+////                        AddSkillCellView(skill: skill, purchasingSkill: $purchasingSkill, purchaseText: "") { skill in
+//////                            // Purhase Skill
+//////                            self.purchasingSkill = true
+//////                            var xpSpent = skill.modXpCost()
+//////                            var fsSpent = 0
+//////                            var messageString = "\(skill.name) planned using "
+//////
+//////                            if skill.canUseFreeSkill {
+//////                                AlertManager.shared.showAlert("Use Free Tier-1 Skill?", button1: Alert.Button.default(Text("Use xp"), action: {
+//////                                    runOnMainThread {
+//////                                        messageString += "\(xpSpent) xp"
+//////                                        if skill.usesPrestige {
+//////                                            messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
+//////                                        }
+//////                                        let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
+//////                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
+//////                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
+//////                                                runOnMainThread {
+//////                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                                    })
+//////                                                    self.character = char!
+//////                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
+//////                                                        runOnMainThread {
+//////                                                            self.charSkills = charSkills.charSkills
+//////                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                            self.loading = false
+//////                                                            self.purchasingSkill = false
+//////                                                        }
+//////                                                    } failureCase: { error in
+//////                                                        runOnMainThread {
+//////                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                            self.loading = false
+//////                                                            self.purchasingSkill = false
+//////                                                        }
+//////                                                    }
+//////                                                }
+//////                                            }
+//////
+//////                                        } failureCase: { error in
+//////                                            runOnMainThread {
+//////                                                self.purchasingSkill = false
+//////                                            }
+//////                                        }
+//////                                    }
+//////                                }), button2: Alert.Button.default(Text("Use FT1S"), action: {
+//////                                    runOnMainThread {
+//////                                        fsSpent = 1
+//////                                        xpSpent = 0
+//////                                        messageString += "1 Free Tier-1 Skill point"
+//////                                        if skill.usesPrestige {
+//////                                            messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
+//////                                        }
+//////                                        let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
+//////                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
+//////                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
+//////                                                runOnMainThread {
+//////                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                                    })
+//////                                                    self.character = char!
+//////                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
+//////                                                        runOnMainThread {
+//////                                                            self.charSkills = charSkills.charSkills
+//////                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                            self.loading = false
+//////                                                            self.purchasingSkill = false
+//////                                                        }
+//////                                                    } failureCase: { error in
+//////                                                        runOnMainThread {
+//////                                                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                            self.loading = false
+//////                                                            self.purchasingSkill = false
+//////                                                        }
+//////                                                    }
+//////                                                }
+//////                                            }
+//////
+//////                                        } failureCase: { error in
+//////                                            runOnMainThread {
+//////                                                self.purchasingSkill = false
+//////                                            }
+//////                                        }
+//////                                    }
+//////                                }))
+//////                                
+//////                            } else {
+//////                                messageString += "\(xpSpent) xp"
+//////                                if skill.usesPrestige {
+//////                                    messageString += " and \(skill.prestigeCost.intValueDefaultZero) pp"
+//////                                }
+//////                                let charSkill = CharacterSkillCreateModel(characterId: character.id, skillId: skill.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: skill.prestigeCost.intValueDefaultZero)
+//////                                CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
+//////                                    CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
+//////                                        runOnMainThread {
+//////                                            AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                            })
+//////                                            self.character = char!
+//////                                            CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
+//////                                                runOnMainThread {
+//////                                                    self.charSkills = charSkills.charSkills
+//////                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                    self.loading = false
+//////                                                    self.purchasingSkill = false
+//////                                                }
+//////                                            } failureCase: { error in
+//////                                                runOnMainThread {
+//////                                                    self.skills = getAvailableSkills(OldDM.skills ?? [])
+//////                                                    self.loading = false
+//////                                                    self.purchasingSkill = false
+//////                                                }
+//////                                            }
+//////                                        }
+//////                                    }
+//////
+//////                                } failureCase: { error in
+//////                                    runOnMainThread {
+//////                                        self.purchasingSkill = false
+//////                                    }
+//////                                }
+//////                            }
+////                        }
+//                    }
                 }
                 .scrollContentBackground(.hidden)
             } else {
@@ -202,23 +205,23 @@ struct AddPlannedSkillView: View {
         }
         .background(Color.lightGray)
         .onAppear() {
-            self.loading = true
-            OldDM.load([.skills]) {
-                runOnMainThread {
-                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
-                        runOnMainThread {
-                            self.charSkills = charSkills.charSkills
-                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                            self.loading = false
-                        }
-                    } failureCase: { error in
-                        runOnMainThread {
-                            self.skills = getAvailableSkills(OldDM.skills ?? [])
-                            self.loading = false
-                        }
-                    }
-                }
-            }
+//            self.loading = true
+//            OldDM.load([.skills]) {
+//                runOnMainThread {
+//                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
+//                        runOnMainThread {
+//                            self.charSkills = charSkills.charSkills
+//                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//                            self.loading = false
+//                        }
+//                    } failureCase: { error in
+//                        runOnMainThread {
+//                            self.skills = getAvailableSkills(OldDM.skills ?? [])
+//                            self.loading = false
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -226,113 +229,45 @@ struct AddPlannedSkillView: View {
         return searchText.trimmed != "" || filterType != .none
     }
 
-    func getFilteredSkills() -> [CharacterModifiedSkillModel] {
-        var filteredSkills = [CharacterModifiedSkillModel]()
+    func getFilteredSkills() -> [FullCharacterModifiedSkillModel] {
+        var filteredSkills = [FullCharacterModifiedSkillModel]()
 
         for skill in skills {
-            if skill.includeModInFilter(searchText: searchText, filterType: filterType) {
+            if skill.includeInFilter(searchText: searchText, filterType: filterType) {
                 filteredSkills.append(skill)
             }
         }
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [CharacterModifiedSkillModel]) -> [CharacterModifiedSkillModel] {
-        switch sortType {
-        case .az:
-            return skills.sorted { f, s in
-                f.name.caseInsensitiveCompare(s.name) == .orderedAscending
-            }
-        case .za:
-            return skills.sorted { f, s in
-                f.name.caseInsensitiveCompare(s.name) == .orderedDescending
-            }
-        case .xpAsc:
-            return skills.sorted { f, s in
-                f.modXpCost.intValueDefaultZero == s.modXpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.modXpCost.intValueDefaultZero < s.modXpCost.intValueDefaultZero
-            }
-        case .xpDesc:
-            return skills.sorted { f, s in
-                f.modXpCost.intValueDefaultZero == s.modXpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.modXpCost.intValueDefaultZero > s.modXpCost.intValueDefaultZero
-            }
-        case .typeAsc:
-            return skills.sorted { f, s in
-                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedAscending
-            }
-        case .typeDesc:
-            return skills.sorted { f, s in
-                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedDescending
-            }
-        }
-    }
-
-    func getAvailableSkills(_ allSkills: [OldFullSkillModel]) -> [CharacterModifiedSkillModel] {
-        let charSkills = character.skills
-        // Remove all skills the character already has
-        var newSkillList = allSkills.filter { skillToKeep in
-            return !charSkills.contains(where: { charSkill in
-                charSkill.id == skillToKeep.id
-            })
-        }
-
-        // Remove all skills you don't have prereqs for
-        newSkillList = newSkillList.filter { skillToKeep in
-            if skillToKeep.prereqs.isEmpty {
-                return true
-            }
-            for prereq in skillToKeep.prereqs {
-                guard !charSkills.contains(where: { charSkill in
-                    charSkill.id == prereq.id
-                }) else { continue }
-                return false
-            }
-            return true
-        }
-
-        // Remove Choose One skills that can't be chosen
-        let cskills = character.getChooseOneSkills()
-        if cskills.isEmpty {
-            // Remove all level 2 cskills
-            newSkillList = newSkillList.filter({ skillToKeep in
-                return !skillToKeep.id.equalsAnyOf(Constants.SpecificSkillIds.allLevel2SpecialistSkills)
-            })
-        } else if cskills.count == 2 {
-            // Remove all cskills
-            newSkillList = newSkillList.filter({ skillToKeep in
-                return !skillToKeep.id.equalsAnyOf(Constants.SpecificSkillIds.allSpecalistSkills)
-            })
-        } else if let cskill = cskills.first {
-            var idsToRemove = [Int]()
-            switch cskill.id {
-                case Constants.SpecificSkillIds.expertCombat:
-                    idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertCombat
-                case Constants.SpecificSkillIds.expertProfession:
-                    idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertProfession
-                case Constants.SpecificSkillIds.expertTalent:
-                    idsToRemove = Constants.SpecificSkillIds.allSpecalistsNotUnderExpertTalent
-                default:
-                    break
-            }
-            // Remove all cskills not under your expert skill
-            newSkillList = newSkillList.filter({ skillToKeep in
-                return !skillToKeep.id.equalsAnyOf(idsToRemove)
-            })
-        }
-
-        let combatXpMod = character.costOfCombatSkills()
-        let professionXpMod = character.costOfProfessionSkills()
-        let talentXpMod = character.costOfTalentSkills()
-        let inf50Mod = character.costOf50InfectSkills()
-        let inf75Mod = character.costOf75InfectSkills()
-
-        // Convert to new model type
-        var newCharModSkills = [CharacterModifiedSkillModel]()
-        for skill in newSkillList {
-            newCharModSkills.append(CharacterModifiedSkillModel(skill, modXpCost: skill.getModCost(combatMod: combatXpMod, professionMod: professionXpMod, talentMod: talentXpMod, xpReductions: []), modInfCost: skill.getInfModCost(inf50Mod: inf50Mod, inf75Mod: inf75Mod)))
-        }
-
-        return newCharModSkills
-
+    func getSortedSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
+//        switch sortType {
+//        case .az:
+//            return skills.sorted { f, s in
+//                f.name.caseInsensitiveCompare(s.name) == .orderedAscending
+//            }
+//        case .za:
+//            return skills.sorted { f, s in
+//                f.name.caseInsensitiveCompare(s.name) == .orderedDescending
+//            }
+//        case .xpAsc:
+//            return skills.sorted { f, s in
+//                f.modXpCost.intValueDefaultZero == s.modXpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.modXpCost.intValueDefaultZero < s.modXpCost.intValueDefaultZero
+//            }
+//        case .xpDesc:
+//            return skills.sorted { f, s in
+//                f.modXpCost.intValueDefaultZero == s.modXpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.modXpCost.intValueDefaultZero > s.modXpCost.intValueDefaultZero
+//            }
+//        case .typeAsc:
+//            return skills.sorted { f, s in
+//                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedAscending
+//            }
+//        case .typeDesc:
+//            return skills.sorted { f, s in
+//                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedDescending
+//            }
+//        }
+        return []
     }
     
     private func getSpentXp() -> Int {
@@ -364,5 +299,5 @@ struct AddPlannedSkillView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AddPlannedSkillView(_dm: dm, character: md.fullCharacters().first!)
+    return AddPlannedSkillView(character: md.fullCharacters().first!)
 }

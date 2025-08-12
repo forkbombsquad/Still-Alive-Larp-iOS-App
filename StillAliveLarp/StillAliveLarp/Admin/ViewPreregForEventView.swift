@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct ViewPreregForEventView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -57,20 +59,20 @@ struct ViewPreregForEventView: View {
         }.padding(16)
         .background(Color.lightGray)
         .onAppear {
-            runOnMainThread {
-                OldDM.load([.allPlayers, .allCharacters]) {
-                    runOnMainThread {
-                        self.allPlayers = OldDM.allPlayers ?? []
-                        self.allCharacters = OldDM.allCharacters ?? []
-                        self.loadingPlayers = false
-                        self.loadingCharacters = false
-                        OldDM.load([.eventPreregs], forceDownloadIfApplicable: true) {
-                            self.eventPreregs = OldDM.eventPreregs
-                            self.loadingEventPreregs = false
-                        }
-                    }
-                }
-            }
+//            runOnMainThread {
+//                OldDM.load([.allPlayers, .allCharacters]) {
+//                    runOnMainThread {
+//                        self.allPlayers = OldDM.allPlayers ?? []
+//                        self.allCharacters = OldDM.allCharacters ?? []
+//                        self.loadingPlayers = false
+//                        self.loadingCharacters = false
+//                        OldDM.load([.eventPreregs], forceDownloadIfApplicable: true) {
+//                            self.eventPreregs = OldDM.eventPreregs
+//                            self.loadingEventPreregs = false
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 
@@ -91,9 +93,6 @@ struct ViewPreregForEventView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    dm.loadingAllPlayers = false
-    dm.loadingAllCharacters = false
-    dm.loadingEventPreregs = false
     let md = getMockData()
-    return ViewPreregForEventView(_dm: dm, event: md.event())
+    return ViewPreregForEventView(event: md.event())
 }

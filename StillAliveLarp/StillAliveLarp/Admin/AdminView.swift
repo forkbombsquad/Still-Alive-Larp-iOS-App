@@ -8,6 +8,8 @@
 import SwiftUI
 import CodeScanner
 
+// TODO update view if needed
+
 struct AdminView: View {
 
     @EnvironmentObject var alertManager: AlertManager
@@ -77,68 +79,68 @@ struct AdminView: View {
     }
     
     private func reloadData() {
-        runOnMainThread {
-            self.loadingPlayers = true
-            self.loadingCharacters = true
-            self.loadingEvents = true
-            self.loadingContacts = true
-            self.loadingResearchProjects = true
-            self.loadingNPCs = true
-            PlayerService.getAllPlayers { playerList in
-                runOnMainThread {
-                    self.allPlayers = playerList.players
-                    self.loadingPlayers = false
-                }
-            } failureCase: { _ in
-                runOnMainThread {
-                    self.loadingPlayers = false
-                }
-            }
-            CharacterService.getAllCharacters { characterList in
-                runOnMainThread {
-                    self.allCharacters = characterList.characters
-                    self.charactersWhoNeedBios = self.allCharacters.filter({ c in
-                        !c.approvedBio.boolValueDefaultFalse && !c.bio.isEmpty
-                    })
-                    self.unapprovedBioText = self.getUnapprovedBioCount()
-                    self.loadingCharacters = false
-                }
-            } failureCase: { _ in
-                runOnMainThread {
-                    self.loadingCharacters = false
-                }
-            }
-            EventManager.shared.getEvents(overrideLocal: true) { events in
-                runOnMainThread {
-                    self.loadingEvents = false
-                    self.events = events.reversed()
-                    OldDM.events = events
-                }
-            }
-            AdminService.getAllContactRequests { contactRequestList in
-                runOnMainThread {
-                    self.loadingContacts = false
-                    self.contactRequests = self.sortContactRequests(contactRequestList)
-                }
-            } failureCase: { error in
-                runOnMainThread {
-                    self.loadingContacts = false
-                }
-            }
-            OldDM.load([.researchProjects], forceDownloadIfApplicable: true) {
-                runOnMainThread {
-                    self.researchProjects = OldDM.researchProjects
-                    self.loadingResearchProjects = false
-                }
-            }
-            OldDM.load([.featureFlags], forceDownloadIfApplicable: true)
-            OldDM.load([.npcs], forceDownloadIfApplicable: true) {
-                runOnMainThread {
-                    self.npcs = OldDM.npcs
-                    self.loadingNPCs = false
-                }
-            }
-        }
+//        runOnMainThread {
+//            self.loadingPlayers = true
+//            self.loadingCharacters = true
+//            self.loadingEvents = true
+//            self.loadingContacts = true
+//            self.loadingResearchProjects = true
+//            self.loadingNPCs = true
+//            PlayerService.getAllPlayers { playerList in
+//                runOnMainThread {
+//                    self.allPlayers = playerList.players
+//                    self.loadingPlayers = false
+//                }
+//            } failureCase: { _ in
+//                runOnMainThread {
+//                    self.loadingPlayers = false
+//                }
+//            }
+//            CharacterService.getAllCharacters { characterList in
+//                runOnMainThread {
+//                    self.allCharacters = characterList.characters
+//                    self.charactersWhoNeedBios = self.allCharacters.filter({ c in
+//                        !c.approvedBio.boolValueDefaultFalse && !c.bio.isEmpty
+//                    })
+//                    self.unapprovedBioText = self.getUnapprovedBioCount()
+//                    self.loadingCharacters = false
+//                }
+//            } failureCase: { _ in
+//                runOnMainThread {
+//                    self.loadingCharacters = false
+//                }
+//            }
+////            EventManager.shared.getEvents(overrideLocal: true) { events in
+////                runOnMainThread {
+////                    self.loadingEvents = false
+////                    self.events = events.reversed()
+////                    OldDM.events = events
+////                }
+////            }
+//            AdminService.getAllContactRequests { contactRequestList in
+//                runOnMainThread {
+//                    self.loadingContacts = false
+//                    self.contactRequests = self.sortContactRequests(contactRequestList)
+//                }
+//            } failureCase: { error in
+//                runOnMainThread {
+//                    self.loadingContacts = false
+//                }
+//            }
+////            OldDM.load([.researchProjects], forceDownloadIfApplicable: true) {
+////                runOnMainThread {
+////                    self.researchProjects = OldDM.researchProjects
+////                    self.loadingResearchProjects = false
+////                }
+////            }
+////            OldDM.load([.featureFlags], forceDownloadIfApplicable: true)
+////            OldDM.load([.npcs], forceDownloadIfApplicable: true) {
+////                runOnMainThread {
+////                    self.npcs = OldDM.npcs
+////                    self.loadingNPCs = false
+////                }
+////            }
+//        }
     }
 
     func getUnapprovedBioCount() -> String {
@@ -208,7 +210,7 @@ struct PlayerCharacterManagementView: View {
     var body: some View {
         VStack {
             NavArrowView(title: "Manage NPCs", loading: $loadingNPCs) { _ in
-                AllNpcsListView(npcs: npcs, allowEdit: true)
+//                AllNpcsListView(npcs: npcs, allowEdit: true)
             }
             NavArrowView(title: "Award Player", loading: $loadingPlayers) { _ in
                 AwardPlayerView(players: allPlayers)
@@ -247,11 +249,12 @@ struct MiscAdminView: View {
     var body: some View {
         VStack {
             NavArrowView(title: "Manage Research Projects") { _ in
-                AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true).onDisappear {
-                    runOnMainThread {
-                        self.researchProjects = OldDM.researchProjects
-                    }
-                }
+                AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true)
+//                    .onDisappear {
+//                        runOnMainThread {
+//                            self.researchProjects = OldDM.researchProjects
+//                        }
+//                    }
             }
             NavArrowView(title: "Create Announcement") { _ in
                 CreateAnnouncementView()
@@ -262,9 +265,9 @@ struct MiscAdminView: View {
             NavArrowView(title: "Contact Requests", loading: $loadingContacts, notificationBubbleText: $unreadContactsText) { _ in
                 ContactListView(contactRequests: $contactRequests)
             }
-            NavArrowView(title: "Feature Flag Management", loading: OldDataManager.$shared.loadingFeatureFlags) { _ in
-                FeatureFlagManagementView(featureFlags: OldDataManager.$shared.featureFlags)
-            }
+//            NavArrowView(title: "Feature Flag Management", loading: OldDataManager.$shared.loadingFeatureFlags) { _ in
+//                FeatureFlagManagementView(featureFlags: OldDataManager.$shared.featureFlags)
+//            }
         }
     }
 }
@@ -272,5 +275,5 @@ struct MiscAdminView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    return AdminView(_dm: dm)
+    return AdminView()
 }

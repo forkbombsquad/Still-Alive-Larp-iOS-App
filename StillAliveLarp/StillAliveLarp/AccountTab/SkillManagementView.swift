@@ -7,37 +7,18 @@
 
 import SwiftUI
 
+// TODO redo view
+
 struct SkillManagementView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-    
-    static func Offline(character: OldFullCharacterModel) -> SkillManagementView {
-        return SkillManagementView(offline: true, allowEdit: false, character: character)
-    }
 
     let offline: Bool
     let allowEdit: Bool
-    @State var character: OldFullCharacterModel? = nil
-    let skills: [OldFullSkillModel]
+    @State var character: FullCharacterModel? = nil
+    let skills: [FullCharacterModifiedSkillModel]
     @State var loadingSkills: Bool = false
     @State var searchText: String = ""
-    
-    // Online
-    init(_dm: OldDataManager = OldDataManager.shared, character: OldFullCharacterModel, allowEdit: Bool) {
-        self._dm = _dm
-        self.offline = false
-        self.allowEdit = allowEdit
-        self._character = globalState(character)
-        self.skills = character.skills
-    }
-    
-    private init (offline: Bool, allowEdit: Bool, character: OldFullCharacterModel) {
-        self.offline = offline
-        self.allowEdit = allowEdit
-        self._character = globalState(character)
-        self.skills = character.skills
-        
-    }
 
     var body: some View {
         VStack {
@@ -56,19 +37,19 @@ struct SkillManagementView: View {
                         if !loadingSkills {
                             NavigationLink {
                                 AddSkillView().onDisappear {
-                                    runOnMainThread {
-                                        self.loadingSkills = true
-                                        CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
-                                            runOnMainThread {
-                                                if let fcm = fcm {
-                                                    self.character = fcm
-                                                    OldDM.character = fcm
-                                                }
-                                                self.loadingSkills = false
-                                            }
-                                        }
-                                        
-                                    }
+//                                    runOnMainThread {
+//                                        self.loadingSkills = true
+//                                        CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
+//                                            runOnMainThread {
+//                                                if let fcm = fcm {
+//                                                    self.character = fcm
+//                                                    OldDM.character = fcm
+//                                                }
+//                                                self.loadingSkills = false
+//                                            }
+//                                        }
+//                                        
+//                                    }
                                 }
                             } label: {
                                 VStack {
@@ -116,8 +97,8 @@ struct SkillManagementView: View {
         return searchText.trimmed != ""
     }
 
-    func getFilteredSkills() -> [OldFullSkillModel] {
-        var filteredSkills = [OldFullSkillModel]()
+    func getFilteredSkills() -> [FullCharacterModifiedSkillModel] {
+        var filteredSkills = [FullCharacterModifiedSkillModel]()
 
         for skill in skills {
             if skill.includeInFilter(searchText: searchText, filterType: .none) {
@@ -127,7 +108,7 @@ struct SkillManagementView: View {
         return getSortedSkills(filteredSkills)
     }
 
-    func getSortedSkills(_ skills: [OldFullSkillModel]) -> [OldFullSkillModel] {
+    func getSortedSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
         return skills.sorted { f, s in
             f.name.caseInsensitiveCompare(s.name) == .orderedAscending
         }
@@ -135,8 +116,8 @@ struct SkillManagementView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return SkillManagementView(_dm: dm, character: md.fullCharacters().first!, allowEdit: true)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return SkillManagementView(character: md.fullCharacters().first!, allowEdit: true)
+//}

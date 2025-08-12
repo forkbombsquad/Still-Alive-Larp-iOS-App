@@ -39,5 +39,5 @@ struct SelectEventForIntrigueView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return SelectEventForIntrigueView(_dm: dm, events: md.events.events)
+    return SelectEventForIntrigueView(events: md.events.events)
 }

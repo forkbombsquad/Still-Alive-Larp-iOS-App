@@ -19,7 +19,7 @@ struct HomeTabView: View {
             GeometryReader { gr in
                     ScrollView(showsIndicators: false) {
                         PullToRefresh(coordinateSpaceName: "pullToRefresh_HomeTab", spinnerOffsetY: -100, pullDownDistance: 150) {
-                            DM.load(loadType: .forceDownload)
+                            DM.load()
                         }
                         VStack {
                             Text(DM.getTitlePotentiallyOffline("Home"))
