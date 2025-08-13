@@ -102,7 +102,7 @@ struct CheckOutPlayerView: View {
 //                                if !valResult.hasError {
 //                                    if let char = model.character, isPassedThreshold(char), self.isAlive.lowercased() == "alive" {
 //                                        runOnMainThread {
-//                                            AlertManager.shared.showAlert("Warning!", message: "\(char.fullName) has passed an infection threshold! Make sure to check and see if they're a zombie!\n\n\(getThresholdCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Check Passed!"), action: {
+//                                            alertManager.showAlert("Warning!", message: "\(char.fullName) has passed an infection threshold! Make sure to check and see if they're a zombie!\n\n\(getThresholdCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Check Passed!"), action: {
 //                                                self.checkoutStepOne(model)
 //                                            }), button2: Alert.Button.destructive(Text("Go Back"), action: { }))
 //                                        }
@@ -110,7 +110,7 @@ struct CheckOutPlayerView: View {
 //                                        self.checkoutStepOne(model)
 //                                    }
 //                                } else {
-//                                    AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+//                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
 //                                }
 //
 //                            }.padding(.top, 48)
@@ -159,7 +159,7 @@ struct CheckOutPlayerView: View {
 //    private func checkoutStepOne(_ model: PlayerCheckOutBarcodeModel) {
 //        if let char = model.character, isAlive.lowercased() == "dead" {
 //            runOnMainThread {
-//                AlertManager.shared.showAlert("Warning!", message: "\(char.fullName) has seeming perished, but they still have a chance! Make sure you roll 1d10 to see if they miraculously survive!\n\n\(getDeathCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Still Dead!"), action: {
+//                alertManager.showAlert("Warning!", message: "\(char.fullName) has seeming perished, but they still have a chance! Make sure you roll 1d10 to see if they miraculously survive!\n\n\(getDeathCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Still Dead!"), action: {
 //                    self.checkoutStepTwo(model)
 //                }), button2: Alert.Button.cancel(Text("They Survived! Go Back"), action: { }))
 //            }
@@ -359,7 +359,7 @@ struct CheckOutPlayerView: View {
 
 //    func scannerFailed(_ errorMessage: String) {
 //        runOnMainThread {
-//            AlertManager.shared.showOkAlert("Scanning Failed", message: errorMessage) {
+//            alertManager.showOkAlert("Scanning Failed", message: errorMessage) {
 //                runOnMainThread {
 //                    self.mode.wrappedValue.dismiss()
 //                }
@@ -374,7 +374,7 @@ struct CheckOutPlayerView: View {
 
 //    func showSuccessAlertAllowingRescan(_ message: String) {
 //        runOnMainThread {
-//            AlertManager.shared.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
+//            alertManager.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
 //                self.resetScanner()
 //            }), button2: Alert.Button.cancel(Text("Finished"), action: {
 //                runOnMainThread {

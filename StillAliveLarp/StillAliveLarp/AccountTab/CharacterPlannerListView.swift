@@ -44,7 +44,7 @@ struct CharacterPlannerListView: View {
 //                                }
 //                            }
                             ArrowViewButtonGreen(title: "Start A New Plan", loading: $loadingFullCharacter) {
-                                AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
+                                alertManager.showDynamicAlert(model: CustomAlertModel(
                                     title: "Create a new plan or base one off of an existing Character?",
                                     textFields: [],
                                     checkboxes: [],
@@ -100,7 +100,7 @@ struct CharacterPlannerListView: View {
     
     private func createCharacter(_ existing: CharacterModel?) {
         self.newName = ""
-        AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
+        alertManager.showDynamicAlert(model: CustomAlertModel(
             title: "Creating Plan", textFields: [
                 AlertTextField(placeholder: "Name your planned character", value: $newName)
             ], checkboxes: [], verticalButtons: [], buttons: [

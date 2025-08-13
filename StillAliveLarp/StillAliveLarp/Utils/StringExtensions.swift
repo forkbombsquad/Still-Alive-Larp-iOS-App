@@ -161,8 +161,19 @@ extension String {
             .replacingOccurrences(of: "</\(tag)>", with: "</\(replacement)>")
     }
     
-    func htmlString() -> NSAttributedString {
-        return NSAttributedString(htmlString: self) ?? NSAttributedString(string: "")
+    func htmlString(_ font: UIFont) -> AttributedString {
+        guard let data = self.data(using: .utf8) else { return AttributedString("") }
+        guard let nsAttrStr = try? NSAttributedString(
+            data: data,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ],
+            documentAttributes: nil
+        ) else { return AttributedString("") }
+        var attr = AttributedString(nsAttrStr)
+        attr.font = font
+        return attr
     }
-
+    
 }

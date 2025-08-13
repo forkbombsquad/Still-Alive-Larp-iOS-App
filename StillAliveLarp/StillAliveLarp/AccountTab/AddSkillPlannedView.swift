@@ -83,7 +83,7 @@ struct AddPlannedSkillView: View {
 //////                            var messageString = "\(skill.name) planned using "
 //////
 //////                            if skill.canUseFreeSkill {
-//////                                AlertManager.shared.showAlert("Use Free Tier-1 Skill?", button1: Alert.Button.default(Text("Use xp"), action: {
+//////                                alertManager.showAlert("Use Free Tier-1 Skill?", button1: Alert.Button.default(Text("Use xp"), action: {
 //////                                    runOnMainThread {
 //////                                        messageString += "\(xpSpent) xp"
 //////                                        if skill.usesPrestige {
@@ -93,7 +93,7 @@ struct AddPlannedSkillView: View {
 //////                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
 //////                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
 //////                                                runOnMainThread {
-//////                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                                    alertManager.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
 //////                                                    })
 //////                                                    self.character = char!
 //////                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
@@ -131,7 +131,7 @@ struct AddPlannedSkillView: View {
 //////                                        CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
 //////                                            CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
 //////                                                runOnMainThread {
-//////                                                    AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                                    alertManager.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
 //////                                                    })
 //////                                                    self.character = char!
 //////                                                    CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in
@@ -168,7 +168,7 @@ struct AddPlannedSkillView: View {
 //////                                CharacterSkillService.takePlannedCharacterSkill(charSkill) { _ in
 //////                                    CharacterManager.shared.fetchFullCharacter(characterId: character.id) { char in
 //////                                        runOnMainThread {
-//////                                            AlertManager.shared.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
+//////                                            alertManager.showOkAlert("Skill Successfully Planned!", message: messageString, onOkAction: {
 //////                                            })
 //////                                            self.character = char!
 //////                                            CharacterSkillService.getAllSkillsForChar(self.character.id) { charSkills in

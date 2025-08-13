@@ -36,7 +36,7 @@ struct FeatureFlagManagementView: View {
                             flagDesc = ""
                             activeiOS = false
                             activeAndroid = false
-                            AlertManager.shared.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
+                            alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
                                 AlertTextField(placeholder: "Flag Name", value: $flagName),
                                 AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
                                 ], checkboxes: [
@@ -47,7 +47,7 @@ struct FeatureFlagManagementView: View {
                                         self.createNewFlag()
                                     }),
                                     AlertButton(title: "Cancel", role: .cancel, onPress: {
-                                        AlertManager.shared.dismissDynamicAlert()
+                                        alertManager.dismissDynamicAlert()
                                         loading = false
                                     })
                                 ]))
@@ -60,7 +60,7 @@ struct FeatureFlagManagementView: View {
                                     flagDesc = flag.wrappedValue.description
                                     activeiOS = flag.wrappedValue.isActiveIos
                                     activeAndroid = flag.wrappedValue.isActiveAndroid
-                                    AlertManager.shared.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
+                                    alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
                                         AlertTextField(placeholder: "Flag Name", value: $flagName),
                                         AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
                                         ], checkboxes: [
@@ -74,7 +74,7 @@ struct FeatureFlagManagementView: View {
                                                 self.deleteFlag(flag.wrappedValue.id)
                                             }),
                                             AlertButton(title: "Cancel", role: .cancel, onPress: {
-                                                AlertManager.shared.dismissDynamicAlert()
+                                                alertManager.dismissDynamicAlert()
                                                 loading = false
                                             })
                                         ]))

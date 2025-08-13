@@ -42,7 +42,7 @@ struct SelectSkillForClassXpReducitonView: View {
                             self.loadingXpReduction = true
                             AdminService.giveXpReduction(character.id, skillId: skill.id) { xpReduction in
                                 runOnMainThread {
-                                    AlertManager.shared.showOkAlert("Successfully Added Skill Xp Reduction", message: "\(skill.name) now costs \(max(1, (skill.baseXpCost() - xpReduction.xpReduction.intValueDefaultZero)))xp for \(character.fullName)") {
+                                    alertManager.showOkAlert("Successfully Added Skill Xp Reduction", message: "\(skill.name) now costs \(max(1, (skill.baseXpCost() - xpReduction.xpReduction.intValueDefaultZero)))xp for \(character.fullName)") {
                                         runOnMainThread {
                                             self.mode.wrappedValue.dismiss()
                                             self.loadingXpReduction = false

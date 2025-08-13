@@ -9,6 +9,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct KeyValueView: View {
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     var key: String
     var value: String
@@ -33,7 +35,7 @@ struct KeyValueView: View {
             }.onLongPressGesture {
                 runOnMainThread {
                     UIPasteboard.general.setValue(self.value, forPasteboardType: UTType.plainText.identifier)
-                    AlertManager.shared.showOkAlert("Copied to clipboard:", message: self.value) { }
+                    alertManager.showOkAlert("Copied to clipboard:", message: self.value) { }
                 }
             }
         } else {

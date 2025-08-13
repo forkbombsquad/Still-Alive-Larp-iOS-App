@@ -6,10 +6,18 @@
 //
 
 import Foundation
+import SwiftUI
 import SwiftSoup
 import OrderedCollections
 
 class RulebookUtils {
+    
+    fileprivate static let headingFont: UIFont = .systemFont(ofSize: 36, weight: .bold)
+    fileprivate static let subheadingFont: UIFont = .systemFont(ofSize: 32, weight: .bold)
+    fileprivate static let subsubheadingFont: UIFont = .systemFont(ofSize: 22, weight: .bold)
+    fileprivate static let textFont: UIFont = .systemFont(ofSize: 16)
+    fileprivate static let tableFont: UIFont = .systemFont(ofSize: 16)
+    fileprivate static let tableHeadingFont: UIFont = .systemFont(ofSize: 16)
 
     private struct Tags {
         static let HEADING = "h1"
@@ -51,7 +59,7 @@ class RulebookUtils {
                         currentHeading = nil
                     }
                     currentHeading = Heading()
-                    currentHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
+                currentHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "").htmlString(headingFont)
                 case Tags.SUBHEADING:
                     if let cssh = currentSubSubHeading {
                         if currentSubHeading == nil {
@@ -66,7 +74,7 @@ class RulebookUtils {
                         currentSubHeading = nil
                     }
                     currentSubHeading = SubHeading()
-                    currentSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
+                    currentSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "").htmlString(subheadingFont)
                 case Tags.SUBSUBHEADING:
                     if let cssh = currentSubSubHeading {
                         if currentSubHeading == nil {
@@ -77,7 +85,7 @@ class RulebookUtils {
                         currentSubSubHeading = nil
                     }
                     currentSubSubHeading = SubSubHeading()
-                    currentSubSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "")
+                    currentSubSubHeading?.title = globalStyleHtmlForRulebook((try? element.html()) ?? "").htmlString(subsubheadingFont)
                 case Tags.TEXT:
                     if currentSubSubHeading != nil {
                         currentSubSubHeading?.addTextOrTable(globalStyleHtmlForRulebook((try? element.html()) ?? ""))
@@ -88,27 +96,27 @@ class RulebookUtils {
                     }
                 case Tags.TABLE:
                     let table = Table()
-                    var keys = [String]()
+                    var keys = [AttributedString]()
                     for tableBody in element.children().array() {
                         for tableRow in tableBody.children().array() {
                             var firstTd = true
                             for tableElement in tableRow.children().array() {
                                 switch tableElement.tagName() {
                                     case Tags.TABLEHEAD:
-                                        keys.append(globalStyleHtmlForRulebook((try? tableElement.html()) ?? ""))
+                                    keys.append(globalStyleHtmlForRulebook((try? tableElement.outerHtml()) ?? "").htmlString(tableHeadingFont))
                                 case Tags.TABLEDETAIL:
                                     if firstTd {
                                         var count = 0
                                         for tableCell in tableRow.children().array() {
                                             if table.contents[keys[count]] == nil {
-                                                table.contents[keys[count]] = [String]()
+                                                table.contents[keys[count]] = [AttributedString]()
                                             }
                                             var tcell = globalStyleHtmlForRulebook((try? tableCell.outerHtml()) ?? "")
                                             tcell = tcell.replacingOccurrences(of: "<td>", with: "")
                                                 .replacingOccurrences(of: "</td>", with: "")
                                                 .replacingOccurrences(of: "<small>", with: "")
                                                 .replacingOccurrences(of: "</small>", with: "")
-                                            table.contents[keys[count]]?.append(tcell)
+                                            table.contents[keys[count]]?.append(tcell.htmlString(tableFont))
                                             count += 1
                                         }
                                     }
@@ -128,7 +136,7 @@ class RulebookUtils {
                     }
                 case Tags.LIST:
                     let table = Table()
-                    var keys = [String]()
+                    var keys = [AttributedString]()
                     keys.append("Category")
                     keys.append("Change")
                     for li in element.children().array() {
@@ -147,9 +155,9 @@ class RulebookUtils {
                         }
 
                         if table.contents[keys[count]] == nil {
-                            table.contents[keys[count]] = [String]()
+                            table.contents[keys[count]] = [AttributedString]()
                         }
-                        table.contents[keys[count]]?.append(txt)
+                        table.contents[keys[count]]?.append(txt.htmlString(tableFont))
                     }
                     if currentSubSubHeading != nil {
                         currentSubSubHeading?.addTextOrTable(table)
@@ -202,16 +210,16 @@ class Rulebook: CustomCodeable {
     func getAllFilterableHeadingNames() -> [String] {
         var names = [String]()
         for heading in headings {
-            names.append(heading.title)
+            names.append(heading.title.textValue)
             
             for subsub in heading.subSubHeadings {
-                names.append("            \(subsub.title)")
+                names.append("            \(subsub.title.textValue)")
             }
             
             for sub in heading.subHeadings {
-                names.append("      \(sub.title)")
+                names.append("      \(sub.title.textValue)")
                 for subsub in sub.subSubHeadings {
-                    names.append("            \(subsub.title)")
+                    names.append("            \(subsub.title.textValue)")
                 }
             }
         }
@@ -221,9 +229,9 @@ class Rulebook: CustomCodeable {
 
 class Heading: Identifiable, CustomCodeable {
 
-    var title = ""
+    var title = AttributedString("")
     var order: [TextOrTable] = []
-    var texts: [String] = []
+    var texts: [AttributedString] = []
     var tables: [Table] = []
     var subSubHeadings = [SubSubHeading]()
     var subHeadings = [SubHeading]()
@@ -247,13 +255,35 @@ class Heading: Identifiable, CustomCodeable {
 
     convenience init(title: String, textsAndTables: [Any], subSubHeadings: [SubSubHeading], subHeadings: [SubHeading]) {
         self.init()
+        self.title = title.htmlString(.systemFont(ofSize: 36, weight: .bold))
+        for tot in textsAndTables {
+            if let t = tot as? Table {
+                tables.append(t)
+                order.append(.table)
+            } else if let s = tot as? String {
+                texts.append(s.htmlString(.systemFont(ofSize: 16)))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
+                order.append(.text)
+            }
+        }
+        self.subSubHeadings = subSubHeadings
+        self.subHeadings = subHeadings
+    }
+    
+    convenience init(title: AttributedString, textsAndTables: [Any], subSubHeadings: [SubSubHeading], subHeadings: [SubHeading]) {
+        self.init()
         self.title = title
         for tot in textsAndTables {
             if let t = tot as? Table {
                 tables.append(t)
                 order.append(.table)
             } else if let s = tot as? String {
-                texts.append(s)
+                texts.append(s.htmlString(RulebookUtils.textFont))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
                 order.append(.text)
             }
         }
@@ -266,16 +296,19 @@ class Heading: Identifiable, CustomCodeable {
             tables.append(t)
             order.append(.table)
         } else if let s = textOrTable as? String {
-            texts.append(s)
+            texts.append(s.htmlString(RulebookUtils.textFont))
+            order.append(.text)
+        } else if let at = textOrTable as? AttributedString {
+            texts.append(at)
             order.append(.text)
         }
     }
 
     func contains(_ text: String) -> Bool {
-        if title.containsIgnoreCase(text) {
+        if title.textValue.containsIgnoreCase(text) {
             return true
         }
-        if texts.first(where: { $0.containsIgnoreCase(text) }) != nil {
+        if texts.first(where: { $0.textValue.containsIgnoreCase(text) }) != nil {
             return true
         }
         if tables.first(where: { $0.contains(text) }) != nil {
@@ -300,7 +333,7 @@ class Heading: Identifiable, CustomCodeable {
         var newSubHeadings = [SubHeading]()
         
         for text in texts {
-            if text.containsIgnoreCase(searchText) {
+            if text.textValue.containsIgnoreCase(searchText) {
                 newTextsAndTables.append(text)
             }
         }
@@ -326,11 +359,11 @@ class Heading: Identifiable, CustomCodeable {
     }
     
     func titlesContain(_ title: String) -> Bool {
-        if self.title.equalsIgnoreCase(title) {
+        if self.title.textValue.equalsIgnoreCase(title) {
             return true
-        } else if self.subSubHeadings.first(where: { $0.title.equalsIgnoreCase(title) }) != nil {
+        } else if self.subSubHeadings.first(where: { $0.title.textValue.equalsIgnoreCase(title) }) != nil {
             return true
-        } else if self.subHeadings.first(where: { $0.title.equalsIgnoreCase(title) || ($0.subSubHeadings.first(where: { ssh in ssh.title.equalsIgnoreCase(title)}) != nil) }) != nil {
+        } else if self.subHeadings.first(where: { $0.title.textValue.equalsIgnoreCase(title) || ($0.subSubHeadings.first(where: { ssh in ssh.title.textValue.equalsIgnoreCase(title)}) != nil) }) != nil {
             return true
         }
         return false
@@ -341,20 +374,20 @@ class Heading: Identifiable, CustomCodeable {
         var newSubSubHeadings = [SubSubHeading]()
         var newSubHeadings = [SubHeading]()
         
-        if self.title.equalsIgnoreCase(title) {
+        if self.title.textValue.equalsIgnoreCase(title) {
             newTextsAndTables = textsAndTables
             newSubHeadings = subHeadings
             newSubSubHeadings = subSubHeadings
         }
         for subsub in subSubHeadings {
-            if subsub.title.equalsIgnoreCase(title) {
+            if subsub.title.textValue.equalsIgnoreCase(title) {
                 newSubSubHeadings.append(subsub)
             }
         }
         for sub in subHeadings {
-            if sub.title.equalsIgnoreCase(title) {
+            if sub.title.textValue.equalsIgnoreCase(title) {
                 newSubHeadings.append(sub)
-            } else if let subsub = sub.subSubHeadings.first(where: { $0.title.equalsIgnoreCase(title) }) {
+            } else if let subsub = sub.subSubHeadings.first(where: { $0.title.textValue.equalsIgnoreCase(title) }) {
                 newSubHeadings.append(SubHeading(sub.title, textsAndTables: [], subSubHeadings: [subsub]))
             }
         }
@@ -370,9 +403,9 @@ class Heading: Identifiable, CustomCodeable {
 
 class SubHeading: Identifiable, CustomCodeable {
 
-    var title = ""
+    var title = AttributedString("")
     var order: [TextOrTable] = []
-    var texts: [String] = []
+    var texts: [AttributedString] = []
     var tables: [Table] = []
     var subSubHeadings = [SubSubHeading]()
     
@@ -395,13 +428,34 @@ class SubHeading: Identifiable, CustomCodeable {
 
     convenience init(_ title: String, textsAndTables: [Any], subSubHeadings: [SubSubHeading]) {
         self.init()
+        self.title = title.htmlString(RulebookUtils.subheadingFont)
+        for tot in textsAndTables {
+            if let t = tot as? Table {
+                tables.append(t)
+                order.append(.table)
+            } else if let s = tot as? String {
+                texts.append(s.htmlString(RulebookUtils.textFont))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
+                order.append(.text)
+            }
+        }
+        self.subSubHeadings = subSubHeadings
+    }
+    
+    convenience init(_ title: AttributedString, textsAndTables: [Any], subSubHeadings: [SubSubHeading]) {
+        self.init()
         self.title = title
         for tot in textsAndTables {
             if let t = tot as? Table {
                 tables.append(t)
                 order.append(.table)
             } else if let s = tot as? String {
-                texts.append(s)
+                texts.append(s.htmlString(RulebookUtils.textFont))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
                 order.append(.text)
             }
         }
@@ -413,16 +467,19 @@ class SubHeading: Identifiable, CustomCodeable {
             tables.append(t)
             order.append(.table)
         } else if let s = textOrTable as? String {
-            texts.append(s)
+            texts.append(s.htmlString(RulebookUtils.textFont))
+            order.append(.text)
+        } else if let at = textOrTable as? AttributedString {
+            texts.append(at)
             order.append(.text)
         }
     }
 
     func contains(_ text: String) -> Bool {
-        if title.containsIgnoreCase(text) {
+        if title.textValue.containsIgnoreCase(text) {
             return true
         }
-        if texts.first(where: { $0.containsIgnoreCase(text) }) != nil {
+        if texts.first(where: { $0.textValue.containsIgnoreCase(text) }) != nil {
             return true
         }
         if tables.first(where: { $0.contains(text) }) != nil {
@@ -444,9 +501,9 @@ class SubHeading: Identifiable, CustomCodeable {
 
 class SubSubHeading: Identifiable, CustomCodeable {
 
-    var title = ""
+    var title = AttributedString("")
     var order: [TextOrTable] = []
-    var texts: [String] = []
+    var texts: [AttributedString] = []
     var tables: [Table] = []
     
     var textsAndTables: [Any] {
@@ -468,13 +525,33 @@ class SubSubHeading: Identifiable, CustomCodeable {
 
     convenience init(_ title: String, textsAndTables: [Any]) {
         self.init()
+        self.title = title.htmlString(RulebookUtils.subsubheadingFont)
+        for tot in textsAndTables {
+            if let t = tot as? Table {
+                tables.append(t)
+                order.append(.table)
+            } else if let s = tot as? String {
+                texts.append(s.htmlString(RulebookUtils.textFont))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
+                order.append(.text)
+            }
+        }
+    }
+    
+    convenience init(_ title: AttributedString, textsAndTables: [Any]) {
+        self.init()
         self.title = title
         for tot in textsAndTables {
             if let t = tot as? Table {
                 tables.append(t)
                 order.append(.table)
             } else if let s = tot as? String {
-                texts.append(s)
+                texts.append(s.htmlString(RulebookUtils.textFont))
+                order.append(.text)
+            } else if let at = tot as? AttributedString {
+                texts.append(at)
                 order.append(.text)
             }
         }
@@ -485,16 +562,19 @@ class SubSubHeading: Identifiable, CustomCodeable {
             tables.append(t)
             order.append(.table)
         } else if let s = textOrTable as? String {
-            texts.append(s)
+            texts.append(s.htmlString(RulebookUtils.textFont))
+            order.append(.text)
+        } else if let at = textOrTable as? AttributedString {
+            texts.append(at)
             order.append(.text)
         }
     }
 
     func contains(_ text: String) -> Bool {
-        if title.containsIgnoreCase(text) {
+        if title.textValue.containsIgnoreCase(text) {
             return true
         }
-        if texts.first(where: { $0.containsIgnoreCase(text) }) != nil {
+        if texts.first(where: { $0.textValue.containsIgnoreCase(text) }) != nil {
             return true
         }
         if tables.first(where: { $0.contains(text) }) != nil {
@@ -517,16 +597,23 @@ class Table: Identifiable, CustomCodeable {
     
     convenience init(contents: OrderedDictionary<String, [String]>) {
         self.init()
+        self.contents = OrderedDictionary(uniqueKeysWithValues: contents.map { (key, value) in
+            (key.htmlString(RulebookUtils.tableHeadingFont), value.map { $0.htmlString(RulebookUtils.tableFont) })
+        })
+    }
+    
+    convenience init(contents: OrderedDictionary<AttributedString, [AttributedString]>) {
+        self.init()
         self.contents = contents
     }
 
-    var contents: OrderedDictionary<String, [String]> = [:]
+    var contents: OrderedDictionary<AttributedString, [AttributedString]> = [:]
 
-    func convertToColumns() -> [[String]] {
-        var listOfColumns = [[String]]()
+    func convertToColumns() -> [[AttributedString]] {
+        var listOfColumns = [[AttributedString]]()
 
         for kv in contents {
-            var list = [String]()
+            var list = [AttributedString]()
             list.append(kv.key)
             list.append(contentsOf: kv.value)
             listOfColumns.append(list)
@@ -535,18 +622,18 @@ class Table: Identifiable, CustomCodeable {
         return listOfColumns
     }
 
-    func convertToRows() -> [[String]] {
-        var listOfRows = [[String]]()
-        var list = [String]()
+    func convertToRows() -> [[AttributedString]] {
+        var listOfRows = [[AttributedString]]()
+        var list = [AttributedString]()
         for key in contents.keys {
             list.append(key)
         }
         listOfRows.append(list)
         var counter = 0
         for _ in contents.values.first ?? [] {
-            var l = [String]()
+            var l = [AttributedString]()
             for key in contents.keys {
-                l.append(contents[key]?[counter] ?? "")
+                l.append(contents[key]?[counter] ?? AttributedString(""))
             }
             counter += 1
             listOfRows.append(l)
@@ -556,11 +643,11 @@ class Table: Identifiable, CustomCodeable {
 
     func contains(_ text: String) -> Bool {
         for kv in contents {
-            if kv.key.containsIgnoreCase(text) {
+            if kv.key.textValue.containsIgnoreCase(text) {
                 return true
             }
             for v in kv.value {
-                if v.containsIgnoreCase(text) {
+                if v.textValue.containsIgnoreCase(text) {
                     return true
                 }
             }

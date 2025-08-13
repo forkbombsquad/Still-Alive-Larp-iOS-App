@@ -56,7 +56,7 @@ struct ManageEventView: View {
                             AdminService.updateEvent(event) { updatedEvent in
                                 runOnMainThread {
                                     self.event = updatedEvent
-                                    AlertManager.shared.showOkAlert(started ? "Event Started" : "Event Finished") {
+                                    alertManager.showOkAlert(started ? "Event Started" : "Event Finished") {
                                         runOnMainThread {
                                             self.loading = false
                                             self.mode.wrappedValue.dismiss()

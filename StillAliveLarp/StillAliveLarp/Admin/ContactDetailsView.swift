@@ -43,7 +43,7 @@ struct ContactDetailsView: View {
                             runOnMainThread {
                                 self.contactRequest = contactRequest
                                 self.loading = false
-                                AlertManager.shared.showOkAlert("Contact Request Updated") {
+                                alertManager.showOkAlert("Contact Request Updated") {
                                     runOnMainThread {
                                         self.mode.wrappedValue.dismiss()
                                     }

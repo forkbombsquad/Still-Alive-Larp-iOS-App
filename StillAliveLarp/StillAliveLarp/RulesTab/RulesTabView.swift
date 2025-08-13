@@ -10,7 +10,7 @@ import SwiftUI
 struct RulesTabView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-
+    
     var body: some View {
         NavigationView {
             VStack {

@@ -42,7 +42,6 @@
 		B22324C72E40092B0087786E /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C62E4009270087786E /* FontExtensions.swift */; };
 		B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C82E40F0460087786E /* CharacterPanel.swift */; };
 		B22324CB2E43B0F30087786E /* AttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */; };
-		B22324CD2E43B1220087786E /* AttributedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324CC2E43B11E0087786E /* AttributedTextView.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
@@ -238,7 +237,6 @@
 		B22324C62E4009270087786E /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
 		B22324C82E40F0460087786E /* CharacterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPanel.swift; sourceTree = "<group>"; };
 		B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringExtensions.swift; sourceTree = "<group>"; };
-		B22324CC2E43B11E0087786E /* AttributedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedTextView.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
@@ -587,7 +585,6 @@
 			children = (
 				B2B7123C2E44EE8300B2AA3F /* FortificationCell.swift */,
 				B2B7123A2E44ECE200B2AA3F /* FortificationRingCell.swift */,
-				B22324CC2E43B11E0087786E /* AttributedTextView.swift */,
 				B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */,
 				B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */,
 				B23552CE29EB267000183748 /* LoadingButtonView.swift */,
@@ -937,7 +934,6 @@
 				B2750B5729FAD69200AA5F5B /* EventAttendeeService.swift in Sources */,
 				B2F29FB02A420D0F00E07108 /* GearModel.swift in Sources */,
 				B2750B4329F97E3000AA5F5B /* ContactDetailsView.swift in Sources */,
-				B22324CD2E43B1220087786E /* AttributedTextView.swift in Sources */,
 				B21691F028FF2184006AA921 /* PasswordField.swift in Sources */,
 				B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */,
 				B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */,
@@ -1258,7 +1254,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1299,7 +1295,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

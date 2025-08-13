@@ -65,7 +65,7 @@ struct ApproveBioView: View {
                     .padding(.trailing, 0)
                     LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Deny") {
                         self.loading = true
-                        AlertManager.shared.showAlert("Are You Sure?", message: "Are you sure you want to deny \(self.character.fullName)'s bio? This will delete it and they will have to write another one.", button1: Alert.Button.destructive(Text("Deny Bio"), action: {
+                        alertManager.showAlert("Are You Sure?", message: "Are you sure you want to deny \(self.character.fullName)'s bio? This will delete it and they will have to write another one.", button1: Alert.Button.destructive(Text("Deny Bio"), action: {
                             self.character.approvedBio = "FALSE"
                             self.character.bio = ""
                             AdminService.updateCharacter(self.character) { characterModel in

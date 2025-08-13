@@ -54,7 +54,7 @@ struct GearView: View {
                                 AdminService.updateGear(gearModel: gearUpdateModel) { gearModel in
                                     loading = false
                                     gearModified = false
-                                    AlertManager.shared.showSuccessAlert("Gear Updated Successfully!") {}
+                                    alertManager.showSuccessAlert("Gear Updated Successfully!") {}
                                 } failureCase: { error in
                                     loading = false
                                 }
@@ -65,7 +65,7 @@ struct GearView: View {
                                 AdminService.createGear(gearCreateModel) { gearModel in
                                     loading = false
                                     gearModified = false
-                                    AlertManager.shared.showSuccessAlert("Gear Created Successfully!") {}
+                                    alertManager.showSuccessAlert("Gear Created Successfully!") {}
                                 } failureCase: { error in
                                     loading = false
                                 }
@@ -100,7 +100,7 @@ struct GearView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     if gearModified {
-                        AlertManager.shared.showOkAlert("Unsaved Changes!", message: "You have not saved your changes. Please hit Apply Changes before navigating away.") { }
+                        alertManager.showOkAlert("Unsaved Changes!", message: "You have not saved your changes. Please hit Apply Changes before navigating away.") { }
                     } else {
                         presentationMode.wrappedValue.dismiss()
                     }

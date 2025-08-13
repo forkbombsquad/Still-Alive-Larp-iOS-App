@@ -109,7 +109,7 @@ struct CreateEditEventView: View {
                                             break
 
                                         }
-                                        AlertManager.shared.showOkAlert("Event Edited", onOkAction: {
+                                        alertManager.showOkAlert("Event Edited", onOkAction: {
                                             runOnMainThread {
                                                 self.loading = false
                                                 self.mode.wrappedValue.dismiss()
@@ -128,7 +128,7 @@ struct CreateEditEventView: View {
                                 AdminService.createEvent(event) { createdEvent in
                                     runOnMainThread {
                                         self.events.insert(createdEvent, at: 0)
-                                        AlertManager.shared.showOkAlert("Event Created", onOkAction: {
+                                        alertManager.showOkAlert("Event Created", onOkAction: {
                                             runOnMainThread {
                                                 self.loading = false
                                                 self.mode.wrappedValue.dismiss()
@@ -141,7 +141,7 @@ struct CreateEditEventView: View {
                             }
 
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: nil)
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: nil)
                         }
                     }
                     .padding(.top, 16)

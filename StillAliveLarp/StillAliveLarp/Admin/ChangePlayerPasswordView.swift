@@ -46,7 +46,7 @@ struct ChangePlayerPasswordView: View {
                                 self.loading = true
                                 AdminService.updatePAdmin(self.password, playerId: self.player.id) { player in
                                     runOnMainThread {
-                                        AlertManager.shared.showOkAlert("Password Successfuly Updated For", message: player.fullName) {
+                                        alertManager.showOkAlert("Password Successfuly Updated For", message: player.fullName) {
                                             runOnMainThread {
                                                 self.loading = false
                                                 self.mode.wrappedValue.dismiss()
@@ -58,10 +58,10 @@ struct ChangePlayerPasswordView: View {
                                 }
 
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                             }
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
                         }
                     }
                     .padding(.top, 16)

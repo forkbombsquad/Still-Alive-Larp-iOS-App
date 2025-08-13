@@ -56,7 +56,7 @@ struct PreregView: View {
                             EventPreregService.preregPlayer(preregModel) { _ in
                                 runOnMainThread {
                                     self.loadingSubmit = false
-                                    AlertManager.shared.showSuccessAlert("Preregistration Created") {
+                                    alertManager.showSuccessAlert("Preregistration Created") {
                                         runOnMainThread {
                                             DM.load()
                                             self.mode.wrappedValue.dismiss()
@@ -72,7 +72,7 @@ struct PreregView: View {
                             EventPreregService.updatePrereg(preregModel) { _ in
                                 runOnMainThread {
                                     self.loadingSubmit = false
-                                    AlertManager.shared.showSuccessAlert("Preregistration Updated") {
+                                    alertManager.showSuccessAlert("Preregistration Updated") {
                                         runOnMainThread {
                                             DM.load()
                                             self.mode.wrappedValue.dismiss()

@@ -455,12 +455,12 @@ struct NativeSkillTree: View {
 //                }
 //                
 //                runOnMainThread {
-//                    AlertManager.shared.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
+//                    alertManager.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
 //                        let charSkill = CharacterSkillCreateModel(characterId: char.id, skillId: skl.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: ppSpent)
 //                        CharacterSkillService.takeSkill(charSkill, playerId: player.id) { _ in
 //                            OldDM.load([.player, .character], forceDownloadIfApplicable: true) {
 //                                runOnMainThread {
-//                                    AlertManager.shared.showOkAlert("\(skl.name) Purchased!") {}
+//                                    alertManager.showOkAlert("\(skl.name) Purchased!") {}
 //                                    self.player = OldDM.player
 //                                    self.character = OldDM.character
 //                                    self.availableSkills = getAvailableSkills() ?? []

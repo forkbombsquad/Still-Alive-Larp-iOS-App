@@ -337,17 +337,17 @@ struct EventsView: View {
                             }
                         }
                         HStack {
-                            if selectedEventIndex > 0 {
-                                Image(systemName: "arrow.left.circle")
-                                    .font(.system(size: 44))
-                                    .foregroundColor(.midRed)
-                                    .padding(.top, 8)
-                                    .onTapGesture {
-                                        self.goToPreviousEvent()
-                                    }
-                            }
+                            let disabled = selectedEventIndex == 0
+                            Image(systemName: "arrow.left.circle")
+                                .font(.system(size: 44))
+                                .foregroundColor(disabled ? .darkGray : .midRed)
+                                .padding(.top, 8)
+                                .onTapGesture {
+                                    self.goToPreviousEvent()
+                                }
+                                .disabled(disabled)
                             Spacer()
-                            LoadingButtonView(.constant(false), width: grWidth * 0.2, buttonText: showAllEvents ? "Show Only\nRelevant\nEvents" : "Show\nAll\nEvents") {
+                            LoadingButtonView(.constant(false), width: grWidth * 0.5, buttonText: showAllEvents ? "Show Only\nRelevant\nEvents" : "Show\nAll\nEvents") {
                                 runOnMainThread {
                                     selectedEventIndex = 0
                                     showAllEvents = !showAllEvents
@@ -355,15 +355,15 @@ struct EventsView: View {
                             }
                             .padding(.top, 8)
                             Spacer()
-                            if selectedEventIndex < events.count - 1 {
-                                Image(systemName: "arrow.right.circle")
-                                    .font(.system(size: 44))
-                                    .foregroundColor(.midRed)
-                                    .padding(.top, 8)
-                                    .onTapGesture {
-                                        self.goToNextEvent()
-                                    }
-                            }
+                            let disabledFor = selectedEventIndex == events.count - 1
+                            Image(systemName: "arrow.right.circle")
+                                .font(.system(size: 44))
+                                .foregroundColor(disabledFor ? .darkGray : .midRed)
+                                .padding(.top, 8)
+                                .onTapGesture {
+                                    self.goToNextEvent()
+                                }
+                                .disabled(disabledFor)
                         }
                     }
                 }

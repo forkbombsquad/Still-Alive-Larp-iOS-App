@@ -61,7 +61,7 @@ struct AddEditEventIntrigueView: View {
 
                                     AdminService.updateIntrigue(editIntrigue) { _ in
                                         runOnMainThread {
-                                            AlertManager.shared.showOkAlert("Intrigue Updated") {
+                                            alertManager.showOkAlert("Intrigue Updated") {
                                                 runOnMainThread {
                                                     self.loadingSubmit = false
                                                     self.mode.wrappedValue.dismiss()
@@ -75,7 +75,7 @@ struct AddEditEventIntrigueView: View {
                                     let intrigue = IntrigueCreateModel(eventId: event.id, investigatorMessage: investigatorMessage, interrogatorMessage: interrogatorMessage, webOfInformantsMessage: "")
                                     AdminService.createIntrigue(intrigue) { intrigue in
                                         runOnMainThread {
-                                            AlertManager.shared.showOkAlert("Intrigue Created") {
+                                            alertManager.showOkAlert("Intrigue Created") {
                                                 runOnMainThread {
                                                     self.loadingSubmit = false
                                                     self.mode.wrappedValue.dismiss()
@@ -89,7 +89,7 @@ struct AddEditEventIntrigueView: View {
                                 }
 
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                             }
                         }
                         .padding(.top, 16)

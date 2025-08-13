@@ -64,7 +64,7 @@ struct ContactView: View {
                             ContactService.createContactRequest(contact, onSuccess: { _ in
                                 runOnMainThread {
                                     self.loading = false
-                                    AlertManager.shared.showOkAlert("Contact Request Sent") {
+                                    alertManager.showOkAlert("Contact Request Sent") {
                                         runOnMainThread {
                                             self.mode.wrappedValue.dismiss()
                                         }
@@ -75,7 +75,7 @@ struct ContactView: View {
                             })
 
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                         }
                     }
                     .padding(.top, 16)

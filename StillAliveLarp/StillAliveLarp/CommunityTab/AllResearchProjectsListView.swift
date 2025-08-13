@@ -72,7 +72,7 @@ struct AllResearchProjectsListView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     if self.loading {
-                        AlertManager.shared.showOkAlert("Unsaved Changes!", message: "Your changes are still loading, please wait for them to finish!") { }
+                        alertManager.showOkAlert("Unsaved Changes!", message: "Your changes are still loading, please wait for them to finish!") { }
                     } else {
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -101,7 +101,7 @@ struct AllResearchProjectsListView: View {
                 self.projectComplete = false
             }
             let rpIsNil = rp == nil
-            AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
+            alertManager.showDynamicAlert(model: CustomAlertModel(
                 title: "\(rpIsNil ? "Create" : "Edit") Research Project",
                 textFields: [
                     AlertTextField(placeholder: "Project Name", value: self.$projectName),

@@ -41,7 +41,7 @@ struct ChangePasswordView: View {
 //                                    PlayerService.updateP(self.password, playerId: OldDM.player?.id ?? -1) { player in
 //                                        runOnMainThread {
 //                                            UserAndPassManager.shared.setUAndP(player.username, p: password, remember: true)
-//                                            AlertManager.shared.showOkAlert("Password Successfuly Updated") {
+//                                            alertManager.showOkAlert("Password Successfuly Updated") {
 //                                                runOnMainThread {
 //                                                    self.loading = false
 //                                                    self.mode.wrappedValue.dismiss()
@@ -53,13 +53,13 @@ struct ChangePasswordView: View {
 //                                    }
 //
 //                                } else {
-//                                    AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+//                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
 //                                }
 //                            } else {
-//                                AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+//                                alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
 //                            }
 //                        } else {
-//                            AlertManager.shared.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
+//                            alertManager.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
 //                        }
                     }
                     .padding(.top, 16)

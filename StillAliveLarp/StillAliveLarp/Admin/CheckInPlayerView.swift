@@ -218,7 +218,7 @@ struct CheckInPlayerView: View {
 
 //    func scannerFailed(_ errorMessage: String) {
 //        runOnMainThread {
-//            AlertManager.shared.showOkAlert("Scanning Failed", message: errorMessage) {
+//            alertManager.showOkAlert("Scanning Failed", message: errorMessage) {
 //                runOnMainThread {
 //                    self.mode.wrappedValue.dismiss()
 //                }
@@ -233,7 +233,7 @@ struct CheckInPlayerView: View {
 
 //    func showSuccessAlertAllowingRescan(_ message: String) {
 //        runOnMainThread {
-//            AlertManager.shared.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
+//            alertManager.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
 //                self.resetScanner()
 //            }), button2: Alert.Button.cancel(Text("Finished"), action: {
 //                runOnMainThread {

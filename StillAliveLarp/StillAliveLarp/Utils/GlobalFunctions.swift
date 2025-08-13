@@ -73,5 +73,6 @@ func globalStyleHtmlForRulebook(_ html: String) -> String {
         .replacingHtmlTagWithTagAndInnerValue("talent", with: "font", innerValue: "color='#007AFF'")
         .replacingHtmlTagWithTag("item", with: "i")
         .replacingHtmlTagWithTag("condition", with: "u")
+        .replacingHtmlTagWithTag("th", with: "b")
 }
 

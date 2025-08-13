@@ -780,10 +780,6 @@ class DataManager: ObservableObject {
         }
     }
     
-    static func forceReset() {
-        shared = DataManager()
-    }
-    
     //
     // MARK: - Other Utils
     //

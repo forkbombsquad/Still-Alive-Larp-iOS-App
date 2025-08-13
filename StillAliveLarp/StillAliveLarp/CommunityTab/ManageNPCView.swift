@@ -38,7 +38,7 @@ struct ManageNPCView: View {
                                 self.infection = npc.infection
                                 self.isAlive = npc.isAlive.boolValueDefaultFalse
                                 self.loading = true
-                                AlertManager.shared.showDynamicAlert(model: CustomAlertModel(
+                                alertManager.showDynamicAlert(model: CustomAlertModel(
                                     title: "Adjust \(npc.fullName) Values", textFields: [
                                         AlertTextField(placeholder: "Bullets", value: $bullets),
                                         AlertTextField(placeholder: "Infection Rating", value: $infection)
@@ -55,7 +55,7 @@ struct ManageNPCView: View {
                                                     if let index = npcs.firstIndex(where: { $0.id == characterModel.id }) {
                                                         npcs[index] = characterModel
                                                     }
-                                                    AlertManager.shared.showOkAlert("Update Successful!") {
+                                                    alertManager.showOkAlert("Update Successful!") {
                                                         runOnMainThread {
                                                             self.loading = false
                                                             self.presentationMode.wrappedValue.dismiss()

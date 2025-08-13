@@ -51,7 +51,7 @@ struct CreateCharacterView: View {
 //
 //                            CharacterService.createCharacter(char) { characterModel in
 //                                OldDM.load([.player, .character], forceDownloadIfApplicable: true)
-//                                AlertManager.shared.showSuccessAlert("Character named \(characterModel.fullName) created!") {
+//                                alertManager.showSuccessAlert("Character named \(characterModel.fullName) created!") {
 //                                    runOnMainThread {
 //                                        self.mode.wrappedValue.dismiss()
 //                                    }
@@ -61,7 +61,7 @@ struct CreateCharacterView: View {
 //                            }
 
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                         }
                     }
                     .padding(.top, 16)

@@ -86,7 +86,7 @@ struct AddSkillView: View {
 //                            CharacterSkillService.takeSkill(charSkill, playerId: player.id) { updatedPlayer in
 //                                CharacterManager.shared.fetchActiveCharacter(overrideLocal: true) { character in
 //                                    runOnMainThread {
-//                                        AlertManager.shared.showOkAlert("Skill Purchased", message: messageString, onOkAction: {
+//                                        alertManager.showOkAlert("Skill Purchased", message: messageString, onOkAction: {
 //                                        })
 //                                        PlayerManager.shared.updatePlayer(updatedPlayer)
 //                                        OldDM.player = updatedPlayer

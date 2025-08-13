@@ -642,7 +642,30 @@ fileprivate struct MockData1: MockData {
                     "Here's some more on another line."
                 ])
             ])
-        ])
+        ]),
+        Heading(title: "Downtime",
+                textsAndTables: [
+                    "Most of the Event will take place in Downtime, during which, characters are free to explore the land, complete quests and jobs, gather resources, and pretty much do whatever they would like (within reason). All of the following sub-sections explain the different things that are possible during downtime (besides simply exploring the land) should you wish to do something more productive! Downtime is your opportunity to accomplish whatever it is you would like to accomplish during the event.",
+                    "Remember, generally the Daytime is safer than the Nighttime, so if you want to do a lot of work away from camp, plan your time accordingly."
+                ], subSubHeadings: [], subHeadings: [
+                    SubHeading("Camp Facilities", textsAndTables: [
+                        "There are several facilities at Camp that are free to be used by all Camp Survivors should the need arise. Though there is limited space, there exists potential for expansion in the future."
+                    ], subSubHeadings: [
+                        SubSubHeading("The Teaching Area", textsAndTables: [
+                            "The Teaching Area is where you will need to learn any \n<font color=\'#910016\'>\n Combat\n</font> or \n<font color=\'#0D8017\'>\n Profession\n</font> type skills that you take after your first event. Someone with the approiate level of \n<b>\n Teaching\n</b> skill will help you learn your new abilities. It\'s important to pay them a bullet or two for their time. A single \n<b>\n Teacher\n</b> may only teach one class at once but they may have multiple students learning the same skill. Additionally, multiple \n<b>\n Teachers\n</b> can host classes at the same time. The limitation on this is the number of chairs in the classroom area. Each student needs one chair in order to be taught. If there are no available chairs, you will have to wait until one is available to learn your new skill."
+                        ]),
+                        SubSubHeading("Fortification Health and Destroying Fortifications", textsAndTables: [
+                            "When a \n<i>\n Fortification\n</i> is constructed, it always starts with its \"Maximum Health\" value. Health of \n<i>\n Fortifications\n</i> is represented as pieces of wood that are Velcro\'d to the \n<i>\n Fortification\'s\n</i> surface. Each wood piece represents 1 Health. When a \n<i>\n Fortification\n</i> is damaged, one of the velcro\'d pieces of wood is removed. \n<i>\n Fortifications\n</i> can be Repaired so long as they have Health remaining. If all of a \n<i>\n Fortification\'s\n</i> Health is removed, that \n<i>\n Fortification\n</i> is destroyed and must be rebuilt. Check out the <a href=\"#Repair\">Repairing</a> section for more information about how to repair \n<i>\n Fortifications\n</i> that still have Health remaining.",
+                            "Every entity in Still Alive has the ability to damage \n<i>\n Fortifications\n</i> with their own rules. Players, damage them using the \n<b>\n Bash\n</b>, \n<b>\n Smash\n</b> and \n<b>\n Crash\n</b> Skills (reminder that every Character starts with the \n<b>\n Bash\n</b> Skill for free). In order to start damaging a \n<i>\n Fortification\n</i>, you\'ll need a Melee Weapon (though you don\'t have to be proficient with it). Start roleplaying hitting the \n<i>\n Fortification\n</i> loudly making lots of noise while you are damaging it. If you have the \n<b>\n Smash\n</b> or \n<b>\n Crash\n</b> Skills, you are able to damage \n<i>\n Fortifications\n</i> quietly, but it takes more time. Use the table below to determine how much time it takes to damage a \n<i>\n Fortification\n</i> (allowing you to remove one of it\'s velcro\'d on wood pieces - i.e. it\'s Health).",
+                            Table(contents: [
+                                "" : ["<th>Regular Damage (loud)</th>", "<th>Quiet Damage</th>"],
+                                "Bash" : ["30 Seconds", "-"],
+                                "Smash" : ["20 Seconds", "1 Minute"],
+                                "Crash" : ["10 Seconds", "30 Seconds"]
+                            ])
+                        ])
+                    ])
+                ])
     ])
     
     var updateTracker = UpdateTrackerModel(id: 1, announcements: 1, awards: 1, characters: 1, gear: 1, characterSkills: 1, contactRequests: 1, events: 1, eventAttendees: 1, preregs: 1, featureFlags: 1, intrigues: 1, players: 1, profileImages: 1, researchProjects: 1, skills: 1, skillCategories: 1, skillPrereqs: 1, xpReductions: 1, campStatus: 1, rulebookVersion: "1.1.1.1", treatingWoundsVersion: "1.1.1.1")

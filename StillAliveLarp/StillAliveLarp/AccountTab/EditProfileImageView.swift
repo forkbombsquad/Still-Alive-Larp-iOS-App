@@ -58,7 +58,7 @@ struct EditProfileImageView: View {
 //                                    ProfileImageService.deleteProfileImage(id) { _ in
 //                                        runOnMainThread {
 //                                            self.image = UIImage(imageLiteralResourceName: "blank-profile")
-//                                            AlertManager.shared.showSuccessAlert("Profile Image Deleted!") {}
+//                                            alertManager.showSuccessAlert("Profile Image Deleted!") {}
 //                                            self.loading = false
 //                                            OldDM.profileImage = nil
 //                                            self.selectImageText = "Select Image"
@@ -167,7 +167,7 @@ struct EditProfileImageView: View {
 //                        }
 //                        
 //                    } else {
-//                        AlertManager.shared.showOkAlert("Something Went Wrong!", message: "Unable to convert image to bitmap") {
+//                        alertManager.showOkAlert("Something Went Wrong!", message: "Unable to convert image to bitmap") {
 //                            runOnMainThread {
 //                                self.selectImageText = "Select Image"
 //                                self.loading = false
@@ -184,7 +184,7 @@ struct EditProfileImageView: View {
                     if !loading {
                         presentationMode.wrappedValue.dismiss()
                     } else {
-                        AlertManager.shared.showOkAlert("Cannot Go Back Yet!", message: "Your new profile image is still uploading. Please wait for it to finish.") { }
+                        alertManager.showOkAlert("Cannot Go Back Yet!", message: "Your new profile image is still uploading. Please wait for it to finish.") { }
                     }
                 }) {
                     HStack {
@@ -198,7 +198,7 @@ struct EditProfileImageView: View {
     }
     
     func displayFinishedMessage() {
-        AlertManager.shared.showSuccessAlert("Profile Image Updated!") {}
+        alertManager.showSuccessAlert("Profile Image Updated!") {}
         runOnMainThread {
             self.selectImageText = "Select Image"
         }

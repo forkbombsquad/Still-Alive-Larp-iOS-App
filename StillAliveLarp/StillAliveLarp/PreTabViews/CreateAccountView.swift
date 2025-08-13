@@ -58,7 +58,7 @@ struct CreateAccountView: View {
                                 PlayerService.createPlayer(preApprovalCode, player: playerCreate) { player in
                                     DM.setCurrentPlayerId(player.id)
                                     UserAndPassManager.shared.setTemp(u: emailAddress, p: password)
-                                    AlertManager.shared.showOkAlert("Account Created!") {
+                                    alertManager.showOkAlert("Account Created!") {
                                         runOnMainThread {
                                             self.loading = false
                                             self.mode.wrappedValue.dismiss()
@@ -69,10 +69,10 @@ struct CreateAccountView: View {
                                 }
 
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                             }
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
                         }
 
                     }

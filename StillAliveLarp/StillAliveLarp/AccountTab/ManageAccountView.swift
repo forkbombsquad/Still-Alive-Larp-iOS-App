@@ -28,8 +28,21 @@ struct ManageAccountView: View {
                             ChangePasswordView()
                         }
                         Spacer()
+                        LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Force Download Data") {
+                            self.loading = true
+                            DM.load(loadType: .forceDownload) {
+                                DM.popToRoot()
+                            }
+                        }
+                        LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Delete Local Data") {
+                            alertManager.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once deleted, all local data will be wiped and will need to be re-downloaded and reconfigured.", customButtonText: "Delete Local Data") {
+                                self.loading = true
+                                self.loadingText = ""
+                                self.deleteLocalData()
+                            }
+                        }
                         LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Delete Account") {
-                            AlertManager.shared.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once your account is deleted it will be gone forever and CAN NOT be recovered.", customButtonText: "Delete Account") {
+                            alertManager.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once your account is deleted it will be gone forever and CAN NOT be recovered.", customButtonText: "Delete Account") {
                                 self.loading = true
                                 self.loadingText = ""
                                 self.deleteCharSkills()
@@ -40,6 +53,13 @@ struct ManageAccountView: View {
             }
         }.padding(16)
             .background(Color.lightGray)
+    }
+    
+    private func deleteLocalData() {
+        runOnMainThread {
+            LocalDataManager.clearAllLocalData()
+            alertManager.showOkAlert("Success", message: "All local data has been deleted! To see changes take effect, please completely close the app!") {}
+        }
     }
 
     private func deleteCharSkills() {
@@ -138,7 +158,7 @@ struct ManageAccountView: View {
 
     private func successDeleting() {
 //        self.loadingText = ""
-//        AlertManager.shared.showSuccessAlert("Your account and all associated data has been deleted!") {
+//        alertManager.showSuccessAlert("Your account and all associated data has been deleted!") {
 //            forceResetAllPlayerData()
 //            runOnMainThread {
 //                OldDM.popToRoot()

@@ -51,7 +51,7 @@ struct CreateAnnouncementView: View {
 
                             AdminService.createAnnouncement(announcement) { _ in
                                 runOnMainThread {
-                                    AlertManager.shared.showOkAlert("Announcement Created") {
+                                    alertManager.showOkAlert("Announcement Created") {
                                         self.loading = false
                                         self.mode.wrappedValue.dismiss()
                                     }
@@ -60,7 +60,7 @@ struct CreateAnnouncementView: View {
                                 self.loading = false
                             }
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                         }
                     }
                     .padding(.top, 16)

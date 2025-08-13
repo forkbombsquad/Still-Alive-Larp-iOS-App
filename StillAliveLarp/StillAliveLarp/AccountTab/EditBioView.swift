@@ -42,7 +42,7 @@ struct EditBioView: View {
 //
 //                            CharacterService.updateBio(char) { characterModel in
 //                                OldDM.load([.character], forceDownloadIfApplicable: true)
-//                                AlertManager.shared.showOkAlert("Success", message: "\(character.fullName)'s bio was approved!") {
+//                                alertManager.showOkAlert("Success", message: "\(character.fullName)'s bio was approved!") {
 //                                    runOnMainThread {
 //                                        self.mode.wrappedValue.dismiss()
 //                                    }
