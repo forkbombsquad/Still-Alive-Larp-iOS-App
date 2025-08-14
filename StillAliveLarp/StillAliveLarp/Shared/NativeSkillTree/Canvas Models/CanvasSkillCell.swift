@@ -169,7 +169,10 @@ struct CanvasSkillCell: View {
                         .padding(16)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, minHeight: collapsedWidth, alignment: .center)
-                        .shadow(color: .black, radius: 1)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
+                        .shadow(color: .black, radius: 0.4)
                 }
             }
             .padding(0)
@@ -243,30 +246,19 @@ struct CanvasSkillCell: View {
     }
     
     func getXpRowText() -> String {
-        // TODO redo this
-        return ""
-//        var xpRow = "\(skill.xpC)xp"
-//        if skill.prestigeCost.intValueDefaultZero > 0 {
-//            xpRow += " | \(skill.prestigeCost)pp"
-//        }
-//        if skill.minInfection.intValueDefaultZero > 0 {
-//            xpRow += " | \(skill.minInfection)% Inf Threshold"
-//        }
-//        return xpRow
+        return skill.getFullCostText()
     }
     
     func skillTopBoxText() -> String? {
-        // TODO redo this
-        return ""
-//        var str = ""
-//        if skill.skillCategoryId == Constants.SpecificSkillCategories.infected {
-//            str = "At least \(skill.minInfection)% Infection Rating Required"
-//        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.spec {
-//            str = "You may only select 1 Tier-\(skill.xpCost) specialization skill"
-//        } else if skill.skillCategoryId == Constants.SpecificSkillCategories.prestige {
-//            str = "Requires \(skill.prestigeCost) Prestige Point"
-//        }
-//        return str.isEmpty ? nil : str
+        var str = ""
+        if skill.usesInfection() {
+            str = "At least \(skill.getInfCostText()) Required"
+        } else if skill.category.id == Constants.SpecificSkillCategories.spec {
+            str = "You may only select 1 Tier-\(skill.baseXpCost()) specialization skill"
+        } else if skill.usesPrestige() {
+            str = "Requires \(skill.prestigeCost()) Prestige Point"
+        }
+        return str.isEmpty ? nil : str
     }
     
 }
@@ -276,10 +268,10 @@ struct CanvasSkillCell: View {
     let freeSkill = 6
     let longSkill = 72
     let prestigeSkill = 23
-    let infSkill = 40
+    let infSkill = 14
     let specSkill = 19
     let manyPrereqs = 47
-    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == manyPrereqs })!.fullCharacterModifiedSkillModel(), allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
+    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == infSkill })!.fullCharacterModifiedSkillModel(), allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
 }
 
 struct SkillCellMeasurer: View {

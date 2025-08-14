@@ -4,9 +4,9 @@ class SkillGrid: ObservableObject {
     let personal: Bool
     let allowPurchase: Bool
     let player: FullPlayerModel
-    let character: FullCharacterModel?
+    @Published var character: FullCharacterModel?
     
-    let skills: [FullCharacterModifiedSkillModel]
+    @Published var skills: [FullCharacterModifiedSkillModel]
     @Published var gridCategories: [SkillGridCategory] = []
     var fullGrid: [[FullCharacterModifiedSkillModel?]] = []
     @Published var trueGrid: [GridSkill] = []
@@ -19,13 +19,8 @@ class SkillGrid: ObservableObject {
         self.skills = character?.allSkillsWithCharacterModifications() ?? skills
         
         calculateWidthAndHeightOfGridCategories()
-        orderCategories()
         self.fullGrid = calculateFullGrid()
         self.trueGrid = calculateTrueGrid()
-    }
-    
-    private func orderCategories() {
-        gridCategories.sort { $0.skillCategoryId < $1.skillCategoryId }
     }
 
     private func calculateFullGrid() -> [[FullCharacterModifiedSkillModel?]] {

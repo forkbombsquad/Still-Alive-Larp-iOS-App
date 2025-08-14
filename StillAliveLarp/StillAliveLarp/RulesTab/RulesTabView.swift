@@ -30,8 +30,7 @@ struct RulesTabView: View {
         //                                SkillListView(skills: allSkills)
                                     }
                                     NavArrowView(title: "Skill Tree Diagram") { _ in
-                                        // TODO
-        //                                NativeSkillTree(skillGrid: SkillGrid(skills: self.allSkills, skillCategories: self.skillCategories, personal: false, allowPurchase: false))
+                                        NativeSkillTree.initAsBase(allSkills: DM.getSkillsAsFCMSM(), currentPlayer: DM.getCurrentPlayer()!)
                                     }
                                     NavArrowView(title: "Core Rulebook") { _ in
                                         ViewRulesView(rulebook: DM.rulebook)

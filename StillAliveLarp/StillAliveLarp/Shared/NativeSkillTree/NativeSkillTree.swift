@@ -28,6 +28,8 @@ struct NativeSkillTree: View {
         return NativeSkillTree(allSkills: [], personal: true, allowPurchase: false, player: currentPlayer, character: npc)
     }
     
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     private let collapsedWidth: CGFloat = 300
     private let expandedWidth: CGFloat = 500
@@ -56,7 +58,7 @@ struct NativeSkillTree: View {
     
     private init(allSkills: [FullCharacterModifiedSkillModel], personal: Bool, allowPurchase: Bool, player: FullPlayerModel, character: FullCharacterModel?) {
         self._skillGrid = globalStateObject(SkillGrid(personal: personal, allowPurchase: allowPurchase, player: player, character: character, skills: allSkills))
-        self.availableSkills = character?.allPurchaseableSkills() ?? []
+        self._availableSkills = globalState(character?.allPurchaseableSkills() ?? [])
     }
     
     var body: some View {
@@ -281,10 +283,9 @@ struct NativeSkillTree: View {
     }
     
     private func forceRefresh() {
-        // TODO
-//        DispatchQueue.main.async {
-//            self.trueGrid = trueGrid
-//        }
+        DispatchQueue.main.async {
+            self.skillGrid.trueGrid = skillGrid.trueGrid
+        }
     }
     
     private func getTappedOnSkill(x: CGFloat, y: CGFloat) -> Int? {
@@ -418,86 +419,62 @@ struct NativeSkillTree: View {
     }
     
     private func handleTap(x: CGFloat, y: CGFloat) {
-        // TODO redo this
-//        if !isPurchasing, let expandedSkill = expandedSkill, expandedSkill.expanded, tappedOnPurchase(expandedSkill, x: x, y: y) {
-//            self.isPurchasing = true
-//            self.loadingText = "Purchasing..."
-//            Task {
-//                let dots = ["", ".", "..", "..."]
-//                var i = 0
-//                while isPurchasing {
-//                    await MainActor.run {
-//                        self.loadingText = "Purchasing" + dots[i % dots.count]
-//                    }
-//                    try? await Task.sleep(nanoseconds: 250000000) // 0.25 seconds
-//                    i += 1
-//                }
-//            }
-//            if let player = player, let char = character, let skl = availableSkills.first(where: { $0.id == expandedSkill.skill.id }) {
-//                // TODO redo this
-//                var xpSpent = 0
-//                var fsSpent = 0
-//                var ppSpent = 0
-//
-//                var msgStr = "It will cost you "
-//
-//                if skl.canUseFreeSkill, Int(player.freeTier1Skills) ?? 0 > 0 {
-//                    msgStr += "1 Free Tier-1 Skill point (you have \(player.freeTier1Skills) FT1S)"
-//                    fsSpent = 1
-//                } else {
-//                    msgStr += "\(skl.modXpCost)xp (you have \(player.experience)xp)"
-//                    xpSpent = Int(skl.modXpCost) ?? 0
-//                }
-//
-//                if skl.usesPrestige {
-//                    msgStr += " and \(skl.prestigeCost) Prestige point (you have \(player.prestigePoints)pp)"
-//                    ppSpent = 1
-//                }
-//                
-//                runOnMainThread {
-//                    alertManager.showOkCancelAlert("Are you sure you want to purchase \(skl.name)", message: msgStr) {
-//                        let charSkill = CharacterSkillCreateModel(characterId: char.id, skillId: skl.id, xpSpent: xpSpent, fsSpent: fsSpent, ppSpent: ppSpent)
-//                        CharacterSkillService.takeSkill(charSkill, playerId: player.id) { _ in
-//                            OldDM.load([.player, .character], forceDownloadIfApplicable: true) {
-//                                runOnMainThread {
-//                                    alertManager.showOkAlert("\(skl.name) Purchased!") {}
-//                                    self.player = OldDM.player
-//                                    self.character = OldDM.character
-//                                    self.availableSkills = getAvailableSkills() ?? []
-//                                    self.isPurchasing = false
-//                                    self.forceRefresh()
-//                                }
-//                            }
-//                        } failureCase: { error in
-//                            runOnMainThread {
-//                                self.isPurchasing = false
-//                            }
-//                        }
-//
-//                    } onCancelAction: {
-//                        runOnMainThread {
-//                            self.isPurchasing = false
-//                        }
-//                    }
-//                }
-//                
-//            }
-//        } else if let tappedSkillIndex = getTappedOnSkill(x: x, y: y) {
-//            let oldState = trueGrid[tappedSkillIndex].expanded
-//            for index in trueGrid.indices {
-//                trueGrid[index].expanded = false
-//            }
-//            trueGrid[tappedSkillIndex].expanded = !oldState
-//            self.expandedSkill = !oldState ? trueGrid[tappedSkillIndex] : nil
-//            
-//            forceRefresh()
-//        } else {
-//            for index in trueGrid.indices {
-//                trueGrid[index].expanded = false
-//            }
-//            self.expandedSkill = nil
-//            forceRefresh()
-//        }
+        if !isPurchasing {
+            if let expandedSkill = expandedSkill, expandedSkill.expanded, tappedOnPurchase(expandedSkill, x: x, y: y), let character = skillGrid.character, DM.playerIsCurrentPlayer(character.playerId), DM.playerIsCurrentPlayer(character.playerId), let skill = availableSkills.first(where: { $0.id == expandedSkill.skill.id }) {
+                // Purchase
+                purchaseSkill(character, skill: skill)
+            } else if let tappedSkillIndex = getTappedOnSkill(x: x, y: y) {
+                // Expand/Contract
+                let oldState = skillGrid.trueGrid[tappedSkillIndex].expanded
+                for index in skillGrid.trueGrid.indices {
+                    skillGrid.trueGrid[index].expanded = false
+                }
+                skillGrid.trueGrid[tappedSkillIndex].expanded = !oldState
+                self.expandedSkill = !oldState ? skillGrid.trueGrid[tappedSkillIndex] : nil
+                
+                forceRefresh()
+            } else {
+                // Contract
+                for index in skillGrid.trueGrid.indices {
+                    skillGrid.trueGrid[index].expanded = false
+                }
+                self.expandedSkill = nil
+                forceRefresh()
+            }
+        }
+    }
+    
+    private func purchaseSkill(_ character: FullCharacterModel, skill: FullCharacterModifiedSkillModel) {
+        // Purchase
+        self.isPurchasing = true
+        self.loadingText = "Purchasing..."
+        Task {
+            let dots = ["", ".", "..", "..."]
+            var i = 0
+            while isPurchasing {
+                await MainActor.run {
+                    self.loadingText = "Purchasing" + dots[i % dots.count]
+                }
+                try? await Task.sleep(nanoseconds: 250000000) // 0.25 seconds
+                i += 1
+            }
+        }
+        character.attemptToPurchaseSkill(skill: skill) { success in
+            if success {
+                DM.load(finished: {
+                    runOnMainThread {
+                        if let character = self.skillGrid.character, let refreshedChar = DM.getCharacter(character.id) {
+                            self.skillGrid.character = refreshedChar
+                            self.skillGrid.skills = refreshedChar.allSkillsWithCharacterModifications()
+                            self.availableSkills = character.allPurchaseableSkills()
+                        }
+                    }
+                })
+            } else {
+                self.isPurchasing = false
+                self.loadingText = ""
+            }
+        }
     }
 
 }

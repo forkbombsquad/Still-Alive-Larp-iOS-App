@@ -53,6 +53,7 @@ struct MainView: View {
                                     .multilineTextAlignment(.leading)
                                     .frame(alignment: .leading)
                                     .padding(.trailing, 8)
+                                Spacer()
 
                                 LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.4, height: 90, buttonText: "Log In", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
                                     DM.setOfflineMode(false)
@@ -89,11 +90,13 @@ struct MainView: View {
                                         self.loading = false
                                     }
                                 }
-                            }.padding(.top, 32)
+                            }
+                            .padding(.top, 32)
+                            .padding(.horizontal, 3)
                             NavigationLink(destination: CreateAccountView()) {
                                 Text("Create Account")
                                     .font(.system(size: 20, weight: .bold))
-                                    .frame(width: gr.size.width, height: 90)
+                                    .frame(width: gr.size.width - 8, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
                                     .foregroundColor(.white)
@@ -104,7 +107,7 @@ struct MainView: View {
                             NavigationLink(destination: ContactView()) {
                                 Text("Contact Us")
                                     .font(.system(size: 20, weight: .bold))
-                                    .frame(width: gr.size.width, height: 90)
+                                    .frame(width: gr.size.width - 8, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
                                     .foregroundColor(.white)
@@ -112,17 +115,17 @@ struct MainView: View {
                                     .controlSize(.large)
                             }
                             
-                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
+                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 20, weight: .bold)) {
                                 loading = true
                                 DM.setOfflineMode(true)
-                                DM.load {
+                                DM.load(finished:  {
                                     runOnMainThread {
                                         if DM.getCurrentPlayer() != nil {
                                             self.loading = false
                                             DM.actionState = 1
                                         }
                                     }
-                                }
+                                })
                             }
                         }
 
@@ -158,5 +161,5 @@ struct MainView: View {
 
 #Preview {
     DataManager.shared.setDebugMode(true)
-    return MainView()
+    return MainView().environmentObject(DataManager.shared)
 }
