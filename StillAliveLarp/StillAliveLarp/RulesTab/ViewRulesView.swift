@@ -35,9 +35,7 @@ struct ViewRulesView: View {
         VStack {
             GeometryReader { gr in
                 VStack {
-                    Text(DM.getTitlePotentiallyOffline("Rulebook v\(rulebook?.version ?? "unknown version")"))
-                        .font(.stillAliveTitleFont)
-                        .frame(alignment: .center)
+                    globalCreateTitleView("Rulebook v\(rulebook?.version ?? "unknown version")", DM: DM)
                     Button(action: {
                         showFilters.toggle()
                     }) {

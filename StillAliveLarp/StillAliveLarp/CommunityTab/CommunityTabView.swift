@@ -18,8 +18,7 @@ struct CommunityTabView: View {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh_CommunityTab", spinnerOffsetY: -100, pullDownDistance: 150) {
                         DM.load()
                     }
-                    Text(DM.getTitlePotentiallyOffline("Community"))
-                        .font(.stillAliveTitleFont)
+                    globalCreateTitleView("Community", DM: DM)
                     LoadingLayoutView {
                         VStack {
                             NavArrowView(title: "All Players") { _ in

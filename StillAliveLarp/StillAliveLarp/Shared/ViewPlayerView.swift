@@ -19,16 +19,14 @@ struct ViewPlayerView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text(DM.getTitlePotentiallyOffline(player.fullName))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView(player.fullName, DM: DM)
                         Image(uiImage: player.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile"))
                             .resizable()
                             .scaledToFit()
                             .frame(width: 200, height: 200)
                             .padding(.bottom, 8)
                         NavArrowView(title: "View Player Stats") { _ in
-                            // TODO
+                            ViewPlayerStatsView(player: player)
                         }
                         NavArrowView(title: "View Player Awards") { _ in
                             // TODO

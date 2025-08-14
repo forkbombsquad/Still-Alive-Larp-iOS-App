@@ -76,3 +76,10 @@ func globalStyleHtmlForRulebook(_ html: String) -> String {
         .replacingHtmlTagWithTag("th", with: "b")
 }
 
+@ViewBuilder
+func globalCreateTitleView(_ title: String, DM: DataManager) -> some View {
+    Text(DM.getTitlePotentiallyOffline(title))
+        .font(.stillAliveTitleFont)
+        .multilineTextAlignment(.center)
+        .frame(alignment: .center)
+}

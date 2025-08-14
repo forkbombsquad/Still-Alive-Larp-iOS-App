@@ -63,6 +63,8 @@ struct CardWithTitleView<Content: View>: ContainerViewWithTitle {
                 Spacer()
                 Text(title)
                     .font(.system(size: 24))
+                    .frame(alignment: .center)
+                    .multilineTextAlignment(.center)
                     .underline(true)
                     .foregroundColor(.darkGray)
                 Spacer()

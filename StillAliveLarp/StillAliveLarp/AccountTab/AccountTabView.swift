@@ -24,8 +24,7 @@ struct AccountTabView: View {
                             DM.load()
                         }
                         VStack {
-                            Text(DM.getTitlePotentiallyOffline("My Account"))
-                                .font(.stillAliveTitleFont)
+                            globalCreateTitleView("My Account", DM: DM)
                             LoadingLayoutView {
                                 VStack {
                                     NavigationLink(destination: EditProfileImageView()) {
@@ -42,13 +41,13 @@ struct AccountTabView: View {
                                         .font(.system(size: 24, weight: .bold))
                                         .frame(alignment: .leading)
                                         .padding(.top, 24)
-                                    NavArrowView(title: "View Player Stats") { _ in
-                                        // TODO
-                                    }
-                                    NavArrowView(title: "View Player Awards") { _ in
-                                        // TODO
-                                    }
                                     if let player = DM.getCurrentPlayer() {
+                                        NavArrowView(title: "View Player Stats") { _ in
+                                            ViewPlayerStatsView(player: player)
+                                        }
+                                        NavArrowView(title: "View Player Awards") { _ in
+                                            // TODO
+                                        }
                                         CharacterPanel(fromAccount: true, player: player, character: DM.getActiveCharacter())
                                     }
                                     Text("Account")

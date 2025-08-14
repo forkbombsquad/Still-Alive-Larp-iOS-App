@@ -34,9 +34,7 @@ struct AllResearchProjectsListView: View {
                         }
                     }
                     VStack {
-                        Text(DM.getTitlePotentiallyOffline("\(allowEdit ? "Manage " : "")Research Projects"))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView("\(allowEdit ? "Manage " : "")Research Projects", DM: DM)
                         if loading {
                             LoadingBlock()
                         } else {

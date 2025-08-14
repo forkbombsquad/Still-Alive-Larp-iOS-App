@@ -25,9 +25,7 @@ struct PlayersListView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text(DM.getTitlePotentiallyOffline(title))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView(title, DM: DM)
                         LazyVStack(spacing: 8) {
                             ForEach(players.alphabetized) { player in
                                 NavArrowView(title: "\(player.fullName)\(player.isAdmin ? " (Staff)" : "")") { _ in

@@ -27,9 +27,7 @@ struct NPCListView: View {
                     VStack {
                         let living = npcs.filter({ $0.isAlive })
                         let dead = npcs.filter({ !$0.isAlive })
-                        Text(DM.getTitlePotentiallyOffline(title))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView(title, DM: DM)
                         Divider().padding(.horizontal, 16).padding(.bottom, 8)
                         KeyValueView(key: "Total Living NPCs", value: "\(living.count) / 10", showDivider: false)
                         KeyValueView(key: "Quest Rewards Reduced By", value: "\((10 - living.count) * 10)%").padding(.top, 8)

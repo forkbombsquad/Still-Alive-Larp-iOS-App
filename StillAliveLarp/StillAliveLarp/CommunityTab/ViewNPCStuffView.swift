@@ -19,9 +19,7 @@ struct ViewNPCStuffView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text(DM.getTitlePotentiallyOffline("\(npc.fullName) (NPC\(npc.isAlive ? "" : " - Dead"))"))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView("\(npc.fullName) (NPC\(npc.isAlive ? "" : " - Dead"))", DM: DM)
                         KeyValueView(key: "Times Played", value: DM.events.flatMap({ $0.attendees }).count(where: { $0.npcId == npc.id }).stringValue, showDivider: false).padding(.top, 16)
                         KeyValueView(key: "Infection Rating", value: "\(npc.infection)%", showDivider: false)
                         KeyValueView(key: "Bullets", value: "\(npc.bullets)")
@@ -31,12 +29,13 @@ struct ViewNPCStuffView: View {
                         if npc.hasUnshakableResolve() {
                             KeyValueView(key: "Unshakable Resolve Uses Remaining", value: "\((npc.hasUnshakableResolve() ? 1 : 0) - npc.unshakableResolveUses) / \(npc.hasUnshakableResolve() ? 1 : 0)")
                         }
-                        
-                        NavArrowView(title: "View SKills (Tree)") { _ in
-                         // TODO Native Skill Tree Personal
+                        if let player = DM.getCurrentPlayer() {
+                            NavArrowView(title: "View SKills (Tree)") { _ in
+                                NativeSkillTree.initAsNPCPersonal(currentPlayer: player, npc: npc)
+                            }
                         }
                         NavArrowView(title: "View SKills (List)") { _ in
-                            // TODO Native Skill Tree Personal
+                            // TODO Native Skill List Personal
                         }
                         NavArrowView(title: "NPC Bio") { _ in
                             // TODO Bio

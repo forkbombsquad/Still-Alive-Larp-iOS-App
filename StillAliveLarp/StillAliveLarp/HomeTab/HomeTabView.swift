@@ -22,9 +22,7 @@ struct HomeTabView: View {
                             DM.load()
                         }
                         VStack {
-                            Text(DM.getTitlePotentiallyOffline("Home"))
-                                .font(.stillAliveTitleFont)
-                                .frame(alignment: .center)
+                            globalCreateTitleView("Home", DM: DM)
                             LoadingLayoutView {
                                 VStack {
                                     AnnouncementsView()

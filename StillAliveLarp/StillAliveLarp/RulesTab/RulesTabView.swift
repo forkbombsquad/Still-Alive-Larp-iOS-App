@@ -20,9 +20,7 @@ struct RulesTabView: View {
                             DM.load()
                         }
                         VStack {
-                            Text(DM.getTitlePotentiallyOffline("Rules and Reference"))
-                                .font(.stillAliveTitleFont)
-                                .frame(alignment: .center)
+                            globalCreateTitleView("Rules and Reference", DM: DM)
                             LoadingLayoutView {
                                 VStack {
                                     NavArrowView(title: "Skill List") { _ in

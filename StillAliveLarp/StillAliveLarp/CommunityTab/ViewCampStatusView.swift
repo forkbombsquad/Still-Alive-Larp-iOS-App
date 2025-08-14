@@ -19,9 +19,7 @@ struct ViewCampStatusView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text(DM.getTitlePotentiallyOffline("Camp Status"))
-                            .font(.stillAliveTitleFont)
-                            .frame(alignment: .center)
+                        globalCreateTitleView("Camp Status", DM: DM)
                         LazyVStack(spacing: 8) {
                             ForEach(campStatus.campFortifications.sorted(by: { $0.ring < $1.ring })) { fortification in
                                 FortificationRingCell(allowOnClick: .constant(false), campFortification: fortification, onClick: nil)
