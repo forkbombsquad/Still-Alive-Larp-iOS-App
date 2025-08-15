@@ -13,14 +13,12 @@ struct AddSkillView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    typealias slk = SkillListView
-
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     @State var skills: [FullCharacterModifiedSkillModel] = []
     @State var searchText: String = ""
-    @State var filterType: slk.FilterType = .none
-    @State var sortType: slk.SortType = .az
+    @State var filterType: SkillFilterType = .none
+    @State var sortType: SkillSortType = .az
 
     @State var purchasingSkill = false
 

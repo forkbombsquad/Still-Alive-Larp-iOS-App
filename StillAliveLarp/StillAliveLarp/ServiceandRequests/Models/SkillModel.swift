@@ -8,6 +8,29 @@
 import Foundation
 import SwiftUI
 
+enum SkillFilterType: String, CaseIterable {
+    case none = "No Filter"
+    case combat = "Combat"
+    case profession = "Profession"
+    case talent = "Talent"
+    case xp0 = "0xp"
+    case xp1 = "1xp"
+    case xp2 = "2xp"
+    case xp3 = "3xp"
+    case xp4 = "4xp"
+    case pp = "Prestige Points"
+    case inf = "Infection Threshold"
+}
+
+enum SkillSortType: String, CaseIterable {
+    case az = "A-Z"
+    case za = "Z-A"
+    case xpAsc = "XP Asc"
+    case xpDesc = "XP Desc"
+    case typeAsc = "Type Asc"
+    case typeDesc = "Type Desc"
+}
+
 struct SkillModel: CustomCodeable, Identifiable {
     let id: Int
     let xpCost: String
@@ -170,7 +193,7 @@ struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
         return skill.getPrereqNames()
     }
     
-    func includeInFilter(searchText: String, filterType: SkillListView.FilterType) -> Bool {
+    func includeInFilter(searchText: String, filterType: SkillFilterType) -> Bool {
         let text = searchText.trimmed.lowercased()
         if text.isNotEmpty {
             if !name.lowercased().contains(text) &&

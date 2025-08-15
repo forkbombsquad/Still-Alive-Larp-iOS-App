@@ -233,7 +233,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         }
     }
     
-    func allPurchaseableSkills(searchText: String = "", filter: SkillListView.FilterType = .none) -> [FullCharacterModifiedSkillModel] {
+    func allPurchaseableSkills(searchText: String = "", filter: SkillFilterType = .none) -> [FullCharacterModifiedSkillModel] {
         let charSkills = allNonPurchasedSkills()
         let player = DataManager.shared.getPlayerForCharacter(self)
         
@@ -432,7 +432,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return gear?.getGearOrganized() ?? [:]
     }
     
-    func getPurchasedSkillsFiltered(searchText: String, filter: SkillListView.FilterType) -> [FullCharacterModifiedSkillModel] {
+    func getPurchasedSkillsFiltered(searchText: String, filter: SkillFilterType) -> [FullCharacterModifiedSkillModel] {
         return allPurchasedSkills().filter({ $0.includeInFilter(searchText: searchText, filterType: filter) })
     }
     

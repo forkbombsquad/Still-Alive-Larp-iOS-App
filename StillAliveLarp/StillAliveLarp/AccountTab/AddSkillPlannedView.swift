@@ -13,8 +13,6 @@ struct AddPlannedSkillView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    typealias slk = SkillListView
-
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     @State var character: FullCharacterModel
@@ -23,8 +21,8 @@ struct AddPlannedSkillView: View {
     @State var loading: Bool = false
     
     @State var searchText: String = ""
-    @State var filterType: slk.FilterType = .none
-    @State var sortType: slk.SortType = .az
+    @State var filterType: SkillFilterType = .none
+    @State var sortType: SkillSortType = .az
 
     @State var purchasingSkill = false
 
@@ -52,7 +50,7 @@ struct AddPlannedSkillView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
                 HStack {
                     Menu("Sort\n(\(sortType.rawValue))") {
-                        ForEach(slk.SortType.allCases, id: \.self) { sortType in
+                        ForEach(SkillSortType.allCases, id: \.self) { sortType in
                             Button(sortType.rawValue) {
                                 self.sortType = sortType
                             }
@@ -65,7 +63,7 @@ struct AddPlannedSkillView: View {
                         .textInputAutocapitalization(.never)
                     Spacer()
                     Menu("Filter\n(\(filterType.rawValue))") {
-                        ForEach(slk.FilterType.allCases, id: \.self) { filterType in
+                        ForEach(SkillFilterType.allCases, id: \.self) { filterType in
                             Button(filterType.rawValue) {
                                 self.filterType = filterType
                             }
