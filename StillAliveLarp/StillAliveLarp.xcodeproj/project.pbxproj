@@ -60,7 +60,6 @@
 		B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529929E869D800183748 /* AwardPlayerFormView.swift */; };
 		B235529C29E8805100183748 /* AwardCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529B29E8805100183748 /* AwardCharacterView.swift */; };
 		B235529E29E8810A00183748 /* AwardCharacterFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529D29E8810A00183748 /* AwardCharacterFormView.swift */; };
-		B23552B629E9C49400183748 /* SkillManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B529E9C49400183748 /* SkillManagementView.swift */; };
 		B23552B829E9C9B800183748 /* CharacterSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B729E9C9B800183748 /* CharacterSkill.swift */; };
 		B23552BA29E9CBAE00183748 /* CharacterSkillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B929E9CBAE00183748 /* CharacterSkillService.swift */; };
 		B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552BB29E9D14E00183748 /* CreateCharacterView.swift */; };
@@ -88,6 +87,7 @@
 		B23728B62DCA735400495777 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728B52DCA735200495777 /* FeatureFlag.swift */; };
 		B23728B92DCA828B00495777 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B23728B82DCA828B00495777 /* Gzip */; };
 		B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */; };
+		B24BBE7B2E96D0F900ACE2AC /* FileStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE7A2E96D0F300ACE2AC /* FileStorageManager.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -255,7 +255,6 @@
 		B235529929E869D800183748 /* AwardPlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardPlayerFormView.swift; sourceTree = "<group>"; };
 		B235529B29E8805100183748 /* AwardCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterView.swift; sourceTree = "<group>"; };
 		B235529D29E8810A00183748 /* AwardCharacterFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterFormView.swift; sourceTree = "<group>"; };
-		B23552B529E9C49400183748 /* SkillManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementView.swift; sourceTree = "<group>"; };
 		B23552B729E9C9B800183748 /* CharacterSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSkill.swift; sourceTree = "<group>"; };
 		B23552B929E9CBAE00183748 /* CharacterSkillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSkillService.swift; sourceTree = "<group>"; };
 		B23552BB29E9D14E00183748 /* CreateCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCharacterView.swift; sourceTree = "<group>"; };
@@ -283,6 +282,7 @@
 		B23728B32DC1CCBC00495777 /* ReserachProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReserachProject.swift; sourceTree = "<group>"; };
 		B23728B52DCA735200495777 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
 		B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagCell.swift; sourceTree = "<group>"; };
+		B24BBE7A2E96D0F300ACE2AC /* FileStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageManager.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -505,6 +505,7 @@
 		B2222490291DB10E003BCA0A /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				B24BBE7A2E96D0F300ACE2AC /* FileStorageManager.swift */,
 				B22324B82E33E6BD0087786E /* LocalDataManager.swift */,
 				B22324B42E33C7110087786E /* DataManager.swift */,
 				B2A6A7EC291464D90025040B /* AuthManager.swift */,
@@ -718,7 +719,6 @@
 				B2DFB0C6295649D500132B08 /* AccountTabView.swift */,
 				B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */,
 				B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */,
-				B23552B529E9C49400183748 /* SkillManagementView.swift */,
 				B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */,
 				B23552BF29E9EA0E00183748 /* AddSkillView.swift */,
 				B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */,
@@ -1009,7 +1009,6 @@
 				B2DFB0C329563C9900132B08 /* MockData.swift in Sources */,
 				B235A4F62DD7A59600AF96DC /* SkillCategoryModel.swift in Sources */,
 				B2DFB0C7295649D500132B08 /* AccountTabView.swift in Sources */,
-				B23552B629E9C49400183748 /* SkillManagementView.swift in Sources */,
 				B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */,
 				B233D76E2A1D4E1C002B9BBA /* AppVersionModel.swift in Sources */,
 				B25D45C42A151D7600C3048C /* SelectEventForPreregView.swift in Sources */,
@@ -1023,6 +1022,7 @@
 				B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */,
 				B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */,
 				B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */,
+				B24BBE7B2E96D0F900ACE2AC /* FileStorageManager.swift in Sources */,
 				B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */,
 				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,

@@ -41,7 +41,7 @@ class LocalDataManager {
     static let localDataVersion = "1.0.0.0"
     
     static func clearAllLocalData() {
-         UserAndPassManager.shared.clearAll()
+        UserAndPassManager.shared.clearAll()
         for key in LDMKeys.allKeys {
             shared.clear(key)
         }
@@ -78,6 +78,7 @@ class LocalDataManager {
     
     private func clear(_ key: String) {
         UserDefaults.standard.removeObject(forKey: getUserDefaultsKey(key))
+        FileStorageManager.shared.remove(forKey: getUserDefaultsKey(key))
     }
     
     private func clear(_ key: DMT) {
@@ -91,7 +92,7 @@ class LocalDataManager {
     private func store(_ obj: CustomCodeable, key: String) {
         let json = obj.toJsonString() ?? ""
         let compressed = json.compress()
-        UserDefaults.standard.set(compressed, forKey: getUserDefaultsKey(key))
+        FileStorageManager.shared.write(compressed, forKey: getUserDefaultsKey(key))
     }
     
     private func store(_ obj: CustomCodeable, key: DMT) {
@@ -125,7 +126,8 @@ class LocalDataManager {
     }
     
     private func get<T: CustomCodeable>(_ key: String) -> T? {
-        guard let compressed = UserDefaults.standard.data(forKey: getUserDefaultsKey(key)) else { return nil }
+        guard let compressed = FileStorageManager.shared.read(forKey: getUserDefaultsKey(key)) else { return nil }
+
         guard let json = compressed.decompress()?.jsonData else { return nil }
         guard let obj: T = json.toJsonObject(as: T.self) else { return nil }
         return obj
@@ -136,7 +138,7 @@ class LocalDataManager {
     }
     
     private func get<C>(_ key: String) -> C? where C: Collection & Codable, C.Element: CustomCodeable {
-        guard let compressed = UserDefaults.standard.data(forKey: getUserDefaultsKey(key)) else { return nil }
+        guard let compressed = FileStorageManager.shared.read(forKey: getUserDefaultsKey(key)) else { return nil }
         guard let json = compressed.decompress()?.jsonData else { return nil }
         guard let wrapper: CollectionCompressorObject<C> = json.toJsonObject() else { return nil }
         return wrapper.collection
@@ -147,7 +149,7 @@ class LocalDataManager {
     }
     
     private func get<Value: Codable>(_ key: String) -> [Int : Value]? {
-        guard let compressed = UserDefaults.standard.data(forKey: getUserDefaultsKey(key)) else { return nil }
+        guard let compressed = FileStorageManager.shared.read(forKey: getUserDefaultsKey(key)) else { return nil }
         guard let json = compressed.decompress()?.jsonData else { return nil }
         guard let wrapper: IntMapCompressorObject<Value> = json.toJsonObject() else { return nil }
         return wrapper.collection

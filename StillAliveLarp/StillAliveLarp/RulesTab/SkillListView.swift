@@ -8,7 +8,7 @@
 import SwiftUI
 
 // TODO redo view
-// TODo rename to SkillsListView
+// TODO rename to SkillsListView
 
 struct SkillListView: View {
     @EnvironmentObject var alertManager: AlertManager
@@ -48,39 +48,40 @@ struct SkillListView: View {
                             .textInputAutocapitalization(.never)
                         if let character = character, character.isAlive && DM.playerIsCurrentPlayer(character.playerId) && !DM.offlineMode {
                             Spacer()
-                            NavigationLink {
-                                // TODO add skills
-        //                        AddSkillView().onDisappear {
-        ////                                    runOnMainThread {
-        ////                                        self.loadingSkills = true
-        ////                                        CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
-        ////                                            runOnMainThread {
-        ////                                                if let fcm = fcm {
-        ////                                                    self.character = fcm
-        ////                                                    OldDM.character = fcm
-        ////                                                }
-        ////                                                self.loadingSkills = false
-        ////                                            }
-        ////                                        }
-        ////
-        ////                                    }
-        //                        }
-                            } label: {
-                                VStack {
-                                    Image(systemName: "plus.app.fill").resizable().frame(width: 22, height: 22)
-                                    Text("Add New").font(.system(size: 16, weight: .bold))
-                                }
-                                .padding(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20).strokeBorder(Color.brightRed, lineWidth: 2)
-                                )
-                            }
+                            // TODO add skills
+//                            NavigationLink {
+//        //                        AddSkillView().onDisappear {
+//        ////                                    runOnMainThread {
+//        ////                                        self.loadingSkills = true
+//        ////                                        CharacterManager.shared.fetchFullCharacter(characterId: character.id) { fcm in
+//        ////                                            runOnMainThread {
+//        ////                                                if let fcm = fcm {
+//        ////                                                    self.character = fcm
+//        ////                                                    OldDM.character = fcm
+//        ////                                                }
+//        ////                                                self.loadingSkills = false
+//        ////                                            }
+//        ////                                        }
+//        ////
+//        ////                                    }
+//        //                        }
+//                            } label: {
+//                                VStack {
+//                                    Image(systemName: "plus.app.fill").resizable().frame(width: 22, height: 22)
+//                                    Text("Add New").font(.system(size: 16, weight: .bold))
+//                                }
+//                                .padding(8)
+//                                .overlay(
+//                                    RoundedRectangle(cornerRadius: 20).strokeBorder(Color.brightRed, lineWidth: 2)
+//                                )
+//                            }
                         }
                         Spacer()
                     }.padding([.leading, .trailing, .top], 16)
                     LoadingLayoutView {
                         VStack {
                             if let character = character, allowDelete && character.isAlive && DM.playerIsCurrentPlayer(character.playerId) && !DM.offlineMode {
+                                // TODO this needs to be skill delete view, not contact view.
                                 NavigationLink(destination: ContactView()) {
                                     Text("Remove Skills")
                                         .font(.system(size: 20, weight: .bold))
@@ -94,7 +95,7 @@ struct SkillListView: View {
                             }
                             List() {
                                 ForEach(shouldDoFiltering() ? getFilteredSkills() : getSortedSkills(skills)) { skill in
-                                    SkillCellView(skill: skill)
+                                    SkillCellView(skill: skill, setupType: getSetupType(), player: DM.getCurrentPlayer()!, forPlannedCharacterOrNpc: isForPlannedOrNPC())
                                 }
                             }
                             .scrollContentBackground(.hidden)
@@ -104,6 +105,22 @@ struct SkillListView: View {
             }
         }
         .background(Color.lightGray)
+    }
+    
+    private func getSetupType() -> SkillCellView.SetupType {
+        if let character = character {
+            return DM.playerIsCurrentPlayer(character.id) ? .purchase : .normal
+        } else {
+            return .normal
+        }
+    }
+    
+    private func isForPlannedOrNPC() -> Bool {
+        if let character = character {
+            return character.characterType() == .planner || character.characterType() == .npc
+        } else {
+            return false
+        }
     }
 
     func shouldDoFiltering() -> Bool {
@@ -122,33 +139,9 @@ struct SkillListView: View {
     }
 
     func getSortedSkills(_ skills: [FullCharacterModifiedSkillModel]) -> [FullCharacterModifiedSkillModel] {
-//        switch sortType {
-//        case .az:
-//            return skills.sorted { f, s in
-//                f.name.caseInsensitiveCompare(s.name) == .orderedAscending
-//            }
-//        case .za:
-//            return skills.sorted { f, s in
-//                f.name.caseInsensitiveCompare(s.name) == .orderedDescending
-//            }
-//        case .xpAsc:
-//            return skills.sorted { f, s in
-//                f.xpCost.intValueDefaultZero == s.xpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.xpCost.intValueDefaultZero < s.xpCost.intValueDefaultZero
-//            }
-//        case .xpDesc:
-//            return skills.sorted { f, s in
-//                f.xpCost.intValueDefaultZero == s.xpCost.intValueDefaultZero ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.xpCost.intValueDefaultZero > s.xpCost.intValueDefaultZero
-//            }
-//        case .typeAsc:
-//            return skills.sorted { f, s in
-//                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedAscending
-//            }
-//        case .typeDesc:
-//            return skills.sorted { f, s in
-//                f.getTypeText() == s.getTypeText() ? f.name.caseInsensitiveCompare(s.name) == .orderedAscending : f.getTypeText().caseInsensitiveCompare(s.getTypeText()) == .orderedDescending
-//            }
-//        }
-        return []
+        return skills.sorted { f, s in
+            f.name.caseInsensitiveCompare(s.name) == .orderedAscending
+        }
     }
 
 }
