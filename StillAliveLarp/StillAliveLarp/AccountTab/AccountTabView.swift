@@ -46,7 +46,7 @@ struct AccountTabView: View {
                                             ViewPlayerStatsView(player: player)
                                         }
                                         NavArrowView(title: "View Player Awards") { _ in
-                                            // TODO
+                                            ViewAwardsView(player: player, awards: player.getAwardsSorted())
                                         }
                                         CharacterPanel(fromAccount: true, player: player, character: DM.getActiveCharacter())
                                     }

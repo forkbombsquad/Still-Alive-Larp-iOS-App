@@ -60,7 +60,7 @@ struct CharacterPanel: View {
             }
             if show[.awards]! {
                 NavArrowView(title: "View Character Awards") { _ in
-                    // TODO
+                    ViewAwardsView(player: DM.getPlayerForCharacter(character!), awards: character?.getAwardsSorted() ?? [])
                 }
             }
             if show[.otherCharacters]! {
@@ -71,12 +71,17 @@ struct CharacterPanel: View {
             }
             if show[.inactive]! {
                 NavArrowView(title: "View Inactive Characters") { _ in
-                    // TODO
+                    CharactersListView(title: "\(player.fullName)'s Inactive Characters", destination: .viewCharacter, characters: player.getInactiveCharacters())
                 }
             }
             if show[.planned]! {
                 NavArrowView(title: "\(fromAccount ? "Character Planner" : "View Planned Characters")") { _ in
-                    // TODO
+                    if fromAccount && !DM.offlineMode {
+                        // TODO character planner
+                        EmptyView()
+                    } else {
+                        CharactersListView(title: "\(player.fullName)'s Inactive Characters", destination: .viewCharacter, characters: player.getPlannedCharacters())
+                    }
                 }
             }
         }

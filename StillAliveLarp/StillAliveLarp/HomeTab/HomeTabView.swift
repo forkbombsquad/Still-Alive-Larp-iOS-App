@@ -389,25 +389,8 @@ struct AwardsView: View {
                 if let player = DM.getCurrentPlayer(), player.awards.isNotEmpty {
                     let awards = player.getAwardsSorted()
                     ForEach(awards) { award in
-                       VStack {
-                           HStack {
-                               if let character = player.characters.first(where: { $0.id == award.characterId }) {
-                                   Text(character.fullName)
-                                       .font(.system(size: 16, weight: .bold))
-                               } else {
-                                   Text(player.fullName)
-                                       .font(.system(size: 16, weight: .bold))
-                               }
-                               Text("\(award.date.yyyyMMddToMonthDayYear())")
-                               Spacer()
-                               Text(award.getDisplayText())
-                           }.padding([.top, .bottom], 8)
-                           Text("\(award.reason)")
-                           if award != awards.last {
-                               Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
-                           }
-                       }
-                   }
+                        AwardCell(player: player, award: award, showDivider: award != awards.last)
+                    }
                } else {
                    Text("You don't have any Awards yet")
                        .font(.system(size: 16))

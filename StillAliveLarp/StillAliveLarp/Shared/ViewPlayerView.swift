@@ -29,7 +29,7 @@ struct ViewPlayerView: View {
                             ViewPlayerStatsView(player: player)
                         }
                         NavArrowView(title: "View Player Awards") { _ in
-                            // TODO
+                            ViewAwardsView(player: player, awards: player.getAwardsSorted())
                         }
                         CharacterPanel(fromAccount: false, player: player, character: player.getActiveCharacter())
                     }

@@ -88,6 +88,10 @@
 		B23728B92DCA828B00495777 /* Gzip in Frameworks */ = {isa = PBXBuildFile; productRef = B23728B82DCA828B00495777 /* Gzip */; };
 		B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */; };
 		B24BBE7B2E96D0F900ACE2AC /* FileStorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE7A2E96D0F300ACE2AC /* FileStorageManager.swift */; };
+		B24BBE7D2E97577400ACE2AC /* ViewAwardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE7C2E97576B00ACE2AC /* ViewAwardsView.swift */; };
+		B24BBE7F2E97580500ACE2AC /* AwardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE7E2E97580500ACE2AC /* AwardCell.swift */; };
+		B24BBE812E975A9D00ACE2AC /* CharactersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE802E975A9500ACE2AC /* CharactersListView.swift */; };
+		B24BBE832E975C3100ACE2AC /* ViewCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -283,6 +287,10 @@
 		B23728B52DCA735200495777 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
 		B23728BB2DCB99A500495777 /* FeatureFlagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagCell.swift; sourceTree = "<group>"; };
 		B24BBE7A2E96D0F300ACE2AC /* FileStorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageManager.swift; sourceTree = "<group>"; };
+		B24BBE7C2E97576B00ACE2AC /* ViewAwardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewAwardsView.swift; sourceTree = "<group>"; };
+		B24BBE7E2E97580500ACE2AC /* AwardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCell.swift; sourceTree = "<group>"; };
+		B24BBE802E975A9500ACE2AC /* CharactersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersListView.swift; sourceTree = "<group>"; };
+		B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCharacterView.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -519,6 +527,9 @@
 		B22324CE2E44E22C0087786E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */,
+				B24BBE802E975A9500ACE2AC /* CharactersListView.swift */,
+				B24BBE7C2E97576B00ACE2AC /* ViewAwardsView.swift */,
 				B235A4F22DD7A4F200AF96DC /* NativeSkillTree */,
 				B2B712322E44E34F00B2AA3F /* PlayersListView.swift */,
 				B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */,
@@ -600,6 +611,7 @@
 				B235A4F02DD788C800AF96DC /* LoadingBlock.swift */,
 				B22324BE2E3D006C0087786E /* LoadingLayoutView.swift */,
 				B22324C82E40F0460087786E /* CharacterPanel.swift */,
+				B24BBE7E2E97580500ACE2AC /* AwardCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -946,6 +958,7 @@
 				B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */,
 				B235A4FC2DD7B88400AF96DC /* CGRectExtensions.swift in Sources */,
 				B293AEFA291569B200D2447C /* UserAndPassManager.swift in Sources */,
+				B24BBE7D2E97577400ACE2AC /* ViewAwardsView.swift in Sources */,
 				B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */,
 				B222249F291E9F99003BCA0A /* CharacterService.swift in Sources */,
 				B2B712392E44EBA600B2AA3F /* ViewCampStatusView.swift in Sources */,
@@ -1009,12 +1022,14 @@
 				B2DFB0C329563C9900132B08 /* MockData.swift in Sources */,
 				B235A4F62DD7A59600AF96DC /* SkillCategoryModel.swift in Sources */,
 				B2DFB0C7295649D500132B08 /* AccountTabView.swift in Sources */,
+				B24BBE812E975A9D00ACE2AC /* CharactersListView.swift in Sources */,
 				B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */,
 				B233D76E2A1D4E1C002B9BBA /* AppVersionModel.swift in Sources */,
 				B25D45C42A151D7600C3048C /* SelectEventForPreregView.swift in Sources */,
 				B235A4FA2DD7AAD400AF96DC /* SkillGrid.swift in Sources */,
 				B222248D291DA33F003BCA0A /* HomeTabView.swift in Sources */,
 				B22324B92E33E6C30087786E /* LocalDataManager.swift in Sources */,
+				B24BBE7F2E97580500ACE2AC /* AwardCell.swift in Sources */,
 				B2750B3F29F979F300AA5F5B /* ContactService.swift in Sources */,
 				B2750B4D29F9B05D00AA5F5B /* IntrigueModel.swift in Sources */,
 				B23552CB29EB1F0E00183748 /* ErrorModel.swift in Sources */,
@@ -1029,6 +1044,7 @@
 				B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */,
 				B2A0D4E729E5B47300A235B4 /* SkillService.swift in Sources */,
 				B2A0D4EE29E7174B00A235B4 /* SkillPrereqService.swift in Sources */,
+				B24BBE832E975C3100ACE2AC /* ViewCharacterView.swift in Sources */,
 				B2E135BA29FD7F330038DE31 /* SpecialClassXpReductionService.swift in Sources */,
 				B2F9837B29F0833800512839 /* ManageEventView.swift in Sources */,
 				B2F472A62DCBE4F300F37FA5 /* EditProfileImageView.swift in Sources */,
