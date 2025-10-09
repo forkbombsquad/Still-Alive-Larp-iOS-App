@@ -9,35 +9,13 @@ import SwiftUI
 import CodeScanner
 
 // TODO update view if needed
+// TODO support offline
 
 struct AdminView: View {
 
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-
-    @State var loadingPlayers: Bool = true
-    @State var allPlayers = [PlayerModel]()
-
-    @State var loadingCharacters: Bool = true
-    @State var allCharacters = [CharacterModel]()
-
-    @State var charactersWhoNeedBios = [CharacterModel]()
-    @State var unapprovedBioText = ""
-
-    @State var loadingEvents: Bool = true
-    @State var events = [EventModel]()
-
-    @State var loadingContacts: Bool = true
-    @State var unreadContactsText = ""
-    @State var contactRequests = [ContactRequestModel]()
     
-    @State var researchProjects: [ResearchProjectModel] = []
-    @State var loadingResearchProjects: Bool = true
-    
-    @State var loadingNPCs: Bool = true
-    @State var npcs: [CharacterModel] = []
-    
-    @State var firstLoad = true
 
     var body: some View {
         VStack {
@@ -54,28 +32,22 @@ struct AdminView: View {
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
-                        EventToolsView(events: $events, loadingEvents: $loadingEvents)
+//                        EventToolsView(events: $events, loadingEvents: $loadingEvents)
                         Text("Player/Character Management")
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
-                        PlayerCharacterManagementView(allCharacters: $allCharacters, npcs: $npcs, loadingCharacters: $loadingCharacters, allPlayers: $allPlayers, loadingPlayers: $loadingPlayers, loadingNPCs: $loadingNPCs)
+//                        PlayerCharacterManagementView(allCharacters: $allCharacters, npcs: $npcs, loadingCharacters: $loadingCharacters, allPlayers: $allPlayers, loadingPlayers: $loadingPlayers, loadingNPCs: $loadingNPCs)
                         Text("Misc Administration")
                             .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top, 8)
-                        MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, researchProjects: $researchProjects, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests, loadingResearchProjects: $loadingResearchProjects)
+//                        MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, researchProjects: $researchProjects, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests, loadingResearchProjects: $loadingResearchProjects)
                     }
                 }.coordinateSpace(name: "pullToRefresh_AdminTab")
             }
         }.padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            if firstLoad {
-                firstLoad = false
-                reloadData()
-            }
-        }
     }
     
     private func reloadData() {
@@ -144,8 +116,10 @@ struct AdminView: View {
     }
 
     func getUnapprovedBioCount() -> String {
-        let count = self.charactersWhoNeedBios.count
-        return count == 0 ? "" : count.stringValue
+        // TODO
+//        let count = self.charactersWhoNeedBios.count
+//        return count == 0 ? "" : count.stringValue
+        return ""
     }
 
     func sortContactRequests(_ contactRequestList: ContactRequestListModel) -> [ContactRequestModel] {
@@ -213,7 +187,7 @@ struct PlayerCharacterManagementView: View {
 //                AllNpcsListView(npcs: npcs, allowEdit: true)
             }
             NavArrowView(title: "Award Player", loading: $loadingPlayers) { _ in
-                AwardPlayerView(players: allPlayers)
+                PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
             }
             NavArrowView(title: "Award Character", loading: $loadingCharacters) { _ in
                 AwardCharacterView(characters: allCharacters)
@@ -225,7 +199,7 @@ struct PlayerCharacterManagementView: View {
                 SelectCharacterForGearManagementView(characters: allCharacters)
             }
             NavArrowView(title: "Update Player Password", loading: $loadingPlayers) { _ in
-                ChangePasswordListView(players: allPlayers)
+                PlayersListView(title: "Select Player To Change Password For", destination: .changePass, players: DM.players)
             }
         }
     }

@@ -45,7 +45,7 @@
 		B22784C52DDCDFF100F08902 /* CharacterPlannerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */; };
 		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
 		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
-		B228C27B29F83B470064686D /* BioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C27A29F83B470064686D /* BioView.swift */; };
+		B228C27B29F83B470064686D /* ViewBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C27A29F83B470064686D /* ViewBioView.swift */; };
 		B228C28F29F840770064686D /* EditBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C28E29F840770064686D /* EditBioView.swift */; };
 		B228C29229F8471B0064686D /* CommunityTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C29129F8471B0064686D /* CommunityTabView.swift */; };
 		B233D76E2A1D4E1C002B9BBA /* AppVersionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B233D76D2A1D4E1C002B9BBA /* AppVersionModel.swift */; };
@@ -53,11 +53,10 @@
 		B235528C29E83A0E00183748 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235528B29E83A0E00183748 /* AdminView.swift */; };
 		B235528E29E83ADD00183748 /* PlayerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235528D29E83ADD00183748 /* PlayerService.swift */; };
 		B235529029E8469400183748 /* AdminService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235528F29E8469400183748 /* AdminService.swift */; };
-		B235529229E8480600183748 /* AwardPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529129E8480600183748 /* AwardPlayerView.swift */; };
 		B235529429E85BBB00183748 /* AwardModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529329E85BBB00183748 /* AwardModel.swift */; };
 		B235529629E85D3200183748 /* AwardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529529E85D3200183748 /* AwardService.swift */; };
 		B235529829E85F7600183748 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529729E85F7600183748 /* DateExtensions.swift */; };
-		B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529929E869D800183748 /* AwardPlayerFormView.swift */; };
+		B235529A29E869D800183748 /* AwardPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529929E869D800183748 /* AwardPlayerView.swift */; };
 		B235529C29E8805100183748 /* AwardCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529B29E8805100183748 /* AwardCharacterView.swift */; };
 		B235529E29E8810A00183748 /* AwardCharacterFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529D29E8810A00183748 /* AwardCharacterFormView.swift */; };
 		B23552B829E9C9B800183748 /* CharacterSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B729E9C9B800183748 /* CharacterSkill.swift */; };
@@ -92,6 +91,8 @@
 		B24BBE7F2E97580500ACE2AC /* AwardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE7E2E97580500ACE2AC /* AwardCell.swift */; };
 		B24BBE812E975A9D00ACE2AC /* CharactersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE802E975A9500ACE2AC /* CharactersListView.swift */; };
 		B24BBE832E975C3100ACE2AC /* ViewCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */; };
+		B24BBE852E97F83100ACE2AC /* SkillCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE842E97F82D00ACE2AC /* SkillCell.swift */; };
+		B24BBE872E98175A00ACE2AC /* DeleteSkillsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24BBE862E98175A00ACE2AC /* DeleteSkillsView.swift */; };
 		B251B0652BD1A08D00915F01 /* FeatureFlagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */; };
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
@@ -109,7 +110,6 @@
 		B2750B4329F97E3000AA5F5B /* ContactDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4229F97E3000AA5F5B /* ContactDetailsView.swift */; };
 		B2750B4529F98C5700AA5F5B /* ManageAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4429F98C5700AA5F5B /* ManageAccountView.swift */; };
 		B2750B4729F98D2E00AA5F5B /* ChangePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4629F98D2E00AA5F5B /* ChangePasswordView.swift */; };
-		B2750B4929F9900C00AA5F5B /* ChangePasswordListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4829F9900C00AA5F5B /* ChangePasswordListView.swift */; };
 		B2750B4B29F9904300AA5F5B /* ChangePlayerPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */; };
 		B2750B4D29F9B05D00AA5F5B /* IntrigueModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4C29F9B05D00AA5F5B /* IntrigueModel.swift */; };
 		B2750B4F29F9B4D600AA5F5B /* IntrigueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2750B4E29F9B4D600AA5F5B /* IntrigueService.swift */; };
@@ -244,7 +244,7 @@
 		B22784C42DDCDFF000F08902 /* CharacterPlannerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerListView.swift; sourceTree = "<group>"; };
 		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
 		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
-		B228C27A29F83B470064686D /* BioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BioView.swift; sourceTree = "<group>"; };
+		B228C27A29F83B470064686D /* ViewBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBioView.swift; sourceTree = "<group>"; };
 		B228C28E29F840770064686D /* EditBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBioView.swift; sourceTree = "<group>"; };
 		B228C29129F8471B0064686D /* CommunityTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityTabView.swift; sourceTree = "<group>"; };
 		B233D76D2A1D4E1C002B9BBA /* AppVersionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionModel.swift; sourceTree = "<group>"; };
@@ -252,11 +252,10 @@
 		B235528B29E83A0E00183748 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		B235528D29E83ADD00183748 /* PlayerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerService.swift; sourceTree = "<group>"; };
 		B235528F29E8469400183748 /* AdminService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminService.swift; sourceTree = "<group>"; };
-		B235529129E8480600183748 /* AwardPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardPlayerView.swift; sourceTree = "<group>"; };
 		B235529329E85BBB00183748 /* AwardModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardModel.swift; sourceTree = "<group>"; };
 		B235529529E85D3200183748 /* AwardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardService.swift; sourceTree = "<group>"; };
 		B235529729E85F7600183748 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
-		B235529929E869D800183748 /* AwardPlayerFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardPlayerFormView.swift; sourceTree = "<group>"; };
+		B235529929E869D800183748 /* AwardPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardPlayerView.swift; sourceTree = "<group>"; };
 		B235529B29E8805100183748 /* AwardCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterView.swift; sourceTree = "<group>"; };
 		B235529D29E8810A00183748 /* AwardCharacterFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterFormView.swift; sourceTree = "<group>"; };
 		B23552B729E9C9B800183748 /* CharacterSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSkill.swift; sourceTree = "<group>"; };
@@ -291,6 +290,8 @@
 		B24BBE7E2E97580500ACE2AC /* AwardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCell.swift; sourceTree = "<group>"; };
 		B24BBE802E975A9500ACE2AC /* CharactersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersListView.swift; sourceTree = "<group>"; };
 		B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCharacterView.swift; sourceTree = "<group>"; };
+		B24BBE842E97F82D00ACE2AC /* SkillCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillCell.swift; sourceTree = "<group>"; };
+		B24BBE862E98175A00ACE2AC /* DeleteSkillsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteSkillsView.swift; sourceTree = "<group>"; };
 		B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagModel.swift; sourceTree = "<group>"; };
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
@@ -308,7 +309,6 @@
 		B2750B4229F97E3000AA5F5B /* ContactDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailsView.swift; sourceTree = "<group>"; };
 		B2750B4429F98C5700AA5F5B /* ManageAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageAccountView.swift; sourceTree = "<group>"; };
 		B2750B4629F98D2E00AA5F5B /* ChangePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordView.swift; sourceTree = "<group>"; };
-		B2750B4829F9900C00AA5F5B /* ChangePasswordListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordListView.swift; sourceTree = "<group>"; };
 		B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePlayerPasswordView.swift; sourceTree = "<group>"; };
 		B2750B4C29F9B05D00AA5F5B /* IntrigueModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrigueModel.swift; sourceTree = "<group>"; };
 		B2750B4E29F9B4D600AA5F5B /* IntrigueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntrigueService.swift; sourceTree = "<group>"; };
@@ -527,6 +527,8 @@
 		B22324CE2E44E22C0087786E /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				B228C27A29F83B470064686D /* ViewBioView.swift */,
+				B24BBE862E98175A00ACE2AC /* DeleteSkillsView.swift */,
 				B24BBE822E975C2E00ACE2AC /* ViewCharacterView.swift */,
 				B24BBE802E975A9500ACE2AC /* CharactersListView.swift */,
 				B24BBE7C2E97576B00ACE2AC /* ViewAwardsView.swift */,
@@ -534,6 +536,7 @@
 				B2B712322E44E34F00B2AA3F /* PlayersListView.swift */,
 				B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */,
 				B2B712362E44E84900B2AA3F /* NPCListView.swift */,
+				B2A0D4EB29E5D50F00A235B4 /* SkillListView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -554,8 +557,7 @@
 			isa = PBXGroup;
 			children = (
 				B235528B29E83A0E00183748 /* AdminView.swift */,
-				B235529129E8480600183748 /* AwardPlayerView.swift */,
-				B235529929E869D800183748 /* AwardPlayerFormView.swift */,
+				B235529929E869D800183748 /* AwardPlayerView.swift */,
 				B235529B29E8805100183748 /* AwardCharacterView.swift */,
 				B235529D29E8810A00183748 /* AwardCharacterFormView.swift */,
 				B2F9836729F033D800512839 /* CharacterBioListView.swift */,
@@ -567,7 +569,6 @@
 				B2F9838729F1747D00512839 /* CheckInPlayerView.swift */,
 				B2750B4029F97D1400AA5F5B /* ContactListView.swift */,
 				B2750B4229F97E3000AA5F5B /* ContactDetailsView.swift */,
-				B2750B4829F9900C00AA5F5B /* ChangePasswordListView.swift */,
 				B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */,
 				B2750B5029F9B56000AA5F5B /* SelectEventForIntrigueView.swift */,
 				B2750B5229F9B67300AA5F5B /* AddEditEventIntrigueView.swift */,
@@ -595,6 +596,7 @@
 		B23552D029EB268A00183748 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B24BBE842E97F82D00ACE2AC /* SkillCell.swift */,
 				B2B7123C2E44EE8300B2AA3F /* FortificationCell.swift */,
 				B2B7123A2E44ECE200B2AA3F /* FortificationRingCell.swift */,
 				B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */,
@@ -663,7 +665,6 @@
 			isa = PBXGroup;
 			children = (
 				B2A0D4E829E5B78900A235B4 /* RulesTabView.swift */,
-				B2A0D4EB29E5D50F00A235B4 /* SkillListView.swift */,
 				B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */,
 			);
 			path = RulesTab;
@@ -734,7 +735,6 @@
 				B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */,
 				B23552BF29E9EA0E00183748 /* AddSkillView.swift */,
 				B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */,
-				B228C27A29F83B470064686D /* BioView.swift */,
 				B228C28E29F840770064686D /* EditBioView.swift */,
 				B2750B4429F98C5700AA5F5B /* ManageAccountView.swift */,
 				B2750B4629F98D2E00AA5F5B /* ChangePasswordView.swift */,
@@ -952,7 +952,6 @@
 				B2E135B429FAFB8E0038DE31 /* GlobalFunctions.swift in Sources */,
 				B235A4F82DD7A82900AF96DC /* SkillCategoryService.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
-				B235529229E8480600183748 /* AwardPlayerView.swift in Sources */,
 				B22324C72E40092B0087786E /* FontExtensions.swift in Sources */,
 				B294A4202DD24AE4002877B9 /* StyledPickerView.swift in Sources */,
 				B235A4FE2DD7D58300AF96DC /* ManageNPCView.swift in Sources */,
@@ -977,13 +976,14 @@
 				B22324BF2E3D006C0087786E /* LoadingLayoutView.swift in Sources */,
 				B2A0D4EC29E5D50F00A235B4 /* SkillListView.swift in Sources */,
 				B2F9837729F07AB300512839 /* EventManagementView.swift in Sources */,
-				B235529A29E869D800183748 /* AwardPlayerFormView.swift in Sources */,
+				B235529A29E869D800183748 /* AwardPlayerView.swift in Sources */,
 				B2B712352E44E53E00B2AA3F /* ViewPlayerView.swift in Sources */,
+				B24BBE872E98175A00ACE2AC /* DeleteSkillsView.swift in Sources */,
 				B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */,
 				B22324C32E3D5B9D0087786E /* CampStatusService.swift in Sources */,
 				B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */,
 				B222249B291E9806003BCA0A /* CardView.swift in Sources */,
-				B228C27B29F83B470064686D /* BioView.swift in Sources */,
+				B228C27B29F83B470064686D /* ViewBioView.swift in Sources */,
 				B21691EC28FDEEEA006AA921 /* CreateAccountView.swift in Sources */,
 				B2DFB0B82955FB4600132B08 /* MockRequest.swift in Sources */,
 				B21691F228FF2859006AA921 /* Validator.swift in Sources */,
@@ -1016,7 +1016,6 @@
 				B2E135BE29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift in Sources */,
 				B235529029E8469400183748 /* AdminService.swift in Sources */,
 				B293AEFC29156B9200D2447C /* PlayerModel.swift in Sources */,
-				B2750B4929F9900C00AA5F5B /* ChangePasswordListView.swift in Sources */,
 				B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */,
 				B235A4F12DD788C800AF96DC /* LoadingBlock.swift in Sources */,
 				B2DFB0C329563C9900132B08 /* MockData.swift in Sources */,
@@ -1076,6 +1075,7 @@
 				B235528E29E83ADD00183748 /* PlayerService.swift in Sources */,
 				B233D7702A1D4E8F002B9BBA /* VersionService.swift in Sources */,
 				B2750B5329F9B67300AA5F5B /* AddEditEventIntrigueView.swift in Sources */,
+				B24BBE852E97F83100ACE2AC /* SkillCell.swift in Sources */,
 				B2B7123B2E44ECE600B2AA3F /* FortificationRingCell.swift in Sources */,
 				B293AEF529154F0400D2447C /* ServiceController.swift in Sources */,
 				B2F9837329F066CC00512839 /* EventService.swift in Sources */,

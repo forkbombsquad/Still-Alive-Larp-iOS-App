@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// TODO redo
 struct ChangePasswordView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -18,52 +17,55 @@ struct ChangePasswordView: View {
 
     @State private var loading = false
 
+    let player: FullPlayerModel
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    Text("Change Password")
-                        .font(Font.system(size: 36, weight: .bold))
-                        .multilineTextAlignment(.center)
+                    if DM.playerIsCurrentPlayer(player) {
+                        Text("Change Password")
+                            .font(Font.system(size: 36, weight: .bold))
+                            .multilineTextAlignment(.center)
+                            .padding(.trailing, 0)
+                        PasswordField(hintText: "Current Password", password: $existingPassword)
+                        PasswordField(hintText: "New Password", password: $password)
+                        PasswordField(hintText: "Confirm New Password", password: $confirmPassword)
+                        LoadingButtonView($loading, width: gr.size.width - 32, height: 60, buttonText: "Submit") {
+                            if checkOldPass() {
+                                if checkPasswordsMatch() {
+                                    let valResult = validateFields()
+                                    if !valResult.hasError {
+                                        self.loading = true
+                                        PlayerService.updateP(self.password, playerId: player.id) { player in
+                                            runOnMainThread {
+                                                UserAndPassManager.shared.setUandP(u: player.username, p: password, remember: true)
+                                                DM.load()
+                                                alertManager.showOkAlert("Password Successfuly Updated") {
+                                                    runOnMainThread {
+                                                        self.loading = false
+                                                        self.mode.wrappedValue.dismiss()
+                                                    }
+                                                }
+                                            }
+                                        } failureCase: { error in
+                                            self.loading = false
+                                        }
+    
+                                    } else {
+                                        alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                    }
+                                } else {
+                                    alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+                                }
+                            } else {
+                                alertManager.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
+                            }
+                        }
+                        .padding(.top, 16)
                         .padding(.trailing, 0)
-                    PasswordField(hintText: "Current Password", password: $existingPassword)
-                    PasswordField(hintText: "New Password", password: $password)
-                    PasswordField(hintText: "Confirm New Password", password: $confirmPassword)
-                    LoadingButtonView($loading, width: gr.size.width - 32, height: 60, buttonText: "Submit") {
-                        // TODO redo
-//                        if checkOldPass() {
-//                            if checkPasswordsMatch() {
-//                                let valResult = validateFields()
-//                                if !valResult.hasError {
-//                                    self.loading = true
-//                                    PlayerService.updateP(self.password, playerId: OldDM.player?.id ?? -1) { player in
-//                                        runOnMainThread {
-//                                            UserAndPassManager.shared.setUAndP(player.username, p: password, remember: true)
-//                                            alertManager.showOkAlert("Password Successfuly Updated") {
-//                                                runOnMainThread {
-//                                                    self.loading = false
-//                                                    self.mode.wrappedValue.dismiss()
-//                                                }
-//                                            }
-//                                        }
-//                                    } failureCase: { error in
-//                                        self.loading = false
-//                                    }
-//
-//                                } else {
-//                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
-//                                }
-//                            } else {
-//                                alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
-//                            }
-//                        } else {
-//                            alertManager.showOkAlert("Validation Error", message: "Existing password incorrect", onOkAction: {})
-//                        }
                     }
-                    .padding(.top, 16)
-                    .padding(.trailing, 0)
                 }
             }
         }
@@ -85,9 +87,4 @@ struct ChangePasswordView: View {
         return self.existingPassword == UserAndPassManager.shared.getP()
     }
 
-}
-
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return ChangePasswordView()
 }

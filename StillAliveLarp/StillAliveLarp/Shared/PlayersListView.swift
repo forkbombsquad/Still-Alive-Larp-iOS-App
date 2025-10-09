@@ -33,11 +33,9 @@ struct PlayersListView: View {
                                     case .viewPlayer:
                                         ViewPlayerView(player: player)
                                     case .awardPlayer:
-                                        EmptyView()
-                                        // TODO AwardPlayerView
+                                        AwardPlayerView(player: player)
                                     case .changePass:
-                                        EmptyView()
-                                        // TODO ChangePassView
+                                        ChangePlayerPasswordView(player: player)
                                     }
                                 }
                             }

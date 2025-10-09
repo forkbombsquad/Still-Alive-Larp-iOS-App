@@ -67,6 +67,39 @@ struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
         self.inf75Mod = inf75Mod
     }
     
+    var skillTypeColor: Color {
+        switch skillTypeId {
+            case Constants.SkillTypes.combat: return .brightRed
+            case Constants.SkillTypes.talent: return .blue
+            case Constants.SkillTypes.profession: return .darkGreen
+            default: return .black
+        }
+    }
+    
+    var colorForXp: Color {
+        if hasModCost() {
+            if modXpCost() > baseXpCost() {
+                return .brightRed
+            } else {
+                return .darkGreen
+            }
+        } else {
+            return .black
+        }
+    }
+    
+    var infColor: Color {
+        if hasModInfCost() {
+            if modInfectionCost() > baseInfectionCost() {
+                return .brightRed
+            } else {
+                return .darkGreen
+            }
+        } else {
+            return .black
+        }
+    }
+    
     var id: Int {
         return skill.id
     }
@@ -265,15 +298,15 @@ struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
         }
         
         if hasModCost() && !usedFreeSkill {
-            text += " (changed from \(baseXpCost())xp with:"
+            text += "\n(changed from \(baseXpCost())xp with:"
             if getRelevatnSpecCostChange() != 0 {
-                text += " \(getRelevatnSpecCostChange()) from \(getTypeText()) Specialization"
+                text += "\n\(getRelevatnSpecCostChange()) from \(getTypeText()) Specialization"
             }
             if getRelevatnSpecCostChange() != 0 && hasXpReduction() {
-                text += " and"
+                text += "\nand"
             }
             if hasXpReduction() {
-                text += " \(xpReduction?.xpReduction.intValueDefaultZero ?? 0) from Special Class Xp Reductions"
+                text += "\n\(xpReduction?.xpReduction.intValueDefaultZero ?? 0) from Special Class Xp Reductions"
             }
             text += ")"
         }
@@ -284,7 +317,7 @@ struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
         var text = ""
         text += "\(modInfectionCost())% Inf Threshold"
         if hasModInfCost() {
-            text += " (changed from \(baseInfectionCost())%)"
+            text += "\n(changed from \(baseInfectionCost())%)"
         }
         return text
     }

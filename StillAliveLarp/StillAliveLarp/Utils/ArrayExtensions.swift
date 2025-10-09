@@ -63,6 +63,14 @@ extension Array where Element == FullCharacterModel {
 
 }
 
+extension Array where Element == FullCharacterModifiedSkillModel {
+
+    var alphabetized: [FullCharacterModifiedSkillModel] {
+        return self.sorted { $0.name < $1.name }
+    }
+
+}
+
 extension Array where Element == CharacterModel {
 
     var alphabetized: [CharacterModel] {

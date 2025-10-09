@@ -16,77 +16,79 @@ struct ViewCharacterView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    let character: FullCharacterModel
+    @State var character: FullCharacterModel?
     
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        let show = calculateShouldShow()
-                        globalCreateTitleView("\(character.fullName)\n\(character.getPostText())", DM: DM)
-                        Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
-                        if show[.playerName]! {
-                            Text("\(DM.getPlayerForCharacter(character).fullName)").padding(8)
+                        if let character = character {
+                            let show = calculateShouldShow()
+                            globalCreateTitleView("\(character.fullName)\n\(character.getPostText())", DM: DM)
                             Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
-                        }
-                        if show[.stats]! {
-                            NavArrowView(title: "View Stats") { _ in
-                                // TODO View Character Stats View
-                                EmptyView()
+                            if show[.playerName]! {
+                                Text("\(DM.getPlayerForCharacter(character).fullName)").padding(8)
+                                Divider().background(Color.darkGray).padding([.leading, .trailing], 8)
                             }
-                        }
-                        if show[.skillsTree]! {
-                            NavArrowView(title: "View Skills (Tree)") { _ in
-                                switch character.characterType() {
-                                case .standard, .hidden:
-                                    if DM.playerIsCurrentPlayer(character.playerId) && character.isAlive {
-                                        NativeSkillTree.initAsPersonal(currentPlayer: DM.getPlayerForCharacter(character), character: character, isInOfflineMode: DM.offlineMode)
-                                    } else {
-                                        NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: DM.getCurrentPlayer()!, character: character)
-                                    }
-                                case .npc:
-                                    NativeSkillTree.initAsNPCPersonal(currentPlayer: DM.getCurrentPlayer()!, npc: character)
-                                case .planner:
-                                    if DM.playerIsCurrentPlayer(character.playerId) {
-                                        NativeSkillTree.initAsPlannedPersonal(currentPlayer: DM.getCurrentPlayer()!, plannedCharacter: character, isInOfflineMode: DM.offlineMode)
-                                    } else {
-                                        NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: DM.getCurrentPlayer()!, character: character)
+                            if show[.stats]! {
+                                NavArrowView(title: "View Stats") { _ in
+                                    // TODO View Character Stats View
+                                    EmptyView()
+                                }
+                            }
+                            if show[.skillsTree]! {
+                                NavArrowView(title: "View Skills (Tree)") { _ in
+                                    switch character.characterType() {
+                                    case .standard, .hidden:
+                                        if DM.playerIsCurrentPlayer(character.playerId) && character.isAlive {
+                                            NativeSkillTree.initAsPersonal(currentPlayer: DM.getPlayerForCharacter(character), character: character, isInOfflineMode: DM.offlineMode)
+                                        } else {
+                                            NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: DM.getCurrentPlayer()!, character: character)
+                                        }
+                                    case .npc:
+                                        NativeSkillTree.initAsNPCPersonal(currentPlayer: DM.getCurrentPlayer()!, npc: character)
+                                    case .planner:
+                                        if DM.playerIsCurrentPlayer(character.playerId) {
+                                            NativeSkillTree.initAsPlannedPersonal(currentPlayer: DM.getCurrentPlayer()!, plannedCharacter: character, isInOfflineMode: DM.offlineMode)
+                                        } else {
+                                            NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: DM.getCurrentPlayer()!, character: character)
+                                        }
                                     }
                                 }
                             }
-                        }
-                        if show[.skillsList]! {
-                            NavArrowView(title: "View Skills (List)") {
-                                _ in
-                                SkillListView(character: character, allowDelete: character.characterType() == .planner && DM.playerIsCurrentPlayer(character.playerId))
+                            if show[.skillsList]! {
+                                NavArrowView(title: "View Skills (List)") {
+                                    _ in
+                                    SkillsListView(character: $character, allowDelete: character.characterType() == .planner && DM.playerIsCurrentPlayer(character.playerId))
+                                }
                             }
-                        }
-                        if show[.bio]! {
-                            NavArrowView(title: "View Bio") {
-                                _ in
-                                // TODO View Bio View
-                                EmptyView()
+                            if show[.bio]! {
+                                NavArrowView(title: "View Bio") {
+                                    _ in
+                                    // TODO View Bio View
+                                    EmptyView()
+                                }
                             }
-                        }
-                        if show[.gear]! {
-                            NavArrowView(title: "View Bio") {
-                                _ in
-                                // TODO View Gear View
-                                EmptyView()
+                            if show[.gear]! {
+                                NavArrowView(title: "View Bio") {
+                                    _ in
+                                    // TODO View Gear View
+                                    EmptyView()
+                                }
                             }
-                        }
-                        if show[.xpReductions]! {
-                            NavArrowView(title: "View Xp Reductions") {
-                                _ in
-                                // TODO View Xp Reductions View
-                                EmptyView()
+                            if show[.xpReductions]! {
+                                NavArrowView(title: "View Xp Reductions") {
+                                    _ in
+                                    // TODO View Xp Reductions View
+                                    EmptyView()
+                                }
                             }
-                        }
-                        if show[.awards]! {
-                            NavArrowView(title: "View Awards") {
-                                _ in
-                                ViewAwardsView(player: DM.getPlayerForCharacter(character), awards: character.awards)
+                            if show[.awards]! {
+                                NavArrowView(title: "View Awards") {
+                                    _ in
+                                    ViewAwardsView(player: DM.getPlayerForCharacter(character), awards: character.awards)
+                                }
                             }
                         }
                     }
@@ -98,6 +100,7 @@ struct ViewCharacterView: View {
     }
     
     private func calculateShouldShow() -> [ViewCharacterViewShowType : Bool] {
+        guard let character = character else { return [:] }
         let charIsStandard = character.characterType() == .standard
         let charIsPlanner = character.characterType() == .planner
         let bioApproved = character.approvedBio

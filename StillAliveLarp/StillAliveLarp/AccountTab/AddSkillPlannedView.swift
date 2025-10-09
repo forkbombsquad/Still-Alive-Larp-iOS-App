@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// TODO redo view
+// TODO get rid of view
 
 struct AddPlannedSkillView: View {
     @EnvironmentObject var alertManager: AlertManager
