@@ -71,7 +71,7 @@
 		B23552CB29EB1F0E00183748 /* ErrorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552CA29EB1F0E00183748 /* ErrorModel.swift */; };
 		B23552CF29EB267000183748 /* LoadingButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552CE29EB267000183748 /* LoadingButtonView.swift */; };
 		B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */; };
-		B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */; };
+		B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */; };
 		B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */; };
 		B235A4F12DD788C800AF96DC /* LoadingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F02DD788C800AF96DC /* LoadingBlock.swift */; };
 		B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */; };
@@ -271,7 +271,7 @@
 		B23552CE29EB267000183748 /* LoadingButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButtonView.swift; sourceTree = "<group>"; };
 		B23552F429ED9B8D00183748 /* Still-Alive-Larp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Still-Alive-Larp-Info.plist"; sourceTree = SOURCE_ROOT; };
 		B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNPCStuffView.swift; sourceTree = "<group>"; };
-		B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllResearchProjectsListView.swift; sourceTree = "<group>"; };
+		B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewOrManageResearchProjectsView.swift; sourceTree = "<group>"; };
 		B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchProjectCell.swift; sourceTree = "<group>"; };
 		B235A4F02DD788C800AF96DC /* LoadingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBlock.swift; sourceTree = "<group>"; };
 		B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSkillTree.swift; sourceTree = "<group>"; };
@@ -537,6 +537,7 @@
 				B2B712342E44E53E00B2AA3F /* ViewPlayerView.swift */,
 				B2B712362E44E84900B2AA3F /* NPCListView.swift */,
 				B2A0D4EB29E5D50F00A235B4 /* SkillListView.swift */,
+				B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -546,7 +547,6 @@
 			children = (
 				B228C29129F8471B0064686D /* CommunityTabView.swift */,
 				B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */,
-				B235A4EC2DD785D000AF96DC /* AllResearchProjectsListView.swift */,
 				B235A4FD2DD7D58300AF96DC /* ManageNPCView.swift */,
 				B2B712382E44EBA600B2AA3F /* ViewCampStatusView.swift */,
 			);
@@ -927,7 +927,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B235A4ED2DD785D000AF96DC /* AllResearchProjectsListView.swift in Sources */,
+				B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */,
 				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,

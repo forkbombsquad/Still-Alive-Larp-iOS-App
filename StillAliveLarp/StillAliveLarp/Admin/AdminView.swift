@@ -223,7 +223,7 @@ struct MiscAdminView: View {
     var body: some View {
         VStack {
             NavArrowView(title: "Manage Research Projects") { _ in
-                AllResearchProjectsListView(researchProjects: researchProjects, allowEdit: true)
+                ViewOrManageResearchProjectsView(researchProjects: researchProjects, allowEdit: true)
 //                    .onDisappear {
 //                        runOnMainThread {
 //                            self.researchProjects = OldDM.researchProjects

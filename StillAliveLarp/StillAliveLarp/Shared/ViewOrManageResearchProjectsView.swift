@@ -1,5 +1,5 @@
 //
-//  AllResearchProjectsListView.swift
+//  ViewOrManageResearchProjectsView.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 5/16/25.
@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-// TODO rename to ViewOrManageResearchProjectsView
-// TODO move this to shared folder
-struct AllResearchProjectsListView: View {
+struct ViewOrManageResearchProjectsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var alertManager: AlertManager
@@ -156,5 +154,5 @@ struct AllResearchProjectsListView: View {
 #Preview {
     DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return AllResearchProjectsListView(researchProjects: md.researchProjects.researchProjects, allowEdit: false)
+    return ViewOrManageResearchProjectsView(researchProjects: md.researchProjects.researchProjects, allowEdit: false)
 }

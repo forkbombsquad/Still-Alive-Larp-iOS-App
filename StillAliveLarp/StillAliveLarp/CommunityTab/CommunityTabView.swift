@@ -33,7 +33,7 @@ struct CommunityTabView: View {
                                 NPCListView(npcs: DM.getAllCharacters(.npc), title: "All NPCs", destination: .view)
                             }
                             NavArrowView(title: "Research Projects") { _ in
-                                AllResearchProjectsListView(researchProjects: DM.researchProjects, allowEdit: false)
+                                ViewOrManageResearchProjectsView(researchProjects: DM.researchProjects, allowEdit: false)
                             }
                         }
                     }

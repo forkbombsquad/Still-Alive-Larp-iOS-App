@@ -14,75 +14,69 @@ struct ManageNPCView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    @Binding var npcs: [CharacterModel]
-    let npc: CharacterModel
-    
     @State var loading = false
     @State var bullets = ""
     @State var infection = ""
     @State var isAlive = true
     
-    @State var fullChar: FullCharacterModel? = nil
+    @State var character: FullCharacterModel?
     
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("Manage NPC\n\(npc.fullName)")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                        ArrowViewButton(title: "Manage Bullets and Infection", loading: $loading) {
-                            runOnMainThread {
-                                self.bullets = npc.bullets
-                                self.infection = npc.infection
-                                self.isAlive = npc.isAlive.boolValueDefaultFalse
-                                self.loading = true
-                                alertManager.showDynamicAlert(model: CustomAlertModel(
-                                    title: "Adjust \(npc.fullName) Values", textFields: [
-                                        AlertTextField(placeholder: "Bullets", value: $bullets),
-                                        AlertTextField(placeholder: "Infection Rating", value: $infection)
-                                    ], checkboxes: [
-                                        AlertToggle(text: "Is Alive?", isOn: $isAlive)
-                                    ], verticalButtons: [], buttons: [
-                                        AlertButton(title: "Ok", onPress: {
-                                            var update = self.npc
-                                            update.bullets = self.bullets
-                                            update.infection = self.infection
-                                            update.isAlive = self.isAlive.stringValue.uppercased()
-                                            AdminService.updateCharacter(update) { characterModel in
-                                                runOnMainThread {
-                                                    if let index = npcs.firstIndex(where: { $0.id == characterModel.id }) {
-                                                        npcs[index] = characterModel
-                                                    }
-                                                    alertManager.showOkAlert("Update Successful!") {
-                                                        runOnMainThread {
-                                                            self.loading = false
-                                                            self.presentationMode.wrappedValue.dismiss()
+                        if let character = character {
+                            Text("Manage NPC\n\(character.fullName)")
+                                .font(.system(size: 32, weight: .bold))
+                                .frame(alignment: .center)
+                            ArrowViewButton(title: "Manage Bullets and Infection", loading: $loading) {
+                                runOnMainThread {
+                                    self.bullets = character.bullets.stringValue
+                                    self.infection = character.infection.stringValue
+                                    self.isAlive = character.isAlive
+                                    self.loading = true
+                                    alertManager.showDynamicAlert(model: CustomAlertModel(
+                                        title: "Adjust \(character.fullName) Values", textFields: [
+                                            AlertTextField(placeholder: "Bullets", value: $bullets),
+                                            AlertTextField(placeholder: "Infection Rating", value: $infection)
+                                        ], checkboxes: [
+                                            AlertToggle(text: "Is Alive?", isOn: $isAlive)
+                                        ], verticalButtons: [], buttons: [
+                                            AlertButton(title: "Ok", onPress: {
+                                                var update = character
+                                                update.bullets = self.bullets.intValueDefaultZero
+                                                update.infection = self.infection.intValueDefaultZero
+                                                update.isAlive = self.isAlive
+                                                AdminService.updateCharacter(update.baseModel()) { characterModel in
+                                                    runOnMainThread {
+                                                        DM.load()
+                                                        alertManager.showOkAlert("Update Successful!") {
+                                                            runOnMainThread {
+                                                                self.loading = false
+                                                                self.presentationMode.wrappedValue.dismiss()
+                                                            }
                                                         }
                                                     }
+                                                    
+                                                } failureCase: { error in
+                                                    runOnMainThread {
+                                                        self.loading = false
+                                                    }
                                                 }
-                                                
-                                            } failureCase: { error in
+
+                                            }),
+                                            AlertButton.cancel(onPress: {
                                                 runOnMainThread {
                                                     self.loading = false
                                                 }
-                                            }
-
-                                        }),
-                                        AlertButton.cancel(onPress: {
-                                            runOnMainThread {
-                                                self.loading = false
-                                            }
-                                        })
-                                    ])
-                                )
+                                            })
+                                        ])
+                                    )
+                                }
                             }
-                        }
-                        NavArrowView(title: "Manage Skills", loading: $loading) { _ in
-                            if let char = self.fullChar {
-                                // TODO
-//                                SkillManagementView(character: char, allowEdit: true)
+                            NavArrowView(title: "Manage Skills", loading: $loading) { _ in
+                                SkillsListView(character: $character, allowDelete: true)
                             }
                         }
                     }
@@ -91,18 +85,5 @@ struct ManageNPCView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-//        .onAppear {
-//            self.loading = true
-//            CharacterManager.shared.fetchFullCharacter(characterId: npc.id) { fcm in
-//                self.fullChar = fcm
-//                self.loading = false
-//            }
-//        }
     }
 }
-
-//#Preview {
-//    DataManager.shared.setDebugMode(true)
-//    let md = getMockData()
-//    return ManageNPCView(npcs: .constant(md.characterListFullModel.characters), npc: md.character())
-//}
