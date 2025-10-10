@@ -53,8 +53,8 @@ struct GenerateCheckoutBarcodeView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return GenerateCheckoutBarcodeView(player: md.fullPlayers().first!, attendee: md.eventAttendee())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return GenerateCheckoutBarcodeView(player: md.fullPlayers().first!, attendee: md.eventAttendee())
+//}

@@ -146,10 +146,10 @@ struct SkillCell: View {
  md.fullCharacters().first!.allPurchasedSkills().first!
  */
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    let char = md.fullCharacters().first!
-    let player = md.fullPlayers().first!
-    return SkillCell.initForPurchase(skill: char.allNonPurchasedSkills()[8], player: player, character: char, loading: .constant(false), loadingText: .constant(""), onPressPurchase: { _ in })
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    let char = md.fullCharacters().first!
+//    let player = md.fullPlayers().first!
+//    return SkillCell.initForPurchase(skill: char.allNonPurchasedSkills()[8], player: player, character: char, loading: .constant(false), loadingText: .constant(""), onPressPurchase: { _ in })
+//}

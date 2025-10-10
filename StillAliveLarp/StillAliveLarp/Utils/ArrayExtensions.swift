@@ -79,6 +79,35 @@ extension Array where Element == CharacterModel {
 
 }
 
+extension Array where Element == EventPreregModel {
+
+    func getRegNumbers() -> PreregNumbers {
+        var p = 0
+        var pn = 0
+        var b = 0
+        var bn = 0
+        var f = 0
+        var na = 0
+        for prereg in self {
+            let isNpc = prereg.getCharId() == nil
+            switch prereg.eventRegType {
+            case .notPrereged:
+                na += 1
+            case .free:
+                f += 1
+            case .basic:
+                b += 1
+                bn += isNpc ? 1 : 0
+            case .premium:
+                p += 1
+                pn += isNpc ? 1 : 0
+            }
+        }
+        return PreregNumbers(premium: p, premiumNpc: pn, basic: b, basicNpc: bn, free: f, notAttending: na)
+    }
+
+}
+
 
 extension Array where Element == EventModel {
 

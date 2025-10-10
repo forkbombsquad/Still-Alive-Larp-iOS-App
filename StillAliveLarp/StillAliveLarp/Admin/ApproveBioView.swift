@@ -91,8 +91,8 @@ struct ApproveBioView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ApproveBioView(character: .constant(md.character(2)))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ApproveBioView(character: .constant(md.character(2)))
+//}

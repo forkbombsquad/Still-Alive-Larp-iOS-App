@@ -151,8 +151,8 @@ struct ViewOrManageResearchProjectsView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ViewOrManageResearchProjectsView(researchProjects: md.researchProjects.researchProjects, allowEdit: false)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ViewOrManageResearchProjectsView(researchProjects: md.researchProjects.researchProjects, allowEdit: false)
+//}

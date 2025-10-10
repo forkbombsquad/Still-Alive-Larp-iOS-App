@@ -81,7 +81,7 @@ struct CreateCharacterView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return CreateCharacterView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CreateCharacterView()
+//}

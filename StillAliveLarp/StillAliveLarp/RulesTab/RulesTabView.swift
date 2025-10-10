@@ -49,7 +49,7 @@ struct RulesTabView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return RulesTabView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return RulesTabView()
+//}

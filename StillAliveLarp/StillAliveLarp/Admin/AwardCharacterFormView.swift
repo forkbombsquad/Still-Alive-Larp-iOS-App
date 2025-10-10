@@ -8,8 +8,6 @@
 import SwiftUI
 import Combine
 
-// TODO update view if needed
-
 struct AwardCharacterFormView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -32,7 +30,7 @@ struct AwardCharacterFormView: View {
     private static let riv = "RIVAL"
     private static let roc = "ROCKET"
 
-    let character: CharacterModel
+    let character: FullCharacterModel
     @State private var awardType: String = stat.m
     @State private var awardOptions = [stat.m, stat.a, stat.i]
 
@@ -108,12 +106,13 @@ struct AwardCharacterFormView: View {
                             aType = "\(aType)_\(self.ammoType)"
                         }
                         if let type = AdminService.CharAwardType(rawValue: aType) {
-                            let award = AwardCreateModel.CreateCharacterAward(character, awardType: type, reason: reason, amount: amount)
+                            let award = AwardCreateModel.CreateCharacterAward(character.baseModel(), awardType: type, reason: reason, amount: amount)
 
                             self.loading = true
                             AdminService.awardChar(award) { _ in
                                 self.loading = false
                                 runOnMainThread {
+                                    DM.load()
                                     self.mode.wrappedValue.dismiss()
                                 }
                             } failureCase: { _ in
@@ -129,10 +128,4 @@ struct AwardCharacterFormView: View {
             .padding(16)
             .background(Color.lightGray)
     }
-}
-
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return AwardCharacterFormView(character: md.character())
 }

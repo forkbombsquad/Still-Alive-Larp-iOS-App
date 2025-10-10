@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO still working on this
+
 struct CharactersListView: View {
     
     enum CharactersListViewDestination {
@@ -33,22 +35,16 @@ struct CharactersListView: View {
                                     switch destination {
                                     case .viewCharacter:
                                         ViewCharacterView(character: character)
-                                        // TODO View character View
                                     case .selectSkillForXpReduction:
                                         // TODO select Skill For Xp Reduction View
                                         EmptyView()
                                     case .awardCharacter:
                                         // TODO award char view
                                         EmptyView()
-                                    case .viewGear:
-                                        // TODO view gear
-                                        EmptyView()
-                                    case .manageGear:
-                                        // TODO manage gear
-                                        EmptyView()
+                                    case .viewGear, .manageGear:
+                                        GearView(character: character)
                                     case .approveBio:
-                                        // TODO approve bio
-                                        EmptyView()
+                                        ApproveBioView(character: character)
                                     case .deleteSkills:
                                         // TODO delete skills
                                         EmptyView()

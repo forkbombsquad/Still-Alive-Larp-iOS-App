@@ -49,8 +49,8 @@ struct PlayersListView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return PlayersListView(title: "All Players", destination: .viewPlayer, players: md.fullPlayers())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return PlayersListView(title: "All Players", destination: .viewPlayer, players: md.fullPlayers())
+//}

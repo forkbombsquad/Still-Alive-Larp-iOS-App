@@ -52,8 +52,11 @@ struct CreateAnnouncementView: View {
                             AdminService.createAnnouncement(announcement) { _ in
                                 runOnMainThread {
                                     alertManager.showOkAlert("Announcement Created") {
-                                        self.loading = false
-                                        self.mode.wrappedValue.dismiss()
+                                        runOnMainThread {
+                                            self.loading = false
+                                            DM.load()
+                                            self.mode.wrappedValue.dismiss()
+                                        }
                                     }
                                 }
                             } failureCase: { error in
@@ -79,7 +82,7 @@ struct CreateAnnouncementView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return CreateAnnouncementView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CreateAnnouncementView()
+//}

@@ -49,8 +49,8 @@ struct FortificationRingCell: View {
     }
 }
 
-#Preview {
-    let md = getMockData()
-    return FortificationRingCell(allowOnClick: .constant(false), campFortification: md.campStatus.campFortifications.first!, onClick: nil)
-}
+//#Preview {
+//    let md = getMockData()
+//    return FortificationRingCell(allowOnClick: .constant(false), campFortification: md.campStatus.campFortifications.first!, onClick: nil)
+//}
 

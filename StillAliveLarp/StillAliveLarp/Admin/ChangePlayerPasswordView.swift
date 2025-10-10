@@ -42,6 +42,7 @@ struct ChangePlayerPasswordView: View {
                                             alertManager.showOkAlert("Password Successfuly Updated For", message: player.fullName) {
                                                 runOnMainThread {
                                                     self.loading = false
+                                                    DM.load()
                                                     self.mode.wrappedValue.dismiss()
                                                 }
                                             }

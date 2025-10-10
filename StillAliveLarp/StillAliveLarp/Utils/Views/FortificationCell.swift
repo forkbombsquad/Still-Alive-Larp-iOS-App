@@ -31,10 +31,10 @@ struct FortificationCell: View {
     }
 }
 
-#Preview {
-    let md = getMockData()
-    return FortificationCell(fortification: md.campStatus.campFortifications.first!.fortifications.first!)
-}
+//#Preview {
+//    let md = getMockData()
+//    return FortificationCell(fortification: md.campStatus.campFortifications.first!.fortifications.first!)
+//}
 
 
 

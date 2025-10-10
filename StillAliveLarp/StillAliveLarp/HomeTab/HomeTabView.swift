@@ -403,7 +403,7 @@ struct AwardsView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return HomeTabView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return HomeTabView()
+//}

@@ -45,7 +45,7 @@ struct CommunityTabView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return CommunityTabView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CommunityTabView()
+//}

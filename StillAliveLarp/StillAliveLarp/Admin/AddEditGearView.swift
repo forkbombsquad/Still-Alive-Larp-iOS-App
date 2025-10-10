@@ -180,8 +180,8 @@ struct AddEditGearView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return AddEditGearView(gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return AddEditGearView(gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
+//}

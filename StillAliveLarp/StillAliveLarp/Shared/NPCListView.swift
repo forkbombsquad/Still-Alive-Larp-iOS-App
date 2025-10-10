@@ -62,8 +62,8 @@ struct NPCListView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return NPCListView(npcs: md.fullCharacters(), title: "All NPCs", destination: .view)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return NPCListView(npcs: md.fullCharacters(), title: "All NPCs", destination: .view)
+//}

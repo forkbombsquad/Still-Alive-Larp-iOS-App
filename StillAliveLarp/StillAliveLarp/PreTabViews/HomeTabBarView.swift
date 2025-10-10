@@ -35,7 +35,7 @@ struct HomeTabBarView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return HomeTabBarView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return HomeTabBarView()
+//}

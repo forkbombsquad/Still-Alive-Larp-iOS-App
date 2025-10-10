@@ -14,46 +14,34 @@ struct ViewEventAttendeesView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    let eventModel: EventModel
-    
-    @State var eventAttendees: [EventAttendeeModel] = []
-    @State var loadingEventAttendees = true
-    @State var loadingPlayers = true
-    @State var allPlayers: [PlayerModel] = []
+    let event: FullEventModel
     
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("Attendees for\n\(eventModel.title)")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .multilineTextAlignment(.center)
-                        if loadingEventAttendees || loadingPlayers {
-                            LoadingBlock()
-                        } else {
-                            Text("Players")
-                                .font(.system(size: 28, weight: .bold))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .multilineTextAlignment(.leading)
-                                .padding([.horizontal, .top], 16)
-                                .padding(.bottom, 8)
-                            LazyVStack(spacing: 8) {
-                                ForEach(getCharacterAttendees()) { attendee in
-                                    KeyValueView(key: getPlayerName(attendee.playerId), value: attendee.isCheckedIn.boolValueDefaultFalse ? "Checked In" : "Checked Out")
-                                }
+                        globalCreateTitleView("Attendees for\n\(event.title)", DM: DM)
+                        Text("Players")
+                            .font(.system(size: 28, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .multilineTextAlignment(.leading)
+                            .padding([.horizontal, .top], 16)
+                            .padding(.bottom, 8)
+                        LazyVStack(spacing: 8) {
+                            ForEach(event.attendees.filter({ !$0.asNpc.boolValueDefaultFalse })) { attendee in
+                                KeyValueView(key: getPlayerName(attendee.playerId), value: attendee.isCheckedIn.boolValueDefaultFalse ? "Checked In" : "Checked Out")
                             }
-                            Text("NPCs")
-                                .font(.system(size: 28, weight: .bold))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .multilineTextAlignment(.leading)
-                                .padding([.horizontal, .top], 16)
-                                .padding(.bottom, 8)
-                            LazyVStack(spacing: 8) {
-                                ForEach(getNPCAttendees()) { attendee in
-                                    KeyValueView(key: getPlayerName(attendee.playerId), value: attendee.isCheckedIn.boolValueDefaultFalse ? "Checked In" : "Checked Out")
-                                }
+                        }
+                        Text("NPCs")
+                            .font(.system(size: 28, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .multilineTextAlignment(.leading)
+                            .padding([.horizontal, .top], 16)
+                            .padding(.bottom, 8)
+                        LazyVStack(spacing: 8) {
+                            ForEach(event.attendees.filter({ $0.asNpc.boolValueDefaultFalse })) { attendee in
+                                KeyValueView(key: getPlayerName(attendee.playerId), value: attendee.isCheckedIn.boolValueDefaultFalse ? "Checked In" : "Checked Out")
                             }
                         }
                     }
@@ -62,36 +50,15 @@ struct ViewEventAttendeesView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-//            self.loadingEventAttendees = true
-//            self.loadingPlayers = true
-//            OldDM.selectedEvent = eventModel
-//            OldDM.load([.allPlayers, .eventAttendeesForSelectedEvent]) {
-//                runOnMainThread {
-//                    self.allPlayers = OldDM.allPlayers ?? []
-//                    self.eventAttendees = OldDM.eventAttendeesForEvent
-//                    self.loadingEventAttendees = false
-//                    self.loadingPlayers = false
-//                }
-//            }
-        }
-    }
-    
-    private func getCharacterAttendees() -> [EventAttendeeModel] {
-        return eventAttendees.filter({ !$0.asNpc.boolValueDefaultFalse })
-    }
-    
-    private func getNPCAttendees() -> [EventAttendeeModel] {
-        return eventAttendees.filter({ $0.asNpc.boolValueDefaultFalse })
     }
     
     private func getPlayerName(_ id: Int) -> String {
-        return allPlayers.first(where: { $0.id == id })?.fullName ?? "Unknown Player"
+        return DM.players.first(where: { $0.id == id })?.fullName ?? "Unknown Player"
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ViewEventAttendeesView(eventModel: md.event())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ViewEventAttendeesView(eventModel: md.event())
+//}

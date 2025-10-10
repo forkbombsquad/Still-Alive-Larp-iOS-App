@@ -33,8 +33,7 @@ struct ViewCharacterView: View {
                             }
                             if show[.stats]! {
                                 NavArrowView(title: "View Stats") { _ in
-                                    // TODO View Character Stats View
-                                    EmptyView()
+                                    ViewCharacterStatsView(character: character)
                                 }
                             }
                             if show[.skillsTree]! {
@@ -66,22 +65,19 @@ struct ViewCharacterView: View {
                             if show[.bio]! {
                                 NavArrowView(title: "View Bio") {
                                     _ in
-                                    // TODO View Bio View
-                                    EmptyView()
+                                    ViewBioView(character: $character)
                                 }
                             }
                             if show[.gear]! {
-                                NavArrowView(title: "View Bio") {
+                                NavArrowView(title: "View Gear") {
                                     _ in
-                                    // TODO View Gear View
-                                    EmptyView()
+                                    GearView(character: character)
                                 }
                             }
                             if show[.xpReductions]! {
                                 NavArrowView(title: "View Xp Reductions") {
                                     _ in
-                                    // TODO View Xp Reductions View
-                                    EmptyView()
+                                    XpReductionsListView(character: character)
                                 }
                             }
                             if show[.awards]! {

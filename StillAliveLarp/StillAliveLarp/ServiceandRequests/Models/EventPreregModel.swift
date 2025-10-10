@@ -87,3 +87,12 @@ struct EventPreregCreateModel: CustomCodeable {
         return characterId == -1 ? nil : characterId
     }
 }
+
+struct PreregNumbers {
+    let premium: Int
+    let premiumNpc: Int
+    let basic: Int
+    let basicNpc: Int
+    let free: Int
+    let notAttending: Int
+}

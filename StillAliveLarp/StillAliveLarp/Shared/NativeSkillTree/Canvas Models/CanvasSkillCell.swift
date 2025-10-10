@@ -263,16 +263,16 @@ struct CanvasSkillCell: View {
     
 }
 
-#Preview {
-    let md = getMockData()
-    let freeSkill = 6
-    let longSkill = 72
-    let prestigeSkill = 23
-    let infSkill = 14
-    let specSkill = 19
-    let manyPrereqs = 47
-    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == infSkill })!.fullCharacterModifiedSkillModel(), allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
-}
+//#Preview {
+//    let md = getMockData()
+//    let freeSkill = 6
+//    let longSkill = 72
+//    let prestigeSkill = 23
+//    let infSkill = 14
+//    let specSkill = 19
+//    let manyPrereqs = 47
+//    CanvasSkillCell(expanded: true, skill: md.fullSkills().first(where: { $0.id == infSkill })!.fullCharacterModifiedSkillModel(), allowPurchase: true, purchaseState: .purchased, loadingPurchase: false, collapsedWidth: 300, expandedWidth: 300, loadingText: "Purchasing...")
+//}
 
 struct SkillCellMeasurer: View {
     let skill: FullCharacterModifiedSkillModel

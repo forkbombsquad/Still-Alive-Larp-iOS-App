@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-// TODO update view if needed
-
 struct AwardCharacterView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-    @State var characters: [CharacterModel]
+    @State var characters: [FullCharacterModel]
 
     var body: some View {
         VStack {
@@ -33,10 +31,4 @@ struct AwardCharacterView: View {
         }.padding(16)
         .background(Color.lightGray)
     }
-}
-
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return AwardCharacterView(characters: md.characterListFullModel.characters)
 }

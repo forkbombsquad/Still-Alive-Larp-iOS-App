@@ -13,56 +13,59 @@ struct CharacterPanel: View {
     
     let fromAccount: Bool
     let player: FullPlayerModel
-    let character: FullCharacterModel?
+    @State var character: FullCharacterModel?
     
     var body: some View {
         VStack {
             let show = calculateShouldShow()
-            if show[.charTitle]! {
-                Text("\(character?.fullName ?? "") \(getActiveText())")
-                    .font(.system(size: 24, weight: .bold))
-                    .frame(alignment: .leading)
-                    .padding(.top, 24)
-            }
-            if show[.stats]! {
-                NavArrowView(title: "View Character Stats") { _ in
-                    // TODO
+            if let character = character {
+                if show[.charTitle]! {
+                    Text("\(character.fullName) \(getActiveText())")
+                        .font(.system(size: 24, weight: .bold))
+                        .frame(alignment: .leading)
+                        .padding(.top, 24)
                 }
-            }
-            if show[.skillTree]! {
-                NavArrowView(title: "\(fromAccount ? "Manage Skills (Tree)" : "Manage Skills (Tree)")") { _ in
-                    if fromAccount {
-                        NativeSkillTree.initAsPersonal(currentPlayer: player, character: character!, isInOfflineMode: DM.offlineMode)
-                    } else {
-                        NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: player, character: character!)
+                if show[.stats]! {
+                    NavArrowView(title: "View Character Stats") { _ in
+                        ViewCharacterStatsView(character: character)
+                    }
+                }
+                if show[.skillTree]! {
+                    NavArrowView(title: "\(fromAccount ? "Manage Skills (Tree)" : "View Skills (Tree)")") { _ in
+                        if fromAccount {
+                            NativeSkillTree.initAsPersonal(currentPlayer: player, character: character, isInOfflineMode: DM.offlineMode)
+                        } else {
+                            NativeSkillTree.initAsOtherPlayerPersonal(currentPlayer: player, character: character)
+                        }
+                    }
+                }
+                if show[.skillList]! {
+                    NavArrowView(title: "\(fromAccount ? "Manage Skills (List)" : "View Skills (List)")") { _ in
+                        SkillsListView(character: $character, allowDelete: fromAccount)
+                    }
+                }
+                if show[.bio]! {
+                    NavArrowView(title: "View Bio") { _ in
+                        ViewBioView(character: $character)
+                    }
+                }
+                if show[.gear]! {
+                    NavArrowView(title: "View Gear") { _ in
+                        GearView(character: character)
+                    }
+                }
+                if show[.xpReductions]! {
+                    NavArrowView(title: "View Xp Reductions") { _ in
+                        XpReductionsListView(character: character)
+                    }
+                }
+                if show[.awards]! {
+                    NavArrowView(title: "View Character Awards") { _ in
+                        ViewAwardsView(player: DM.getPlayerForCharacter(character), awards: character.getAwardsSorted())
                     }
                 }
             }
-            if show[.skillList]! {
-                NavArrowView(title: "\(fromAccount ? "Manage Skills (List)" : "Manage Skills (List)")") { _ in
-                    // TODO
-                }
-            }
-            if show[.bio]! {
-                NavArrowView(title: "View Bio") { _ in
-                    // TODO
-                }
-            }
-            if show[.gear]! {
-                NavArrowView(title: "View Gear") { _ in
-                    // TODO
-                }
-            }
-            if show[.xpReductions]! {
-                NavArrowView(title: "View Xp Reductions") { _ in
-                    // TODO
-                }
-            }
-            if show[.awards]! {
-                NavArrowView(title: "View Character Awards") { _ in
-                    ViewAwardsView(player: DM.getPlayerForCharacter(character!), awards: character?.getAwardsSorted() ?? [])
-                }
-            }
+            
             if show[.otherCharacters]! {
                 Text("Other Characters")
                     .font(.system(size: 24, weight: .bold))
@@ -77,10 +80,9 @@ struct CharacterPanel: View {
             if show[.planned]! {
                 NavArrowView(title: "\(fromAccount ? "Character Planner" : "View Planned Characters")") { _ in
                     if fromAccount && !DM.offlineMode {
-                        // TODO character planner
-                        EmptyView()
+                        CharacterPlannerView(player: player)
                     } else {
-                        CharactersListView(title: "\(player.fullName)'s Inactive Characters", destination: .viewCharacter, characters: player.getPlannedCharacters())
+                        CharactersListView(title: "\(player.fullName)'s Planned Characters", destination: .viewCharacter, characters: player.getPlannedCharacters())
                     }
                 }
             }
@@ -145,8 +147,8 @@ struct CharacterPanel: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let mockData = getMockData()
-    return CharacterPanel(fromAccount: true, player: mockData.fullPlayers().first!, character: mockData.fullCharacters().first!)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let mockData = getMockData()
+//    return CharacterPanel(fromAccount: true, player: mockData.fullPlayers().first!, character: mockData.fullCharacters().first!)
+//}

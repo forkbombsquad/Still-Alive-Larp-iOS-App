@@ -98,7 +98,7 @@ struct ContactView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return ContactView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return ContactView()
+//}

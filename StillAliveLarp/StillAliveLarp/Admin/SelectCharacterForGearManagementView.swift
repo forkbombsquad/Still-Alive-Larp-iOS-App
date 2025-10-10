@@ -38,8 +38,8 @@ struct SelectCharacterForGearManagementView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return SelectCharacterForGearManagementView(characters: md.characterListFullModel.characters)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return SelectCharacterForGearManagementView(characters: md.characterListFullModel.characters)
+//}

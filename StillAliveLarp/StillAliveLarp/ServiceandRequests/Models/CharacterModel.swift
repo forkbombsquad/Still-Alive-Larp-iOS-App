@@ -122,7 +122,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         return allPurchasedSkills().sumOf({ $0.spentFt1s() })
     }
     
-    func getSpentPp1s() -> Int {
+    func getSpentPps() -> Int {
         return allPurchasedSkills().sumOf({ $0.spentPp() })
     }
     

@@ -53,9 +53,9 @@ struct GenerateCheckInBarcodeView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return GenerateCheckInBarcodeView(player: md.fullPlayers().first!, useChar: true, event: md.fullEvents().first!)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return GenerateCheckInBarcodeView(player: md.fullPlayers().first!, useChar: true, event: md.fullEvents().first!)
+//}
 

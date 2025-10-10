@@ -36,24 +36,27 @@ struct ContactDetailsView: View {
                     }
                     .padding(.trailing, 0)
                     Divider()
-                    LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Mark as \(self.contactRequest.read.boolValueDefaultFalse ? "Unread" : "Read")") {
-                        self.loading = true
-                        self.contactRequest.read = self.contactRequest.read.boolValueDefaultFalse ? "FALSE" : "TRUE"
-                        AdminService.updateContactRequest(self.contactRequest) { updatedContactRequest in
-                            runOnMainThread {
-                                self.contactRequest = contactRequest
-                                self.loading = false
-                                alertManager.showOkAlert("Contact Request Updated") {
-                                    runOnMainThread {
-                                        self.mode.wrappedValue.dismiss()
+                    if !DM.offlineMode {
+                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Mark as \(self.contactRequest.read.boolValueDefaultFalse ? "Unread" : "Read")") {
+                            self.loading = true
+                            self.contactRequest.read = self.contactRequest.read.boolValueDefaultFalse ? "FALSE" : "TRUE"
+                            AdminService.updateContactRequest(self.contactRequest) { updatedContactRequest in
+                                runOnMainThread {
+                                    self.contactRequest = contactRequest
+                                    self.loading = false
+                                    DM.load()
+                                    alertManager.showOkAlert("Contact Request Updated") {
+                                        runOnMainThread {
+                                            self.mode.wrappedValue.dismiss()
+                                        }
                                     }
                                 }
+                            } failureCase: { error in
+                                self.loading = false
                             }
-                        } failureCase: { error in
-                            self.loading = false
                         }
+                        .padding(.trailing, 0)
                     }
-                    .padding(.trailing, 0)
                 }
             }
         }
@@ -63,8 +66,8 @@ struct ContactDetailsView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ContactDetailsView(contactRequest: .constant(md.contact()))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ContactDetailsView(contactRequest: .constant(md.contact()))
+//}

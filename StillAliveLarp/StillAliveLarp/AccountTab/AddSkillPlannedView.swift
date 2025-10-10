@@ -294,8 +294,8 @@ struct AddPlannedSkillView: View {
 }
 
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return AddPlannedSkillView(character: md.fullCharacters().first!)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return AddPlannedSkillView(character: md.fullCharacters().first!)
+//}

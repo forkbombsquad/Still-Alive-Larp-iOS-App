@@ -36,8 +36,8 @@ struct SelectCharacterForClassXpReducitonView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return SelectCharacterForClassXpReducitonView(characters: md.characterListFullModel.characters)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return SelectCharacterForClassXpReducitonView(characters: md.characterListFullModel.characters)
+//}

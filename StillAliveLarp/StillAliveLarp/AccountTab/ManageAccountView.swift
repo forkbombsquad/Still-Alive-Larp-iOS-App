@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO redo view
-
 struct ManageAccountView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -30,9 +28,9 @@ struct ManageAccountView: View {
                         Spacer()
                         LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Force Download Data") {
                             self.loading = true
-                            DM.load(loadType: .forceDownload) {
+                            DM.load(loadType: .forceDownload, finished:  {
                                 DM.popToRoot()
-                            }
+                            })
                         }
                         LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Delete Local Data") {
                             alertManager.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once deleted, all local data will be wiped and will need to be re-downloaded and reconfigured.", customButtonText: "Delete Local Data") {
@@ -63,111 +61,125 @@ struct ManageAccountView: View {
     }
 
     private func deleteCharSkills() {
-//        if let charId = OldDM.character?.id {
-//            self.loadingText = "Deleting Skills"
-//            CharacterSkillService.deleteSkills(characterId: charId) { _ in
-//                self.deleteCharGear()
-//            } failureCase: { error in
-//                self.deleteCharGear()
-//            }
-//        } else {
-//            deleteEventAttendees()
-//        }
+        runOnMainThread {
+            self.loading = true
+        }
+        guard let player = DM.getCurrentPlayer(), let character = player.getActiveCharacter() else {
+            self.deleteEventAttendees()
+            return
+        }
+        runOnMainThread {
+            self.loadingText = "Deleting Skills"
+        }
+        CharacterSkillService.deleteSkills(characterId: character.id) { _ in
+            self.deleteCharGear(charId: character.id)
+        } failureCase: { error in
+            self.deleteCharGear(charId: character.id)
+        }
     }
 
-    private func deleteCharGear() {
-//        if let charId = OldDM.character?.id {
-//            self.loadingText = "Deleting Gear"
-//            GearService.deleteGear(characterId: charId) { _ in
-//                self.deleteSpecialClassXpReductions()
-//            } failureCase: { error in
-//                self.deleteSpecialClassXpReductions()
-//            }
-//        } else {
-//            deleteEventAttendees()
-//        }
+    private func deleteCharGear(charId: Int) {
+        runOnMainThread {
+            self.loadingText = "Deleting Gear"
+        }
+        GearService.deleteGear(characterId: charId) { _ in
+            self.deleteSpecialClassXpReductions(charId: charId)
+        } failureCase: { error in
+            self.deleteSpecialClassXpReductions(charId: charId)
+        }
     }
 
-    private func deleteSpecialClassXpReductions() {
-//        self.loadingText = "Deleting Xp Reductions"
-//        if let charId = OldDM.character?.id {
-//            SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
-//                self.deleteEventAttendees()
-//            } failureCase: { error in
-//                self.deleteEventAttendees()
-//            }
-//        } else {
-//            deleteEventAttendees()
-//        }
+    private func deleteSpecialClassXpReductions(charId: Int) {
+        runOnMainThread {
+            self.loadingText = "Deleting Xp Reductions"
+        }
+        SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
+            self.deleteEventAttendees()
+        } failureCase: { error in
+            self.deleteEventAttendees()
+        }
     }
 
     private func deleteEventAttendees() {
-//        self.loadingText = "Deleting Events Attended"
-//        EventAttendeeService.deleteAttendees { _ in
-//            self.deleteAwards()
-//        } failureCase: { error in
-//            self.deleteAwards()
-//        }
+        runOnMainThread {
+            self.loading = true
+            self.loadingText = "Deleting Events Attended"
+        }
+        
+        EventAttendeeService.deleteAttendees { _ in
+            self.deleteAwards()
+        } failureCase: { error in
+            self.deleteAwards()
+        }
     }
 
     private func deleteAwards() {
-//        self.loadingText = "Deleting Awards"
-//        AwardService.deleteAwards { _ in
-//            self.deletePreregs()
-//        } failureCase: { error in
-//            self.deletePreregs()
-//        }
+        runOnMainThread {
+            self.loadingText = "Deleting Awards"
+        }
+        AwardService.deleteAwards { _ in
+            self.deletePreregs()
+        } failureCase: { error in
+            self.deletePreregs()
+        }
     }
 
     private func deletePreregs() {
-//        self.loadingText = "Deleting Preregistrations"
-//        EventPreregService.deletePreregs { _ in
-//            self.deleteCharacters()
-//        } failureCase: { error in
-//            self.deleteCharacters()
-//        }
+        runOnMainThread {
+            self.loadingText = "Deleting Preregistrations"
+        }
+        EventPreregService.deletePreregs { _ in
+            self.deleteCharacters()
+        } failureCase: { error in
+            self.deleteCharacters()
+        }
     }
 
     private func deleteCharacters() {
-//        self.loadingText = "Deleting Characters"
-//        CharacterService.deleteCharacters { _ in
-//            self.deleteProfileImages()
-//        } failureCase: { error in
-//            self.deleteProfileImages()
-//        }
+        runOnMainThread {
+            self.loadingText = "Deleting Characters"
+        }
+        
+        CharacterService.deleteCharacters { _ in
+            self.deleteProfileImages()
+        } failureCase: { error in
+            self.deleteProfileImages()
+        }
     }
 
     private func deleteProfileImages() {
-//        self.loadingText = "Deleting Profile Images"
-//        ProfileImageService.deleteProfileImage(OldDM.player?.id ?? -1) { profileImage in
-//            self.deletePlayer()
-//        } failureCase: { error in
-//            self.deletePlayer()
-//        }
+        runOnMainThread {
+            self.loadingText = "Deleting Profile Image"
+        }
+        ProfileImageService.deleteProfileImage(DM.currentPlayerId) { profileImage in
+            self.deletePlayer()
+        } failureCase: { error in
+            self.deletePlayer()
+        }
 
     }
 
     private func deletePlayer() {
-//        self.loadingText = "Deleting Player"
-//        PlayerService.deletePlayer { _ in
-//            self.successDeleting()
-//        } failureCase: { error in
-//            self.loading = false
-//        }
+        runOnMainThread {
+            self.loadingText = "Deleting Player"
+        }
+        PlayerService.deletePlayer { _ in
+            self.successDeleting()
+        } failureCase: { error in
+            self.loading = false
+        }
     }
 
     private func successDeleting() {
-//        self.loadingText = ""
-//        alertManager.showSuccessAlert("Your account and all associated data has been deleted!") {
-//            forceResetAllPlayerData()
-//            runOnMainThread {
-//                OldDM.popToRoot()
-//            }
-//        }
+        runOnMainThread {
+            self.loadingText = ""
+            self.loading = false
+            alertManager.showSuccessAlert("Your account and all associated data has been deleted!") {
+                forceResetAllPlayerData()
+                runOnMainThread {
+                    DM.popToRoot()
+                }
+            }
+        }
     }
 }
-
-//#Preview {
-//    DataManager.shared.setDebugMode(true)
-//    return ManageAccountView(loading: false)
-//}

@@ -46,9 +46,3 @@ struct ViewPlayerStatsView: View {
         .background(Color.lightGray)
     }
 }
-
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ViewPlayerStatsView(player: md.fullPlayers()[0])
-}

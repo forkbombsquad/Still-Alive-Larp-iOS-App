@@ -34,8 +34,8 @@ struct ViewCampStatusView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ViewCampStatusView(campStatus: md.campStatus)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ViewCampStatusView(campStatus: md.campStatus)
+//}

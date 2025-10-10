@@ -27,29 +27,36 @@ struct AccountTabView: View {
                             globalCreateTitleView("My Account", DM: DM)
                             LoadingLayoutView {
                                 VStack {
-                                    NavigationLink(destination: EditProfileImageView()) {
-                                        ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
-                                            Image(uiImage: DM.getCurrentPlayer()?.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile"))
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(width: imgWidth, height: imgWidth)
-                                            
-                                            FakeLoadingButtonView(.constant(false), width: 44, height: 44, buttonText: "Edit")
+                                    let player = DM.getCurrentPlayer()!
+                                    if DM.offlineMode {
+                                        Image(uiImage: player.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile"))
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 200, height: 200)
+                                            .padding(.bottom, 8)
+                                    } else {
+                                        NavigationLink(destination: EditProfileImageView()) {
+                                            ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
+                                                Image(uiImage: player.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile"))
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: imgWidth, height: imgWidth)
+                                                
+                                                FakeLoadingButtonView(.constant(false), width: 44, height: 44, buttonText: "Edit")
+                                            }
                                         }
                                     }
-                                    Text(DM.getCurrentPlayer()?.fullName ?? "")
+                                    Text(player.fullName)
                                         .font(.system(size: 24, weight: .bold))
                                         .frame(alignment: .leading)
                                         .padding(.top, 24)
-                                    if let player = DM.getCurrentPlayer() {
-                                        NavArrowView(title: "View Player Stats") { _ in
-                                            ViewPlayerStatsView(player: player)
-                                        }
-                                        NavArrowView(title: "View Player Awards") { _ in
-                                            ViewAwardsView(player: player, awards: player.getAwardsSorted())
-                                        }
-                                        CharacterPanel(fromAccount: true, player: player, character: DM.getActiveCharacter())
+                                    NavArrowView(title: "View Player Stats") { _ in
+                                        ViewPlayerStatsView(player: player)
                                     }
+                                    NavArrowView(title: "View Player Awards") { _ in
+                                        ViewAwardsView(player: player, awards: player.getAwardsSorted())
+                                    }
+                                    CharacterPanel(fromAccount: true, player: player, character: DM.getActiveCharacter())
                                     Text("Account")
                                         .font(.system(size: 24, weight: .bold))
                                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,7 +93,7 @@ struct AccountTabView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return AccountTabView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return AccountTabView()
+//}

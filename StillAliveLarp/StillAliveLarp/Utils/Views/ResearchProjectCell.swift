@@ -65,7 +65,7 @@ struct ResearchProjectCell: View {
     }
 }
 
-#Preview {
-    let md = getMockData()
-    return ResearchProjectCell(researchProject: md.researchProject(), loading: .constant(false))
-}
+//#Preview {
+//    let md = getMockData()
+//    return ResearchProjectCell(researchProject: md.researchProject(), loading: .constant(false))
+//}

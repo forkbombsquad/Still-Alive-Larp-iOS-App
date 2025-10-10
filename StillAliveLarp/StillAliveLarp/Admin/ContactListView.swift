@@ -11,7 +11,7 @@ struct ContactListView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @Binding var contactRequests: [ContactRequestModel]
+    @State var contactRequests: [ContactRequestModel]
 
     var body: some View {
         VStack {
@@ -35,8 +35,8 @@ struct ContactListView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return ContactListView(contactRequests: .constant(md.contacts.contactRequests))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ContactListView(contactRequests: .constant(md.contacts.contactRequests))
+//}

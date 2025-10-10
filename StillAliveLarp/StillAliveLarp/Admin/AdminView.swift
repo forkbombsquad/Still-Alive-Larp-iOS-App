@@ -8,9 +8,6 @@
 import SwiftUI
 import CodeScanner
 
-// TODO update view if needed
-// TODO support offline
-
 struct AdminView: View {
 
     @EnvironmentObject var alertManager: AlertManager
@@ -24,25 +21,25 @@ struct AdminView: View {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh_AdminTab", spinnerOffsetY: -100, pullDownDistance: 150) {
                         self.reloadData()
                     }
-                    VStack {
-                        Text("Admin Tools")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                        Text("Event Tools")
-                            .font(.system(size: 24, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 8)
-//                        EventToolsView(events: $events, loadingEvents: $loadingEvents)
-                        Text("Player/Character Management")
-                            .font(.system(size: 24, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 8)
-//                        PlayerCharacterManagementView(allCharacters: $allCharacters, npcs: $npcs, loadingCharacters: $loadingCharacters, allPlayers: $allPlayers, loadingPlayers: $loadingPlayers, loadingNPCs: $loadingNPCs)
-                        Text("Misc Administration")
-                            .font(.system(size: 24, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 8)
-//                        MiscAdminView(allCharacters: $allCharacters, loadingCharacters: $loadingCharacters, unapprovedBioText: $unapprovedBioText, charactersWhoNeedBios: $charactersWhoNeedBios, researchProjects: $researchProjects, loadingContacts: $loadingContacts, unreadContactsText: $unreadContactsText, contactRequests: $contactRequests, loadingResearchProjects: $loadingResearchProjects)
+                    LoadingLayoutView {
+                        VStack {
+                            globalCreateTitleView("Admin Panel", DM: DM)
+                            Text("Event Tools")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, 8)
+                            EventToolsView()
+                            Text("Player/Character Management")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, 8)
+                            PlayerCharacterManagementView()
+                            Text("Misc Administration")
+                                .font(.system(size: 24, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.top, 8)
+                            MiscAdminView()
+                        }
                     }
                 }.coordinateSpace(name: "pullToRefresh_AdminTab")
             }
@@ -51,93 +48,9 @@ struct AdminView: View {
     }
     
     private func reloadData() {
-//        runOnMainThread {
-//            self.loadingPlayers = true
-//            self.loadingCharacters = true
-//            self.loadingEvents = true
-//            self.loadingContacts = true
-//            self.loadingResearchProjects = true
-//            self.loadingNPCs = true
-//            PlayerService.getAllPlayers { playerList in
-//                runOnMainThread {
-//                    self.allPlayers = playerList.players
-//                    self.loadingPlayers = false
-//                }
-//            } failureCase: { _ in
-//                runOnMainThread {
-//                    self.loadingPlayers = false
-//                }
-//            }
-//            CharacterService.getAllCharacters { characterList in
-//                runOnMainThread {
-//                    self.allCharacters = characterList.characters
-//                    self.charactersWhoNeedBios = self.allCharacters.filter({ c in
-//                        !c.approvedBio.boolValueDefaultFalse && !c.bio.isEmpty
-//                    })
-//                    self.unapprovedBioText = self.getUnapprovedBioCount()
-//                    self.loadingCharacters = false
-//                }
-//            } failureCase: { _ in
-//                runOnMainThread {
-//                    self.loadingCharacters = false
-//                }
-//            }
-////            EventManager.shared.getEvents(overrideLocal: true) { events in
-////                runOnMainThread {
-////                    self.loadingEvents = false
-////                    self.events = events.reversed()
-////                    OldDM.events = events
-////                }
-////            }
-//            AdminService.getAllContactRequests { contactRequestList in
-//                runOnMainThread {
-//                    self.loadingContacts = false
-//                    self.contactRequests = self.sortContactRequests(contactRequestList)
-//                }
-//            } failureCase: { error in
-//                runOnMainThread {
-//                    self.loadingContacts = false
-//                }
-//            }
-////            OldDM.load([.researchProjects], forceDownloadIfApplicable: true) {
-////                runOnMainThread {
-////                    self.researchProjects = OldDM.researchProjects
-////                    self.loadingResearchProjects = false
-////                }
-////            }
-////            OldDM.load([.featureFlags], forceDownloadIfApplicable: true)
-////            OldDM.load([.npcs], forceDownloadIfApplicable: true) {
-////                runOnMainThread {
-////                    self.npcs = OldDM.npcs
-////                    self.loadingNPCs = false
-////                }
-////            }
-//        }
-    }
-
-    func getUnapprovedBioCount() -> String {
-        // TODO
-//        let count = self.charactersWhoNeedBios.count
-//        return count == 0 ? "" : count.stringValue
-        return ""
-    }
-
-    func sortContactRequests(_ contactRequestList: ContactRequestListModel) -> [ContactRequestModel] {
-        let unsorted = contactRequestList.contactRequests
-        let unread = unsorted.filter { crm in
-            !crm.read.boolValueDefaultFalse
+        runOnMainThread {
+            DM.load()
         }
-        let read = unsorted.filter { crm in
-            crm.read.boolValueDefaultFalse
-        }
-        var newList = [ContactRequestModel]()
-        newList = unread.sorted(by: { f, s in
-            f.fullName.caseInsensitiveCompare(s.fullName) == .orderedAscending
-        })
-        newList.append(contentsOf: read.sorted(by: { f, s in
-            f.fullName.caseInsensitiveCompare(s.fullName) == .orderedAscending
-        }))
-        return newList
     }
 
 }
@@ -146,25 +59,27 @@ struct EventToolsView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @Binding var events: [EventModel]
-    @Binding var loadingEvents: Bool
-
     var body: some View {
         VStack {
-            NavArrowView(title: "Player Check-In") { _ in
-                CheckInPlayerView()
+            let online = !DM.offlineMode
+            if online {
+                NavArrowView(title: "Player Check-In") { _ in
+                    CheckInPlayerView()
+                }
+                NavArrowView(title: "Player Check-Out") { _ in
+                    CheckOutPlayerView()
+                }
             }
-            NavArrowView(title: "Player Check-Out") { _ in
-                CheckOutPlayerView()
+            NavArrowView(title: "View Preregistrations") { _ in
+                EventsListView(title: "Select Event To View Preregistrations", destination: .prereg, additionalDestination: .none, events: DM.events)
             }
-            NavArrowView(title: "View Preregistrations", loading: $loadingEvents) { _ in
-                SelectEventForPreregView(events: events)
+            NavArrowView(title: "Event Management") { _ in
+                EventsListView(title: "Event Management", destination: .eventManagement, additionalDestination: .createNewEvent, events: DM.events)
             }
-            NavArrowView(title: "Event Management", loading: $loadingEvents) { _ in
-                EventManagementView(events: $events)
-            }
-            NavArrowView(title: "Manage Intrigue", loading: $loadingEvents) { _ in
-                SelectEventForIntrigueView(events: events)
+            if online {
+                NavArrowView(title: "Manage Intrigue") { _ in
+                    EventsListView(title: "Select Event To Manage Intrigue", destination: .intrigue, additionalDestination: .none, events: DM.events)
+                }
             }
         }
     }
@@ -174,32 +89,30 @@ struct PlayerCharacterManagementView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @Binding var allCharacters: [CharacterModel]
-    @Binding var npcs: [CharacterModel]
-    @Binding var loadingCharacters: Bool
-    @Binding var allPlayers: [PlayerModel]
-    @Binding var loadingPlayers: Bool
-    @Binding var loadingNPCs: Bool
-
     var body: some View {
         VStack {
-            NavArrowView(title: "Manage NPCs", loading: $loadingNPCs) { _ in
-//                AllNpcsListView(npcs: npcs, allowEdit: true)
+            let online = !DM.offlineMode
+            if online {
+                NavArrowView(title: "Manage NPCs") { _ in
+                    NPCListView(npcs: DM.getAllCharacters(.npc), title: "Select NPC To Manage", destination: .manage)
+                }
+                NavArrowView(title: "Award Player") { _ in
+                    PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
+                }
+                NavArrowView(title: "Award Character") { _ in
+                    AwardCharacterView(characters: DM.getAllCharacters(.standard))
+                }
+                NavArrowView(title: "Give Class Xp Reduction") { _ in
+                    CharactersListView(title: "Select Character for Xp Reduction", destination: .selectSkillForXpReduction, characters: DM.getAllCharacters(.standard))
+                }
             }
-            NavArrowView(title: "Award Player", loading: $loadingPlayers) { _ in
-                PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
+            NavArrowView(title: "Manage Character Gear") { _ in
+                CharactersListView(title: "Select Character for Gear Management", destination: DM.offlineMode ? .viewGear : .manageGear, characters: DM.getAllCharacters(.standard))
             }
-            NavArrowView(title: "Award Character", loading: $loadingCharacters) { _ in
-                AwardCharacterView(characters: allCharacters)
-            }
-            NavArrowView(title: "Give Class Xp Reduction", loading: $loadingCharacters) { _ in
-                SelectCharacterForClassXpReducitonView(characters: allCharacters)
-            }
-            NavArrowView(title: "Manage Character Gear", loading: $loadingCharacters) { _ in
-                SelectCharacterForGearManagementView(characters: allCharacters)
-            }
-            NavArrowView(title: "Update Player Password", loading: $loadingPlayers) { _ in
-                PlayersListView(title: "Select Player To Change Password For", destination: .changePass, players: DM.players)
+            if online {
+                NavArrowView(title: "Update Player Password") { _ in
+                    PlayersListView(title: "Select Player To Change Password For", destination: .changePass, players: DM.players)
+                }
             }
         }
     }
@@ -208,46 +121,37 @@ struct PlayerCharacterManagementView: View {
 struct MiscAdminView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-
-    @Binding var allCharacters: [CharacterModel]
-    @Binding var loadingCharacters: Bool
-    @Binding var unapprovedBioText: String
-    @Binding var charactersWhoNeedBios: [CharacterModel]
-    @Binding var researchProjects: [ResearchProjectModel]
-    
-    @Binding var loadingContacts: Bool
-    @Binding var unreadContactsText: String
-    @Binding var contactRequests: [ContactRequestModel]
-    @Binding var loadingResearchProjects: Bool
     
     var body: some View {
         VStack {
+            let online = !DM.offlineMode
             NavArrowView(title: "Manage Research Projects") { _ in
-                ViewOrManageResearchProjectsView(researchProjects: researchProjects, allowEdit: true)
-//                    .onDisappear {
-//                        runOnMainThread {
-//                            self.researchProjects = OldDM.researchProjects
-//                        }
-//                    }
+                ViewOrManageResearchProjectsView(researchProjects: DM.researchProjects, allowEdit: online)
             }
-            NavArrowView(title: "Create Announcement") { _ in
-                CreateAnnouncementView()
+            if online {
+                NavArrowView(title: "Create Announcement") { _ in
+                    CreateAnnouncementView()
+                }
+                let chars = DM.getCharactersWhoNeedBiosApproved()
+                NavArrowView(title: "Approve Bios", notificationBubbleText: .constant(chars.count == 0 ? "" : chars.count.stringValue)) { _ in
+                    CharactersListView(title: "Select Character To Approve Bio For", destination: .approveBio, characters: chars)
+                }
             }
-            NavArrowView(title: "Approve Bios", loading: $loadingCharacters, notificationBubbleText: $unapprovedBioText) { _ in
-                CharacterBioListView(charactersWhoNeedBiosApproved: $charactersWhoNeedBios)
+
+            let contacts = DM.contactRequests.count(where: { !$0.read.boolValueDefaultFalse })
+            NavArrowView(title: "Contact Requests", notificationBubbleText: .constant(contacts == 0 ? "" : contacts.stringValue)) { _ in
+                ContactListView(contactRequests: DM.contactRequests)
             }
-            NavArrowView(title: "Contact Requests", loading: $loadingContacts, notificationBubbleText: $unreadContactsText) { _ in
-                ContactListView(contactRequests: $contactRequests)
+            NavArrowView(title: "Feature Flag Management") { _ in
+                FeatureFlagManagementView(featureFlags: DM.featureFlags)
             }
-//            NavArrowView(title: "Feature Flag Management", loading: OldDataManager.$shared.loadingFeatureFlags) { _ in
-//                FeatureFlagManagementView(featureFlags: OldDataManager.$shared.featureFlags)
-//            }
+            .padding(.bottom, 32)
         }
     }
 }
 
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return AdminView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return AdminView()
+//}

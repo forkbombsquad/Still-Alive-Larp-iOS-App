@@ -114,7 +114,7 @@ struct CreateAccountView: View {
 
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    return CreateAccountView()
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CreateAccountView()
+//}

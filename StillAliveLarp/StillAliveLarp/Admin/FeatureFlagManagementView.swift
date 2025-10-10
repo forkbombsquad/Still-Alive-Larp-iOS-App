@@ -14,7 +14,7 @@ struct FeatureFlagManagementView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    @Binding var featureFlags: [FeatureFlagModel]
+    @State var featureFlags: [FeatureFlagModel]
     @State var loading: Bool = false
     
     @State var flagName: String = ""
@@ -126,8 +126,8 @@ struct FeatureFlagManagementView: View {
     }
 }
 
-#Preview {
-    DataManager.shared.setDebugMode(true)
-    let md = getMockData()
-    return FeatureFlagManagementView(featureFlags: .constant(md.featureFlagList.results))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return FeatureFlagManagementView(featureFlags: .constant(md.featureFlagList.results))
+//}

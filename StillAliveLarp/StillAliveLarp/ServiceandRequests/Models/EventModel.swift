@@ -50,6 +50,10 @@ struct FullEventModel: CustomCodeable, Identifiable {
         return (isOngoing() || isToday() || isInFuture()) && !isFinished
     }
     
+    func baseModel() -> EventModel {
+        return EventModel(id: id, title: title, description: description, date: date, startTime: startTime, endTime: endTime, isStarted: isStarted.stringValue, isFinished: isFinished.stringValue)
+    }
+    
 }
 
 struct EventModel: CustomCodeable, Identifiable {

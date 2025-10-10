@@ -1,5 +1,5 @@
 //
-//  CharacterPlannerListView.swift
+//  CharacterPlannerView.swift
 //  Still Alive Larp
 //
 //  Created by Rydge Craker on 5/20/25.
@@ -7,22 +7,15 @@
 
 import SwiftUI
 
-// TODO redo
-
-struct CharacterPlannerListView: View {
+struct CharacterPlannerView: View {
     
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-    let player: PlayerModel
+    @State var player: FullPlayerModel
     
     @State var loading: Bool = false
     @State var loadingText: String = ""
-    @State var allRegularCharacters: [CharacterModel] = []
-    @State var allPlannedCharacters: [CharacterModel] = []
-    
-    @State var loadingFullCharacter: Bool = false
-    
     @State var newName: String = ""
     
     var body: some View {
@@ -30,33 +23,36 @@ struct CharacterPlannerListView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack {
-                        Text("Planned Characters")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                        if loading {
-                            LoadingBlockWithText(loadingText: $loadingText)
-                        } else {
-//                            LazyVStack(spacing: 8) {
-//                                ForEach(allPlannedCharacters) { plannedChar in
-//                                    NavArrowViewBlue(title: plannedChar.fullName, loading: $loadingFullCharacter) {
-//                                        SkillManagementPlannerView(character: plannedChar)
-//                                    }
-//                                }
-//                            }
-                            ArrowViewButtonGreen(title: "Start A New Plan", loading: $loadingFullCharacter) {
-                                alertManager.showDynamicAlert(model: CustomAlertModel(
-                                    title: "Create a new plan or base one off of an existing Character?",
-                                    textFields: [],
-                                    checkboxes: [],
-                                    verticalButtons:
-                                        [AlertButton(title: "New Plan", onPress: {
-                                            runOnMainThread {
-                                                self.createCharacter(nil)
+                        globalCreateTitleView("\(player.fullName)'s\nPlanned Characters", DM: DM)
+                        LoadingLayoutView {
+                            VStack {
+                                if loading {
+                                    LoadingBlockWithText(loadingText: $loadingText)
+                                } else {
+                                    Text("*Swipe away a Planned Character to delete it*")
+                                    LazyVStack(spacing: 8) {
+                                        ForEach(player.getPlannedCharacters()) { plannedChar in
+                                            NavArrowViewBlue(title: plannedChar.fullName, loading: $loading) {
+                                                ViewCharacterView(character: plannedChar)
                                             }
-                                        })] + self.getCharacterChoices()
-                                    , buttons: [
-                                        AlertButton.cancel {}
-                                    ]))
+                                        }
+                                    }
+                                    ArrowViewButtonGreen(title: "Start A New Plan", loading: $loading) {
+                                        alertManager.showDynamicAlert(model: CustomAlertModel(
+                                            title: "Create a new plan or base one off of an existing Character?",
+                                            textFields: [],
+                                            checkboxes: [],
+                                            verticalButtons:
+                                                [AlertButton(title: "New Plan", onPress: {
+                                                    runOnMainThread {
+                                                        self.createCharacter(nil)
+                                                    }
+                                                })] + self.getCharacterChoices()
+                                            , buttons: [
+                                                AlertButton.cancel {}
+                                            ]))
+                                    }
+                                }
                             }
                         }
                     }
@@ -65,30 +61,25 @@ struct CharacterPlannerListView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-//        .onAppear {
-//            self.loadingText = "Loading Planned Characters..."
-//            self.loading = true
-//            OldDM.player = player
-//            OldDM.load([.allCharacters, .plannedCharacters]) {
-//                runOnMainThread {
-//                    self.allRegularCharacters = OldDM.allCharacters?.filter({ $0.playerId == self.player.id }) ?? []
-//                    self.allPlannedCharacters = OldDM.allPlannedCharacters
-//                    self.loading = false
-//                }
-//            }
-//        }
     }
     
     private func getCharacterChoices() -> [AlertButton] {
         var choices: [AlertButton] = []
-        for char in self.allRegularCharacters {
+        if let ac = player.getActiveCharacter() {
+            choices.append(AlertButton(title: ac.fullName, onPress: {
+                runOnMainThread {
+                    self.createCharacter(ac)
+                }
+            }))
+        }
+        for char in player.getInactiveCharacters() {
             choices.append(AlertButton(title: char.fullName, onPress: {
                 runOnMainThread {
                     self.createCharacter(char)
                 }
             }))
         }
-        for char in self.allPlannedCharacters {
+        for char in player.getPlannedCharacters() {
             choices.append(AlertButton(title: char.fullName, onPress: {
                 runOnMainThread {
                     self.createCharacter(char)
@@ -98,7 +89,7 @@ struct CharacterPlannerListView: View {
         return choices
     }
     
-    private func createCharacter(_ existing: CharacterModel?) {
+    private func createCharacter(_ existing: FullCharacterModel?) {
         self.newName = ""
         alertManager.showDynamicAlert(model: CustomAlertModel(
             title: "Creating Plan", textFields: [
@@ -145,7 +136,7 @@ struct CharacterPlannerListView: View {
             ]))
     }
     
-    private func addSkillsForExisting(newChar: CharacterModel, existingChar: CharacterModel) {
+    private func addSkillsForExisting(newChar: CharacterModel, existingChar: FullCharacterModel) {
         self.loadingText = "Fetching Skills..."
         CharacterSkillService.getAllSkillsForChar(existingChar.id) { charSkills in
             runOnMainThread {
@@ -183,19 +174,13 @@ struct CharacterPlannerListView: View {
     }
     
     private func reload() {
-//        self.loadingText = "Loading New Planned Character..."
-//        OldDM.player = player
-//        OldDM.load([.plannedCharacters], forceDownloadIfApplicable: true) {
-//            runOnMainThread {
-//                self.allPlannedCharacters = OldDM.allPlannedCharacters
-//                self.loading = false
-//            }
-//        }
+        runOnMainThread {
+            DM.load(finished: {
+                runOnMainThread {
+                    self.player = DM.players.first(where: { $0.id == player.id }) ?? player
+                }
+            })
+            self.loading = false
+        }
     }
 }
-
-//#Preview {
-//    DataManager.shared.setDebugMode(true)
-//    let md = getMockData()
-//    return CharacterPlannerListView(player: md.player())
-//}
