@@ -7,15 +7,14 @@
 
 import SwiftUI
 
-// TODO redo view
 struct FeatureFlagCell: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
     let flag: FeatureFlagModel
+    let width: CGFloat
     
     @Binding var loading: Bool
-    @State private var containerWidth: CGFloat = 0
     let onEditPress: () -> Void
     
     var body: some View {
@@ -32,34 +31,26 @@ struct FeatureFlagCell: View {
                         HStack {
                             Text("iOS: \(flag.isActiveIos ? "ON" : "OFF")")
                                 .font(.system(size: 16, weight: .bold))
-                                .frame(width: containerWidth * 0.33, alignment: .center)
+                                .frame(width: width * 0.33, alignment: .center)
                                 .foregroundColor(flag.isActiveIos ? Color.darkGreen : Color.midRed)
                             Text("ANDROID: \(flag.isActiveAndroid ? "ON" : "OFF")")
                                 .font(.system(size: 16, weight: .bold))
-                                .frame(width: containerWidth * 0.33, alignment: .center)
+                                .frame(width: width * 0.33, alignment: .center)
                                 .foregroundColor(flag.isActiveAndroid ? Color.darkGreen : Color.midRed)
                         }
                     }
-                    LoadingButtonView($loading, width: containerWidth * 0.2, height: 44, buttonText: "Edit", onButtonPress: onEditPress)
+                    LoadingButtonView($loading, width: width * 0.2, height: 44, buttonText: "Edit", onButtonPress: onEditPress)
                 }
             }
             .padding(8)
-            .background(GeometryReader { geo in
-                        Color.clear
-                            .onAppear {
-                                containerWidth = geo.size.width
-                            }
-                            .onChange(of: geo.size.width) { newWidth in
-                                containerWidth = newWidth
-                            }
-                    }
-                )
         }
         .padding(.horizontal, 16)
     }
 }
 
-//#Preview {
-//    DataManager.shared.setDebugMode(true)
-//    return FeatureFlagCell(flag: dm.featureFlags.first!, loading: .constant(false), onEditPress: {})
-//}
+#Preview {
+    let dm = DataManager.shared
+    dm.setDebugMode(true)
+    let mockData = getMockData()
+    return FeatureFlagCell(flag: mockData.featureFlag(), width: 350, loading: .constant(false), onEditPress: {}).environmentObject(dm)
+}

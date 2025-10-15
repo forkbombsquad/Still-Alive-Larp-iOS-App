@@ -174,8 +174,8 @@ struct ManageAccountView: View {
         runOnMainThread {
             self.loadingText = ""
             self.loading = false
-            alertManager.showSuccessAlert("Your account and all associated data has been deleted!") {
-                forceResetAllPlayerData()
+            forceResetAllPlayerData()
+            alertManager.showSuccessAlert("Your account and all associated data has been deleted, please restart the app!") {
                 runOnMainThread {
                     DM.popToRoot()
                 }

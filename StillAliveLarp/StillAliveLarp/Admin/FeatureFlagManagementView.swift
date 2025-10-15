@@ -7,14 +7,13 @@
 
 import SwiftUI
 
-// TODO redo view
-
 struct FeatureFlagManagementView: View {
     
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
     @State var featureFlags: [FeatureFlagModel]
+    
     @State var loading: Bool = false
     
     @State var flagName: String = ""
@@ -24,64 +23,61 @@ struct FeatureFlagManagementView: View {
     
     var body: some View {
         VStack {
-            ScrollView {
-                VStack {
-                    Text("Feature Flag Management")
-                        .font(.system(size: 32, weight: .bold))
-                        .frame(alignment: .center)
-                    LazyVStack(spacing: 8) {
-                        ArrowViewButtonGreen(title: "Add New", loading: $loading) {
-                            loading = true
-                            flagName = ""
-                            flagDesc = ""
-                            activeiOS = false
-                            activeAndroid = false
-                            alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
-                                AlertTextField(placeholder: "Flag Name", value: $flagName),
-                                AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
-                                ], checkboxes: [
-                                    AlertToggle(text: "Active on iOS", isOn: $activeiOS),
-                                    AlertToggle(text: "Active on Android", isOn: $activeAndroid)
-                                ], verticalButtons: [], buttons: [
-                                    AlertButton(title: "Save", role: nil, onPress: {
-                                        self.createNewFlag()
-                                    }),
-                                    AlertButton(title: "Cancel", role: .cancel, onPress: {
-                                        alertManager.dismissDynamicAlert()
-                                        loading = false
-                                    })
-                                ]))
-                        }
-                        ForEach($featureFlags) { flag in
-                            HStack {
-                                FeatureFlagCell(flag: flag.wrappedValue, loading: $loading, onEditPress: {
-                                    loading = true
-                                    flagName = flag.wrappedValue.name
-                                    flagDesc = flag.wrappedValue.description
-                                    activeiOS = flag.wrappedValue.isActiveIos
-                                    activeAndroid = flag.wrappedValue.isActiveAndroid
-                                    alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
-                                        AlertTextField(placeholder: "Flag Name", value: $flagName),
-                                        AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
-                                        ], checkboxes: [
-                                            AlertToggle(text: "Active on iOS", isOn: $activeiOS),
-                                            AlertToggle(text: "Active on Android", isOn: $activeAndroid)
-                                        ], verticalButtons: [], buttons: [
-                                            AlertButton(title: "Update", role: nil, onPress: {
-                                                self.updateFlag(flag.wrappedValue.id)
-                                            }),
-                                            AlertButton(title: "Delete", role: .destructive, onPress: {
-                                                self.deleteFlag(flag.wrappedValue.id)
-                                            }),
-                                            AlertButton(title: "Cancel", role: .cancel, onPress: {
-                                                alertManager.dismissDynamicAlert()
-                                                loading = false
+            GeometryReader { gr in
+                ScrollView {
+                    VStack {
+                        LoadingLayoutView {
+                            VStack {
+                                globalCreateTitleView("Feature Flag Management", DM: DM)
+                                LazyVStack(spacing: 8) {
+                                    ArrowViewButtonGreen(title: "Add New") {
+                                        flagName = ""
+                                        flagDesc = ""
+                                        activeiOS = false
+                                        activeAndroid = false
+                                        alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
+                                            AlertTextField(placeholder: "Flag Name", value: $flagName),
+                                            AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
+                                            ], checkboxes: [
+                                                AlertToggle(text: "Active on iOS", isOn: $activeiOS),
+                                                AlertToggle(text: "Active on Android", isOn: $activeAndroid)
+                                            ], verticalButtons: [], buttons: [
+                                                AlertButton(title: "Save", role: nil, onPress: {
+                                                    self.createNewFlag()
+                                                }),
+                                                AlertButton(title: "Cancel", role: .cancel, onPress: {
+                                                    alertManager.dismissDynamicAlert()
+                                                })
+                                            ]))
+                                    }
+                                    ForEach($featureFlags) { flag in
+                                        FeatureFlagCell(flag: flag.wrappedValue, width: gr.size.width, loading: $loading, onEditPress: {
+                                            flagName = flag.wrappedValue.name
+                                            flagDesc = flag.wrappedValue.description
+                                            activeiOS = flag.wrappedValue.isActiveIos
+                                            activeAndroid = flag.wrappedValue.isActiveAndroid
+                                            alertManager.showDynamicAlert(model: CustomAlertModel(title: "Edit Feature Flag", textFields: [
+                                                AlertTextField(placeholder: "Flag Name", value: $flagName),
+                                                AlertTextField(placeholder: "Flag Description", value: $flagDesc, isMultiline: true)
+                                                ], checkboxes: [
+                                                    AlertToggle(text: "Active on iOS", isOn: $activeiOS),
+                                                    AlertToggle(text: "Active on Android", isOn: $activeAndroid)
+                                                ], verticalButtons: [], buttons: [
+                                                    AlertButton(title: "Update", role: nil, onPress: {
+                                                        self.updateFlag(flag.wrappedValue.id)
+                                                    }),
+                                                    AlertButton(title: "Delete", role: .destructive, onPress: {
+                                                        self.deleteFlag(flag.wrappedValue.id)
+                                                    }),
+                                                    AlertButton(title: "Cancel", role: .cancel, onPress: {
+                                                        alertManager.dismissDynamicAlert()
+                                                    })
+                                                ]))
                                             })
-                                        ]))
-                                    })
-                                Spacer(minLength: 0)
+                                        .padding(.horizontal, 16)
+                                    }
+                                }
                             }
-                            .padding(.horizontal, 16)
                         }
                     }
                 }
@@ -96,33 +92,27 @@ struct FeatureFlagManagementView: View {
         let flag = FeatureFlagCreateModel(name: flagName, description: flagDesc, activeAndroid: activeAndroid.stringValue, activeIos: activeiOS.stringValue)
         AdminService.createFeatureFlag(flag) { _ in
             self.reload()
-        } failureCase: { error in
-            self.loading = false
-        }
+        } failureCase: { _ in }
     }
     
     private func updateFlag(_ id: Int) {
         let flag = FeatureFlagModel(id: id, name: flagName, description: flagDesc, activeAndroid: activeAndroid.stringValue, activeIos: activeiOS.stringValue)
         AdminService.updateFeatureFlag(featureFlagModel: flag) { _ in
             self.reload()
-        } failureCase: { error in
-            self.loading = false
-        }
+        } failureCase: { _ in }
     }
     
     private func deleteFlag(_ id: Int) {
         AdminService.deleteFeatureFlag(featureFlagId: id) { featureFlagModel in
             self.reload()
-        } failureCase: { error in
-            self.loading = false
-        }
+        } failureCase: { _ in }
 
     }
     
     private func reload() {
-//        OldDM.load([.featureFlags], forceDownloadIfApplicable: true) {
-//            self.loading = false
-//        }
+        DM.load(finished: {
+            self.featureFlags = DM.featureFlags
+        })
     }
 }
 

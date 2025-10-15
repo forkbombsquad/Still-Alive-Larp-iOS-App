@@ -26,11 +26,13 @@ struct LoadingLayoutView<Content: View>: View {
     }
     
     var body: some View {
-        Group {
+        ZStack {
+            content()
+                .opacity(DM.isLoadingMirror ? 0 : 1)
+                .disabled(DM.isLoadingMirror) // prevent interactions while loading
+            
             if DM.isLoadingMirror {
                 LoadingLayout()
-            } else {
-                content()
             }
         }.onAppear {
             // Ran into a race condition where changing published variables caused the onAppear to be called too quickly so it would loop endlessly. Restricting it to once per second fixes the issue

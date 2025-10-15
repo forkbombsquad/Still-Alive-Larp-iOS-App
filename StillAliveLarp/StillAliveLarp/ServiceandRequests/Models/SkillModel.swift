@@ -49,14 +49,14 @@ struct SkillListModel: CustomCodeable {
 struct FullCharacterModifiedSkillModel: CustomCodeable, Identifiable {
     private let skill: FullSkillModel
     private let charSkillModel: CharacterSkillModel?
-    private let xpReduction: SpecialClassXpReductionModel?
+    private let xpReduction: XpReductionModel?
     private let combatXpMod: Int
     private let professionXpMod: Int
     private let talentXpMod: Int
     private let inf50Mod: Int
     private let inf75Mod: Int
     
-    init(skill: FullSkillModel, charSkillModel: CharacterSkillModel?, xpReduction: SpecialClassXpReductionModel?, combatXpMod: Int, professionXpMod: Int, talentXpMod: Int, inf50Mod: Int, inf75Mod: Int) {
+    init(skill: FullSkillModel, charSkillModel: CharacterSkillModel?, xpReduction: XpReductionModel?, combatXpMod: Int, professionXpMod: Int, talentXpMod: Int, inf50Mod: Int, inf75Mod: Int) {
         self.skill = skill
         self.charSkillModel = charSkillModel
         self.xpReduction = xpReduction

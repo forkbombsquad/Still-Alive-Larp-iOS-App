@@ -221,16 +221,18 @@ struct CurrentCharacterView: View {
                         .font(.system(size: 16))
                         .lineLimit(nil)
                         .padding(.top, 8)
-                    NavigationLink(destination: CreateCharacterView()) {
-                        Text("Create New Character")
-                            .frame(width: grWidth - 32, height: 90)
-                            .background(Color.midRed)
-                            .cornerRadius(15)
-                            .foregroundColor(.white)
-                            .tint(.midRed)
-                            .controlSize(.large)
-                            .padding(.top, 8)
-                    }.navigationViewStyle(.stack)
+                    if !DM.offlineMode {
+                        NavigationLink(destination: CreateCharacterView()) {
+                            Text("Create New Character")
+                                .frame(width: grWidth - 32, height: 90)
+                                .background(Color.midRed)
+                                .cornerRadius(15)
+                                .foregroundColor(.white)
+                                .tint(.midRed)
+                                .controlSize(.large)
+                                .padding(.top, 8)
+                        }.navigationViewStyle(.stack)
+                    }
                 }
             }
         }

@@ -10,7 +10,7 @@ import SwiftSoup
 
 class DataManager: ObservableObject {
     
-    private init() { }
+    private init() {}
     
     enum DataManagerPassedDataKey {
         case barcode,
@@ -118,8 +118,8 @@ class DataManager: ObservableObject {
         case offline, downloadIfNecessary, forceDownload
     }
     
-    @ObservedObject static private(set) var shared = DataManager()
-    
+    static let shared = DataManager()
+
     //
     // MARK: - Settings
     //
@@ -128,9 +128,6 @@ class DataManager: ObservableObject {
     @Published private(set) var debugMode: Bool = false
     @Published private(set) var offlineMode: Bool = false
     @Published private(set) var currentPlayerId: Int = -1
-    // TODO remove if not needed
-//    @Published private var updateCallbacks: [String: () -> Void] = [:]
-//    @Published private var passedData: [String: Any] = [:]
     
     @Published var loadingText: String = ""
     let loadingActor = LoadingActor()
@@ -261,54 +258,7 @@ class DataManager: ObservableObject {
     func setCurrentPlayerId(_ player: PlayerModel) {
         setCurrentPlayerId(player.id)
     }
-    
-    // TODO remove if not needed
-    
-//    func setUpdateCallback<T: View>(_ view: T, _ callback: @escaping () -> Void) {
-//        updateCallbacks[getViewName(view)] = callback
-//    }
-//    
-//    func clearUpdateCallback<T: View>(_ view: T.Type) {
-//        updateCallbacks.removeValue(forKey: getViewName(view))
-//    }
-//    
-//    func callUpdateCallback<T: View>(_ view: T.Type) {
-//        updateCallbacks[getViewName(view)]?()
-//    }
-//    
-//    func callUpdateCallbacks<T: View>(_ views: [T.Type]) {
-//        for view in views {
-//            callUpdateCallback(view)
-//        }
-//    }
-//    
-//    func setPassedData<T: View>(_ view: T, dataKey: DataManagerPassedDataKey, data: Any) {
-//        passedData["\(getViewName(view))\(dataKey)"] = data
-//    }
-//    
-//    func clearPassedData<T: View>(_ view: T.Type, dataKey: DataManagerPassedDataKey) {
-//        passedData.removeValue(forKey: "\(getViewName(view))\(dataKey)")
-//    }
-//    
-//    func getPassedData<T: View, K>(_ view: T.Type, dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
-//        guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { return nil }
-//        if clear {
-//            clearPassedData(view, dataKey: dataKey)
-//        }
-//        return data
-//    }
-//    
-//    func getPassedData<T: View, K>(_ views: [T.Type], dataKey: DataManagerPassedDataKey, clear: Bool = true) -> K? {
-//        for view in views {
-//            guard let data = passedData["\(getViewName(view))\(dataKey)"] as? K else { continue }
-//            if clear {
-//                clearPassedData(view, dataKey: dataKey)
-//            }
-//            return data
-//        }
-//        return nil
-//    }
-    
+  
     func setDebugMode(_ debug: Bool) {
         debugMode = debug
         Constants.ServiceOperationMode.updateServiceMode(debugMode ? .test : .prod)

@@ -12,12 +12,12 @@ struct Constants {
     struct Versioning {
         // TODO ALWAYS
         // use this instead of the built-in to prevent issues. Make sure to change both
-        static let appBuildNumber = "24"
+        static let appBuildNumber = "27"
         static let appVersion = "2.2.2.0"
     }
     
     struct Logging {
-//        TODO ALWAYS - set these to false before release
+        //  TODO ALWAYS - set these to false before release
         static let showServiceLogging = false
         static let showTestLogging = false
         static let showDebugButtonInAccountView = false

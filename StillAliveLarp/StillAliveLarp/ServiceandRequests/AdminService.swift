@@ -161,8 +161,8 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
-    static func giveXpReduction(_ characterId: Int, skillId: Int, onSuccess: @escaping (_ xpReduction: SpecialClassXpReductionModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.giveXpReduction, addToEndOfUrl: "\(characterId)", params: ["skill_id": skillId], responseObject: SpecialClassXpReductionModel.self, success: { success in
+    static func giveXpReduction(_ characterId: Int, skillId: Int, onSuccess: @escaping (_ xpReduction: XpReductionModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.giveXpReduction, addToEndOfUrl: "\(characterId)", params: ["skill_id": skillId], responseObject: XpReductionModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

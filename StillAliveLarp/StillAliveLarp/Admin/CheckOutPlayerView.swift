@@ -8,7 +8,7 @@
 import SwiftUI
 import CodeScanner
 
-// TODO redo this view
+// TODO redo this view someday
 
 struct CheckOutPlayerView: View {
 //    @EnvironmentObject var alertManager: AlertManager

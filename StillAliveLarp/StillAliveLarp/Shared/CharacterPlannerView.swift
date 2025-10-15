@@ -29,7 +29,8 @@ struct CharacterPlannerView: View {
                                 if loading {
                                     LoadingBlockWithText(loadingText: $loadingText)
                                 } else {
-                                    Text("*Swipe away a Planned Character to delete it*")
+                                    // TODO add swipe to delete one day
+//                                    Text("*Swipe away a Planned Character to delete it*")
                                     LazyVStack(spacing: 8) {
                                         ForEach(player.getPlannedCharacters()) { plannedChar in
                                             NavArrowViewBlue(title: plannedChar.fullName, loading: $loading) {

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO redo view
-
 struct ViewEventAttendeesView: View {
     
     @EnvironmentObject var alertManager: AlertManager
@@ -22,12 +20,7 @@ struct ViewEventAttendeesView: View {
                 ScrollView {
                     VStack {
                         globalCreateTitleView("Attendees for\n\(event.title)", DM: DM)
-                        Text("Players")
-                            .font(.system(size: 28, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .multilineTextAlignment(.leading)
-                            .padding([.horizontal, .top], 16)
-                            .padding(.bottom, 8)
+                        globalCreateTitleView("Players", DM: DM)
                         LazyVStack(spacing: 8) {
                             ForEach(event.attendees.filter({ !$0.asNpc.boolValueDefaultFalse })) { attendee in
                                 KeyValueView(key: getPlayerName(attendee.playerId), value: attendee.isCheckedIn.boolValueDefaultFalse ? "Checked In" : "Checked Out")
@@ -55,6 +48,7 @@ struct ViewEventAttendeesView: View {
     private func getPlayerName(_ id: Int) -> String {
         return DM.players.first(where: { $0.id == id })?.fullName ?? "Unknown Player"
     }
+    
 }
 
 //#Preview {

@@ -81,7 +81,6 @@ struct GearModel: CustomCodeable, Identifiable {
                 Constants.GearTypes.bag: bag,
                 Constants.GearTypes.other: other
             ]
-
             
         } else {
             return [:]

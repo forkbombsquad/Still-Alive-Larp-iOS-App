@@ -6,14 +6,12 @@
 //
 
 import SwiftUI
-import CodeScanner
 
 struct AdminView: View {
 
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
     
-
     var body: some View {
         VStack {
             GeometryReader { gr in
@@ -100,7 +98,7 @@ struct PlayerCharacterManagementView: View {
                     PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
                 }
                 NavArrowView(title: "Award Character") { _ in
-                    AwardCharacterView(characters: DM.getAllCharacters(.standard))
+                    CharactersListView(title: "Select Character To Award", destination: .awardCharacter, characters: DM.getAllCharacters(.standard))
                 }
                 NavArrowView(title: "Give Class Xp Reduction") { _ in
                     CharactersListView(title: "Select Character for Xp Reduction", destination: .selectSkillForXpReduction, characters: DM.getAllCharacters(.standard))

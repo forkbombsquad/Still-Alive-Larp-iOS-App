@@ -369,15 +369,15 @@ class LocalDataManager {
         return get(DMT.skillPrereqs) ?? LDSkillPrereqModels(all: [], byBaseSkill: [:], byPrereqSkill: [:])
     }
     
-    func storeXpReductions(_ xpReductions: [SpecialClassXpReductionModel]) {
-        var xpReductionMap: [Int : [SpecialClassXpReductionModel]] = [:]
+    func storeXpReductions(_ xpReductions: [XpReductionModel]) {
+        var xpReductionMap: [Int : [XpReductionModel]] = [:]
         for xpReduction in xpReductions {
             xpReductionMap[xpReduction.characterId, default: []].append(xpReduction)
         }
         store(xpReductionMap, key: DMT.xpReductions)
     }
     
-    func getXpReductions() -> [Int : [SpecialClassXpReductionModel]] {
+    func getXpReductions() -> [Int : [XpReductionModel]] {
         return get(DMT.xpReductions) ?? [:]
     }
     
@@ -517,7 +517,7 @@ class LocalDataManager {
         return get(LDMKeys.fullEventsKey) ?? []
     }
     
-    private func buildAndStoreFullCharacters(characters: [CharacterModel], fullSkills: [FullSkillModel], characterSkills: [Int : [CharacterSkillModel]], gear: [Int : GearModel], awards: LDAwardModels, attendees: LDEventAttendeeModels, preregs: LDPreregModels, xpReductions: [Int : [SpecialClassXpReductionModel]]) {
+    private func buildAndStoreFullCharacters(characters: [CharacterModel], fullSkills: [FullSkillModel], characterSkills: [Int : [CharacterSkillModel]], gear: [Int : GearModel], awards: LDAwardModels, attendees: LDEventAttendeeModels, preregs: LDPreregModels, xpReductions: [Int : [XpReductionModel]]) {
         var fullChars = [FullCharacterModel]()
         for character in characters {
             let charSkills = characterSkills[character.id] ?? []

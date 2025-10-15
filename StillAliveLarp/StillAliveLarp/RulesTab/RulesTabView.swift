@@ -24,7 +24,7 @@ struct RulesTabView: View {
                             LoadingLayoutView {
                                 VStack {
                                     NavArrowView(title: "Skill List") { _ in
-                                        SkillsListView(skills: DM.getSkillsAsFCMSM(), allowDelete: false, title: "All Skills")
+                                        return SkillsListView(skills: DM.getSkillsAsFCMSM(), allowDelete: false, title: "All Skills")
                                     }
                                     NavArrowView(title: "Skill Tree Diagram") { _ in
                                         NativeSkillTree.initAsBase(allSkills: DM.getSkillsAsFCMSM(), currentPlayer: DM.getCurrentPlayer()!)

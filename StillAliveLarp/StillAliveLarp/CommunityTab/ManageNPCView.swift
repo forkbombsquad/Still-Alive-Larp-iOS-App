@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO update view if needed
-
 struct ManageNPCView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var alertManager: AlertManager
@@ -53,6 +51,7 @@ struct ManageNPCView: View {
                                                         DM.load()
                                                         alertManager.showOkAlert("Update Successful!") {
                                                             runOnMainThread {
+                                                                DM.load()
                                                                 self.loading = false
                                                                 self.presentationMode.wrappedValue.dismiss()
                                                             }

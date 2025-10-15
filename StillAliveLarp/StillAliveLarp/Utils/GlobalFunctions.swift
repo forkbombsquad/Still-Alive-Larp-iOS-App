@@ -19,14 +19,9 @@ func getBuildNumber() -> Int {
 }
 
 func forceResetAllPlayerData() {
-    // TODO
-//    runOnMainThread {
-//        OldDataManager.forceReset()
-//        OldLocalDataHandler.forceReset()
-//        UserAndPassManager.forceReset()
-//        PlayerManager.forceReset()
-//        CharacterManager.forceReset()
-//    }
+    runOnMainThread {
+        LocalDataManager.clearAllLocalData()
+    }
 }
 
 func globalPrintServiceLogs(_ message: String) {

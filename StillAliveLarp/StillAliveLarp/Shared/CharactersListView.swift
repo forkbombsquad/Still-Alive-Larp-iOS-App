@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO still working on this
-
 struct CharactersListView: View {
     
     enum CharactersListViewDestination {
@@ -36,18 +34,19 @@ struct CharactersListView: View {
                                     case .viewCharacter:
                                         ViewCharacterView(character: character)
                                     case .selectSkillForXpReduction:
-                                        // TODO select Skill For Xp Reduction View
-                                        EmptyView()
+                                        SelectSkillForClassXpReducitonView(character: character)
                                     case .awardCharacter:
-                                        // TODO award char view
-                                        EmptyView()
+                                        AwardCharacterView(character: character)
                                     case .viewGear, .manageGear:
                                         GearView(character: character)
                                     case .approveBio:
-                                        ApproveBioView(character: character)
+                                        ApproveBioView(character: .constant(character))
                                     case .deleteSkills:
-                                        // TODO delete skills
-                                        EmptyView()
+                                        if character.characterType() == .planner {
+                                            DeleteSkillsView(character: .constant(character), mode: .justDelete)
+                                        } else if character.isAlive && DM.getCurrentPlayer()?.isAdmin ?? false {
+                                            DeleteSkillsView(character: .constant(character), mode: .refund)
+                                        }
                                     }
                                 }
                             }

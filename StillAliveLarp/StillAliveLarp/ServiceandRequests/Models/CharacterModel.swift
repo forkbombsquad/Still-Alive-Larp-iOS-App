@@ -42,11 +42,11 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     let awards: [AwardModel]
     let eventAttendees: [EventAttendeeModel]
     let preregs: [EventPreregModel]
-    let xpReductions: [SpecialClassXpReductionModel]
+    let xpReductions: [XpReductionModel]
     
     private var skills: [FullCharacterModifiedSkillModel]
     
-    init(character: CharacterModel, allSkills: [FullSkillModel], charSkills: [CharacterSkillModel], gear: GearModel? = nil, awards: [AwardModel], eventAttendees: [EventAttendeeModel], preregs: [EventPreregModel], xpReductions: [SpecialClassXpReductionModel]) {
+    init(character: CharacterModel, allSkills: [FullSkillModel], charSkills: [CharacterSkillModel], gear: GearModel? = nil, awards: [AwardModel], eventAttendees: [EventAttendeeModel], preregs: [EventPreregModel], xpReductions: [XpReductionModel]) {
         self.id = character.id
         self.fullName = character.fullName
         self.startDate = character.startDate

@@ -26,7 +26,7 @@ protocol MockData {
     var eventAttendees: EventAttendeeListModel { get }
     var contacts: ContactRequestListModel { get }
     var intrigues: IntrigueListModel { get }
-    var xpReductions: SpecialClassXpReductionListModel { get }
+    var xpReductions: XpReductionListModel { get }
     var preregs: EventPreregListModel { get }
     var version: AppVersionModel { get }
     var gearList: GearListModel { get }
@@ -163,15 +163,15 @@ extension MockData {
         return ints
     }
     
-    func xpReduction(_ index: Int = 0) -> SpecialClassXpReductionModel {
+    func xpReduction(_ index: Int = 0) -> XpReductionModel {
         return xpReductions.specialClassXpReductions[index]
     }
     
-    func xpReduction(id: Int) -> SpecialClassXpReductionModel {
+    func xpReduction(id: Int) -> XpReductionModel {
         return xpReductions.specialClassXpReductions.first(where: { $0.id == id })!
     }
     
-    func xpReduction(characterId: Int, skillId: Int) -> SpecialClassXpReductionModel {
+    func xpReduction(characterId: Int, skillId: Int) -> XpReductionModel {
         return xpReductions.specialClassXpReductions.first(where: { $0.characterId == characterId && $0.skillId == skillId })!
     }
     
@@ -457,12 +457,12 @@ fileprivate struct MockData1: MockData {
         AwardModel(id: 14, playerId: 3, characterId: 3, awardType: AdminService.CharAwardType.ammoRocket.rawValue, reason: "Getting all the bullet types. 77 of each", date: "2023/01/06", amount: "77"),
     ])
     
-    var xpReductions = SpecialClassXpReductionListModel(specialClassXpReductions: [
-        SpecialClassXpReductionModel(id: 1, characterId: 1, skillId: 23, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 2, characterId: 1, skillId: 5, xpReduction: "2"),
-        SpecialClassXpReductionModel(id: 2, characterId: 2, skillId: 55, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 14, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 89, xpReduction: "1")
+    var xpReductions = XpReductionListModel(specialClassXpReductions: [
+        XpReductionModel(id: 1, characterId: 1, skillId: 23, xpReduction: "1"),
+        XpReductionModel(id: 2, characterId: 1, skillId: 5, xpReduction: "2"),
+        XpReductionModel(id: 2, characterId: 2, skillId: 55, xpReduction: "1"),
+        XpReductionModel(id: 3, characterId: 3, skillId: 14, xpReduction: "1"),
+        XpReductionModel(id: 3, characterId: 3, skillId: 89, xpReduction: "1")
     ])
                                                         
     var characterSkillList: CharacterSkillListModel {

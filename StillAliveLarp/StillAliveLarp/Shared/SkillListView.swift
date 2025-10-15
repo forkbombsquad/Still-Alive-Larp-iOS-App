@@ -62,7 +62,7 @@ struct SkillsListView: View {
                     }.padding([.leading, .trailing, .top], 16)
                     LoadingLayoutView {
                         VStack {
-                            if let character = character, allowDelete && character.isAlive && DM.playerIsCurrentPlayer(character.playerId) && !DM.offlineMode {
+                            if let character = character, allowDelete && character.isAlive && DM.playerIsCurrentPlayer(character.playerId) && !DM.offlineMode && character.characterType() == .planner {
                                 NavigationLink(destination: DeleteSkillsView(character: $character, mode: .justDelete)) {
                                     Text("Remove Skills")
                                         .font(.system(size: 20, weight: .bold))

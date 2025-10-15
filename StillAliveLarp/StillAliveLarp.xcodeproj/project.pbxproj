@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		B205F4742A44988400C45B1A /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B205F4732A44988400C45B1A /* ArrayExtensions.swift */; };
-		B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20FF4632A267FD600B13F1D /* OldDataManager.swift */; };
 		B21691BD28FDDC5D006AA921 /* Still_Alive_LarpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */; };
 		B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21691BE28FDDC5D006AA921 /* MainView.swift */; };
 		B21691C128FDDC5F006AA921 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B21691C028FDDC5F006AA921 /* Assets.xcassets */; };
@@ -43,11 +42,10 @@
 		B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C82E40F0460087786E /* CharacterPanel.swift */; };
 		B22324CB2E43B0F30087786E /* AttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */; };
-		B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */; };
-		B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */; };
 		B22793E32E9954D0007480AB /* ViewCharacterStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */; };
 		B22793E52E9974D5007480AB /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E42E9974D2007480AB /* EventsListView.swift */; };
 		B22793E72E997C78007480AB /* PreregCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E62E997C72007480AB /* PreregCell.swift */; };
+		B22793E92E9FE2DF007480AB /* SelectSkillForClassXpReducitonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E82E9FE2DF007480AB /* SelectSkillForClassXpReducitonView.swift */; };
 		B228C27B29F83B470064686D /* ViewBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C27A29F83B470064686D /* ViewBioView.swift */; };
 		B228C28F29F840770064686D /* EditBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C28E29F840770064686D /* EditBioView.swift */; };
 		B228C29229F8471B0064686D /* CommunityTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228C29129F8471B0064686D /* CommunityTabView.swift */; };
@@ -60,8 +58,7 @@
 		B235529629E85D3200183748 /* AwardService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529529E85D3200183748 /* AwardService.swift */; };
 		B235529829E85F7600183748 /* DateExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529729E85F7600183748 /* DateExtensions.swift */; };
 		B235529A29E869D800183748 /* AwardPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529929E869D800183748 /* AwardPlayerView.swift */; };
-		B235529C29E8805100183748 /* AwardCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529B29E8805100183748 /* AwardCharacterView.swift */; };
-		B235529E29E8810A00183748 /* AwardCharacterFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529D29E8810A00183748 /* AwardCharacterFormView.swift */; };
+		B235529E29E8810A00183748 /* AwardCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235529D29E8810A00183748 /* AwardCharacterView.swift */; };
 		B23552B829E9C9B800183748 /* CharacterSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B729E9C9B800183748 /* CharacterSkill.swift */; };
 		B23552BA29E9CBAE00183748 /* CharacterSkillService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552B929E9CBAE00183748 /* CharacterSkillService.swift */; };
 		B23552BC29E9D14E00183748 /* CreateCharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23552BB29E9D14E00183748 /* CreateCharacterView.swift */; };
@@ -100,8 +97,6 @@
 		B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0662BD1A25800915F01 /* FeatureFlagService.swift */; };
 		B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */; };
 		B251B06B2BD1A5ED00915F01 /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */; };
-		B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */; };
-		B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */; };
 		B25D45B52A12B5D600C3048C /* EventPreregModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B42A12B5D500C3048C /* EventPreregModel.swift */; };
 		B25D45B72A12B73200C3048C /* EventPreregService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B62A12B73200C3048C /* EventPreregService.swift */; };
 		B25D45B92A12BA4100C3048C /* PreregView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25D45B82A12BA4100C3048C /* PreregView.swift */; };
@@ -143,7 +138,6 @@
 		B2CB77CD2DCBAF8200617137 /* FeatureFlagManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */; };
 		B2D682372968879C005FDCCE /* ViewPlayerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */; };
 		B2D6823929688A46005FDCCE /* KeyValueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823829688A46005FDCCE /* KeyValueView.swift */; };
-		B2D6823B29688D2D005FDCCE /* CharacterStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */; };
 		B2DFB0B82955FB4600132B08 /* MockRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0B72955FB4600132B08 /* MockRequest.swift */; };
 		B2DFB0BA2955FCEB00132B08 /* RequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0B92955FCEB00132B08 /* RequestBuilder.swift */; };
 		B2DFB0BC2955FDE800132B08 /* DictionaryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DFB0BB2955FDE800132B08 /* DictionaryExtensions.swift */; };
@@ -155,8 +149,6 @@
 		B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */; };
 		B2E135B829FD7DA80038DE31 /* SpecialClassXpReduction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135B729FD7DA80038DE31 /* SpecialClassXpReduction.swift */; };
 		B2E135BA29FD7F330038DE31 /* SpecialClassXpReductionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135B929FD7F330038DE31 /* SpecialClassXpReductionService.swift */; };
-		B2E135BC29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135BB29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift */; };
-		B2E135BE29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135BD29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift */; };
 		B2E135C029FD8F7E0038DE31 /* XpReductionsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E135BF29FD8F7E0038DE31 /* XpReductionsListView.swift */; };
 		B2E5F2D92AD07FBB004D61F5 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = B2E5F2D82AD07FBB004D61F5 /* SwiftSoup */; };
 		B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */; };
@@ -203,7 +195,6 @@
 
 /* Begin PBXFileReference section */
 		B205F4732A44988400C45B1A /* ArrayExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
-		B20FF4632A267FD600B13F1D /* OldDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldDataManager.swift; sourceTree = "<group>"; };
 		B21691B928FDDC5D006AA921 /* StillAliveLarp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StillAliveLarp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B21691BC28FDDC5D006AA921 /* Still_Alive_LarpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Still_Alive_LarpApp.swift; sourceTree = "<group>"; };
 		B21691BE28FDDC5D006AA921 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -241,11 +232,10 @@
 		B22324C82E40F0460087786E /* CharacterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPanel.swift; sourceTree = "<group>"; };
 		B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringExtensions.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerView.swift; sourceTree = "<group>"; };
-		B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillManagementPlannerView.swift; sourceTree = "<group>"; };
-		B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddSkillPlannedView.swift; sourceTree = "<group>"; };
 		B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCharacterStatsView.swift; sourceTree = "<group>"; };
 		B22793E42E9974D2007480AB /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
 		B22793E62E997C72007480AB /* PreregCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreregCell.swift; sourceTree = "<group>"; };
+		B22793E82E9FE2DF007480AB /* SelectSkillForClassXpReducitonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSkillForClassXpReducitonView.swift; sourceTree = "<group>"; };
 		B228C27A29F83B470064686D /* ViewBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBioView.swift; sourceTree = "<group>"; };
 		B228C28E29F840770064686D /* EditBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditBioView.swift; sourceTree = "<group>"; };
 		B228C29129F8471B0064686D /* CommunityTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityTabView.swift; sourceTree = "<group>"; };
@@ -258,8 +248,7 @@
 		B235529529E85D3200183748 /* AwardService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardService.swift; sourceTree = "<group>"; };
 		B235529729E85F7600183748 /* DateExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtensions.swift; sourceTree = "<group>"; };
 		B235529929E869D800183748 /* AwardPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardPlayerView.swift; sourceTree = "<group>"; };
-		B235529B29E8805100183748 /* AwardCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterView.swift; sourceTree = "<group>"; };
-		B235529D29E8810A00183748 /* AwardCharacterFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterFormView.swift; sourceTree = "<group>"; };
+		B235529D29E8810A00183748 /* AwardCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCharacterView.swift; sourceTree = "<group>"; };
 		B23552B729E9C9B800183748 /* CharacterSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSkill.swift; sourceTree = "<group>"; };
 		B23552B929E9CBAE00183748 /* CharacterSkillService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterSkillService.swift; sourceTree = "<group>"; };
 		B23552BB29E9D14E00183748 /* CreateCharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCharacterView.swift; sourceTree = "<group>"; };
@@ -298,8 +287,6 @@
 		B251B0662BD1A25800915F01 /* FeatureFlagService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagService.swift; sourceTree = "<group>"; };
 		B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageModel.swift; sourceTree = "<group>"; };
 		B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
-		B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCharacterForGearManagementView.swift; sourceTree = "<group>"; };
-		B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OldLocalDataHandler.swift; sourceTree = "<group>"; };
 		B25D45B42A12B5D500C3048C /* EventPreregModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPreregModel.swift; sourceTree = "<group>"; };
 		B25D45B62A12B73200C3048C /* EventPreregService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPreregService.swift; sourceTree = "<group>"; };
 		B25D45B82A12BA4100C3048C /* PreregView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreregView.swift; sourceTree = "<group>"; };
@@ -340,7 +327,6 @@
 		B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagManagementView.swift; sourceTree = "<group>"; };
 		B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewPlayerStatsView.swift; sourceTree = "<group>"; };
 		B2D6823829688A46005FDCCE /* KeyValueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueView.swift; sourceTree = "<group>"; };
-		B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterStatusView.swift; sourceTree = "<group>"; };
 		B2DFB0B72955FB4600132B08 /* MockRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockRequest.swift; sourceTree = "<group>"; };
 		B2DFB0B92955FCEB00132B08 /* RequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestBuilder.swift; sourceTree = "<group>"; };
 		B2DFB0BB2955FDE800132B08 /* DictionaryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryExtensions.swift; sourceTree = "<group>"; };
@@ -352,8 +338,6 @@
 		B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		B2E135B729FD7DA80038DE31 /* SpecialClassXpReduction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialClassXpReduction.swift; sourceTree = "<group>"; };
 		B2E135B929FD7F330038DE31 /* SpecialClassXpReductionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialClassXpReductionService.swift; sourceTree = "<group>"; };
-		B2E135BB29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectCharacterForClassXpReducitonView.swift; sourceTree = "<group>"; };
-		B2E135BD29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSkillForClassXpReducitonView.swift; sourceTree = "<group>"; };
 		B2E135BF29FD8F7E0038DE31 /* XpReductionsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XpReductionsListView.swift; sourceTree = "<group>"; };
 		B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RulebookUtils.swift; sourceTree = "<group>"; };
 		B2E5F2DC2AD09634004D61F5 /* ViewRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRulesView.swift; sourceTree = "<group>"; };
@@ -497,7 +481,6 @@
 				B23552C129E9ECAC00183748 /* IntExtensions.swift */,
 				B23552C329E9EEA500183748 /* Constants.swift */,
 				B2F9838D29F1906300512839 /* BarcodeGenerator.swift */,
-				B258D9AA29F3197C003BE368 /* OldLocalDataHandler.swift */,
 				B2E135B329FAFB8E0038DE31 /* GlobalFunctions.swift */,
 				B2E135B529FC029F0038DE31 /* UIApplicationExtensions.swift */,
 				B205F4732A44988400C45B1A /* ArrayExtensions.swift */,
@@ -516,7 +499,6 @@
 				B22324B42E33C7110087786E /* DataManager.swift */,
 				B2A6A7EC291464D90025040B /* AuthManager.swift */,
 				B293AEF9291569B200D2447C /* UserAndPassManager.swift */,
-				B20FF4632A267FD600B13F1D /* OldDataManager.swift */,
 				B2E5F2DA2AD0807C004D61F5 /* RulebookUtils.swift */,
 			);
 			path = Managers;
@@ -559,10 +541,10 @@
 		B235528A29E839FB00183748 /* Admin */ = {
 			isa = PBXGroup;
 			children = (
+				B22793E82E9FE2DF007480AB /* SelectSkillForClassXpReducitonView.swift */,
 				B235528B29E83A0E00183748 /* AdminView.swift */,
 				B235529929E869D800183748 /* AwardPlayerView.swift */,
-				B235529B29E8805100183748 /* AwardCharacterView.swift */,
-				B235529D29E8810A00183748 /* AwardCharacterFormView.swift */,
+				B235529D29E8810A00183748 /* AwardCharacterView.swift */,
 				B2F9836929F0366900512839 /* ApproveBioView.swift */,
 				B2F9836E29F0441E00512839 /* CreateAnnouncementView.swift */,
 				B2F9837829F07C7200512839 /* CreateEditEventView.swift */,
@@ -573,10 +555,7 @@
 				B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */,
 				B2750B5229F9B67300AA5F5B /* AddEditEventIntrigueView.swift */,
 				B2E135AF29FAE55D0038DE31 /* CheckOutPlayerView.swift */,
-				B2E135BB29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift */,
-				B2E135BD29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift */,
 				B25D45C52A15223C00C3048C /* ViewPreregForEventView.swift */,
-				B2568EB52A4F156800AF666C /* SelectCharacterForGearManagementView.swift */,
 				B2CB77CC2DCBAF8200617137 /* FeatureFlagManagementView.swift */,
 				B294A41D2DD10A5A002877B9 /* AddEditGearView.swift */,
 				B21F1C152DD57C040004B391 /* ViewEventAttendeesView.swift */,
@@ -730,10 +709,7 @@
 			isa = PBXGroup;
 			children = (
 				B2DFB0C6295649D500132B08 /* AccountTabView.swift */,
-				B2D6823A29688D2D005FDCCE /* CharacterStatusView.swift */,
-				B22784C62DDCFAD300F08902 /* SkillManagementPlannerView.swift */,
 				B23552BF29E9EA0E00183748 /* AddSkillView.swift */,
-				B22784C82DDCFD7000F08902 /* AddSkillPlannedView.swift */,
 				B228C28E29F840770064686D /* EditBioView.swift */,
 				B2750B4429F98C5700AA5F5B /* ManageAccountView.swift */,
 				B2750B4629F98D2E00AA5F5B /* ChangePasswordView.swift */,
@@ -931,13 +907,11 @@
 				B2F9837929F07C7200512839 /* CreateEditEventView.swift in Sources */,
 				B21691BF28FDDC5D006AA921 /* MainView.swift in Sources */,
 				B2A0D4E529E5B3B400A235B4 /* SkillModel.swift in Sources */,
-				B22784C92DDCFD7000F08902 /* AddSkillPlannedView.swift in Sources */,
 				B2222496291DBB95003BCA0A /* DataExtensions.swift in Sources */,
 				B2F472A42DCBDEAB00F37FA5 /* BoolExtensions.swift in Sources */,
 				B25D45B92A12BA4100C3048C /* PreregView.swift in Sources */,
 				B2A6A7ED291464D90025040B /* AuthManager.swift in Sources */,
 				B23552BA29E9CBAE00183748 /* CharacterSkillService.swift in Sources */,
-				B235529C29E8805100183748 /* AwardCharacterView.swift in Sources */,
 				B23552CF29EB267000183748 /* LoadingButtonView.swift in Sources */,
 				B2DFB0BA2955FCEB00132B08 /* RequestBuilder.swift in Sources */,
 				B2750B5729FAD69200AA5F5B /* EventAttendeeService.swift in Sources */,
@@ -945,7 +919,6 @@
 				B2750B4329F97E3000AA5F5B /* ContactDetailsView.swift in Sources */,
 				B21691F028FF2184006AA921 /* PasswordField.swift in Sources */,
 				B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */,
-				B2568EB62A4F156800AF666C /* SelectCharacterForGearManagementView.swift in Sources */,
 				B2E135B429FAFB8E0038DE31 /* GlobalFunctions.swift in Sources */,
 				B235A4F82DD7A82900AF96DC /* SkillCategoryService.swift in Sources */,
 				B251B0672BD1A25800915F01 /* FeatureFlagService.swift in Sources */,
@@ -987,7 +960,6 @@
 				B21691F228FF2859006AA921 /* Validator.swift in Sources */,
 				B21691EE28FDEF06006AA921 /* ContactView.swift in Sources */,
 				B2DFB0BC2955FDE800132B08 /* DictionaryExtensions.swift in Sources */,
-				B2D6823B29688D2D005FDCCE /* CharacterStatusView.swift in Sources */,
 				B2E5F2DD2AD09634004D61F5 /* ViewRulesView.swift in Sources */,
 				B2F29FB22A4214A700E07108 /* GearView.swift in Sources */,
 				B22324B52E33C7170087786E /* DataManager.swift in Sources */,
@@ -1009,8 +981,6 @@
 				B2B712332E44E34F00B2AA3F /* PlayersListView.swift in Sources */,
 				B294A41C2DD02EAB002877B9 /* GearCell.swift in Sources */,
 				B228C28F29F840770064686D /* EditBioView.swift in Sources */,
-				B2E135BC29FD81020038DE31 /* SelectCharacterForClassXpReducitonView.swift in Sources */,
-				B2E135BE29FD820A0038DE31 /* SelectSkillForClassXpReducitonView.swift in Sources */,
 				B235529029E8469400183748 /* AdminService.swift in Sources */,
 				B293AEFC29156B9200D2447C /* PlayerModel.swift in Sources */,
 				B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */,
@@ -1033,7 +1003,6 @@
 				B23728B22DC1C10600495777 /* ServiceEndpoints.swift in Sources */,
 				B23728B42DC1CCBC00495777 /* ReserachProject.swift in Sources */,
 				B24BBE7B2E96D0F900ACE2AC /* FileStorageManager.swift in Sources */,
-				B22784C72DDCFAD300F08902 /* SkillManagementPlannerView.swift in Sources */,
 				B2F292E92C121BC200B5BE85 /* ZoomableScrollView.swift in Sources */,
 				B2F292E42C120F6100B5BE85 /* ImageDownloader.swift in Sources */,
 				B294A41E2DD10A5A002877B9 /* AddEditGearView.swift in Sources */,
@@ -1055,7 +1024,7 @@
 				B23552C629EAFE5C00183748 /* AnnouncementService.swift in Sources */,
 				B22793E32E9954D0007480AB /* ViewCharacterStatsView.swift in Sources */,
 				B22324C12E3D3F8B0087786E /* CampStatusModel.swift in Sources */,
-				B235529E29E8810A00183748 /* AwardCharacterFormView.swift in Sources */,
+				B235529E29E8810A00183748 /* AwardCharacterView.swift in Sources */,
 				B228C29229F8471B0064686D /* CommunityTabView.swift in Sources */,
 				B2F9838C29F18F4500512839 /* GenerateCheckInBarcodeView.swift in Sources */,
 				B2F9836A29F0366900512839 /* ApproveBioView.swift in Sources */,
@@ -1063,6 +1032,7 @@
 				B22324BD2E3417330087786E /* LocalDataManagerModels.swift in Sources */,
 				B22224A3291EADFD003BCA0A /* StringExtensions.swift in Sources */,
 				B23552BE29E9DB8E00183748 /* ViewExtensions.swift in Sources */,
+				B22793E92E9FE2DF007480AB /* SelectSkillForClassXpReducitonView.swift in Sources */,
 				B23728BC2DCB99A500495777 /* FeatureFlagCell.swift in Sources */,
 				B2E135C029FD8F7E0038DE31 /* XpReductionsListView.swift in Sources */,
 				B2DFB0C929564D2700132B08 /* NavArrowView.swift in Sources */,
@@ -1075,7 +1045,6 @@
 				B2B7123B2E44ECE600B2AA3F /* FortificationRingCell.swift in Sources */,
 				B293AEF529154F0400D2447C /* ServiceController.swift in Sources */,
 				B2F9837329F066CC00512839 /* EventService.swift in Sources */,
-				B258D9AB29F3197C003BE368 /* OldLocalDataHandler.swift in Sources */,
 				B251B0692BD1A58E00915F01 /* ProfileImageModel.swift in Sources */,
 				B2F9839029F2F09D00512839 /* EventAttendeeModel.swift in Sources */,
 				B22324B72E33DFC30087786E /* UpdateTrackerService.swift in Sources */,
@@ -1087,7 +1056,6 @@
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
-				B20FF4642A267FD600B13F1D /* OldDataManager.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
 				B2B7123D2E44EE8700B2AA3F /* FortificationCell.swift in Sources */,
 			);
@@ -1249,7 +1217,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
@@ -1271,7 +1239,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stillalivelarp.stillalivelarp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1290,7 +1258,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
@@ -1312,7 +1280,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.0;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stillalivelarp.stillalivelarp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
