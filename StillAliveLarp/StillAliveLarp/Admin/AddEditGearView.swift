@@ -9,7 +9,8 @@ import SwiftUI
 
 struct AddEditGearView: View {
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     let gearToEdit: GearJsonModel?
     let characterName: String
@@ -179,10 +180,8 @@ struct AddEditGearView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return AddEditGearView(_dm: dm, gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return AddEditGearView(gearToEdit: nil, characterName: md.character(id: 2).fullName) { _ in }
+//}

@@ -33,5 +33,17 @@ struct CharacterSkillService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllCharacterSkills(onSuccess: @escaping (_ charSkills: CharacterSkillListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.getAllCharacterSkills, responseObject: CharacterSkillListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+    
+    static func deleteSkills(playerId: Int, charId: Int, skillId: Int,  onSuccess: @escaping (_ charSkills: CharacterSkillListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.deleteCharacterSkill, addToEndOfUrl: "\(playerId)/\(charId)/\(skillId)", responseObject: CharacterSkillListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
 }

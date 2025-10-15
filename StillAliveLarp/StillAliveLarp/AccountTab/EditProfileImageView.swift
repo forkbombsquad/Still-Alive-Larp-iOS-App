@@ -12,7 +12,8 @@ struct EditProfileImageView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
     @State private var loading: Bool = false
     @State private var image: UIImage = UIImage(imageLiteralResourceName: "blank-profile")
@@ -28,47 +29,51 @@ struct EditProfileImageView: View {
                 let buttonWidth = gr.size.width * 0.93
                 ScrollView {
                     VStack {
-                        Text("Edit Profile Image")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                        ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: imgWidth, height: imgWidth)
-                            if DataManager.shared.loadingProfileImage || loading {
-                                ProgressView()
-                                .tint(.red)
-                                .controlSize(.large)
-                                .padding(.top, 80)
-                            }
-                        }
-                        VStack {
-                            ArrowViewButton(bindingTitle: $selectImageText, loading: $loading) {
-                                showPicker = true
-                            }
-                            if DataManager.shared.profileImage != nil || DataManager.shared.loadingProfileImage, let id = DataManager.shared.player?.id {
-                                LoadingButtonView($loading, width: buttonWidth, buttonText: "Delete Profile Image") {
-                                    self.loading = true
-                                    self.selectImageText = "Deleting Profile Image..."
-                                    ProfileImageService.deleteProfileImage(id) { _ in
-                                        runOnMainThread {
-                                            self.image = UIImage(imageLiteralResourceName: "blank-profile")
-                                            AlertManager.shared.showSuccessAlert("Profile Image Deleted!") {}
-                                            self.loading = false
-                                            DataManager.shared.profileImage = nil
-                                            self.selectImageText = "Select Image"
-                                        }
-                                    } failureCase: { error in
-                                        runOnMainThread {
-                                            self.loading = false
+                        LoadingLayoutView {
+                            VStack {
+                                if let player = DM.getCurrentPlayer() {
+                                    globalCreateTitleView("Edit Profile Image", DM: DM)
+                                    ZStack(alignment: Alignment(horizontal: .center, vertical: .top)) {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: imgWidth, height: imgWidth)
+                                        if loading {
+                                            ProgressView()
+                                            .tint(.red)
+                                            .controlSize(.large)
+                                            .padding(.top, 80)
                                         }
                                     }
+                                    VStack {
+                                        ArrowViewButton(bindingTitle: $selectImageText, loading: $loading) {
+                                            showPicker = true
+                                        }
+                                        if player.profileImage != nil {
+                                            LoadingButtonView($loading, width: buttonWidth, buttonText: "Delete Profile Image") {
+                                                self.loading = true
+                                                self.selectImageText = "Deleting Profile Image..."
+                                                ProfileImageService.deleteProfileImage(player.id) { _ in
+                                                    runOnMainThread {
+                                                        self.image = UIImage(imageLiteralResourceName: "blank-profile")
+                                                        alertManager.showSuccessAlert("Profile Image Deleted!") {}
+                                                        DM.load()
+                                                        self.loading = false
+                                                        self.selectImageText = "Select Image"
+                                                    }
+                                                } failureCase: { error in
+                                                    runOnMainThread {
+                                                        self.loading = false
+                                                    }
+                                                }
 
-                                }.padding(.horizontal, 8)
+                                            }.padding(.horizontal, 8)
+                                        }
+                                    }
+                                    .frame(width: buttonWidth, alignment: .center)
+                                }
                             }
                         }
-                        .frame(width: buttonWidth, alignment: .center)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                 }
@@ -76,17 +81,6 @@ struct EditProfileImageView: View {
         }
         .padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            DataManager.shared.load([.profileImage]) {
-                runOnMainThread {
-                    self.image = DataManager.shared.profileImage?.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                    self.loading = DataManager.shared.loadingProfileImage
-                }
-            }
-            runOnMainThread {
-                self.loading = DataManager.shared.loadingProfileImage
-            }
-        }
         .sheet(isPresented: $showPicker) {
             runOnMainThread {
                 self.loading = true
@@ -101,69 +95,70 @@ struct EditProfileImageView: View {
                 }
                 DispatchQueue.global(qos: .userInitiated).async {
                     runOnMainThread {
+                        self.loading = true
                         self.selectImageText = "Compressing Image..."
                     }
                     if let bitmap = imageToBase64String(selectedImage, quality: 0.7) {
-                        runOnMainThread {
-                            self.selectImageText = "Preparing Image For Upload..."
-                        }
-                        if DataManager.shared.profileImage == nil || DataManager.shared.profileImage?.playerId != DataManager.shared.player?.id {
-                            
-                            let createModel = ProfileImageCreateModel(playerId: DataManager.shared.player?.id ?? -1, image: bitmap)
-                            
+                        if let player = DM.getCurrentPlayer() {
                             runOnMainThread {
-                                self.image = createModel.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                                self.selectImageText = "Uploading Image..."
+                                self.selectImageText = "Preparing Image For Upload..."
                             }
-                            
-                            ProfileImageService.createProfileImage(createModel) { _ in
+                            if let previousImage = player.profileImage { // Update
+                                let updatedImage = ProfileImageModel(id: previousImage.id, playerId: player.id, image: bitmap)
                                 
-                                DataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
+                                runOnMainThread {
+                                    self.image = updatedImage.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                    self.selectImageText = "Uploading Image..."
+                                }
+                                
+                                ProfileImageService.updateProfileImage(updatedImage) { _ in
+                                    
                                     runOnMainThread {
-                                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage()
+                                        DM.load()
                                         self.loading = false
-                                        self.displayFinishedMessage()
+                                        self.selectImageText = "Select Image"
+                                    }
+                                    
+                                } failureCase: { _ in
+                                    runOnMainThread {
+                                        self.loading = false
+                                        self.selectImageText = "Select Image"
                                     }
                                 }
                                 
-                            } failureCase: { _ in
+                            } else { // Create
+                                let createModel = ProfileImageCreateModel(playerId: player.id, image: bitmap)
+                                
                                 runOnMainThread {
-                                    self.selectImageText = "Select Image"
-                                    self.loading = false
+                                    self.image = createModel.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
+                                    self.selectImageText = "Uploading Image..."
                                 }
+                                
+                                ProfileImageService.createProfileImage(createModel) { _ in
+                                    runOnMainThread {
+                                        DM.load()
+                                        self.loading = false
+                                        self.selectImageText = "Select Image"
+                                    }
+                                    
+                                } failureCase: { _ in
+                                    runOnMainThread {
+                                        self.selectImageText = "Select Image"
+                                        self.loading = false
+                                    }
+                                }
+                                
                             }
-                            
                         } else {
-                            let prev = DataManager.shared.profileImage!
-                            
-                            let updatedImage = ProfileImageModel(id: prev.id, playerId: DataManager.shared.player?.id ?? -1, image: bitmap)
-                            
-                            runOnMainThread {
-                                self.image = updatedImage.uiImage ?? UIImage(imageLiteralResourceName: "blank-profile")
-                                self.selectImageText = "Uploading Image..."
-                            }
-                            
-                            ProfileImageService.updateProfileImage(updatedImage) { _ in
-                                
-                                DataManager.shared.load(.init([.profileImage]), forceDownloadIfApplicable: true) {
-                                    runOnMainThread {
-                                        self.image = DataManager.shared.profileImage?.uiImage ?? UIImage()
-                                        self.loading = false
-                                        self.displayFinishedMessage()
-                                    }
-                                }
-                                
-                                
-                            } failureCase: { _ in
+                            alertManager.showOkAlert("Something Went Wrong!", message: "Player not found!") {
                                 runOnMainThread {
-                                    self.loading = false
                                     self.selectImageText = "Select Image"
+                                    self.loading = false
                                 }
                             }
                         }
-                        
                     } else {
-                        AlertManager.shared.showOkAlert("Something Went Wrong!", message: "Unable to convert image to bitmap") {
+                        alertManager.showOkAlert("Something Went Wrong!", message: "Unable to convert image to bitmap") {
                             runOnMainThread {
                                 self.selectImageText = "Select Image"
                                 self.loading = false
@@ -177,10 +172,12 @@ struct EditProfileImageView: View {
         .toolbar { // Custom back button
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    if !loading {
+                    if loading || DM.isLoadingMirror {
                         presentationMode.wrappedValue.dismiss()
                     } else {
-                        AlertManager.shared.showOkAlert("Cannot Go Back Yet!", message: "Your new profile image is still uploading. Please wait for it to finish.") { }
+                        runOnMainThread {
+                            alertManager.showOkAlert("Cannot Go Back Yet!", message: "Your new profile image is still uploading. Please wait for it to finish.") { }
+                        }
                     }
                 }) {
                     HStack {
@@ -194,7 +191,7 @@ struct EditProfileImageView: View {
     }
     
     func displayFinishedMessage() {
-        AlertManager.shared.showSuccessAlert("Profile Image Updated!") {}
+        alertManager.showSuccessAlert("Profile Image Updated!") {}
         runOnMainThread {
             self.selectImageText = "Select Image"
         }
@@ -251,9 +248,7 @@ struct PhotoPicker: UIViewControllerRepresentable {
 
 
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return EditProfileImageView(_dm: dm)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return EditProfileImageView()
+//}

@@ -7,6 +7,55 @@
 
 import Foundation
 
+struct FullEventModel: CustomCodeable, Identifiable {
+    let id: Int
+    let title: String
+    let description: String
+    let date: String
+    let startTime: String
+    let endTime: String
+    var isStarted: Bool
+    var isFinished: Bool
+    var attendees: [EventAttendeeModel]
+    var preregs: [EventPreregModel]
+    var intrigue: IntrigueModel?
+    
+    init(event: EventModel, attendees: [EventAttendeeModel], preregs: [EventPreregModel], intrigue: IntrigueModel?) {
+        self.id = event.id
+        self.title = event.title
+        self.description = event.description
+        self.date = event.date
+        self.startTime = event.startTime
+        self.endTime = event.endTime
+        self.isStarted = event.isStarted.boolValueDefaultFalse
+        self.isFinished = event.isFinished.boolValueDefaultFalse
+        self.attendees = attendees
+        self.preregs = preregs
+        self.intrigue = intrigue
+    }
+    
+    func isOngoing() -> Bool {
+        return isStarted && !isFinished
+    }
+    
+    func isToday() -> Bool {
+        return Calendar.current.isDate(Date(), inSameDayAs: date.yyyyMMddtoDate())
+    }
+    
+    func isInFuture() -> Bool {
+        return date.yyyyMMddtoDate().isAfter(Date())
+    }
+    
+    func isRelevant() -> Bool {
+        return (isOngoing() || isToday() || isInFuture()) && !isFinished
+    }
+    
+    func baseModel() -> EventModel {
+        return EventModel(id: id, title: title, description: description, date: date, startTime: startTime, endTime: endTime, isStarted: isStarted.stringValue, isFinished: isFinished.stringValue)
+    }
+    
+}
+
 struct EventModel: CustomCodeable, Identifiable {
     let id: Int
     let title: String
@@ -16,10 +65,6 @@ struct EventModel: CustomCodeable, Identifiable {
     let endTime: String
     var isStarted: String
     var isFinished: String
-
-    var barcodeModel: EventBarcodeModel {
-        return EventBarcodeModel(self)
-    }
 
     func isToday() -> Bool {
         return Calendar.current.isDateInToday(date.yyyyMMddtoDate())
@@ -37,26 +82,6 @@ struct EventModel: CustomCodeable, Identifiable {
             return "Ongoing"
         }
         return ""
-    }
-}
-
-struct EventBarcodeModel: CustomCodeable, Identifiable {
-    let id: Int
-    let title: String
-    let date: String
-    let startTime: String
-    let endTime: String
-    var isStarted: String
-    var isFinished: String
-
-    init(_ event: EventModel) {
-        self.id = event.id
-        self.title = event.title
-        self.date = event.date
-        self.startTime = event.startTime
-        self.endTime = event.endTime
-        self.isStarted = event.isStarted
-        self.isFinished = event.isFinished
     }
 }
 

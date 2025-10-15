@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum EventRegType: String {
+enum EventRegType: String, Codable {
     case notPrereged = "NONE"
     case free = "FREE"
     case basic = "BASIC"
@@ -86,4 +86,13 @@ struct EventPreregCreateModel: CustomCodeable {
     func getCharId() -> Int? {
         return characterId == -1 ? nil : characterId
     }
+}
+
+struct PreregNumbers {
+    let premium: Int
+    let premiumNpc: Int
+    let basic: Int
+    let basicNpc: Int
+    let free: Int
+    let notAttending: Int
 }

@@ -8,12 +8,13 @@
 import SwiftUI
 
 @ViewBuilder
-fileprivate func createTextView(_ text: String) -> some View {
-    Text("    " + text).font(.system(size: 16)).padding(.bottom, 16).padding(.horizontal, 8).multilineTextAlignment(.leading).frame(maxWidth: .infinity, alignment: .leading)
+fileprivate func createTextView(_ text: AttributedString) -> some View {
+    Text(text).font(.system(size: 16)).padding(.bottom, 16).padding(.horizontal, 8).multilineTextAlignment(.leading).frame(maxWidth: .infinity, alignment: .leading)
 }
 
 struct ViewRulesView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var searchText: String = ""
     let rulebook: Rulebook?
@@ -21,8 +22,9 @@ struct ViewRulesView: View {
     @State var filter: String = "No Filter"
     var allFilters: [String]
     
-    init(_dm: DataManager = DataManager.shared, rulebook: Rulebook?) {
-        self._dm = _dm
+    @State var showFilters: Bool = false
+    
+    init(rulebook: Rulebook?) {
         self.rulebook = rulebook
         allFilters = ["No Filter"]
         allFilters.append(contentsOf: rulebook?.getAllFilterableHeadingNames() ?? [])
@@ -30,33 +32,66 @@ struct ViewRulesView: View {
     }
 
     var body: some View {
-        GeometryReader { gr in
-            VStack {
-                Text("Rulebook v\(rulebook?.version ?? "unknown version")")
-                    .font(.system(size: 36, weight: .bold))
-                    .frame(alignment: .center)
-                Menu("Filter\n(\(sanitizeFilter()))") {
-                    ForEach(allFilters, id: \.self) { filter in
-                        Button(filter) {
-                            self.filter = filter
+        VStack {
+            GeometryReader { gr in
+                VStack {
+                    globalCreateTitleView("Rulebook v\(rulebook?.version ?? "unknown version")", DM: DM)
+                    Button(action: {
+                        showFilters.toggle()
+                    }) {
+                        HStack {
+                            Spacer()
+                            Text("Filter\n(\(sanitizeFilter()))")
+                                .frame(alignment: .center)
+                                .font(.system(size: 16, weight: .bold))
+                                .padding(.top, -16)
+                            Image(systemName: "chevron.down")
+                            Spacer()
+                        }
+                        .frame(width: gr.size.width)
+                    }.popover(isPresented: $showFilters) {
+                        ScrollView {
+                            ForEach(allFilters, id: \.self) { filter in
+                                Button(action: {
+                                    self.filter = filter
+                                    showFilters = false
+                                }) {
+                                    HStack {
+                                        let headingLevel: CGFloat = filter.hasPrefix("            ") ? 2 : (filter.hasPrefix("      ") ? 1 : 0)
+                                        let size: CGFloat = 18 - (headingLevel * 2)
+                                        let weight: Font.Weight = (headingLevel == 0 ? .bold : (headingLevel == 1 ? .semibold : .regular))
+                                        Text(filter)
+                                            .font(.system(size: size, weight: weight))
+                                            .foregroundColor(.black)
+                                            .frame(alignment: .leading)
+                                            .padding([.horizontal], 8)
+                                        Spacer()
+                                    }
+                                }
+                                .frame(alignment: .leading)
+                                .padding([.top, .horizontal], 8)
+                            }
+                        }
+                        .background(Color.lightGray)
+                        .frame(width: UIScreen.main.bounds.width * 0.9, alignment: .leading)
+                        .presentationBackground(Color.lightGray)
+                        .presentationCompactAdaptation(.popover)
+                    }
+                    TextField("Search", text: $searchText)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 8)
+                        .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.never)
+                    ScrollView(.vertical) {
+                        ForEach(filterHeadings()) { heading in
+                            HeadingView(heading: heading, width: gr.size.width)
+                                .background(Color.lightGray)
+                                .padding(2)
                         }
                     }
                 }
-                .font(.system(size: 16, weight: .bold))
-                .padding(.top, -16)
-                TextField("Search", text: $searchText)
-                    .padding([.horizontal, .bottom], 16)
-                    .textFieldStyle(.roundedBorder)
-                    .textInputAutocapitalization(.never)
-                ScrollView(.vertical) {
-                    ForEach(filterHeadings()) { heading in
-                        HeadingView(heading: heading, width: gr.size.width)
-                            .background(Color.lightGray)
-                            .padding(2)
-                    }
-                }
+                .background(Color.lightGray)
             }
-            .background(Color.lightGray)
         }
     }
 
@@ -99,7 +134,8 @@ struct ViewRulesView: View {
 }
 
 struct HeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let heading: Heading
     let width: CGFloat
@@ -109,15 +145,13 @@ struct HeadingView: View {
             VStack {
                 Text(heading.title)
                     .multilineTextAlignment(.center)
-                    .font(.system(size: 36))
                     .underline()
-                    .fontWeight(.bold)
                     .padding(8)
                 ForEach(0 ..< heading.textsAndTables.count, id: \.self) { index in
                     if let table = heading.textsAndTables[index] as? Table {
                         CustomTableView(table: table)
                             .padding(16)
-                    } else if let text = heading.textsAndTables[index] as? String {
+                    } else if let text = heading.textsAndTables[index] as? AttributedString {
                         createTextView(text)
                     }
                 }
@@ -128,12 +162,14 @@ struct HeadingView: View {
                     SubHeadingView(subHeading: subHeading, width: width)
                 }
             }
+            .frame(width: width - 16, alignment: .center)
         }
     }
 }
 
 struct SubHeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let subHeading: SubHeading
     let width: CGFloat
@@ -151,7 +187,7 @@ struct SubHeadingView: View {
                 if let table = subHeading.textsAndTables[index] as? Table {
                     CustomTableView(table: table)
                         .padding(16)
-                } else if let text = subHeading.textsAndTables[index] as? String {
+                } else if let text = subHeading.textsAndTables[index] as? AttributedString {
                     createTextView(text)
                 }
             }
@@ -163,7 +199,8 @@ struct SubHeadingView: View {
 }
 
 struct SubSubHeadingView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     let subSubHeading: SubSubHeading
     let width: CGFloat
@@ -181,7 +218,7 @@ struct SubSubHeadingView: View {
                 if let table = subSubHeading.textsAndTables[index] as? Table {
                     CustomTableView(table: table)
                         .padding(16)
-                } else if let text = subSubHeading.textsAndTables[index] as? String {
+                } else if let text = subSubHeading.textsAndTables[index] as? AttributedString {
                     createTextView(text)
                 }
             }
@@ -191,15 +228,15 @@ struct SubSubHeadingView: View {
 
 struct CustomTableView: View {
     
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     
-    let cols: [[String]]
-    let rows: [[String]]
+    let cols: [[AttributedString]]
+    let rows: [[AttributedString]]
     var minWidths: [Int] = []
     var minHeights: [Int] = []
     
-    init(_dm: DataManager = DataManager.shared, table: Table) {
-        self._dm = _dm
+    init(table: Table) {
         self.cols = table.convertToColumns()
         self.rows = table.convertToRows()
         for col in cols {
@@ -210,16 +247,16 @@ struct CustomTableView: View {
         }
     }
     
-    func getMinWidth(col: [String]) -> Int {
-        return min(max((col.map { $0.count }.max() ?? 0) * 8, 100), 400)
+    func getMinWidth(col: [AttributedString]) -> Int {
+        return min(max((col.map { $0.textValue.count }.max() ?? 0) * 8, 100), 400)
     }
     
-    func getMinHeight(row: [String]) -> Int {
+    func getMinHeight(row: [AttributedString]) -> Int {
         var mx = 0
         for (index, cell) in row.enumerated() {
             let font = UIFont.systemFont(ofSize: UIFont.systemFontSize + 4)
             let constraintRect = CGSize(width: CGFloat(minWidths[index]), height: CGFloat.greatestFiniteMagnitude)
-            let boundingBox = cell.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+            let boundingBox = cell.textValue.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
             mx = max(mx, Int(ceil(boundingBox.height)) + 16)
         }
         return max(mx, 44)
@@ -231,11 +268,8 @@ struct CustomTableView: View {
                 ForEach(0..<rows.count, id: \.self) { rowIndex in
                     HStack(spacing: 0) {
                         ForEach(0..<rows[rowIndex].count, id: \.self) { colIndex in
-                            let uneditedText = rows[rowIndex][colIndex]
-                            let text = uneditedText.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
                             TableCell(
-                                text: text,
-                                isHeader: rowIndex == 0,
+                                text: rows[rowIndex][colIndex],
                                 width: minWidths[colIndex],
                                 height: minHeights[rowIndex]
                             )
@@ -247,16 +281,12 @@ struct CustomTableView: View {
     }
     
     struct TableCell: View {
-        let text: String
-        let isHeader: Bool
+        let text: AttributedString
         let width: Int
         let height: Int
 
         var body: some View {
-            let cleanedText = text.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
-            
-            Text(cleanedText)
-                .fontWeight(isHeader || text.contains("<b>") ? .bold : .regular)
+            Text(text)
                 .multilineTextAlignment(.center)
                 .frame(height: CGFloat(height))
                 .frame(width: CGFloat(width))
@@ -271,9 +301,7 @@ struct CustomTableView: View {
 
 
 #Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
+    DataManager.shared.setDebugMode(true)
     let md = getMockData()
-    return ViewRulesView(_dm: dm, rulebook: md.rulebook)
+    return ViewRulesView(rulebook: md.rulebook).environmentObject(DataManager.shared)
 }

@@ -55,6 +55,14 @@ struct CharacterService {
             jsonObject.characters = success.jsonObject.characters.filter({ $0.fullName.lowercased() != "google test" })
             onSuccess(jsonObject)
         }, failureCase: failureCase)
+    }
+    
+    static func getAllFullCharacters(onSuccess: @escaping (_ characterList: CharacterListFullModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allFullCharacters, responseObject: CharacterListFullModel.self, success: { success in
+            var jsonObject = success.jsonObject
+            jsonObject.characters = success.jsonObject.characters.filter({ $0.fullName.lowercased() != "google test" })
+            onSuccess(jsonObject)
+        }, failureCase: failureCase)
 
     }
     
@@ -73,4 +81,10 @@ struct CharacterService {
         }, failureCase: failureCase)
     }
 
+    static func deleteCharacter(id: Int, onSuccess: @escaping (_ characterModel: CharacterModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.deleteCharacters, addToEndOfUrl: id.stringValue, responseObject: CharacterModel.self, overrideDefaultErrorBehavior: true, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
+    
 }

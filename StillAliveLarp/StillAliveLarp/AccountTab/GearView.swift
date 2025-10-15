@@ -8,82 +8,69 @@
 import SwiftUI
 
 struct GearView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
     @Environment(\.presentationMode) var presentationMode
-    
-    static func Offline(_ character: FullCharacterModel, gear: GearModel) -> GearView {
-        return GearView(character: character.baseModel, gear: gear, offline: true, allowEdit: false)
-    }
 
-    init(character: CharacterModel, allowEdit: Bool) {
-        self.character = character
-        self.offline = false
-        self.allowEdit = allowEdit
-    }
-    
-    private init(character: CharacterModel, gear: GearModel, offline: Bool, allowEdit: Bool) {
-        self.character = character
-        self.offline = offline
-        self.allowEdit = allowEdit
-        self._gear = globalState(gear)
-        self._gearJsonModels = globalState(gear.jsonModels ?? [])
-    }
-
-    let character: CharacterModel
-    private let offline: Bool
-    let allowEdit: Bool
+    @State var character: FullCharacterModel
     
     @State var loading: Bool = false
     @State var gearModified: Bool = false
     @State var gear: GearModel? = nil
     @State var gearJsonModels: [GearJsonModel] = []
     
-    @State var firstLoad: Bool = true
+    @State var firstLoad = true
     
     var body: some View {
         VStack(alignment: .center) {
             GeometryReader { gr in
                 VStack {
                     ScrollView {
-                        Text("\(allowEdit ? "Manage\n" : "")\(character.fullName)'s\nGear\(gearModified ? "*" : "")\(offline ? " (Offline)" : "")")
-                            .font(.system(size: 32, weight: .bold))
-                            .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
-                            .padding([.bottom], 16)
-                        if (loading) {
-                            Text("Loading Character Gear...")
-                                .font(.system(size: 32, weight: .bold))
-                                .multilineTextAlignment(.center)
-                                .frame(alignment: .center)
-                                .padding([.bottom], 16)
-                            LoadingBlock()
-                        } else {
-                            GearViewModular(allowEdit: allowEdit, characterName: character.fullName, loading: $loading, gearModified: $gearModified, gearJsonModels: $gearJsonModels)
+                        globalCreateTitleView("\(allowEdit() ? "Manage" : "\n")\(character.fullName)'s\nGear\(gearModified ? "*" : "")", DM: DM)
+                        LoadingLayoutView {
+                            GearViewModular(allowEdit: allowEdit(), characterName: character.fullName, loading: $loading, gearModified: $gearModified, gearJsonModels: $gearJsonModels)
                         }
                     }
-                    if gearModified {
+                    if gearModified && !DM.isLoadingMirror {
                         LoadingButtonView($loading, width: gr.size.width - 16, buttonText: "Apply Changes") {
                             self.loading = true
                             if let gear = gear {
                                 // Edit
                                 let gearUpdateModel = GearModel(id: gear.id, characterId: character.id, gearJson: GearJsonListModel(gearJson: gearJsonModels).toJsonString() ?? "")
                                 AdminService.updateGear(gearModel: gearUpdateModel) { gearModel in
-                                    loading = false
-                                    gearModified = false
-                                    AlertManager.shared.showSuccessAlert("Gear Updated Successfully!") {}
+                                    runOnMainThread {
+                                        loading = false
+                                        gearModified = false
+                                        alertManager.showSuccessAlert("Gear Updated Successfully!") {}
+                                        DM.load(finished: {
+                                            runOnMainThread {
+                                                self.reloadModels()
+                                            }
+                                        })
+                                    }
                                 } failureCase: { error in
-                                    loading = false
+                                    runOnMainThread {
+                                        loading = false
+                                    }
                                 }
-
                             } else {
                                 // Add New
                                 let gearCreateModel = GearCreateModel(characterId: character.id, gearJson: GearJsonListModel(gearJson: gearJsonModels).toJsonString() ?? "")
                                 AdminService.createGear(gearCreateModel) { gearModel in
-                                    loading = false
-                                    gearModified = false
-                                    AlertManager.shared.showSuccessAlert("Gear Created Successfully!") {}
+                                    runOnMainThread {
+                                        loading = false
+                                        gearModified = false
+                                        alertManager.showSuccessAlert("Gear Created Successfully!") {}
+                                        DM.load(finished: {
+                                            runOnMainThread {
+                                                self.reloadModels()
+                                            }
+                                        })
+                                    }
                                 } failureCase: { error in
-                                    loading = false
+                                    runOnMainThread {
+                                        loading = false
+                                    }
                                 }
 
                             }
@@ -93,30 +80,18 @@ struct GearView: View {
             }
         }.padding(16)
         .background(Color.lightGray)
-        .onAppear {
-            if !offline {
-                if firstLoad {
-                    runOnMainThread {
-                        firstLoad = false
-                        loading = true
-                        DataManager.shared.selectedChar = character
-                        DataManager.shared.load([.selectedCharacterGear], forceDownloadIfApplicable: true) {
-                            runOnMainThread {
-                                self.loading = false
-                                self.gear = DataManager.shared.selectedCharacterGear?.first ?? GearModel(id: -1, characterId: -1, gearJson: "")
-                                self.gearJsonModels = self.gear?.jsonModels ?? []
-                            }
-                        }
-                    }
-                }
+        .onAppear() {
+            if firstLoad {
+                firstLoad = false
+                reloadModels()
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar { // Custom back button
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
-                    if gearModified {
-                        AlertManager.shared.showOkAlert("Unsaved Changes!", message: "You have not saved your changes. Please hit Apply Changes before navigating away.") { }
+                    if gearModified || DM.isLoadingMirror {
+                        alertManager.showOkAlert("Unsaved Changes!", message: "You have not saved your changes. Please hit Apply Changes before navigating away.") { }
                     } else {
                         presentationMode.wrappedValue.dismiss()
                     }
@@ -129,6 +104,17 @@ struct GearView: View {
             }
         }
     }
+    
+    func allowEdit() -> Bool {
+        return DM.getPlayerForCharacter(character).isAdmin && !DM.offlineMode
+    }
+    
+    func reloadModels() {
+        self.character = DM.getCharacter(character.id) ?? character
+        self.gear = character.gear
+        self.gearJsonModels = character.gear?.jsonModels ?? []
+    }
+    
 }
 
 struct GearViewModular: View {
@@ -271,16 +257,4 @@ struct GearSubview: View {
             self.gearJsonModels.append(prevPrim)
         }
     }
-}
-
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    dm.loadingSelectedCharacterGear = false
-    dm.selectedCharacterGear = [md.gear(characterId: 2)]
-    var gv = GearView(character: md.character(id: 2), allowEdit: true)
-    gv._dm = dm
-    return gv
 }

@@ -15,6 +15,7 @@ protocol MockData {
     var oauthToken: OAuthTokenResponse { get }
     var playerList: PlayerListModel { get }
     var announcementsList: AnnouncementsListModel { get }
+    var allAnnouncements: AnnouncementFullListModel { get }
     var announcement: AnnouncementModel { get }
     var characterListFullModel: CharacterListFullModel { get }
     var skills: SkillListModel { get }
@@ -25,15 +26,18 @@ protocol MockData {
     var eventAttendees: EventAttendeeListModel { get }
     var contacts: ContactRequestListModel { get }
     var intrigues: IntrigueListModel { get }
-    var xpReductions: SpecialClassXpReductionListModel { get }
+    var xpReductions: XpReductionListModel { get }
     var preregs: EventPreregListModel { get }
     var version: AppVersionModel { get }
     var gearList: GearListModel { get }
     var featureFlagList: FeatureFlagListModel { get }
     var profileImageModel: ProfileImageModel { get }
+    var profileImageList: ProfileImageListModel { get }
     var researchProjects: ResearchProjectListModel { get }
     var rulebook: Rulebook { get }
     var skillCategories: SKillCategoryListModel { get }
+    var updateTracker: UpdateTrackerModel { get }
+    var campStatus: CampStatusModel { get }
 }
 
 extension MockData {
@@ -44,6 +48,14 @@ extension MockData {
     
     func player(id: Int) -> PlayerModel {
         return playerList.players.first(where: { $0.id == id } )!
+    }
+    
+    func fullPlayers() -> [FullPlayerModel] {
+        var fps = [FullPlayerModel]()
+        for player in playerList.players {
+            fps.append(FullPlayerModel(player: player, characters: fullCharacters().filter({ $0.playerId == player.id }), awards: awards.awards.filter({ $0.playerId == player.id }), eventAttendees: eventAttendees.eventAttendees.filter({ $0.playerId == player.id }), preregs: preregs.eventPreregs.filter({ $0.playerId == player.id }), profileImage: profileImageModel))
+        }
+        return fps
     }
     
     func characterList() -> [CharacterSubModel] {
@@ -64,14 +76,8 @@ extension MockData {
     
     func fullCharacters() -> [FullCharacterModel] {
         var fcs = [FullCharacterModel]()
-        let fs = fullSkills()
         for character in characterListFullModel.characters {
-            var fc = FullCharacterModel(character)
-            let csl = characterSkillList.charSkills
-            for charSkill in csl.filter({ $0.characterId == character.id }) {
-                guard let skill = fs.first(where: { $0.id == charSkill.skillId }) else { continue }
-                fc.skills.append(skill)
-            }
+            let fc = FullCharacterModel(character: character, allSkills: fullSkills(), charSkills: characterSkillList.charSkills.filter({ $0.characterId == character.id }), awards: awards.awards.filter({ $0.characterId == character.id }), eventAttendees: eventAttendees.eventAttendees.filter({ $0.characterId == character.id }), preregs: preregs.eventPreregs.filter({ $0.getCharId() == character.id }), xpReductions: xpReductions.specialClassXpReductions.filter({ $0.characterId == character.id }))
             fcs.append(fc)
         }
         return fcs
@@ -88,13 +94,7 @@ extension MockData {
     func fullSkills() -> [FullSkillModel] {
         var fs = [FullSkillModel]()
         for skill in skills.results {
-            fs.append(FullSkillModel(skill))
-        }
-        for (index, skill) in fs.enumerated() {
-            for prereq in prereqs.skillPrereqs.filter({ $0.baseSkillId == skill.id }) {
-                guard let pskill = fs.first(where: { $0.id == prereq.prereqSkillId }) else { continue }
-                fs[index].prereqs.append(pskill)
-            }
+            fs.append(FullSkillModel(skillModel: skill, prereqs: skills.results.filter({ $0.id.equalsAnyOf(prereqs.skillPrereqs.filter({ preq in preq.baseSkillId == skill.id }).map({ preq in preq.baseSkillId })) }), postreqs: skills.results.filter({ $0.id.equalsAnyOf(prereqs.skillPrereqs.filter({ preq in preq.prereqSkillId == skill.id }).map({ preq in preq.prereqSkillId })) }), category: SkillCategoryModel(id: skill.skillCategoryId, name: skillCategories.results.first(where: { $0.id == skill.skillCategoryId })?.name ?? "")))
         }
         return fs
     }
@@ -117,6 +117,14 @@ extension MockData {
     
     func event(id: Int) -> EventModel {
         return events.events.first(where: { $0.id == id })!
+    }
+    
+    func fullEvents() -> [FullEventModel] {
+        var fe = [FullEventModel]()
+        for event in events.events {
+            fe.append(FullEventModel(event: event, attendees: eventAttendees.eventAttendees.filter({ $0.eventId == event.id }), preregs: preregs.eventPreregs.filter({ $0.eventId == event.id }), intrigue: intrigue()))
+        }
+        return fe
     }
     
     func eventAttendee(_ index: Int = 0) -> EventAttendeeModel {
@@ -147,15 +155,23 @@ extension MockData {
         return intrigues.intrigues.first(where: { $0.id == id })!
     }
     
-    func xpReduction(_ index: Int = 0) -> SpecialClassXpReductionModel {
+    func intriguesByEvent() -> [Int : IntrigueModel] {
+        var ints = [Int : IntrigueModel]()
+        for intrigue in intrigues.intrigues {
+            ints[intrigue.eventId] = intrigue
+        }
+        return ints
+    }
+    
+    func xpReduction(_ index: Int = 0) -> XpReductionModel {
         return xpReductions.specialClassXpReductions[index]
     }
     
-    func xpReduction(id: Int) -> SpecialClassXpReductionModel {
+    func xpReduction(id: Int) -> XpReductionModel {
         return xpReductions.specialClassXpReductions.first(where: { $0.id == id })!
     }
     
-    func xpReduction(characterId: Int, skillId: Int) -> SpecialClassXpReductionModel {
+    func xpReduction(characterId: Int, skillId: Int) -> XpReductionModel {
         return xpReductions.specialClassXpReductions.first(where: { $0.characterId == characterId && $0.skillId == skillId })!
     }
     
@@ -207,26 +223,20 @@ extension MockData {
         return skillCategories.results.first(where: { $0.id == id })!
     }
     
-    func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> PlayerCheckInBarcodeModel {
-        let player = playerList.players.first(where: { $0.id == playerId })!
-        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
-        let event = events.events.first(where: { $0.id == eventId })!
-        let gear = gearList.charGear.first(where: { $0.characterId == characterId })
-        
-        return PlayerCheckInBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, event: event.barcodeModel, relevantSkills: char?.getRelevantBarcodeSkills() ?? [], gear: gear)
+    func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> CheckInOutBarcodeModel {
+        return CheckInOutBarcodeModel(playerId: playerId, characterId: characterId, eventId: eventId)
     }
     
-    func playerCheckOutBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventAttendeeId: Int = 1, eventId: Int = 1) -> PlayerCheckOutBarcodeModel {
-        let player = playerList.players.first(where: { $0.id == playerId })!
-        let char = fullCharacters().first(where: { $0.id == (characterId ?? -1) })
-        return PlayerCheckOutBarcodeModel(player: player.barcodeModel, character: char?.barcodeModel, eventAttendeeId: eventAttendeeId, eventId: eventId, relevantSkills: char?.getRelevantBarcodeSkills() ?? [])
+    func playerCheckOutBarcodeModel(eventAttendeeId: Int = 1) -> CheckInOutBarcodeModel {
+        let attendee = eventAttendee(id: eventAttendeeId)
+        return CheckInOutBarcodeModel(playerId: attendee.playerId, characterId: attendee.characterId, eventId: attendee.eventId)
     }
     
     func getResponse(_ request: MockRequest) -> Codable {
         switch request.endpoint {
             case .playerSignIn, .player, .playerCreate, .awardPlayer, .updateP, .updatePAdmin, .updatePlayer, .deletePlayer:
                 return player()
-            case .authToken:
+            case .authToken, .playerAuthToken:
                 return oauthToken
             case .announcementsAll:
                 return announcementsList
@@ -296,6 +306,24 @@ extension MockData {
                 return researchProjects
             case .getAllSkillCategories:
                 return skillCategories
+            case .updateTracker:
+                return updateTracker
+        case .allAnnouncements:
+            return allAnnouncements
+        case .campStatus:
+            return campStatus
+        case .allFullCharacters:
+            return fullCharacters()
+        case .getAllCharacterSkills, .deleteCharacterSkill:
+            return characterSkillList
+        case .allEventAttendees:
+            return eventAttendees
+        case .getAllXpReductions:
+            return xpReductions
+        case .allPreregs:
+            return preregs
+        case .getAllProfileImages:
+            return profileImageList
         }
     }
     
@@ -311,10 +339,18 @@ fileprivate struct MockData1: MockData {
     ])
 
     var profileImageModel = ProfileImageModel(id: 0, playerId: 1, image: "TEST")
+    var profileImageList = ProfileImageListModel(profileImages: [
+        ProfileImageModel(id: 0, playerId: 1, image: "TEST"),
+        ProfileImageModel(id: 1, playerId: 2, image: "TEST 2")
+    ])
 
     var oauthToken = OAuthTokenResponse(access_token: "TestAccessToken")
 
     var announcementsList = AnnouncementsListModel(announcements: [AnnouncementSubModel(id: 1)])
+    var allAnnouncements = AnnouncementFullListModel(announcements: [
+        AnnouncementModel(id: 1, title: "Test Announcement", text: "This is a test announcment with mock data yo.", date: "2022/12/23"),
+        AnnouncementModel(id: 2, title: "Test Announcement 2", text: "This is a test announcment with mock data yo but it's different than the first one.", date: "2023/12/23")
+    ])
     var announcement = AnnouncementModel(id: 1, title: "Test Announcement", text: "This is a test announcment with mock data yo.", date: "2022/12/23")
     
     var characterListFullModel = CharacterListFullModel(characters: [
@@ -421,12 +457,12 @@ fileprivate struct MockData1: MockData {
         AwardModel(id: 14, playerId: 3, characterId: 3, awardType: AdminService.CharAwardType.ammoRocket.rawValue, reason: "Getting all the bullet types. 77 of each", date: "2023/01/06", amount: "77"),
     ])
     
-    var xpReductions = SpecialClassXpReductionListModel(specialClassXpReductions: [
-        SpecialClassXpReductionModel(id: 1, characterId: 1, skillId: 23, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 2, characterId: 1, skillId: 5, xpReduction: "2"),
-        SpecialClassXpReductionModel(id: 2, characterId: 2, skillId: 55, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 14, xpReduction: "1"),
-        SpecialClassXpReductionModel(id: 3, characterId: 3, skillId: 89, xpReduction: "1")
+    var xpReductions = XpReductionListModel(specialClassXpReductions: [
+        XpReductionModel(id: 1, characterId: 1, skillId: 23, xpReduction: "1"),
+        XpReductionModel(id: 2, characterId: 1, skillId: 5, xpReduction: "2"),
+        XpReductionModel(id: 2, characterId: 2, skillId: 55, xpReduction: "1"),
+        XpReductionModel(id: 3, characterId: 3, skillId: 14, xpReduction: "1"),
+        XpReductionModel(id: 3, characterId: 3, skillId: 89, xpReduction: "1")
     ])
                                                         
     var characterSkillList: CharacterSkillListModel {
@@ -487,14 +523,14 @@ fileprivate struct MockData1: MockData {
     ])
 
     var eventAttendees = EventAttendeeListModel(eventAttendees: [
-        EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 2, playerId: 2, characterId: 2, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 3, playerId: 3, characterId: 3, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 4, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 5, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 6, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 7, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE"),
-        EventAttendeeModel(id: 8, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE")
+        EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 2, playerId: 2, characterId: 2, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 3, playerId: 3, characterId: 3, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 4, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 5, playerId: 4, characterId: 4, eventId: 1, isCheckedIn: "FALSE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 6, playerId: 2, characterId: 2, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 7, playerId: 3, characterId: 3, eventId: 2, isCheckedIn: "TRUE", asNpc: "FALSE", npcId: -1),
+        EventAttendeeModel(id: 8, playerId: 4, characterId: 4, eventId: 2, isCheckedIn: "TRUE", asNpc: "TRUE", npcId: -1)
     ])
 
     var contacts = ContactRequestListModel(contactRequests: [
@@ -545,6 +581,8 @@ fileprivate struct MockData1: MockData {
         ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE"),
         ResearchProjectModel(id: 2, name: "Curing the Infection", description: "This probably won't happen. No one is even working on it.", milestones: 0, complete: "FALSE")
     ])
+    
+    var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])])
     
     var rulebook = Rulebook(version: "2.1.0", headings: [
         Heading(title: "Section 1", textsAndTables: [
@@ -604,8 +642,33 @@ fileprivate struct MockData1: MockData {
                     "Here's some more on another line."
                 ])
             ])
-        ])
+        ]),
+        Heading(title: "Downtime",
+                textsAndTables: [
+                    "Most of the Event will take place in Downtime, during which, characters are free to explore the land, complete quests and jobs, gather resources, and pretty much do whatever they would like (within reason). All of the following sub-sections explain the different things that are possible during downtime (besides simply exploring the land) should you wish to do something more productive! Downtime is your opportunity to accomplish whatever it is you would like to accomplish during the event.",
+                    "Remember, generally the Daytime is safer than the Nighttime, so if you want to do a lot of work away from camp, plan your time accordingly."
+                ], subSubHeadings: [], subHeadings: [
+                    SubHeading("Camp Facilities", textsAndTables: [
+                        "There are several facilities at Camp that are free to be used by all Camp Survivors should the need arise. Though there is limited space, there exists potential for expansion in the future."
+                    ], subSubHeadings: [
+                        SubSubHeading("The Teaching Area", textsAndTables: [
+                            "The Teaching Area is where you will need to learn any \n<font color=\'#910016\'>\n Combat\n</font> or \n<font color=\'#0D8017\'>\n Profession\n</font> type skills that you take after your first event. Someone with the approiate level of \n<b>\n Teaching\n</b> skill will help you learn your new abilities. It\'s important to pay them a bullet or two for their time. A single \n<b>\n Teacher\n</b> may only teach one class at once but they may have multiple students learning the same skill. Additionally, multiple \n<b>\n Teachers\n</b> can host classes at the same time. The limitation on this is the number of chairs in the classroom area. Each student needs one chair in order to be taught. If there are no available chairs, you will have to wait until one is available to learn your new skill."
+                        ]),
+                        SubSubHeading("Fortification Health and Destroying Fortifications", textsAndTables: [
+                            "When a \n<i>\n Fortification\n</i> is constructed, it always starts with its \"Maximum Health\" value. Health of \n<i>\n Fortifications\n</i> is represented as pieces of wood that are Velcro\'d to the \n<i>\n Fortification\'s\n</i> surface. Each wood piece represents 1 Health. When a \n<i>\n Fortification\n</i> is damaged, one of the velcro\'d pieces of wood is removed. \n<i>\n Fortifications\n</i> can be Repaired so long as they have Health remaining. If all of a \n<i>\n Fortification\'s\n</i> Health is removed, that \n<i>\n Fortification\n</i> is destroyed and must be rebuilt. Check out the <a href=\"#Repair\">Repairing</a> section for more information about how to repair \n<i>\n Fortifications\n</i> that still have Health remaining.",
+                            "Every entity in Still Alive has the ability to damage \n<i>\n Fortifications\n</i> with their own rules. Players, damage them using the \n<b>\n Bash\n</b>, \n<b>\n Smash\n</b> and \n<b>\n Crash\n</b> Skills (reminder that every Character starts with the \n<b>\n Bash\n</b> Skill for free). In order to start damaging a \n<i>\n Fortification\n</i>, you\'ll need a Melee Weapon (though you don\'t have to be proficient with it). Start roleplaying hitting the \n<i>\n Fortification\n</i> loudly making lots of noise while you are damaging it. If you have the \n<b>\n Smash\n</b> or \n<b>\n Crash\n</b> Skills, you are able to damage \n<i>\n Fortifications\n</i> quietly, but it takes more time. Use the table below to determine how much time it takes to damage a \n<i>\n Fortification\n</i> (allowing you to remove one of it\'s velcro\'d on wood pieces - i.e. it\'s Health).",
+                            Table(contents: [
+                                "" : ["<th>Regular Damage (loud)</th>", "<th>Quiet Damage</th>"],
+                                "Bash" : ["30 Seconds", "-"],
+                                "Smash" : ["20 Seconds", "1 Minute"],
+                                "Crash" : ["10 Seconds", "30 Seconds"]
+                            ])
+                        ])
+                    ])
+                ])
     ])
+    
+    var updateTracker = UpdateTrackerModel(id: 1, announcements: 1, awards: 1, characters: 1, gear: 1, characterSkills: 1, contactRequests: 1, events: 1, eventAttendees: 1, preregs: 1, featureFlags: 1, intrigues: 1, players: 1, profileImages: 1, researchProjects: 1, skills: 1, skillCategories: 1, skillPrereqs: 1, xpReductions: 1, campStatus: 1, rulebookVersion: "1.1.1.1", treatingWoundsVersion: "1.1.1.1")
     
     let skillCategories: SKillCategoryListModel = SKillCategoryListModel(results: [
         SkillCategoryModel(id: 1, name: "Beginner (Free) Skills"),
@@ -628,7 +691,7 @@ fileprivate struct MockData1: MockData {
     private func freeSkillsForCharacter(incrementingId: inout Int, characterId: Int) -> [CharacterSkillModel] {
         var cs = [CharacterSkillModel]()
         for skill in skills.results.filter({ $0.xpCost == "0" }) {
-            cs.append(CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skill.id, xpSpent: 0, fsSpent: 0, ppSpent: 0))
+            cs.append(CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skill.id, xpSpent: 0, fsSpent: 0, ppSpent: 0, date: "2025/06/01"))
             incrementingId += 1
         }
         return cs
@@ -651,7 +714,7 @@ fileprivate struct MockData1: MockData {
             xpCost = max(xpCost + relevantSpecialization, 1)
         }
         
-        let csm = CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skillId, xpSpent: xpCost, fsSpent: fsCost, ppSpent: ppCost)
+        let csm = CharacterSkillModel(id: incrementingId, characterId: characterId, skillId: skillId, xpSpent: xpCost, fsSpent: fsCost, ppSpent: ppCost, date: "2025/06/01")
         
         incrementingId += 1
         

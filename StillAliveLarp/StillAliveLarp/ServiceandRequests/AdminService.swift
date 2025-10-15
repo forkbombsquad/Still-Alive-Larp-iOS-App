@@ -9,13 +9,28 @@ import Foundation
 
 struct AdminService {
 
-    enum PlayerAwardType: String, CaseIterable {
+    protocol AwardType {
+        func getDisplayText(pluralize: Bool) -> String
+    }
+    
+    enum PlayerAwardType: String, CaseIterable, AwardType {
         case xp = "XP"
         case prestigePoints = "PP"
         case freeTier1Skills = "FREE-T1-SKILL"
+        
+        func getDisplayText(pluralize: Bool) -> String {
+            switch self {
+            case .xp:
+                return "Experience Point\(pluralize ? "s" : "")"
+            case .prestigePoints:
+                return "Prestige Point\(pluralize ? "s" : "")"
+            case .freeTier1Skills:
+                return "Free Tier-1 Skill\(pluralize ? "s" : "")"
+            }
+        }
     }
 
-    enum CharAwardType: String, CaseIterable {
+    enum CharAwardType: String, CaseIterable, AwardType {
         case infection = "INFECTION"
         case materialCasings = "MATERIAL_CASINGS"
         case materialWood = "MATERIAL_WOOD"
@@ -27,6 +42,33 @@ struct AdminService {
         case ammoMega = "AMMO_MEGA"
         case ammoRival = "AMMO_RIVAL"
         case ammoRocket = "AMMO_ROCKET"
+        
+        func getDisplayText(pluralize: Bool) -> String {
+            switch self {
+            case .infection:
+                return "Infection Rating"
+            case .materialCasings:
+                return "Bullet Casing\(pluralize ? "s" : "")"
+            case .materialWood:
+                return "Wood"
+            case .materialCloth:
+                return "Cloth"
+            case .materialMetal:
+                return "Metal"
+            case .materialTech:
+                return "Tech Suppl\(pluralize ? "ies" : "y")"
+            case .materialMed:
+                return "Medical Suppl\(pluralize ? "ies" : "y")"
+            case .ammoBullet:
+                return "Bullet\(pluralize ? "s" : "")"
+            case .ammoMega:
+                return "Mega\(pluralize ? "s" : "")"
+            case .ammoRival:
+                return "Rival\(pluralize ? "s" : "")"
+            case .ammoRocket:
+                return "Rocket\(pluralize ? "s" : "")"
+            }
+        }
     }
 
     static func awardPlayer(_ award: AwardCreateModel, onSuccess: @escaping (_ updatedPlayer: PlayerModel) -> Void, failureCase: @escaping FailureCase) {
@@ -89,12 +131,6 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
-    static func getAllContactRequests(onSuccess: @escaping (_ contactRequestList: ContactRequestListModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.allContactRequests, responseObject: ContactRequestListModel.self, success: { success in
-            onSuccess(success.jsonObject)
-        }, failureCase: failureCase)
-    }
-
     static func updatePAdmin(_ newP: String, playerId: Int, onSuccess: @escaping (_ player: PlayerModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.updatePAdmin, addToEndOfUrl: "\(playerId)", headers: ["p": newP], responseObject: PlayerModel.self, success: { success in
             onSuccess(success.jsonObject)
@@ -113,12 +149,6 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
-    static func getAllIntrigues(onSuccess: @escaping (_ intrigue: IntrigueListModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.getAllIntrigue, responseObject: IntrigueListModel.self, success: { success in
-            onSuccess(success.jsonObject)
-        }, failureCase: failureCase)
-    }
-
     static func updatePlayer(_ player: PlayerModel, onSuccess: @escaping (_ playerModel: PlayerModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.updatePlayer, bodyJson: player, responseObject: PlayerModel.self, success: { success in
             onSuccess(success.jsonObject)
@@ -131,8 +161,8 @@ struct AdminService {
         }, failureCase: failureCase)
     }
 
-    static func giveXpReduction(_ characterId: Int, skillId: Int, onSuccess: @escaping (_ xpReduction: SpecialClassXpReductionModel) -> Void, failureCase: @escaping FailureCase) {
-        ServiceController.makeRequest(.giveXpReduction, addToEndOfUrl: "\(characterId)", params: ["skill_id": skillId], responseObject: SpecialClassXpReductionModel.self, success: { success in
+    static func giveXpReduction(_ characterId: Int, skillId: Int, onSuccess: @escaping (_ xpReduction: XpReductionModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.giveXpReduction, addToEndOfUrl: "\(characterId)", params: ["skill_id": skillId], responseObject: XpReductionModel.self, success: { success in
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }

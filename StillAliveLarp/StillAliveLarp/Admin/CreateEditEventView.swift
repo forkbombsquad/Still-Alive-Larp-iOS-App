@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct CreateEditEventView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
-    init(events: Binding<[EventModel]>) {
-        self._events = events
+    let editingEvent: FullEventModel?
+    
+    init() {
         self.editingEvent = nil
         self._title = State(initialValue: "")
         self._description = State(initialValue: "")
@@ -20,8 +23,7 @@ struct CreateEditEventView: View {
         self._endTime = State(initialValue: "")
     }
 
-    init(events: Binding<[EventModel]>, event: EventModel) {
-        self._events = events
+    init(event: FullEventModel) {
         self.editingEvent = event
         self._title = State(initialValue: event.title)
         self._description = State(initialValue: event.description)
@@ -29,10 +31,6 @@ struct CreateEditEventView: View {
         self._startTime = State(initialValue: event.startTime)
         self._endTime = State(initialValue: event.endTime)
     }
-
-    private var editingEvent: EventModel?
-
-    @Binding var events: [EventModel]
 
     @State private var title: String
     @State private var description: String
@@ -42,16 +40,11 @@ struct CreateEditEventView: View {
 
     @State private var loading: Bool = false
 
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-
     var body: some View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    Text(editingEvent == nil ? "Create Event" : "Edit Event")
-                        .font(Font.system(size: 36, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .padding(.trailing, 0)
+                    globalCreateTitleView(editingEvent == nil ? "Create Event" : "Edit Event", DM: DM)
                     TextField("", text: $title)
                         .padding(.top, 8)
                         .padding(.trailing, 0)
@@ -95,25 +88,18 @@ struct CreateEditEventView: View {
                             self.loading = true
                             if let editingEvent = editingEvent {
                                 // EDIT
-                                let edited = EventModel(id: editingEvent.id, title: title, description: description, date: date, startTime: startTime, endTime: endTime, isStarted: editingEvent.isStarted, isFinished: editingEvent.isFinished)
-
-
+                                let edited = EventModel(id: editingEvent.id, title: title, description: description, date: date, startTime: startTime, endTime: endTime, isStarted: editingEvent.isStarted.stringValue, isFinished: editingEvent.isFinished.stringValue)
 
                                 AdminService.updateEvent(edited) { updatedEvent in
                                     runOnMainThread {
-                                        for (index, event) in self.events.enumerated() {
-
-                                            guard event.id == updatedEvent.id else { continue }
-                                            self.events[index] = updatedEvent
-                                            break
-
-                                        }
-                                        AlertManager.shared.showOkAlert("Event Edited", onOkAction: {
+                                        alertManager.showOkAlert("Event Edited!", onOkAction: {
                                             runOnMainThread {
                                                 self.loading = false
+                                                DM.load()
                                                 self.mode.wrappedValue.dismiss()
                                             }
                                         })
+                                        
                                     }
 
                                 } failureCase: { error in
@@ -126,10 +112,10 @@ struct CreateEditEventView: View {
 
                                 AdminService.createEvent(event) { createdEvent in
                                     runOnMainThread {
-                                        self.events.insert(createdEvent, at: 0)
-                                        AlertManager.shared.showOkAlert("Event Created", onOkAction: {
+                                        alertManager.showOkAlert("Event Created!", onOkAction: {
                                             runOnMainThread {
                                                 self.loading = false
+                                                DM.load()
                                                 self.mode.wrappedValue.dismiss()
                                             }
                                         })
@@ -140,7 +126,7 @@ struct CreateEditEventView: View {
                             }
 
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: nil)
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: nil)
                         }
                     }
                     .padding(.top, 16)
@@ -164,12 +150,8 @@ struct CreateEditEventView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    var cev = CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
-    cev._dm = dm
-    return cev
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return CreateEditEventView(events: .constant(md.events.events), event: md.event(2))
+//}

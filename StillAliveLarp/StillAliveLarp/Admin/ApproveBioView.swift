@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ApproveBioView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
-    @Binding var character: CharacterModel
+    @Binding var character: FullCharacterModel
     @State var loading = false
     @State var giveXp = true
 
@@ -36,14 +37,14 @@ struct ApproveBioView: View {
                     Toggle("Grant Experience On Approval", isOn: $giveXp).tint(.brightRed)
                     LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Approve") {
                         self.loading = true
-                        self.character.approvedBio = "TRUE"
-                        AdminService.updateCharacter(self.character) { characterModel in
+                        self.character.approvedBio = true
+                        AdminService.updateCharacter(self.character.baseModel()) { characterModel in
                             if self.giveXp {
                                 let award = AwardCreateModel(playerId: character.playerId, characterId: nil, awardType: AdminService.PlayerAwardType.xp.rawValue, reason: "Bio approved", date: Date().yyyyMMddFormatted, amount: "1")
                                 AdminService.awardPlayer(award) { _ in
                                     runOnMainThread {
+                                        DM.load()
                                         self.loading = false
-                                        self.character = characterModel
                                         self.mode.wrappedValue.dismiss()
                                     }
                                 } failureCase: { error in
@@ -51,8 +52,8 @@ struct ApproveBioView: View {
                                 }
                             } else {
                                 runOnMainThread {
+                                    DM.load()
                                     self.loading = false
-                                    self.character = characterModel
                                     self.mode.wrappedValue.dismiss()
                                 }
                             }
@@ -64,12 +65,12 @@ struct ApproveBioView: View {
                     .padding(.trailing, 0)
                     LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Deny") {
                         self.loading = true
-                        AlertManager.shared.showAlert("Are You Sure?", message: "Are you sure you want to deny \(self.character.fullName)'s bio? This will delete it and they will have to write another one.", button1: Alert.Button.destructive(Text("Deny Bio"), action: {
-                            self.character.approvedBio = "FALSE"
+                        alertManager.showAlert("Are You Sure?", message: "Are you sure you want to deny \(self.character.fullName)'s bio? This will delete it and they will have to write another one.", button1: Alert.Button.destructive(Text("Deny Bio"), action: {
+                            self.character.approvedBio = false
                             self.character.bio = ""
-                            AdminService.updateCharacter(self.character) { characterModel in
+                            AdminService.updateCharacter(self.character.baseModel()) { characterModel in
                                 runOnMainThread {
-                                    self.character = characterModel
+                                    DM.load()
                                     self.loading = false
                                     self.mode.wrappedValue.dismiss()
                                 }
@@ -90,10 +91,8 @@ struct ApproveBioView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return ApproveBioView(_dm: dm, character: .constant(md.character(2)))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ApproveBioView(character: .constant(md.character(2)))
+//}

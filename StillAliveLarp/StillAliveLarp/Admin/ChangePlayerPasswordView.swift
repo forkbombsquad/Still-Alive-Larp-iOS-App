@@ -7,19 +7,11 @@
 
 import SwiftUI
 
-//
-//  ChangePasswordView.swift
-//  Still Alive Larp
-//
-//  Created by Rydge Craker on 4/26/23.
-//
-
-import SwiftUI
-
 struct ChangePlayerPasswordView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
-    let player: PlayerModel
+    let player: FullPlayerModel
 
     @State private var password: String = ""
     @State private var confirmPassword: String = ""
@@ -32,39 +24,44 @@ struct ChangePlayerPasswordView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    Text("Change Password For\n\(player.fullName)")
-                        .font(Font.system(size: 36, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .padding(.trailing, 0)
-                    PasswordField(hintText: "New Password", password: $password)
-                    PasswordField(hintText: "Confirm New Password", password: $confirmPassword)
-                    LoadingButtonView($loading, width: gr.size.width - 32, height: 60, buttonText: "Submit") {
-                        if checkPasswordsMatch() {
-                            let valResult = validateFields()
-                            if !valResult.hasError {
-                                self.loading = true
-                                AdminService.updatePAdmin(self.password, playerId: self.player.id) { player in
-                                    runOnMainThread {
-                                        AlertManager.shared.showOkAlert("Password Successfuly Updated For", message: player.fullName) {
-                                            runOnMainThread {
-                                                self.loading = false
-                                                self.mode.wrappedValue.dismiss()
+                    if DM.getCurrentPlayer()!.isAdmin {
+                        Text("Change Password For\n\(player.fullName)")
+                            .font(Font.system(size: 36, weight: .bold))
+                            .multilineTextAlignment(.center)
+                            .padding(.trailing, 0)
+                        PasswordField(hintText: "New Password", password: $password)
+                        PasswordField(hintText: "Confirm New Password", password: $confirmPassword)
+                        LoadingButtonView($loading, width: gr.size.width - 32, height: 60, buttonText: "Submit") {
+                            if checkPasswordsMatch() {
+                                let valResult = validateFields()
+                                if !valResult.hasError {
+                                    self.loading = true
+                                    AdminService.updatePAdmin(self.password, playerId: self.player.id) { player in
+                                        runOnMainThread {
+                                            DM.load()
+                                            alertManager.showOkAlert("Password Successfuly Updated For", message: player.fullName) {
+                                                runOnMainThread {
+                                                    self.loading = false
+                                                    DM.load()
+                                                    self.mode.wrappedValue.dismiss()
+                                                }
                                             }
                                         }
+                                    } failureCase: { error in
+                                        self.loading = false
                                     }
-                                } failureCase: { error in
-                                    self.loading = false
-                                }
 
+                                } else {
+                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                }
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
                             }
-                        } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
                         }
+                        .padding(.top, 16)
+                        .padding(.trailing, 0)
                     }
-                    .padding(.top, 16)
-                    .padding(.trailing, 0)
+                    
                 }
             }
         }
@@ -82,12 +79,4 @@ struct ChangePlayerPasswordView: View {
         return password == confirmPassword
     }
 
-}
-
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return ChangePlayerPasswordView(_dm: dm, player: md.player())
 }

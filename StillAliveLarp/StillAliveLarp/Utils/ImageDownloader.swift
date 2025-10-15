@@ -27,31 +27,30 @@ class ImageDownloader {
             }
         }
     }
-
-    func download(key: ImageKey, onCompletion: @escaping (_ success: Bool) -> Void) {
+    
+    func downloadReturningImage(key: ImageKey, onCompletion: @escaping (_ imageData: Data?) -> Void) {
         downloadPage(urlString: key.baseUrl) { imagePath in
             guard let imagePath = imagePath else {
-                onCompletion(false)
+                onCompletion(nil)
                 return
             }
-            self.downloadFromUrl(path: imagePath, key: key) { success in
-                onCompletion(success)
+            self.downloadFromUrlForImage(path: imagePath, key: key) { img in
+                onCompletion(img)
             }
         }
     }
-
-    private func downloadFromUrl(path: String, key: ImageKey, onCompletion: @escaping (_ success: Bool) -> Void) {
+    
+    private func downloadFromUrlForImage(path: String, key: ImageKey, onCompletion: @escaping (_ imageData: Data?) -> Void) {
         guard let url = URL(string: path) else {
-            onCompletion(false)
+            onCompletion(nil)
             return
         }
         downloadImage(from: url) { data in
             guard let data = data else {
-                onCompletion(false)
+                onCompletion(nil)
                 return
             }
-            LocalDataHandler.shared.storeImageData(data, key: key.rawValue)
-            onCompletion(true)
+            onCompletion(data)
         }
     }
 

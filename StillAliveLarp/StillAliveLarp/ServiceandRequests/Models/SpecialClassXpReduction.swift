@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct SpecialClassXpReductionModel: CustomCodeable, Identifiable {
+struct XpReductionModel: CustomCodeable, Identifiable {
     let id: Int
     let characterId: Int
     let skillId: Int
     let xpReduction: String
 }
 
-struct SpecialClassXpReductionListModel: CustomCodeable {
-    let specialClassXpReductions: [SpecialClassXpReductionModel]
+struct XpReductionListModel: CustomCodeable {
+    let specialClassXpReductions: [XpReductionModel]
 
     var skillIds: [Int] {
         var ids = [Int]()
@@ -24,10 +24,4 @@ struct SpecialClassXpReductionListModel: CustomCodeable {
         }
         return ids
     }
-}
-
-struct SpecialClassXpReductionCreateModel: CustomCodeable {
-    let characterId: Int
-    let skillId: Int
-    let xpReduction: String
 }

@@ -15,6 +15,19 @@ struct AwardModel: CustomCodeable, Identifiable, Equatable {
     let reason: String
     let date: String
     let amount: String
+    
+    func getAwardTypeEnum() -> AdminService.AwardType {
+        if let paward = AdminService.PlayerAwardType(rawValue: awardType) {
+            return paward
+        } else if let caward = AdminService.CharAwardType(rawValue: awardType) {
+            return caward
+        }
+        return AdminService.PlayerAwardType.xp
+    }
+    
+    func getDisplayText() -> String {
+        return "\(amount) \(getAwardTypeEnum().getDisplayText(pluralize: amount.intValueDefaultZero > 1))"
+    }
 }
 
 struct AwardCreateModel: CustomCodeable {

@@ -96,14 +96,6 @@ extension String {
         return base64String.data(using: .utf8)
     }
     
-    func decompress() -> Data? {
-        guard let gzippedData = Data(base64Encoded: self),
-              let decompressedData = try? gzippedData.gunzipped() else {
-            return nil
-        }
-        return decompressedData
-    }
-    
     func repeated(_ times: Int) -> String {
         var str = ""
         for _ in 0..<times {
@@ -142,6 +134,46 @@ extension String {
     
     mutating func buildJsonLine(key: String, value: [AnyHashable : Any], indentAmount: String = "  ", indentValue: Int, addNewline: Bool = true, addComma: Bool = true) {
         self.buildJsonLine(key: key, value: value.stringDictionary, indentAmount: indentAmount, indentValue: indentValue, addNewline: addNewline, addComma: addComma)
+    }
+    
+    func capitalizingFirstLetterOfEachWord() -> String {
+        return self
+            .lowercased()
+            .split(separator: " ")
+            .map { word in
+                word.prefix(1).uppercased() + word.dropFirst()
+            }
+            .joined(separator: " ")
+    }
+    
+    func replacingHtmlTag(_ tag: String, with replacement: String = "") -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: replacement)
+            .replacingOccurrences(of: "</\(tag)>", with: replacement)
+    }
+
+    func replacingHtmlTagWithTag(_ tag: String, with replacement: String = "") -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: "<\(replacement)>")
+            .replacingOccurrences(of: "</\(tag)>", with: "</\(replacement)>")
+    }
+
+    func replacingHtmlTagWithTagAndInnerValue(_ tag: String, with replacement: String = "", innerValue: String) -> String {
+        self.replacingOccurrences(of: "<\(tag)>", with: "<\(replacement) \(innerValue)>")
+            .replacingOccurrences(of: "</\(tag)>", with: "</\(replacement)>")
+    }
+    
+    func htmlString(_ font: UIFont) -> AttributedString {
+        guard let data = self.data(using: .utf8) else { return AttributedString("") }
+        guard let nsAttrStr = try? NSAttributedString(
+            data: data,
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ],
+            documentAttributes: nil
+        ) else { return AttributedString("") }
+        var attr = AttributedString(nsAttrStr)
+        attr.font = font
+        return attr
     }
     
 }

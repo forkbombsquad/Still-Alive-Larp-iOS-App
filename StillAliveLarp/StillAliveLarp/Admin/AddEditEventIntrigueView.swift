@@ -8,16 +8,14 @@
 import SwiftUI
 
 struct AddEditEventIntrigueView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
-    let event: EventModel
-    @State var loadingIntrigue: Bool = true
-    @State var loadingSubmit: Bool = false
+    let event: FullEventModel
+    @State var loading: Bool = true
 
     @State var investigatorMessage = ""
     @State var interrogatorMessage = ""
-
-    @State var intrigue: IntrigueModel? = nil
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -25,11 +23,8 @@ struct AddEditEventIntrigueView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    Text(getTitleText())
-                        .font(Font.system(size: 36, weight: .bold))
-                        .multilineTextAlignment(.center)
-                        .padding(.trailing, 0)
-                    if !loadingIntrigue {
+                    globalCreateTitleView(getTitleText(), DM: DM)
+                    if !loading {
                         TextEditor(text: $investigatorMessage)
                             .padding(.top, 8)
                             .padding(.trailing, 0)
@@ -49,46 +44,51 @@ struct AddEditEventIntrigueView: View {
                                 Text("Interrogator - Fact 2").foregroundColor(.gray).padding().multilineTextAlignment(.center)
                             }
 
-                        LoadingButtonView($loadingSubmit, width: gr.size.width - 32, buttonText: "Submit") {
+                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Submit") {
                             let valResult = validateFields()
                             if !valResult.hasError {
-                                self.loadingSubmit = true
-                                if var editIntrigue = self.intrigue {
-                                    editIntrigue.interrogatorMessage = self.interrogatorMessage
-                                    editIntrigue.investigatorMessage = self.investigatorMessage
-                                    editIntrigue.webOfInformantsMessage = ""
+                                runOnMainThread {
+                                    self.loading = true
+                                    if var editIntrigue = self.event.intrigue {
+                                        editIntrigue.interrogatorMessage = self.interrogatorMessage
+                                        editIntrigue.investigatorMessage = self.investigatorMessage
+                                        editIntrigue.webOfInformantsMessage = ""
 
-                                    AdminService.updateIntrigue(editIntrigue) { _ in
-                                        runOnMainThread {
-                                            AlertManager.shared.showOkAlert("Intrigue Updated") {
-                                                runOnMainThread {
-                                                    self.loadingSubmit = false
-                                                    self.mode.wrappedValue.dismiss()
+                                        AdminService.updateIntrigue(editIntrigue) { _ in
+                                            runOnMainThread {
+                                                DM.load()
+                                                alertManager.showOkAlert("Intrigue Updated!") {
+                                                    runOnMainThread {
+                                                        self.loading = false
+                                                        self.mode.wrappedValue.dismiss()
+                                                    }
                                                 }
                                             }
+                                        } failureCase: { error in
+                                            self.loading = false
                                         }
-                                    } failureCase: { error in
-                                        self.loadingSubmit = false
-                                    }
-                                } else {
-                                    let intrigue = IntrigueCreateModel(eventId: event.id, investigatorMessage: investigatorMessage, interrogatorMessage: interrogatorMessage, webOfInformantsMessage: "")
-                                    AdminService.createIntrigue(intrigue) { intrigue in
-                                        runOnMainThread {
-                                            AlertManager.shared.showOkAlert("Intrigue Created") {
-                                                runOnMainThread {
-                                                    self.loadingSubmit = false
-                                                    self.mode.wrappedValue.dismiss()
+                                    } else {
+                                        let intrigue = IntrigueCreateModel(eventId: event.id, investigatorMessage: investigatorMessage, interrogatorMessage: interrogatorMessage, webOfInformantsMessage: "")
+                                        AdminService.createIntrigue(intrigue) { intrigue in
+                                            runOnMainThread {
+                                                DM.load()
+                                                alertManager.showOkAlert("Intrigue Created") {
+                                                    runOnMainThread {
+                                                        self.loading = false
+                                                        self.mode.wrappedValue.dismiss()
+                                                    }
                                                 }
                                             }
+                                        } failureCase: { error in
+                                            self.loading = false
                                         }
-                                    } failureCase: { error in
-                                        self.loadingSubmit = false
-                                    }
 
+                                    }
                                 }
-
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                runOnMainThread {
+                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                }
                             }
                         }
                         .padding(.top, 16)
@@ -103,16 +103,8 @@ struct AddEditEventIntrigueView: View {
         .frame(maxWidth: .infinity)
         .background(Color.lightGray)
         .onAppear {
-            self.investigatorMessage = intrigue?.investigatorMessage ?? ""
-            self.interrogatorMessage = intrigue?.interrogatorMessage ?? ""
-            IntrigueService.getIntrigue(event.id, onSuccess: { intrigue in
-                self.intrigue = intrigue
-                self.investigatorMessage = intrigue.investigatorMessage
-                self.interrogatorMessage = intrigue.interrogatorMessage
-                self.loadingIntrigue = false
-            }, failureCase: { _ in
-                self.loadingIntrigue = false
-            })
+            self.investigatorMessage = event.intrigue?.investigatorMessage ?? ""
+            self.interrogatorMessage = event.intrigue?.interrogatorMessage ?? ""
         }
     }
 
@@ -124,16 +116,13 @@ struct AddEditEventIntrigueView: View {
     }
 
     func getTitleText() -> String {
-        guard !loadingIntrigue else { return "Loading..." }
-        return intrigue == nil ? "Create Intrigue" : "Edit Intrigue"
+        return event.intrigue == nil ? "Create Intrigue" : "Edit Intrigue"
     }
 
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return AddEditEventIntrigueView(_dm: dm, event: md.event(), intrigue: md.intrigue())
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return AddEditEventIntrigueView(event: md.event(), intrigue: md.intrigue())
+//}

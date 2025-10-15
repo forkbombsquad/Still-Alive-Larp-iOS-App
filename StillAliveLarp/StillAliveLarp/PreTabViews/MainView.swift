@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct MainView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var username: String = ""
     @State private var password: String = ""
@@ -18,14 +19,11 @@ struct MainView: View {
     @State var loading = false
     @State var loadingText = ""
 
-    @State var player: PlayerModel?
-    @State var character: FullCharacterModel?
-
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: DataManager.$shared.actionState) {
+                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: $DM.actionState) {
                         EmptyView()
                     }
                     Image("StillAliveLogo_Black")
@@ -55,15 +53,17 @@ struct MainView: View {
                                     .multilineTextAlignment(.leading)
                                     .frame(alignment: .leading)
                                     .padding(.trailing, 8)
+                                Spacer()
 
                                 LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width * 0.4, height: 90, buttonText: "Log In", progressViewOffset: 0, font: .system(size: 16, weight: .bold)) {
+                                    DM.setOfflineMode(false)
                                     self.loading = true
                                     self.loadingText = "Checking Creds..."
                                     VersionService.getVersions { versions in
                                         let currentVersion = getBuildNumber()
                                         if (currentVersion < versions.iosVersion) {
                                             self.loading = false
-                                            AlertManager.shared.showCustomOrCancelAlert(
+                                            alertManager.showCustomOrCancelAlert(
                                                 "Update Required!",
                                                 message: "Your version of the Still Alive Larp App is outdated. Please visit the App Store to update in order to use online features! \n\nCurrent Build Number: \(currentVersion)\nTarget Build Number: \(versions.iosVersion)",
                                                 customButtonText: "Open App Store", onCustomButtonPress: {
@@ -73,12 +73,12 @@ struct MainView: View {
                                                 })
                                         } else {
                                             loadingText = "Fetching Player Info..."
-                                            UserAndPassManager.shared.setUAndP(username, p: password, remember: rememberMe)
+                                            UserAndPassManager.shared.setUandP(u: username, p: password, remember: rememberMe)
                                             PlayerService.signInPlayer { player in
                                                 runOnMainThread {
                                                     self.loading = false
-                                                    DataManager.shared.actionState = 1
-                                                    PlayerManager.shared.setPlayer(player)
+                                                    DM.setCurrentPlayerId(player.id)
+                                                    DM.actionState = 1
                                                 }
 
 
@@ -90,11 +90,13 @@ struct MainView: View {
                                         self.loading = false
                                     }
                                 }
-                            }.padding(.top, 32)
+                            }
+                            .padding(.top, 32)
+                            .padding(.horizontal, 3)
                             NavigationLink(destination: CreateAccountView()) {
                                 Text("Create Account")
                                     .font(.system(size: 20, weight: .bold))
-                                    .frame(width: gr.size.width, height: 90)
+                                    .frame(width: gr.size.width - 8, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
                                     .foregroundColor(.white)
@@ -105,25 +107,25 @@ struct MainView: View {
                             NavigationLink(destination: ContactView()) {
                                 Text("Contact Us")
                                     .font(.system(size: 20, weight: .bold))
-                                    .frame(width: gr.size.width, height: 90)
+                                    .frame(width: gr.size.width - 8, height: 90)
                                     .background(Color.midRed)
                                     .cornerRadius(15)
                                     .foregroundColor(.white)
                                     .tint(.midRed)
                                     .controlSize(.large)
                             }
-
-                            if player != nil {
-                                NavigationLink(destination: OfflineAccountView()) {
-                                    Text("Offline Mode")
-                                        .font(.system(size: 20, weight: .bold))
-                                        .frame(width: gr.size.width, height: 90)
-                                        .background(Color.midRed)
-                                        .cornerRadius(15)
-                                        .foregroundColor(.white)
-                                        .tint(.midRed)
-                                        .controlSize(.large)
-                                }
+                            
+                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 20, weight: .bold)) {
+                                loading = true
+                                DM.setOfflineMode(true)
+                                DM.load(finished:  {
+                                    runOnMainThread {
+                                        if DM.getCurrentPlayer() != nil {
+                                            self.loading = false
+                                            DM.actionState = 1
+                                        }
+                                    }
+                                })
                             }
                         }
 
@@ -136,15 +138,13 @@ struct MainView: View {
             .onAppear {
                 self.username = getPrefilledUser()
                 self.password = getPrefilledPass()
-                self.player = LocalDataHandler.shared.getPlayer()
-                self.character = LocalDataHandler.shared.getCharacter()
             }
         }.navigationViewStyle(.stack)
     }
 
     private func getPrefilledUser() -> String {
         var u = UserAndPassManager.shared.getTempU()
-        if u == nil && UserAndPassManager.shared.remember() {
+        if u == nil && UserAndPassManager.shared.getRemember() {
             u = UserAndPassManager.shared.getU()
         }
         return u ?? ""
@@ -152,7 +152,7 @@ struct MainView: View {
 
     private func getPrefilledPass() -> String {
         var p = UserAndPassManager.shared.getTempP()
-        if p == nil && UserAndPassManager.shared.remember() {
+        if p == nil && UserAndPassManager.shared.getRemember() {
             p = UserAndPassManager.shared.getP()
         }
         return p ?? ""
@@ -160,8 +160,6 @@ struct MainView: View {
 }
 
 #Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return MainView(_dm: dm)
+    DataManager.shared.setDebugMode(true)
+    return MainView().environmentObject(DataManager.shared)
 }

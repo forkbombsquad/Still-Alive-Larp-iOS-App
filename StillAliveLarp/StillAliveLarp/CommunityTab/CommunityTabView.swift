@@ -8,62 +8,44 @@
 import SwiftUI
 
 struct CommunityTabView: View {
-    @ObservedObject var _dm = DataManager.shared
-    
-    @State var allPlayers: [PlayerModel] = []
-    @State var loadingAllPlayers: Bool = true
-    @State var allNpcs: [CharacterModel] = []
-    @State var loadingAllNpcs: Bool = true
-    @State var allResearchProjects: [ResearchProjectModel] = []
-    @State var loadingAllResearchProjects: Bool = true
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    Text("Community")
-                        .font(.system(size: 32, weight: .bold))
-                        .frame(alignment: .center)
-                    NavArrowView(title: "All Players", loading: $loadingAllPlayers) { _ in
-                        AllPlayersListView(allPlayers: allPlayers)
+                    PullToRefresh(coordinateSpaceName: "pullToRefresh_CommunityTab", spinnerOffsetY: -100, pullDownDistance: 150) {
+                        DM.load()
                     }
-                    if FeatureFlag.campStatus.isActive() {
-                        NavArrowView(title: "Camp Status") { _ in
-                            // TODO sometime in the future
+                    globalCreateTitleView("Community", DM: DM)
+                    LoadingLayoutView {
+                        VStack {
+                            NavArrowView(title: "All Players") { _ in
+                                PlayersListView(title: "All Players", destination: .viewPlayer, players: DM.players)
+                            }
+                            NavArrowView(title: "Camp Status") { _ in
+                                if let cs = DM.campStatus {
+                                    ViewCampStatusView(campStatus: cs)
+                                }
+                            }
+                            NavArrowView(title: "All NPCs") { _ in
+                                NPCListView(npcs: DM.getAllCharacters(.npc), title: "All NPCs", destination: .view)
+                            }
+                            NavArrowView(title: "Research Projects") { _ in
+                                ViewOrManageResearchProjectsView(researchProjects: DM.researchProjects, allowEdit: false)
+                            }
                         }
                     }
-                    NavArrowView(title: "All NPCs", loading: $loadingAllNpcs) { _ in
-                        AllNpcsListView(npcs: allNpcs, allowEdit: false)
-                    }
-                    NavArrowView(title: "Research Projects", loading: $loadingAllResearchProjects) { _ in
-                        AllResearchProjectsListView(researchProjects: allResearchProjects, allowEdit: false)
-                    }
-                }
+                    
+                }.coordinateSpace(name: "pullToRefresh_CommunityTab")
             }.padding(16)
             .background(Color.lightGray)
-            .onAppear {
-                self.loadingAllPlayers = true
-                self.loadingAllNpcs = true
-                self.loadingAllResearchProjects = true
-                DataManager.shared.load([.allPlayers, .npcs, .researchProjects]) {
-                    runOnMainThread {
-                        self.allPlayers = DataManager.shared.allPlayers ?? []
-                        self.allNpcs = DataManager.shared.npcs
-                        self.allResearchProjects = DataManager.shared.researchProjects
-                        self.loadingAllPlayers = false
-                        self.loadingAllNpcs = false
-                        self.loadingAllResearchProjects = false
-                    }
-                }
-            }
         }.navigationViewStyle(.stack)
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    dm.loadingAllPlayers = false
-    return CommunityTabView(_dm: dm)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CommunityTabView()
+//}

@@ -32,5 +32,11 @@ struct EventPreregService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllPreregs(onSuccess: @escaping (_ preregList: EventPreregListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allPreregs, responseObject: EventPreregListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
 }

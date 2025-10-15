@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ManageEventView: View {
-    @ObservedObject var _dm = DataManager.shared
-
-    @Binding var events: [EventModel]
-    @Binding var event: EventModel
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+    
+    @State var event: FullEventModel
 
     @State var loading: Bool = false
 
@@ -22,11 +22,7 @@ struct ManageEventView: View {
             GeometryReader { gr in
                 ScrollView {
                     VStack(alignment: .center) {
-                        Text("Manage Event")
-                            .font(.system(size: 32, weight: .bold))
-                            .multilineTextAlignment(.center)
-                            .frame(alignment: .center)
-                            .padding([.bottom], 16)
+                        globalCreateTitleView("Manage Event", DM: DM)
                         Divider()
                         KeyValueView(key: "Title", value: event.title)
                         KeyValueView(key: "Date", value: event.date.yyyyMMddToMonthDayYear())
@@ -36,26 +32,30 @@ struct ManageEventView: View {
                         KeyValueView(key: "Is Finished", value: event.isFinished)
                         KeyValueView(key: "Description", value: event.description)
                     }
-                    NavArrowViewRed(title: "Edit Event Details") {
-                        CreateEditEventView(events: $events, event: event)
-                    }.padding(.top, 16)
+                    if !DM.offlineMode {
+                        NavArrowViewRed(title: "Edit Event Details") {
+                            CreateEditEventView(event: event)
+                        }.padding(.top, 16)
+                    }
                     NavArrowViewBlue(title: "View Attendees") {
-                        ViewEventAttendeesView(eventModel: event)
+                        ViewEventAttendeesView(event: event)
                     }.padding(.top, 8)
-                    if !event.isFinished.boolValueDefaultFalse {
-                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: event.isStarted.boolValueDefaultFalse ? "Finish Event" : "Start Event") {
+                    if !event.isFinished && !DM.offlineMode {
+                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: event.isStarted ? "Finish Event" : "Start Event") {
                             self.loading = true
                             var started = false
-                            if !event.isStarted.boolValueDefaultFalse {
-                                event.isStarted = "TRUE"
+                            if !event.isStarted {
+                                event.isStarted = true
                                 started = true
                             } else {
-                                event.isFinished = "TRUE"
+                                event.isFinished = true
                             }
-                            AdminService.updateEvent(event) { updatedEvent in
+                            AdminService.updateEvent(event.baseModel()) { updatedEvent in
                                 runOnMainThread {
-                                    self.event = updatedEvent
-                                    AlertManager.shared.showOkAlert(started ? "Event Started" : "Event Finished") {
+                                    self.event.isStarted = updatedEvent.isStarted.boolValueDefaultFalse
+                                    self.event.isFinished = updatedEvent.isFinished.boolValueDefaultFalse
+                                    DM.load()
+                                    alertManager.showOkAlert(started ? "Event Started" : "Event Finished") {
                                         runOnMainThread {
                                             self.loading = false
                                             self.mode.wrappedValue.dismiss()
@@ -76,10 +76,8 @@ struct ManageEventView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return ManageEventView(_dm: dm, events: .constant(md.events.events), event: .constant(md.event(2)))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ManageEventView(events: .constant(md.events.events), event: .constant(md.event(2)))
+//}

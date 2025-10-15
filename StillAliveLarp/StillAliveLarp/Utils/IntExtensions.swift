@@ -29,5 +29,9 @@ extension Int {
         let val = self + value
         return val > 0 ? val : 1
     }
+    
+    var pluralizeString: String {
+        return self == 1 ? "" : "s"
+    }
 
 }

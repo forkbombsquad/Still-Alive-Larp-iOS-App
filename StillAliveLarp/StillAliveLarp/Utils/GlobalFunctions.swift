@@ -20,11 +20,7 @@ func getBuildNumber() -> Int {
 
 func forceResetAllPlayerData() {
     runOnMainThread {
-        DataManager.forceReset()
-        LocalDataHandler.forceReset()
-        UserAndPassManager.forceReset()
-        PlayerManager.forceReset()
-        CharacterManager.forceReset()
+        LocalDataManager.clearAllLocalData()
     }
 }
 
@@ -48,6 +44,37 @@ func globalState<T>(_ variable: T) -> State<T> {
     return State(initialValue: variable)
 }
 
+func globalStateObject<T>(_ variable: T) -> StateObject<T> {
+    return StateObject(wrappedValue: variable)
+}
+
 func max(_ x: CGFloat, _ y: CGFloat) -> CGFloat {
     return CGFloat.maximum(x, y)
+}
+
+func getViewName<T: View>(_ view: T.Type) -> String {
+    return String(describing: view)
+}
+
+func getViewName<T: View>(_ view: T) -> String {
+    return String(describing: type(of: view))
+}
+
+func globalStyleHtmlForRulebook(_ html: String) -> String {
+    html
+        .replacingHtmlTagWithTag("skill", with: "b")
+        .replacingHtmlTagWithTagAndInnerValue("combat", with: "font", innerValue: "color='#910016'")
+        .replacingHtmlTagWithTagAndInnerValue("profession", with: "font", innerValue: "color='#0D8017'")
+        .replacingHtmlTagWithTagAndInnerValue("talent", with: "font", innerValue: "color='#007AFF'")
+        .replacingHtmlTagWithTag("item", with: "i")
+        .replacingHtmlTagWithTag("condition", with: "u")
+        .replacingHtmlTagWithTag("th", with: "b")
+}
+
+@ViewBuilder
+func globalCreateTitleView(_ title: String, DM: DataManager) -> some View {
+    Text(DM.getTitlePotentiallyOffline(title))
+        .font(.stillAliveTitleFont)
+        .multilineTextAlignment(.center)
+        .frame(alignment: .center)
 }

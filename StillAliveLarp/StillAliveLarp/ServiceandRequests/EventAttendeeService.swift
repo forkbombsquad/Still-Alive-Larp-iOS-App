@@ -26,5 +26,11 @@ struct EventAttendeeService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllEventAttendees(onSuccess: @escaping (_ attendeeList: EventAttendeeListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.allEventAttendees, responseObject: EventAttendeeListModel.self, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
 }

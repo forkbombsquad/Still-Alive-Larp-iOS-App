@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ManageAccountView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State var loading = false
     @State var loadingText = ""
@@ -22,11 +23,24 @@ struct ManageAccountView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         NavArrowView(title: "Change Password") { _ in
-                            ChangePasswordView()
+                            ChangePasswordView(player: DM.getCurrentPlayer()!)
                         }
                         Spacer()
+                        LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Force Download Data") {
+                            self.loading = true
+                            DM.load(loadType: .forceDownload, finished:  {
+                                DM.popToRoot()
+                            })
+                        }
+                        LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Delete Local Data") {
+                            alertManager.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once deleted, all local data will be wiped and will need to be re-downloaded and reconfigured.", customButtonText: "Delete Local Data") {
+                                self.loading = true
+                                self.loadingText = ""
+                                self.deleteLocalData()
+                            }
+                        }
                         LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Delete Account") {
-                            AlertManager.shared.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once your account is deleted it will be gone forever and CAN NOT be recovered.", customButtonText: "Delete Account") {
+                            alertManager.showCustomNegativeOrCancelAlert("Are You Sure?", message: "Once your account is deleted it will be gone forever and CAN NOT be recovered.", customButtonText: "Delete Account") {
                                 self.loading = true
                                 self.loadingText = ""
                                 self.deleteCharSkills()
@@ -38,48 +52,60 @@ struct ManageAccountView: View {
         }.padding(16)
             .background(Color.lightGray)
     }
+    
+    private func deleteLocalData() {
+        runOnMainThread {
+            LocalDataManager.clearAllLocalData()
+            alertManager.showOkAlert("Success", message: "All local data has been deleted! To see changes take effect, please completely close the app!") {}
+        }
+    }
 
     private func deleteCharSkills() {
-        if let charId = DataManager.shared.character?.id {
+        runOnMainThread {
+            self.loading = true
+        }
+        guard let player = DM.getCurrentPlayer(), let character = player.getActiveCharacter() else {
+            self.deleteEventAttendees()
+            return
+        }
+        runOnMainThread {
             self.loadingText = "Deleting Skills"
-            CharacterSkillService.deleteSkills(characterId: charId) { _ in
-                self.deleteCharGear()
-            } failureCase: { error in
-                self.deleteCharGear()
-            }
-        } else {
-            deleteEventAttendees()
+        }
+        CharacterSkillService.deleteSkills(characterId: character.id) { _ in
+            self.deleteCharGear(charId: character.id)
+        } failureCase: { error in
+            self.deleteCharGear(charId: character.id)
         }
     }
 
-    private func deleteCharGear() {
-        if let charId = DataManager.shared.character?.id {
+    private func deleteCharGear(charId: Int) {
+        runOnMainThread {
             self.loadingText = "Deleting Gear"
-            GearService.deleteGear(characterId: charId) { _ in
-                self.deleteSpecialClassXpReductions()
-            } failureCase: { error in
-                self.deleteSpecialClassXpReductions()
-            }
-        } else {
-            deleteEventAttendees()
+        }
+        GearService.deleteGear(characterId: charId) { _ in
+            self.deleteSpecialClassXpReductions(charId: charId)
+        } failureCase: { error in
+            self.deleteSpecialClassXpReductions(charId: charId)
         }
     }
 
-    private func deleteSpecialClassXpReductions() {
-        self.loadingText = "Deleting Xp Reductions"
-        if let charId = DataManager.shared.character?.id {
-            SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
-                self.deleteEventAttendees()
-            } failureCase: { error in
-                self.deleteEventAttendees()
-            }
-        } else {
-            deleteEventAttendees()
+    private func deleteSpecialClassXpReductions(charId: Int) {
+        runOnMainThread {
+            self.loadingText = "Deleting Xp Reductions"
+        }
+        SpecialClassXpReductionService.deleteXpReductions(characterId: charId) { _ in
+            self.deleteEventAttendees()
+        } failureCase: { error in
+            self.deleteEventAttendees()
         }
     }
 
     private func deleteEventAttendees() {
-        self.loadingText = "Deleting Events Attended"
+        runOnMainThread {
+            self.loading = true
+            self.loadingText = "Deleting Events Attended"
+        }
+        
         EventAttendeeService.deleteAttendees { _ in
             self.deleteAwards()
         } failureCase: { error in
@@ -88,7 +114,9 @@ struct ManageAccountView: View {
     }
 
     private func deleteAwards() {
-        self.loadingText = "Deleting Awards"
+        runOnMainThread {
+            self.loadingText = "Deleting Awards"
+        }
         AwardService.deleteAwards { _ in
             self.deletePreregs()
         } failureCase: { error in
@@ -97,7 +125,9 @@ struct ManageAccountView: View {
     }
 
     private func deletePreregs() {
-        self.loadingText = "Deleting Preregistrations"
+        runOnMainThread {
+            self.loadingText = "Deleting Preregistrations"
+        }
         EventPreregService.deletePreregs { _ in
             self.deleteCharacters()
         } failureCase: { error in
@@ -106,7 +136,10 @@ struct ManageAccountView: View {
     }
 
     private func deleteCharacters() {
-        self.loadingText = "Deleting Characters"
+        runOnMainThread {
+            self.loadingText = "Deleting Characters"
+        }
+        
         CharacterService.deleteCharacters { _ in
             self.deleteProfileImages()
         } failureCase: { error in
@@ -115,8 +148,10 @@ struct ManageAccountView: View {
     }
 
     private func deleteProfileImages() {
-        self.loadingText = "Deleting Profile Images"
-        ProfileImageService.deleteProfileImage(DataManager.shared.player?.id ?? -1) { profileImage in
+        runOnMainThread {
+            self.loadingText = "Deleting Profile Image"
+        }
+        ProfileImageService.deleteProfileImage(DM.currentPlayerId) { profileImage in
             self.deletePlayer()
         } failureCase: { error in
             self.deletePlayer()
@@ -125,7 +160,9 @@ struct ManageAccountView: View {
     }
 
     private func deletePlayer() {
-        self.loadingText = "Deleting Player"
+        runOnMainThread {
+            self.loadingText = "Deleting Player"
+        }
         PlayerService.deletePlayer { _ in
             self.successDeleting()
         } failureCase: { error in
@@ -134,19 +171,15 @@ struct ManageAccountView: View {
     }
 
     private func successDeleting() {
-        self.loadingText = ""
-        AlertManager.shared.showSuccessAlert("Your account and all associated data has been deleted!") {
+        runOnMainThread {
+            self.loadingText = ""
+            self.loading = false
             forceResetAllPlayerData()
-            runOnMainThread {
-                DataManager.shared.popToRoot()
+            alertManager.showSuccessAlert("Your account and all associated data has been deleted, please restart the app!") {
+                runOnMainThread {
+                    DM.popToRoot()
+                }
             }
         }
     }
-}
-
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return ManageAccountView(_dm: dm, loading: false)
 }

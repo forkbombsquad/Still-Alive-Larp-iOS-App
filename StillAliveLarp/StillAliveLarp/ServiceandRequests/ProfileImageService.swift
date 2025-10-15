@@ -14,6 +14,12 @@ struct ProfileImageService {
             onSuccess(success.jsonObject)
         }, failureCase: failureCase)
     }
+    
+    static func getAllProfileImages(onSuccess: @escaping (_ profileImages: ProfileImageListModel) -> Void, failureCase: @escaping FailureCase) {
+        ServiceController.makeRequest(.getAllProfileImages, responseObject: ProfileImageListModel.self, overrideDefaultErrorBehavior: true, success: { success in
+            onSuccess(success.jsonObject)
+        }, failureCase: failureCase)
+    }
 
     static func createProfileImage(_ profileImageCreateModel: ProfileImageCreateModel, onSuccess: @escaping (_ profileImage: ProfileImageModel) -> Void, failureCase: @escaping FailureCase) {
         ServiceController.makeRequest(.createProfileImage, bodyJson: profileImageCreateModel, responseObject: ProfileImageModel.self, success: { success in

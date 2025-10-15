@@ -9,6 +9,29 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct KeyValueView: View {
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
+
+    init(key: String, value: String, showDivider: Bool = true, allowCopy: Bool = false) {
+        self.key = key
+        self.value = value
+        self.showDivider = showDivider
+        self.allowCopy = allowCopy
+    }
+    
+    init(key: String, value: Bool, showDivider: Bool = true, allowCopy: Bool = false) {
+        self.key = key
+        self.value = value.stringValue
+        self.showDivider = showDivider
+        self.allowCopy = allowCopy
+    }
+    
+    init(key: String, value: Int, showDivider: Bool = true, allowCopy: Bool = false) {
+        self.key = key
+        self.value = value.stringValue
+        self.showDivider = showDivider
+        self.allowCopy = allowCopy
+    }
 
     var key: String
     var value: String
@@ -33,7 +56,7 @@ struct KeyValueView: View {
             }.onLongPressGesture {
                 runOnMainThread {
                     UIPasteboard.general.setValue(self.value, forPasteboardType: UTType.plainText.identifier)
-                    AlertManager.shared.showOkAlert("Copied to clipboard:", message: self.value) { }
+                    alertManager.showOkAlert("Copied to clipboard:", message: self.value) { }
                 }
             }
         } else {

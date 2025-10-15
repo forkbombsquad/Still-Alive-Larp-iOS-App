@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CreateAccountView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var fullName: String = ""
     @State private var emailAddress: String = ""
@@ -55,10 +56,9 @@ struct CreateAccountView: View {
                                 let playerCreate = PlayerCreateModel(username: emailAddress, fullName: fullName, startDate: Date().yyyyMMddFormatted, experience: "0", freeTier1Skills: "0", prestigePoints: "0", isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: "", numEventsAttended: "0", numNpcEventsAttended: "0", isAdmin: "FALSE", password: password)
 
                                 PlayerService.createPlayer(preApprovalCode, player: playerCreate) { player in
-                                    PlayerManager.shared.setPlayer(player)
-                                    UserAndPassManager.shared.setTemp(emailAddress, p: password)
-                                    DataManager.forceReset()
-                                    AlertManager.shared.showOkAlert("Account Created!") {
+                                    DM.setCurrentPlayerId(player.id)
+                                    UserAndPassManager.shared.setTemp(u: emailAddress, p: password)
+                                    alertManager.showOkAlert("Account Created!") {
                                         runOnMainThread {
                                             self.loading = false
                                             self.mode.wrappedValue.dismiss()
@@ -69,10 +69,10 @@ struct CreateAccountView: View {
                                 }
 
                             } else {
-                                AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                             }
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: "Passwords do not match", onOkAction: {})
                         }
 
                     }
@@ -114,9 +114,7 @@ struct CreateAccountView: View {
 
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return CreateAccountView(_dm: dm)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CreateAccountView()
+//}

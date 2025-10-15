@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContactDetailsView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @Binding var contactRequest: ContactRequestModel
     @State var loading = false
@@ -35,24 +36,27 @@ struct ContactDetailsView: View {
                     }
                     .padding(.trailing, 0)
                     Divider()
-                    LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Mark as \(self.contactRequest.read.boolValueDefaultFalse ? "Unread" : "Read")") {
-                        self.loading = true
-                        self.contactRequest.read = self.contactRequest.read.boolValueDefaultFalse ? "FALSE" : "TRUE"
-                        AdminService.updateContactRequest(self.contactRequest) { updatedContactRequest in
-                            runOnMainThread {
-                                self.contactRequest = contactRequest
-                                self.loading = false
-                                AlertManager.shared.showOkAlert("Contact Request Updated") {
-                                    runOnMainThread {
-                                        self.mode.wrappedValue.dismiss()
+                    if !DM.offlineMode {
+                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Mark as \(self.contactRequest.read.boolValueDefaultFalse ? "Unread" : "Read")") {
+                            self.loading = true
+                            self.contactRequest.read = self.contactRequest.read.boolValueDefaultFalse ? "FALSE" : "TRUE"
+                            AdminService.updateContactRequest(self.contactRequest) { updatedContactRequest in
+                                runOnMainThread {
+                                    self.contactRequest = contactRequest
+                                    self.loading = false
+                                    DM.load()
+                                    alertManager.showOkAlert("Contact Request Updated") {
+                                        runOnMainThread {
+                                            self.mode.wrappedValue.dismiss()
+                                        }
                                     }
                                 }
+                            } failureCase: { error in
+                                self.loading = false
                             }
-                        } failureCase: { error in
-                            self.loading = false
                         }
+                        .padding(.trailing, 0)
                     }
-                    .padding(.trailing, 0)
                 }
             }
         }
@@ -62,10 +66,8 @@ struct ContactDetailsView: View {
 
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return ContactDetailsView(_dm: dm, contactRequest: .constant(md.contact()))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ContactDetailsView(contactRequest: .constant(md.contact()))
+//}

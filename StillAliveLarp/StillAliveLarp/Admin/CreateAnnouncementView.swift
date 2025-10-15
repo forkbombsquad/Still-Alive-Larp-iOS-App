@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct CreateAnnouncementView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
     @State private var title: String = ""
     @State private var message: String = ""
@@ -50,16 +51,19 @@ struct CreateAnnouncementView: View {
 
                             AdminService.createAnnouncement(announcement) { _ in
                                 runOnMainThread {
-                                    AlertManager.shared.showOkAlert("Announcement Created") {
-                                        self.loading = false
-                                        self.mode.wrappedValue.dismiss()
+                                    alertManager.showOkAlert("Announcement Created") {
+                                        runOnMainThread {
+                                            self.loading = false
+                                            DM.load()
+                                            self.mode.wrappedValue.dismiss()
+                                        }
                                     }
                                 }
                             } failureCase: { error in
                                 self.loading = false
                             }
                         } else {
-                            AlertManager.shared.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
                         }
                     }
                     .padding(.top, 16)
@@ -78,9 +82,7 @@ struct CreateAnnouncementView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    return CreateAnnouncementView(_dm: dm)
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    return CreateAnnouncementView()
+//}

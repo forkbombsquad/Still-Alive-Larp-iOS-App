@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ContactListView: View {
-    @ObservedObject var _dm = DataManager.shared
+    @EnvironmentObject var alertManager: AlertManager
+    @EnvironmentObject var DM: DataManager
 
-    @Binding var contactRequests: [ContactRequestModel]
+    @State var contactRequests: [ContactRequestModel]
 
     var body: some View {
         VStack {
@@ -34,10 +35,8 @@ struct ContactListView: View {
     }
 }
 
-#Preview {
-    let dm = DataManager.shared
-    dm.debugMode = true
-    dm.loadMockData()
-    let md = getMockData()
-    return ContactListView(_dm: dm, contactRequests: .constant(md.contacts.contactRequests))
-}
+//#Preview {
+//    DataManager.shared.setDebugMode(true)
+//    let md = getMockData()
+//    return ContactListView(contactRequests: .constant(md.contacts.contactRequests))
+//}
