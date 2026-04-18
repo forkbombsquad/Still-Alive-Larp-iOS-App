@@ -38,6 +38,7 @@ protocol MockData {
     var skillCategories: SKillCategoryListModel { get }
     var updateTracker: UpdateTrackerModel { get }
     var campStatus: CampStatusModel { get }
+    var craftingRecipes: CraftingRecipeListModel { get }
 }
 
 extension MockData {
@@ -222,7 +223,39 @@ extension MockData {
     func researchProject(id: Int) -> SkillCategoryModel {
         return skillCategories.results.first(where: { $0.id == id })!
     }
-    
+
+    func craftingRecipe(_ index: Int = 0) -> CraftingRecipeModel {
+        return craftingRecipes.craftingRecipes[index]
+    }
+
+    func craftingRecipe(id: Int) -> CraftingRecipeModel {
+        return craftingRecipes.craftingRecipes.first(where: { $0.id == id })!
+    }
+
+    func fullCraftingRecipes() -> [FullCraftingRecipeModel] {
+        var fcr = [FullCraftingRecipeModel]()
+        for recipe in craftingRecipes.craftingRecipes {
+            let requiredSkill = fullSkills().first { $0.id == recipe.skillId ?? -1 }
+            let baseRecipe = recipe.baseRecipeId != nil && recipe.baseRecipeId != -1 ?
+                fcr.first { $0.id == recipe.baseRecipeId } : nil
+
+            var otherRefs = [FullCraftingRecipeModel]()
+            for refId in recipe.getOtherRecipeIds() {
+                if let ref = fcr.first(where: { $0.id == refId }) {
+                    otherRefs.append(ref)
+                }
+            }
+
+            fcr.append(FullCraftingRecipeModel(
+                craftingRecipe: recipe,
+                requiredSkill: requiredSkill,
+                baseRecipe: baseRecipe?.craftingRecipe,
+                otherRecipeReferences: otherRefs
+            ))
+        }
+        return fcr
+    }
+
     func playerCheckInBarcodeModel(playerId: Int = 1, characterId: Int? = nil, eventId: Int = 1) -> CheckInOutBarcodeModel {
         return CheckInOutBarcodeModel(playerId: playerId, characterId: characterId, eventId: eventId)
     }
@@ -583,7 +616,76 @@ fileprivate struct MockData1: MockData {
     ])
     
     var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])])
-    
+
+    var craftingRecipes = CraftingRecipeListModel(craftingRecipes: [
+        // Ammunition
+        CraftingRecipeModel(id: 4, name: "Rocket", baseRecipeId: -1, skillId: 22, numProduced: 1, category: "Ammunition", craftingTime: 5, wood: 2, metal: 2, cloth: 2, tech: 2, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 6, name: "Bullets", baseRecipeId: -1, skillId: 10, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 0, metal: 5, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 7, name: "Repacked", baseRecipeId: 6, skillId: 10, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 0, metal: 3, cloth: 0, tech: 0, medical: 0, casing: 10, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 9, name: "Megadarts", baseRecipeId: -1, skillId: 39, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 2, metal: 8, cloth: 8, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 10, name: "Repacked", baseRecipeId: 9, skillId: 39, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 1, metal: 5, cloth: 5, tech: 0, medical: 0, casing: 20, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 12, name: "Rivals", baseRecipeId: -1, skillId: 53, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 8, metal: 8, cloth: 5, tech: 5, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 13, name: "Repacked", baseRecipeId: 12, skillId: 53, numProduced: 10, category: "Ammunition", craftingTime: 5, wood: 5, metal: 5, cloth: 3, tech: 3, medical: 0, casing: 30, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 14, name: "Repacked", baseRecipeId: 4, skillId: 22, numProduced: 1, category: "Ammunition", craftingTime: 5, wood: 1, metal: 1, cloth: 1, tech: 1, medical: 0, casing: 5, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        // Tools and Traps
+        CraftingRecipeModel(id: 17, name: "Explosive Charge", baseRecipeId: -1, skillId: 22, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 2, metal: 15, cloth: 8, tech: 8, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "An explosive designed to destory Infection Sites.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        CraftingRecipeModel(id: 18, name: "Rocket Rigged", baseRecipeId: 17, skillId: 22, numProduced: 1, category: "Tools and Traps", craftingTime: 5, wood: 1, metal: 3, cloth: 1, tech: 1, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":4,\"num\":1}],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 45, name: "Juggernaut Snare Trap", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 2, metal: 2, cloth: 5, tech: 2, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A 10' circular trap that entangles the Juggernaut, preventing him from running and charging until he breaks the bonds.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        CraftingRecipeModel(id: 46, name: "Juggernaut Confusion Trap", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 1, metal: 1, cloth: 0, tech: 0, medical: 5, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A 10' circular trap that confuses the Juggernaut, causing him to attack whatever is closest to him, rather than just us.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        CraftingRecipeModel(id: 47, name: "Juggernaut Elemental Trap: Sustained Flame", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 7, metal: 3, cloth: 3, tech: 1, medical: 2, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A 10' circular trap that engulfs the Juggernaut in flames and  leaves him partially vulernable to damage. One of the 3 types Elemental Traps required to actually kill him.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        CraftingRecipeModel(id: 48, name: "Juggernaut Elemental Trap: Large-Scale Explosives", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 0, metal: 1, cloth: 5, tech: 5, medical: 5, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A 10' circular trap that explosively tears into the juggernaut's plated skin and leaves him partially vulernable to damage. One of the 3 types Elemental Traps required to actually kill him.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        CraftingRecipeModel(id: 49, name: "Juggernaut Elemental Trap: Electric Shock", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Tools and Traps", craftingTime: 10, wood: 1, metal: 8, cloth: 0, tech: 5, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A 10' circular trap that explosively tears into the juggernaut's plated skin and leaves him partially vulernable to damage. One of the 3 types Elemental Traps required to actually kill him.\r\n\r\nSpecial: This  still needs to be placed by a Tinkerer with 5 minutes of work."),
+        // Armor
+        CraftingRecipeModel(id: 19, name: "Standard Armor", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Armor", craftingTime: 5, wood: 3, metal: 5, cloth: 1, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Blue-Beaded Armor that blocks melee damage but not firearm damage."),
+        CraftingRecipeModel(id: 20, name: "Bullet-Proof Armor", baseRecipeId: -1, skillId: 44, numProduced: 1, category: "Armor", craftingTime: 10, wood: 5, metal: 8, cloth: 2, tech: 4, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Red-Beaded Armor that blocks melee damage and firearm damage."),
+        // Fortifications
+        CraftingRecipeModel(id: 21, name: "Light Fortification", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Fortifications", craftingTime: 1, wood: 5, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Maximum Health: 5"),
+        CraftingRecipeModel(id: 22, name: "Medium Fortification", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Fortifications", craftingTime: 2, wood: 5, metal: 5, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Maximum Health: 10"),
+        CraftingRecipeModel(id: 23, name: "Heavy Fortification", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Fortifications", craftingTime: 3, wood: 10, metal: 5, cloth: 5, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Maximum Health: 15"),
+        CraftingRecipeModel(id: 24, name: "Advanced Fortification", baseRecipeId: -1, skillId: 44, numProduced: 1, category: "Fortifications", craftingTime: 5, wood: 10, metal: 10, cloth: 5, tech: 5, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Maximum Health: 20"),
+        CraftingRecipeModel(id: 25, name: "Military Grade Fortification", baseRecipeId: -1, skillId: 44, numProduced: 1, category: "Fortifications", craftingTime: 10, wood: 15, metal: 15, cloth: 10, tech: 10, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Maximum Health: 10"),
+        // Firearms
+        CraftingRecipeModel(id: 26, name: "Light Firearm", baseRecipeId: -1, skillId: 31, numProduced: 1, category: "Firearms", craftingTime: 1, wood: 1, metal: 1, cloth: 1, tech: 1, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 27, name: "Medium Firearm", baseRecipeId: -1, skillId: 31, numProduced: 1, category: "Firearms", craftingTime: 2, wood: 2, metal: 2, cloth: 1, tech: 2, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 28, name: "Heavy Firearm", baseRecipeId: -1, skillId: 31, numProduced: 1, category: "Firearms", craftingTime: 3, wood: 3, metal: 4, cloth: 2, tech: 3, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 29, name: "Advanced Firearm", baseRecipeId: -1, skillId: 31, numProduced: 1, category: "Firearms", craftingTime: 5, wood: 4, metal: 8, cloth: 2, tech: 4, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 30, name: "Military Grade Firearm", baseRecipeId: -1, skillId: 52, numProduced: 1, category: "Firearms", craftingTime: 10, wood: 5, metal: 16, cloth: 3, tech: 8, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        // Gear
+        CraftingRecipeModel(id: 31, name: "Small Bag", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: 1, wood: 0, metal: 0, cloth: 1, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A bag or pouch with a capacity of 0.5 liters (30.5cu in) or less"),
+        CraftingRecipeModel(id: 32, name: "Medium Bag", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: 2, wood: 0, metal: 0, cloth: 3, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A bag or pouch with a capacity of between 0.5 liters (30.5cu in) and 5 liters (305.1cu in)"),
+        CraftingRecipeModel(id: 33, name: "Large Bag", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: 5, wood: 0, metal: 0, cloth: 7, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A bag or pouch with a capacity of between 5 liters (305.1cu in) and 25 liters (1,525.6cu in)"),
+        CraftingRecipeModel(id: 34, name: "Extra Large Bag", baseRecipeId: -1, skillId: 44, numProduced: 1, category: "Gear", craftingTime: 10, wood: 0, metal: 0, cloth: 13, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "A bag or pouch with a capacity of more than 25 liters (1,525.6cu in)"),
+        CraftingRecipeModel(id: 35, name: "Clothing", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: 2, wood: 0, metal: 0, cloth: 2, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "This recipe is for Mechanically Advantageous clothing such as Cargo Shorts or a Coat with many pockets. Regular clothing does not need to be crafted in this game. If your clothing piece would come in a pair (such as gloves or boots), you craft both parts of the pair."),
+        CraftingRecipeModel(id: 36, name: "Flashlight", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: 2, wood: 0, metal: 2, cloth: 0, tech: 1, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "This recipe works for both regular flashlights and blacklight flashlights."),
+        CraftingRecipeModel(id: 37, name: "Custom Accessory", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Gear", craftingTime: -1, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "This recipe is special in that it covers all different types of miscellaneous Technically Advantageous accessory items you may want to bring into the game. You always need to talk to a Game Runner to make sure that your Accessory is approved and to get the final crafting recipe for it, but under most circumstances, the recipe for an Accessory just consists of the materials that make it up:\r\n\r\n- If your Accessory contains metal, 1 metal is required.\r\n- If it contains a textile (such as cloth, leather, polyester, etc), 1 cloth is required.\r\n- If it contains wood or other non-metal, non-textile solid materials (such as plastic, resin, glass, etc), 1 wood is required.\r\n- If it contains circuitry or mechanical parts, 1 tech is required.\r\n\r\nNote - If your Accessory only requires one material to craft it, add 1 of that material to the cost - all Accessories cost at least 2 materials to craft."),
+        // Melee Weapons
+        CraftingRecipeModel(id: 38, name: "Super Light Melee Weapon", baseRecipeId: -1, skillId: 91, numProduced: 1, category: "Melee Weapons", craftingTime: 1, wood: 1, metal: 3, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 39, name: "Light Melee Weapon", baseRecipeId: -1, skillId: 91, numProduced: 1, category: "Melee Weapons", craftingTime: 2, wood: 2, metal: 5, cloth: 1, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 40, name: "Medium Melee Weapon", baseRecipeId: -1, skillId: 91, numProduced: 1, category: "Melee Weapons", craftingTime: 5, wood: 2, metal: 9, cloth: 2, tech: 1, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        CraftingRecipeModel(id: 41, name: "Heavy Melee Weapon", baseRecipeId: -1, skillId: 7, numProduced: 1, category: "Melee Weapons", craftingTime: 10, wood: 3, metal: 17, cloth: 3, tech: 2, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        // Pharmaceuticals
+        CraftingRecipeModel(id: 42, name: "Adreanaline", baseRecipeId: -1, skillId: 62, numProduced: 1, category: "Pharmaceuticals", craftingTime: 5, wood: 0, metal: 1, cloth: 0, tech: 0, medical: 5, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Typical Market Price: 30 Bullets\r\n\r\nAdreanaline (pronounced Uh-dree-nuh-line) is represented by small orange candies (such as Tic-Tacs).\r\n\r\nWhen taken, The user ignores the effects of all Wounds and Fatal Wounds for 1 Encounter, giving them the full use of their limbs and preventing them from gaining the Helpless condition. The user still gains these injuries as normal, they just ignore all the effects until the Encounter is finished, after which they immediately feel all of their injuries at once.\r\n\r\nImportant Notes: Even though you don't feel your injuries and can't gain the Helpless condition, you still have them and thus are still susceptible to dying from a gunshot to the Torso while you have a Fatal Wound. You can also still be dragged to the ground by zombies who are grabbing you as normal."),
+        CraftingRecipeModel(id: 43, name: "Bulk", baseRecipeId: 42, skillId: 62, numProduced: 5, category: "Pharmaceuticals", craftingTime: 10, wood: 0, metal: 3, cloth: 0, tech: 0, medical: 20, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: ""),
+        // Recycling
+        CraftingRecipeModel(id: 44, name: "Metal Reclamation", baseRecipeId: -1, skillId: 78, numProduced: 1, category: "Recycling", craftingTime: 1, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 10, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Turn your Bullet Casings into Metal!"),
+        CraftingRecipeModel(id: 64, name: "Alternate Skillset", baseRecipeId: 44, skillId: 10, numProduced: 1, category: "Recycling", craftingTime: 1, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 10, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[]}", desc: "Turn your Bullet Casings into Metal!"),
+        // Dishes and Food
+        CraftingRecipeModel(id: 50, name: "Flour", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 1, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[{\"wheat\":2}]}", desc: "Steps From Harvest To Completion: 1 (+0/1)\r\nBase Food Value: 2\r\nTypical Market Price: 5"),
+        CraftingRecipeModel(id: 51, name: "Fruit Preserves", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 2, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[{\"fruit\":2}]}", desc: "Steps From Harvest To Completion: 1 (+0/1)\r\nBase Food Value: 2\r\nTypical Market Price: 3\r\nFavorite Dish Of: Airman Wylder"),
+        CraftingRecipeModel(id: 52, name: "Filleted Fish", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 1, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[{\"fish\":2}]}", desc: "Steps From Harvest To Completion: 1 (+0/1)\r\nBase Food Value: 2\r\nTypical Market Price: 7"),
+        CraftingRecipeModel(id: 53, name: "Boiled Potatoes", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 2, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[{\"potato\":2}]}", desc: "Steps From Harvest To Completion: 1 (+0/1)\r\nBase Food Value: 2\r\nTypical Market Price: 5"),
+        CraftingRecipeModel(id: 54, name: "Baked Fish Dinner", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 3, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":53,\"num\":1},{\"id\":52,\"num\":1}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 3  (+1/2)\r\nBase Food Value: 5\r\nTypical Market Price: 14"),
+        CraftingRecipeModel(id: 55, name: "Bread", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 3, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":50,\"num\":2}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 3  (+1/2)\r\nBase Food Value: 5\r\nTypical Market Price: 12\r\nFavorite Dish Of: Sargent Gantz"),
+        CraftingRecipeModel(id: 56, name: "Fish Sandwich", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 5, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":55,\"num\":1},{\"id\":52,\"num\":1}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 5  (+2/3)\r\nBase Food Value: 9\r\nTypical Market Price: 22"),
+        CraftingRecipeModel(id: 57, name: "Potato Salad", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 3, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":53,\"num\":2}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 3 (+1/2)\r\nBase Food Value: 5\r\nTypical Market Price: 12"),
+        CraftingRecipeModel(id: 58, name: "Toast and Jelly", baseRecipeId: -1, skillId: 116, numProduced: 1, category: "Dishes and Food", craftingTime: 2, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":55,\"num\":1},{\"id\":51,\"num\":1}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 5  (+2/3)\r\nBase Food Value: 9\r\nTypical Market Price: 18"),
+        CraftingRecipeModel(id: 59, name: "Fish and Chips", baseRecipeId: -1, skillId: 117, numProduced: 1, category: "Dishes and Food", craftingTime: 5, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":52,\"num\":1},{\"id\":50,\"num\":1}],\"foods\":[{\"potato\":1}]}", desc: "Steps From Harvest To Completion: 3 (+2/3)\r\nBase Food Value: 7\r\nTypical Market Price: 17\r\nFavorite Meal Of: Commander Davis"),
+        CraftingRecipeModel(id: 60, name: "Fish Stew", baseRecipeId: -1, skillId: 117, numProduced: 1, category: "Dishes and Food", craftingTime: 5, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[],\"foods\":[{\"potato\":1, \"fish\":2}]}", desc: "Steps From Harvest To Completion: 1  (+1/2)\r\nBase Food Value: 4 \r\nTypical Market Price: 10"),
+        CraftingRecipeModel(id: 61, name: "Charcuterie", baseRecipeId: -1, skillId: 117, numProduced: 1, category: "Dishes and Food", craftingTime: 5, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":55,\"num\":1}],\"foods\":[{\"fruit\":2}]}", desc: "Steps From Harvest To Completion: 4  (+3/3)\r\nBase Food Value: 10\r\nTypical Market Price: 17"),
+        CraftingRecipeModel(id: 62, name: "Fish Pie", baseRecipeId: -1, skillId: 117, numProduced: 1, category: "Dishes and Food", craftingTime: 5, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":53,\"num\":1},{\"id\":52,\"num\":1},{\"id\":55,\"num\":1}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 6  (+4/4)\r\nBase Food Value: 13\r\nTypical Market Price: 28"),
+        CraftingRecipeModel(id: 63, name: "Mashed Potatoes", baseRecipeId: -1, skillId: 117, numProduced: 1, category: "Dishes and Food", craftingTime: 3, wood: 0, metal: 0, cloth: 0, tech: 0, medical: 0, casing: 0, otherRequiredItemIds: "{\"otherItemIds\":[{\"id\":53,\"num\":3}],\"foods\":[]}", desc: "Steps From Harvest To Completion: 4  (+3/3)\r\nBase Food Value: 9\r\nTypical Market Price: 18")
+    ])
+
     var rulebook = Rulebook(version: "2.1.0", headings: [
         Heading(title: "Section 1", textsAndTables: [
             "This is a sentence that will appear before the first table. See the table below for more information:",
