@@ -53,24 +53,23 @@ struct CraftingRecipeCell: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    // Required Skill Column - give it more space
+                    // Required Skill Column - give it 40% width and allow wrapping
                     VStack {
                         Text("Required Skill:")
                             .font(.system(size: 16, weight: .bold))
                             .multilineTextAlignment(.center)
                         if let skill = recipe.requiredSkill {
                             Text(skill.name)
-                                .font(.system(size: 18))
+                                .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(skillTypeColor(skill.skillTypeId))
                                 .multilineTextAlignment(.center)
-                                .fixedSize()
+                                .fixedSize(horizontal: false, vertical: true)
                         } else {
                             Text("*")
                                 .font(.system(size: 18))
                                 .multilineTextAlignment(.center)
                         }
                     }
-                    .frame(width: 120)
                 }
                 .padding(.horizontal, 8)
 
@@ -84,50 +83,45 @@ struct CraftingRecipeCell: View {
                     .font(.system(size: 16, weight: .bold))
                     .multilineTextAlignment(.center)
 
-                // Show all material fields directly (wood, metal, cloth, tech, medical, casing)
-                let allMaterials: [(String, Int)] = [
-                    ("Wood", recipe.craftingRecipe.wood),
-                    ("Metal", recipe.craftingRecipe.metal),
-                    ("Cloth", recipe.craftingRecipe.cloth),
-                    ("Tech Supplies", recipe.craftingRecipe.tech),
-                    ("Medical Supplies", recipe.craftingRecipe.medical),
-                    ("Casings", recipe.craftingRecipe.casing)
-                ].filter { $0.1 > 0 }
+                // Get materials list from the recipe model
+                let matList = recipe.craftingRecipe.getMaterialsList()
 
-                if allMaterials.isEmpty {
+                if matList.isEmpty {
                     Text("-")
                         .font(.system(size: 16))
                         .multilineTextAlignment(.center)
                 } else {
-                    // Split into 3 columns
-                    let col1 = stride(from: 0, to: allMaterials.count, by: 3).map { allMaterials[$0] }
-                    let col2 = stride(from: 1, to: allMaterials.count, by: 3).map { allMaterials[$0] }
-                    let col3 = stride(from: 2, to: allMaterials.count, by: 3).map { allMaterials[$0] }
+                    // Resolve recipe references with actual names from otherRecipeReferences
+                    let resolvedMats = matList.map { mat -> MaterialItem in
+                        if mat.isRecipeReference, let refId = mat.recipeId {
+                            if let fullRef = recipe.otherRecipeReferences.first(where: { $0.id == refId }) {
+                                return MaterialItem(quantity: mat.quantity, name: fullRef.getDisplayName(), recipeId: refId, isRecipeReference: true, isFood: mat.isFood)
+                            }
+                        }
+                        return mat
+                    }
+
+                    // Get distributed columns
+                    let columns = getMaterialColumns(resolvedMats)
 
                     HStack(spacing: 4) {
                         VStack {
-                            ForEach(col1, id: \.0) { name, qty in
-                                Text("\(qty) \(name)")
-                                    .font(.system(size: 16))
-                                    .multilineTextAlignment(.center)
+                            ForEach(columns.col1) { material in
+                                materialText(material)
                             }
                         }
                         .frame(maxWidth: .infinity)
 
                         VStack {
-                            ForEach(col2, id: \.0) { name, qty in
-                                Text("\(qty) \(name)")
-                                    .font(.system(size: 16))
-                                    .multilineTextAlignment(.center)
+                            ForEach(columns.col2) { material in
+                                materialText(material)
                             }
                         }
                         .frame(maxWidth: .infinity)
 
                         VStack {
-                            ForEach(col3, id: \.0) { name, qty in
-                                Text("\(qty) \(name)")
-                                    .font(.system(size: 16))
-                                    .multilineTextAlignment(.center)
+                            ForEach(columns.col3) { material in
+                                materialText(material)
                             }
                         }
                         .frame(maxWidth: .infinity)
@@ -157,24 +151,11 @@ struct CraftingRecipeCell: View {
         .padding(.horizontal, 16)
     }
 
-    // Helper to distribute materials across 3 columns
-    private func materialMatchesColumn(_ material: MaterialItem, column: Int, total: Int) -> Bool {
-        let materialsList = recipe.craftingRecipe.getMaterialsList()
-        let perColumn = max(1, (materialsList.count + 2) / 3)
-        let startIndex = (column - 1) * perColumn
-        let endIndex = min(column * perColumn, materialsList.count)
-
-        if let index = materialsList.firstIndex(where: { $0.id == material.id }) {
-            return index >= startIndex && index < endIndex
-        }
-        return false
-    }
-
     private func materialText(_ material: MaterialItem) -> some View {
         let text = material.isRecipeReference || material.isFood
             ? "\(material.quantity) \(material.name)"
             : "\(material.quantity) \(material.name)"
-        let font: Font = material.isRecipeReference || material.isFood
+        let font: Font = material.isRecipeReference
             ? .system(size: 16, weight: .bold)
             : .system(size: 16)
 
@@ -182,6 +163,7 @@ struct CraftingRecipeCell: View {
             .font(font)
             .multilineTextAlignment(.center)
             .lineLimit(nil)
+            .padding(4)
     }
 
     private func skillTypeColor(_ skillTypeId: Int) -> Color {
@@ -195,5 +177,26 @@ struct CraftingRecipeCell: View {
         default:
             return .blue
         }
+    }
+
+    // Helper to distribute materials across 3 columns
+    private func getMaterialColumns(_ matList: [MaterialItem]) -> (col1: [MaterialItem], col2: [MaterialItem], col3: [MaterialItem]) {
+        var col1 = [MaterialItem]()
+        var col2 = [MaterialItem]()
+        var col3 = [MaterialItem]()
+        var column = 2
+
+        for mat in matList {
+            switch column {
+            case 1: col1.append(mat)
+            case 2: col2.append(mat)
+            case 3: col3.append(mat)
+            default: break
+            }
+            column -= 1
+            if column == 0 { column = 3 }
+        }
+
+        return (col1, col2, col3)
     }
 }
