@@ -613,8 +613,8 @@ fileprivate struct MockData1: MockData {
     ])
     
     var researchProjects = ResearchProjectListModel(researchProjects: [
-        ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE"),
-        ResearchProjectModel(id: 2, name: "Curing the Infection", description: "This probably won't happen. No one is even working on it.", milestones: 0, complete: "FALSE")
+        ResearchProjectModel(id: 1, name: "Radio Tower Project", description: "Commander Davis's Radio Tower Project that the entire camp needs to pitch in for. It's big. It's bad. It's pretty neat. Spooky though.\n\nSome newline related stuff just cuz", milestones: 4, complete: "TRUE", milestoneDescs: "{\"milestoneDescs\":[{\"id\":\"1\",\"text\":\"Gathered all the materials for the radio tower.\"},{\"id\":\"2\",\"text\":\"Assembled the main tower structure.\"},{\"id\":\"3\",\"text\":\"Connected the power source.\"},{\"id\":\"4\",\"text\":\"First broadcast received! We are not alone...\"}]}"),
+        ResearchProjectModel(id: 2, name: "Curing the Infection", description: "This probably won't happen. No one is even working on it.", milestones: 0, complete: "FALSE", milestoneDescs: "{\"milestoneDescs\":[]}")
     ])
     
     var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])])
