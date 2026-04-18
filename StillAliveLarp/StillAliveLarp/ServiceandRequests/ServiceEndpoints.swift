@@ -99,6 +99,7 @@ class ServiceEndpoints {
         case createProfileImage = "profile/create/"
         case updateProfileImage = "profile/update/"
         case deleteProfileImage = "profile/delete/"
+        case getAllCraftingRecipes = "crafting-recipe/all/"
         case getResearchProject = "research-project/"
         case getAllResearchProjects = "research-project/all/"
         case updateResearchProject = "research-project/update/"
@@ -111,7 +112,7 @@ class ServiceEndpoints {
 
         var requestType: ServiceController.RequestType {
             switch self {
-            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent, .getAllSkillCategories, .updateTracker, .allAnnouncements, .campStatus, .allFullCharacters, .getAllCharacterSkills, .getAllXpReductions, .allPreregs, .getAllProfileImages, .allEventAttendees:
+            case .playerSignIn, .announcementsAll, .announcement, .charactersForPlayer, .character, .skill, .allSkills, .skillPrereqsForId, .allSkillPrereqs, .allPlayers, .player, .awards, .allCharacters, .getAllSkillsForChar, .allEvents, .allContactRequests, .getIntrigue, .getAllIntrigue, .eventAttendeesForPlayer, .getXpReductionsForChar, .allPreregsForEvent, .version, .allGear, .allGearForChar, .getFeatureFlag, .getAllFeatureFlags, .getProfileImage, .getResearchProject, .getAllResearchProjects, .charactersForPlayerWithType, .allCharactersWithType, .allNPCCharacters, .getAttendeesForEvent, .getAllSkillCategories, .updateTracker, .allAnnouncements, .campStatus, .allFullCharacters, .getAllCharacterSkills, .getAllXpReductions, .allPreregs, .getAllProfileImages, .allEventAttendees, .getAllCraftingRecipes:
                     return .get
             case .authToken, .playerCreate, .characterCreate, .awardPlayer, .awardChar, .takeSkill, .announcementCreate, .createEvent, .checkInPlayer, .createContact, .createIntrigue, .giveXpReduction, .prereg, .createGear, .createFeatureFlag, .createProfileImage, .createResearchProject, .createPlannedCharacter, .createPlannedCharacterSkill, .playerAuthToken:
                     return .post

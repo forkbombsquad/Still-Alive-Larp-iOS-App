@@ -160,6 +160,7 @@
 		B2F29FB02A420D0F00E07108 /* GearModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FAF2A420D0F00E07108 /* GearModel.swift */; };
 		B2F29FB22A4214A700E07108 /* GearView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F29FB12A4214A700E07108 /* GearView.swift */; };
 		CRAFTING002 /* CraftingRecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING001 /* CraftingRecipeModel.swift */; };
+		CRAFTING004 /* CraftingRecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING003 /* CraftingRecipeService.swift */; };
 		B2F472A42DCBDEAB00F37FA5 /* BoolExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F472A32DCBDEAB00F37FA5 /* BoolExtensions.swift */; };
 		B2F472A62DCBE4F300F37FA5 /* EditProfileImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */; };
 		B2F9836A29F0366900512839 /* ApproveBioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9836929F0366900512839 /* ApproveBioView.swift */; };
@@ -349,6 +350,7 @@
 		B2F29FAF2A420D0F00E07108 /* GearModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearModel.swift; sourceTree = "<group>"; };
 		B2F29FB12A4214A700E07108 /* GearView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearView.swift; sourceTree = "<group>"; };
 		CRAFTING001 /* CraftingRecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeModel.swift; sourceTree = "<group>"; };
+		CRAFTING003 /* CraftingRecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeService.swift; sourceTree = "<group>"; };
 		B2F472A32DCBDEAB00F37FA5 /* BoolExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolExtensions.swift; sourceTree = "<group>"; };
 		B2F472A52DCBE4F300F37FA5 /* EditProfileImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileImageView.swift; sourceTree = "<group>"; };
 		B2F9836929F0366900512839 /* ApproveBioView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApproveBioView.swift; sourceTree = "<group>"; };
@@ -681,6 +683,7 @@
 				B21F1C132DD5247A0004B391 /* ResearchProjectService.swift */,
 				B233D76F2A1D4E8F002B9BBA /* VersionService.swift */,
 				B2F29FAD2A420AD900E07108 /* GearService.swift */,
+				CRAFTING003 /* CraftingRecipeService.swift */,
 				B251B0662BD1A25800915F01 /* FeatureFlagService.swift */,
 				B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */,
 				B23728B12DC1C10600495777 /* ServiceEndpoints.swift */,
@@ -1060,6 +1063,7 @@
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
+				CRAFTING004 /* CraftingRecipeService.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
 				B2B7123D2E44EE8700B2AA3F /* FortificationCell.swift in Sources */,
 			);

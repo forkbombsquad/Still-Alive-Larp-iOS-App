@@ -357,9 +357,11 @@ extension MockData {
             return preregs
         case .getAllProfileImages:
             return profileImageList
+        case .getAllCraftingRecipes:
+            return craftingRecipes
         }
     }
-    
+
 }
 
 fileprivate struct MockData1: MockData {
@@ -770,7 +772,7 @@ fileprivate struct MockData1: MockData {
                 ])
     ])
     
-    var updateTracker = UpdateTrackerModel(id: 1, announcements: 1, awards: 1, characters: 1, gear: 1, characterSkills: 1, contactRequests: 1, events: 1, eventAttendees: 1, preregs: 1, featureFlags: 1, intrigues: 1, players: 1, profileImages: 1, researchProjects: 1, skills: 1, skillCategories: 1, skillPrereqs: 1, xpReductions: 1, campStatus: 1, rulebookVersion: "1.1.1.1", treatingWoundsVersion: "1.1.1.1")
+    var updateTracker = UpdateTrackerModel(id: 1, announcements: 1, awards: 1, characters: 1, gear: 1, characterSkills: 1, contactRequests: 1, events: 1, eventAttendees: 1, preregs: 1, featureFlags: 1, intrigues: 1, players: 1, profileImages: 1, researchProjects: 1, skills: 1, skillCategories: 1, skillPrereqs: 1, xpReductions: 1, campStatus: 1, craftingRecipes: 1, rulebookVersion: "1.1.1.1", treatingWoundsVersion: "1.1.1.1")
     
     let skillCategories: SKillCategoryListModel = SKillCategoryListModel(results: [
         SkillCategoryModel(id: 1, name: "Beginner (Free) Skills"),
