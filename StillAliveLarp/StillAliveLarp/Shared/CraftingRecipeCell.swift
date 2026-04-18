@@ -30,7 +30,7 @@ struct CraftingRecipeCell: View {
                     .padding(.horizontal, 48)
 
                 // Makes | Crafting Time | Required Skill - 3 Column Row
-                HStack {
+                HStack(alignment: .top) {
                     // Makes Column
                     VStack {
                         Text("Makes:")
@@ -53,7 +53,7 @@ struct CraftingRecipeCell: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    // Required Skill Column - wider for no wrapping
+                    // Required Skill Column - give it more space
                     VStack {
                         Text("Required Skill:")
                             .font(.system(size: 16, weight: .bold))
@@ -63,15 +63,14 @@ struct CraftingRecipeCell: View {
                                 .font(.system(size: 18))
                                 .foregroundColor(skillTypeColor(skill.skillTypeId))
                                 .multilineTextAlignment(.center)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.7)
+                                .fixedSize()
                         } else {
                             Text("*")
                                 .font(.system(size: 18))
                                 .multilineTextAlignment(.center)
                         }
                     }
-                    .frame(maxWidth: .infinity)
+                    .frame(width: 120)
                 }
                 .padding(.horizontal, 8)
 
@@ -80,44 +79,55 @@ struct CraftingRecipeCell: View {
                     .frame(height: 1)
                     .padding(.horizontal, 48)
 
-                // Materials Section Header
+// Materials Section Header
                 Text("Materials:")
                     .font(.system(size: 16, weight: .bold))
                     .multilineTextAlignment(.center)
 
-                // 3-Column Materials Layout
-                let materialsList = recipe.craftingRecipe.getMaterialsList()
+                // Show all material fields directly (wood, metal, cloth, tech, medical, casing)
+                let allMaterials: [(String, Int)] = [
+                    ("Wood", recipe.craftingRecipe.wood),
+                    ("Metal", recipe.craftingRecipe.metal),
+                    ("Cloth", recipe.craftingRecipe.cloth),
+                    ("Tech Supplies", recipe.craftingRecipe.tech),
+                    ("Medical Supplies", recipe.craftingRecipe.medical),
+                    ("Casings", recipe.craftingRecipe.casing)
+                ].filter { $0.1 > 0 }
 
-                if materialsList.isEmpty {
+                if allMaterials.isEmpty {
                     Text("-")
                         .font(.system(size: 16))
                         .multilineTextAlignment(.center)
                 } else {
-                    let col1Materials = materialsList.filter { materialMatchesColumn($0, column: 1, total: materialsList.count) }
-                    let col2Materials = materialsList.filter { materialMatchesColumn($0, column: 2, total: materialsList.count) }
-                    let col3Materials = materialsList.filter { materialMatchesColumn($0, column: 3, total: materialsList.count) }
-                    
+                    // Split into 3 columns
+                    let col1 = stride(from: 0, to: allMaterials.count, by: 3).map { allMaterials[$0] }
+                    let col2 = stride(from: 1, to: allMaterials.count, by: 3).map { allMaterials[$0] }
+                    let col3 = stride(from: 2, to: allMaterials.count, by: 3).map { allMaterials[$0] }
+
                     HStack(spacing: 4) {
-                        // Column 1
                         VStack {
-                            ForEach(col1Materials) { material in
-                                materialText(material)
+                            ForEach(col1, id: \.0) { name, qty in
+                                Text("\(qty) \(name)")
+                                    .font(.system(size: 16))
+                                    .multilineTextAlignment(.center)
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        // Column 2
+
                         VStack {
-                            ForEach(col2Materials) { material in
-                                materialText(material)
+                            ForEach(col2, id: \.0) { name, qty in
+                                Text("\(qty) \(name)")
+                                    .font(.system(size: 16))
+                                    .multilineTextAlignment(.center)
                             }
                         }
                         .frame(maxWidth: .infinity)
-                        
-                        // Column 3
+
                         VStack {
-                            ForEach(col3Materials) { material in
-                                materialText(material)
+                            ForEach(col3, id: \.0) { name, qty in
+                                Text("\(qty) \(name)")
+                                    .font(.system(size: 16))
+                                    .multilineTextAlignment(.center)
                             }
                         }
                         .frame(maxWidth: .infinity)

@@ -63,12 +63,14 @@ struct CraftingRecipesListView: View {
                     .foregroundColor(.darkGray)
                 Spacer()
             } else {
-                List() {
-                    ForEach(filteredRecipes) { recipe in
-                        CraftingRecipeCell(recipe: recipe)
+                ScrollView {
+                    LazyVStack(spacing: 8) {
+                        ForEach(filteredRecipes) { recipe in
+                            CraftingRecipeCell(recipe: recipe)
+                        }
                     }
+                    .padding(.horizontal, 16)
                 }
-                .scrollContentBackground(.hidden)
                 .background(Color.lightGray)
             }
         }
