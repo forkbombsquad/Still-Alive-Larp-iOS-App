@@ -55,7 +55,7 @@ struct CraftingRecipesListView: View {
             .padding(.top, 8)
 
             // Recipe List
-            let filteredRecipes = getFilteredRecipes()
+            let filteredRecipes = getFilteredRecipes().sorted { $0.getDisplayName().caseInsensitiveCompare($1.getDisplayName()) == .orderedAscending }
             if filteredRecipes.isEmpty {
                 Spacer()
                 Text("No recipes found")
@@ -69,6 +69,7 @@ struct CraftingRecipesListView: View {
                     }
                 }
                 .scrollContentBackground(.hidden)
+                .background(Color.lightGray)
             }
         }
         .background(Color.lightGray)

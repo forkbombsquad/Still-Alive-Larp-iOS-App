@@ -19,7 +19,7 @@ struct CraftingRecipesCategoriesView: View {
             // Loading wrapper
             LoadingLayoutView {
                 ScrollView {
-                    LazyVStack(spacing: 8) {
+                    LazyVStack(spacing: 2) {
                         // Get unique categories from recipes
                         let categories = getCategories()
                         let counts = getCategoryCounts()
@@ -29,7 +29,7 @@ struct CraftingRecipesCategoriesView: View {
                             let count = counts[category] ?? 0
                             NavArrowView(title: "\(category) (\(count))") { _ in
                                 CraftingRecipesListView(
-                                    recipes: getRecipesForCategory(category),
+                                    recipes: getRecipesForCategory(category).sorted { $0.getDisplayName().caseInsensitiveCompare($1.getDisplayName()) == .orderedAscending },
                                     categoryName: category
                                 )
                             }
@@ -40,9 +40,9 @@ struct CraftingRecipesCategoriesView: View {
                             .padding(.vertical, 16)
 
                         // "All Recipes" button at bottom
-                        NavArrowViewBlue(title: "All Recipes") { 
+                        NavArrowViewBlue(title: "All Recipes") {
                             CraftingRecipesListView(
-                                recipes: DM.craftingRecipes,
+                                recipes: DM.craftingRecipes.sorted { $0.getDisplayName().caseInsensitiveCompare($1.getDisplayName()) == .orderedAscending },
                                 categoryName: "All"
                             )
                         }

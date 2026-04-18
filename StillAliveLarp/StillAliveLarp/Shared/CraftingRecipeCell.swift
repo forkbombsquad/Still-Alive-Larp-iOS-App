@@ -53,7 +53,7 @@ struct CraftingRecipeCell: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    // Required Skill Column
+                    // Required Skill Column - wider for no wrapping
                     VStack {
                         Text("Required Skill:")
                             .font(.system(size: 16, weight: .bold))
@@ -63,6 +63,8 @@ struct CraftingRecipeCell: View {
                                 .font(.system(size: 18))
                                 .foregroundColor(skillTypeColor(skill.skillTypeId))
                                 .multilineTextAlignment(.center)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
                         } else {
                             Text("*")
                                 .font(.system(size: 18))
@@ -85,36 +87,43 @@ struct CraftingRecipeCell: View {
 
                 // 3-Column Materials Layout
                 let materialsList = recipe.craftingRecipe.getMaterialsList()
-                let col1Materials = materialsList.filter { materialMatchesColumn($0, column: 1, total: materialsList.count) }
-                let col2Materials = materialsList.filter { materialMatchesColumn($0, column: 2, total: materialsList.count) }
-                let col3Materials = materialsList.filter { materialMatchesColumn($0, column: 3, total: materialsList.count) }
 
-                HStack(spacing: 4) {
-                    // Column 1
-                    VStack {
-                        ForEach(col1Materials) { material in
-                            materialText(material)
+                if materialsList.isEmpty {
+                    Text("-")
+                        .font(.system(size: 16))
+                        .multilineTextAlignment(.center)
+                } else {
+                    let col1Materials = materialsList.filter { materialMatchesColumn($0, column: 1, total: materialsList.count) }
+                    let col2Materials = materialsList.filter { materialMatchesColumn($0, column: 2, total: materialsList.count) }
+                    let col3Materials = materialsList.filter { materialMatchesColumn($0, column: 3, total: materialsList.count) }
+                    
+                    HStack(spacing: 4) {
+                        // Column 1
+                        VStack {
+                            ForEach(col1Materials) { material in
+                                materialText(material)
+                            }
                         }
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    // Column 2
-                    VStack {
-                        ForEach(col2Materials) { material in
-                            materialText(material)
+                        .frame(maxWidth: .infinity)
+                        
+                        // Column 2
+                        VStack {
+                            ForEach(col2Materials) { material in
+                                materialText(material)
+                            }
                         }
-                    }
-                    .frame(maxWidth: .infinity)
-
-                    // Column 3
-                    VStack {
-                        ForEach(col3Materials) { material in
-                            materialText(material)
+                        .frame(maxWidth: .infinity)
+                        
+                        // Column 3
+                        VStack {
+                            ForEach(col3Materials) { material in
+                                materialText(material)
+                            }
                         }
+                        .frame(maxWidth: .infinity)
                     }
-                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 8)
                 }
-                .padding(.horizontal, 8)
 
                 // Description / Notes (if exists)
                 if let desc = recipe.desc, !desc.isEmpty {
@@ -122,6 +131,10 @@ struct CraftingRecipeCell: View {
                         .frame(height: 1)
                         .padding(.horizontal, 48)
                         .padding(.top, 8)
+
+                    Text("Notes:")
+                        .font(.system(size: 16, weight: .bold))
+                        .multilineTextAlignment(.center)
 
                     Text(desc)
                         .font(.system(size: 14))
