@@ -73,6 +73,9 @@
 		B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */; };
 		B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */; };
 		B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */; };
+		CRAFTING013 /* CraftingRecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING010 /* CraftingRecipeCell.swift */; };
+		CRAFTING014 /* CraftingRecipesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING011 /* CraftingRecipesListView.swift */; };
+		CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING012 /* CraftingRecipesCategoriesView.swift */; };
 		B235A4F12DD788C800AF96DC /* LoadingBlock.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F02DD788C800AF96DC /* LoadingBlock.swift */; };
 		B235A4F42DD7A4FE00AF96DC /* NativeSkillTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */; };
 		B235A4F62DD7A59600AF96DC /* SkillCategoryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */; };
@@ -266,6 +269,9 @@
 		B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNPCStuffView.swift; sourceTree = "<group>"; };
 		B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewOrManageResearchProjectsView.swift; sourceTree = "<group>"; };
 		B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchProjectCell.swift; sourceTree = "<group>"; };
+		CRAFTING010 /* CraftingRecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeCell.swift; sourceTree = "<group>"; };
+		CRAFTING011 /* CraftingRecipesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesListView.swift; sourceTree = "<group>"; };
+		CRAFTING012 /* CraftingRecipesCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesCategoriesView.swift; sourceTree = "<group>"; };
 		B235A4F02DD788C800AF96DC /* LoadingBlock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingBlock.swift; sourceTree = "<group>"; };
 		B235A4F32DD7A4F900AF96DC /* NativeSkillTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSkillTree.swift; sourceTree = "<group>"; };
 		B235A4F52DD7A59100AF96DC /* SkillCategoryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkillCategoryModel.swift; sourceTree = "<group>"; };
@@ -527,6 +533,9 @@
 				B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */,
 				B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */,
 				B2E135BF29FD8F7E0038DE31 /* XpReductionsListView.swift */,
+				CRAFTING010 /* CraftingRecipeCell.swift */,
+				CRAFTING011 /* CraftingRecipesListView.swift */,
+				CRAFTING012 /* CraftingRecipesCategoriesView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -981,6 +990,9 @@
 				B23552C029E9EA0E00183748 /* AddSkillView.swift in Sources */,
 				B293AEF829155D7000D2447C /* OAuthToken.swift in Sources */,
 				B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */,
+				CRAFTING013 /* CraftingRecipeCell.swift in Sources */,
+				CRAFTING014 /* CraftingRecipesListView.swift in Sources */,
+				CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */,
 				B21691EA28FDE6DB006AA921 /* ColorExtensions.swift in Sources */,
 				B21F1C162DD57C040004B391 /* ViewEventAttendeesView.swift in Sources */,
 				B235528C29E83A0E00183748 /* AdminView.swift in Sources */,
