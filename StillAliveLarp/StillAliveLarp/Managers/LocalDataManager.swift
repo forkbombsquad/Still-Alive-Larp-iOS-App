@@ -39,7 +39,7 @@ class LocalDataManager {
     static let shared = LocalDataManager()
     
     // TODO ROUTINE - update this number if any of the models change between releases
-    static let localDataVersion = "1.0.0.1"
+    static let localDataVersion = "1.0.0.2"
     
     static func clearAllLocalData() {
         UserAndPassManager.shared.clearAll()

@@ -73,6 +73,7 @@
 		B235A4EB2DD595FE00AF96DC /* ViewNPCStuffView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */; };
 		B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */; };
 		B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */; };
+		MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = MILESTONE02 /* ViewResearchProjectMilestonesView.swift */; };
 		CRAFTING013 /* CraftingRecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING010 /* CraftingRecipeCell.swift */; };
 		CRAFTING014 /* CraftingRecipesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING011 /* CraftingRecipesListView.swift */; };
 		CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING012 /* CraftingRecipesCategoriesView.swift */; };
@@ -269,6 +270,7 @@
 		B235A4EA2DD595FE00AF96DC /* ViewNPCStuffView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewNPCStuffView.swift; sourceTree = "<group>"; };
 		B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewOrManageResearchProjectsView.swift; sourceTree = "<group>"; };
 		B235A4EE2DD7861900AF96DC /* ResearchProjectCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResearchProjectCell.swift; sourceTree = "<group>"; };
+		MILESTONE02 /* ViewResearchProjectMilestonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewResearchProjectMilestonesView.swift; sourceTree = "<group>"; };
 		CRAFTING010 /* CraftingRecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeCell.swift; sourceTree = "<group>"; };
 		CRAFTING011 /* CraftingRecipesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesListView.swift; sourceTree = "<group>"; };
 		CRAFTING012 /* CraftingRecipesCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesCategoriesView.swift; sourceTree = "<group>"; };
@@ -531,6 +533,7 @@
 				B2B712362E44E84900B2AA3F /* NPCListView.swift */,
 				B2A0D4EB29E5D50F00A235B4 /* SkillListView.swift */,
 				B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */,
+				MILESTONE02 /* ViewResearchProjectMilestonesView.swift */,
 				B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */,
 				B2E135BF29FD8F7E0038DE31 /* XpReductionsListView.swift */,
 				CRAFTING010 /* CraftingRecipeCell.swift */,
@@ -916,6 +919,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */,
+				MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */,
 				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,
