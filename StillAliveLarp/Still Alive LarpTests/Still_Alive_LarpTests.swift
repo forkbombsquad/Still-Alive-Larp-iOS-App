@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Still_Alive_Larp
+@testable import StillAliveLarp
 
 final class Still_Alive_LarpTests: XCTestCase {
 

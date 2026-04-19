@@ -41,6 +41,10 @@
 		B22324C72E40092B0087786E /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C62E4009270087786E /* FontExtensions.swift */; };
 		B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C82E40F0460087786E /* CharacterPanel.swift */; };
 		B22324CB2E43B0F30087786E /* AttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */; };
+		B223FAAE2F947981003CD33D /* CharacterModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAB2F947981003CD33D /* CharacterModelTests.swift */; };
+		B223FAAF2F947981003CD33D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAA2F947981003CD33D /* BaseTestClass.swift */; };
+		B223FAB02F947981003CD33D /* ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAC2F947981003CD33D /* ExtensionTests.swift */; };
+		B223FAB12F947981003CD33D /* PlayerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAD2F947981003CD33D /* PlayerModelTests.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */; };
 		B22793E32E9954D0007480AB /* ViewCharacterStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */; };
 		B22793E52E9974D5007480AB /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E42E9974D2007480AB /* EventsListView.swift */; };
@@ -237,6 +241,10 @@
 		B22324C62E4009270087786E /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
 		B22324C82E40F0460087786E /* CharacterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPanel.swift; sourceTree = "<group>"; };
 		B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringExtensions.swift; sourceTree = "<group>"; };
+		B223FAAA2F947981003CD33D /* BaseTestClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTestClass.swift; sourceTree = "<group>"; };
+		B223FAAB2F947981003CD33D /* CharacterModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModelTests.swift; sourceTree = "<group>"; };
+		B223FAAC2F947981003CD33D /* ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTests.swift; sourceTree = "<group>"; };
+		B223FAAD2F947981003CD33D /* PlayerModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModelTests.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerView.swift; sourceTree = "<group>"; };
 		B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCharacterStatsView.swift; sourceTree = "<group>"; };
 		B22793E42E9974D2007480AB /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
@@ -460,6 +468,10 @@
 		B21691CC28FDDC60006AA921 /* Still Alive LarpTests */ = {
 			isa = PBXGroup;
 			children = (
+				B223FAAA2F947981003CD33D /* BaseTestClass.swift */,
+				B223FAAB2F947981003CD33D /* CharacterModelTests.swift */,
+				B223FAAC2F947981003CD33D /* ExtensionTests.swift */,
+				B223FAAD2F947981003CD33D /* PlayerModelTests.swift */,
 				B21691CD28FDDC60006AA921 /* Still_Alive_LarpTests.swift */,
 			);
 			path = "Still Alive LarpTests";
@@ -1090,6 +1102,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B21691CE28FDDC60006AA921 /* Still_Alive_LarpTests.swift in Sources */,
+				B223FAAE2F947981003CD33D /* CharacterModelTests.swift in Sources */,
+				B223FAAF2F947981003CD33D /* BaseTestClass.swift in Sources */,
+				B223FAB02F947981003CD33D /* ExtensionTests.swift in Sources */,
+				B223FAB12F947981003CD33D /* PlayerModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1322,7 +1338,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
@@ -1341,7 +1357,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
@@ -1359,7 +1375,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpUITests";
@@ -1376,7 +1392,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpUITests";
