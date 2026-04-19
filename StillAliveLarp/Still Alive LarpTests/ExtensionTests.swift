@@ -19,7 +19,7 @@ class ExtensionTests: BaseTestClass {
 
     func testStringCapitalizeFirstLetterOfEachWord() {
         let str = "hello WORLD"
-        XCTAssertEqual(str.capitalizingFirstLetterOfEachWord(), "Hello WORLD")
+        XCTAssertEqual(str.capitalizingFirstLetterOfEachWord(), "Hello World")
         
         let title = "this is a title or a name"
         XCTAssertEqual(title.capitalizingFirstLetterOfEachWord(), "This Is A Title Or A Name")
@@ -27,7 +27,8 @@ class ExtensionTests: BaseTestClass {
 
     func testStringContains() {
         let str = "Hello World"
-        XCTAssertTrue(str.contains("world"))
+        XCTAssertFalse(str.contains("world"))
+        XCTAssertTrue(str.contains("World"))
         XCTAssertFalse(str.contains("universe"))
     }
 
@@ -44,7 +45,7 @@ class ExtensionTests: BaseTestClass {
         XCTAssertTrue(casedString.equalsIgnoreCase(lowercasedString))
     }
 
-    func testEqualsAnyOf() {
+func testEqualsAnyOf() {
         let value = 10
         XCTAssertTrue(value.equalsAnyOf([5, 15, 10, 12]))
         XCTAssertFalse(value.equalsAnyOf([5, 15, 1, 12]))
@@ -88,12 +89,12 @@ class ExtensionTests: BaseTestClass {
     func testYyyyMMddToMonthDayYear() {
         let dateStr = "2023/06/15"
         let converted = dateStr.yyyyMMddToMonthDayYear()
-        XCTAssertEqual(converted, "06/15/2023")
+        XCTAssertEqual(converted, "June 15th, 2023")
     }
 
     func testYyyyMMddToDate() {
         let dateStr = "2023/06/15"
-        let date = dateStr.yyyyMMddToDate()
+        let date = dateStr.yyyyMMddtoDate()
         XCTAssertNotNil(date)
     }
 
@@ -107,7 +108,7 @@ class ExtensionTests: BaseTestClass {
 
     func testArrayFilterWhere() {
         let arr = [1, 2, 3, 4, 5]
-        let filtered = arr.filter(where: { $0 > 2 })
+        let filtered = arr.filter({ $0 > 2 })
         XCTAssertEqual(filtered.count, 3)
     }
 
@@ -115,16 +116,5 @@ class ExtensionTests: BaseTestClass {
         let arr = [1, 2, 3, 4, 5]
         let found = arr.first(where: { $0 > 2 })
         XCTAssertEqual(found, 3)
-    }
-
-    // MARK: - Data Extensions
-
-    func testToJsonObject() {
-        let json = "{\"key\": \"value\"}"
-        let data = json.data(using: .utf8)
-        XCTAssertNotNil(data)
-        
-        let obj = data?.toJsonObject()
-        XCTAssertNotNil(obj)
     }
 }

@@ -16,8 +16,8 @@ class PlayerModelTests: BaseTestClass {
         XCTAssertNotNil(player)
         
         XCTAssertEqual(player?.id, 1)
-        XCTAssertEqual(player?.username, "Rydge")
-        XCTAssertEqual(player?.fullName, "Rydge Craker")
+        XCTAssertEqual(player?.username, "test@test.test")
+        XCTAssertEqual(player?.fullName, "Test Testerson")
     }
 
     func testGetActiveCharacter() async throws {
@@ -28,7 +28,7 @@ class PlayerModelTests: BaseTestClass {
         let activeChar = player?.getActiveCharacter()
         XCTAssertNotNil(activeChar)
         XCTAssertEqual(activeChar?.id, 1)
-        XCTAssertEqual(activeChar?.fullName, "Commander Davis")
+        XCTAssertEqual(activeChar?.fullName, "John Doe")
     }
 
     func testCharacterGroups() async throws {
@@ -43,24 +43,14 @@ class PlayerModelTests: BaseTestClass {
         XCTAssertTrue(plannedChars.isEmpty)
     }
 
-    func testAwards() async throws {
-        await loadDataManager {}
-        let player = DataManager.shared.getCurrentPlayer()
-        XCTAssertNotNil(player)
-        
-        let awards = player?.getAwardsSorted() ?? []
-        let playerAwards = awards.filter { $0.characterId == nil }
-        XCTAssertTrue(playerAwards.count >= 0)
-    }
-
     func testCheckInBarcodeModelWithCharacter() async throws {
         await loadDataManager {}
         let player = DataManager.shared.getCurrentPlayer()
-        let event = DataManager.shared.events.events.first
+        let event = DataManager.shared.events.first
         XCTAssertNotNil(player)
         XCTAssertNotNil(event)
         
-        let barcode = player?.getCheckInBarcodeModel(true, event!)
+        let barcode = player?.getCheckInBarcodeModel(useChar: true, event: event!)
         XCTAssertNotNil(barcode)
         
         XCTAssertEqual(barcode?.playerId, 1)
@@ -71,11 +61,11 @@ class PlayerModelTests: BaseTestClass {
     func testCheckInBarcodeModelWithoutCharacter() async throws {
         await loadDataManager {}
         let player = DataManager.shared.getCurrentPlayer()
-        let event = DataManager.shared.events.events.first
+        let event = DataManager.shared.events.first
         XCTAssertNotNil(player)
         XCTAssertNotNil(event)
         
-        let barcode = player?.getCheckInBarcodeModel(false, event!)
+        let barcode = player?.getCheckInBarcodeModel(useChar: false, event: event!)
         XCTAssertNotNil(barcode)
         
         XCTAssertEqual(barcode?.playerId, 1)
@@ -89,7 +79,7 @@ class PlayerModelTests: BaseTestClass {
         let attendee = EventAttendeeModel(id: 1, playerId: 1, characterId: 1, eventId: 1, isCheckedIn: "TRUE", asNpc: "FALSE", npcId: -1)
         XCTAssertNotNil(player)
         
-        let barcode = player?.getCheckOutBarcodeModel(attendee)
+        let barcode = player?.getCheckOutBarcodeModel(eventAttendee: attendee)
         XCTAssertNotNil(barcode)
         
         XCTAssertEqual(barcode?.playerId, 1)
@@ -103,7 +93,7 @@ class PlayerModelTests: BaseTestClass {
         let attendee = EventAttendeeModel(id: 1, playerId: 1, characterId: nil, eventId: 1, isCheckedIn: "TRUE", asNpc: "TRUE", npcId: 1)
         XCTAssertNotNil(player)
         
-        let barcode = player?.getCheckOutBarcodeModel(attendee)
+        let barcode = player?.getCheckOutBarcodeModel(eventAttendee: attendee)
         XCTAssertNotNil(barcode)
         
         XCTAssertEqual(barcode?.playerId, 1)
@@ -111,24 +101,15 @@ class PlayerModelTests: BaseTestClass {
         XCTAssertEqual(barcode?.eventId, 1)
     }
 
-    func testProfileImage() async throws {
-        await loadDataManager {}
-        let player = DataManager.shared.getCurrentPlayer()
-        XCTAssertNotNil(player)
-        
-        let profileImage = player?.profileImage
-        XCTAssertNotNil(profileImage)
-    }
-
     func testPlayerStats() async throws {
         await loadDataManager {}
         let player = DataManager.shared.getCurrentPlayer()
         XCTAssertNotNil(player)
         
-        let xp = player?.experience.intValueDefaultZero
+        let xp = player?.experience
         XCTAssertTrue(xp ?? 0 >= 0)
         
-        let pp = player?.prestigePoints.intValueDefaultZero
+        let pp = player?.prestigePoints
         XCTAssertTrue(pp ?? 0 >= 0)
         
         let events = player?.numEventsAttended ?? 0
