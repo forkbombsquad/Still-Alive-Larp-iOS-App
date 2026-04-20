@@ -49,6 +49,10 @@ struct Constants {
         static let hidden = 4
     }
 
+    struct SpecificCharacterIds {
+        static let commanderDavis = 1
+    }
+
     struct urls {
         static let skillTreeImage = "https://stillalivelarp.com/skilltree"
         static let skillTreeImageDark = "https://stillalivelarp.com/skilltree/dark"

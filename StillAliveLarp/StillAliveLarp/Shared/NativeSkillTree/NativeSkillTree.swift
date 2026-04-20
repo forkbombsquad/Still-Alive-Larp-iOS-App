@@ -27,6 +27,10 @@ struct NativeSkillTree: View {
     static func initAsNPCPersonal(currentPlayer: FullPlayerModel, npc: FullCharacterModel) -> NativeSkillTree {
         return NativeSkillTree(allSkills: [], personal: true, allowPurchase: false, player: currentPlayer, character: npc)
     }
+
+    static func initAsNPCEditPersonal(currentPlayer: FullPlayerModel, npc: FullCharacterModel) -> NativeSkillTree {
+        return NativeSkillTree(allSkills: [], personal: true, allowPurchase: true, player: currentPlayer, character: npc)
+    }
     
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager

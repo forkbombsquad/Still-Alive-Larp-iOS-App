@@ -97,7 +97,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     }
     
     func isNpcAndNotAttendingEvent(eventId: Int) -> Bool {
-        guard characterType() == .npc else { return false }
+        guard characterType() == .npc || characterType() == .hidden else { return false }
         return DataManager.shared.events.first(where: { $0.id == eventId })?.attendees.first(where: { $0.npcId == self.id }) == nil
     }
     
