@@ -9,10 +9,12 @@ struct CreateNPCView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @State var loading = false
-    @State var fullName = ""
-    @State var bio = ""
-    @State var isHidden = false
+    @State private var fullName: String = ""
+    @State private var bio: String = ""
+
+    @State private var loading: Bool = false
+
+    let isHidden: Bool
 
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
 
@@ -20,138 +22,81 @@ struct CreateNPCView: View {
         VStack {
             GeometryReader { gr in
                 ScrollView {
-                    VStack {
-                        Text(isHidden ? "Create Hidden NPC" : "Create NPC")
-                            .font(.system(size: 32, weight: .bold))
-                            .frame(alignment: .center)
-                            .padding(.bottom, 16)
-
-                        Toggle(isOn: $isHidden) {
-                            Text("Create as Hidden NPC")
-                                .font(.system(size: 16, weight: .bold))
+                    globalCreateTitleView(isHidden ? "Create Hidden NPC" : "Create NPC", DM: DM)
+                    TextField("", text: $fullName)
+                        .padding(.top, 8)
+                        .padding(.trailing, 0)
+                        .textFieldStyle(.roundedBorder)
+                        .placeholder(when: fullName.isEmpty) {
+                            Text("Full Character Name").foregroundColor(.gray).padding().padding(.top, 4)
                         }
-                        .padding(.bottom, 16)
+                    TextEditor(text: $bio)
+                        .padding(.top, 8)
+                        .padding(.trailing, 0)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(minHeight: 250)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .placeholder(when: bio.isEmpty) {
+                            Text("Bio\n(Optional)").foregroundColor(.gray).padding().multilineTextAlignment(.center)
+                        }
+                    LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Submit") {
+                        let valResult = validateFields()
+                        if !valResult.hasError {
+                            self.loading = true
+                            let char = CreateCharacterModel(
+                                fullName: fullName,
+                                startDate: Date().yyyyMMddFormatted,
+                                isAlive: "TRUE",
+                                deathDate: "",
+                                infection: "0",
+                                bio: bio,
+                                approvedBio: "TRUE",
+                                bullets: "20",
+                                megas: "0",
+                                rivals: "0",
+                                rockets: "0",
+                                bulletCasings: "0",
+                                clothSupplies: "0",
+                                woodSupplies: "0",
+                                metalSupplies: "0",
+                                techSupplies: "0",
+                                medicalSupplies: "0",
+                                armor: CharacterModel.ArmorType.none.rawValue,
+                                unshakableResolveUses: "0",
+                                mysteriousStrangerUses: "0",
+                                playerId: Constants.SpecificCharacterIds.commanderDavis,
+                                characterTypeId: isHidden ? Constants.CharacterTypes.hidden : Constants.CharacterTypes.NPC
+                            )
 
-                        Text("Name")
-                            .font(.system(size: 16, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        TextField("Character Name", text: $fullName)
-                            .textFieldStyling()
+                            CharacterService.createPlannedCharacter(char) { characterModel in
+                                DM.load()
+                                alertManager.showSuccessAlert("\(isHidden ? "Hidden NPC" : "NPC") named \(characterModel.fullName) created!") {
+                                    runOnMainThread {
+                                        self.mode.wrappedValue.dismiss()
+                                    }
+                                }
+                            } failureCase: { _ in
+                                runOnMainThread {
+                                    self.loading = false
+                                }
+                            }
 
-                        Text("Bio")
-                            .font(.system(size: 16, weight: .bold))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.top, 8)
-                        TextField("Bio (Optional)", text: $bio)
-                            .textFieldStyling()
-
-                        LoadingButtonView($loading, width: gr.size.width - 32, buttonText: "Create \(isHidden ? "Hidden NPC" : "NPC")") {
-                            createCharacter()
-                        }.padding(.top, 24)
+                        } else {
+                            alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                        }
                     }
+                    .padding(.top, 16)
+                    .padding(.trailing, 0)
                 }
             }
         }
         .padding(16)
+        .frame(maxWidth: .infinity)
         .background(Color.lightGray)
     }
 
-    private func createCharacter() {
-        guard fullName.trimmingCharacters(in: .whitespaces).isNotEmpty else {
-            alertManager.showOkAlert("Validation Error", message: "Name is required")
-            return
-        }
-
-        loading = true
-        let createModel = CreateCharacterModel(
-            fullName: fullName.trimmingCharacters(in: .whitespaces),
-            startDate: Date().yyyyMMddFormatted,
-            isAlive: "TRUE",
-            deathDate: "",
-            infection: "0",
-            bio: bio.trimmingCharacters(in: .whitespaces),
-            approvedBio: "TRUE",
-            bullets: "20",
-            megas: "0",
-            rivals: "0",
-            rockets: "0",
-            bulletCasings: "0",
-            clothSupplies: "0",
-            woodSupplies: "0",
-            metalSupplies: "0",
-            techSupplies: "0",
-            medicalSupplies: "0",
-            armor: CharacterModel.ArmorType.none.rawValue,
-            unshakableResolveUses: "0",
-            mysteriousStrangerUses: "0",
-            playerId: Constants.SpecificCharacterIds.commanderDavis,
-            characterTypeId: isHidden ? Constants.CharacterTypes.hidden : Constants.CharacterTypes.NPC
-        )
-
-        CharacterService.createPlannedCharacter(createModel) { newCharacter in
-            runOnMainThread {
-                DM.load()
-                alertManager.showOkAlert("Success!", message: "\(isHidden ? "Hidden NPC" : "NPC") named \(newCharacter.fullName) created!") {
-                    runOnMainThread {
-                        self.mode.wrappedValue.dismiss()
-                    }
-                }
-            }
-        } failureCase: { error in
-            runOnMainThread {
-                self.loading = false
-            }
-        }
-    }
-}
-
-struct HiddenNPCListView: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
-    let destination: NPCListView.NPCListViewDestination
-
-    var body: some View {
-        VStack {
-            GeometryReader { gr in
-                ScrollView {
-                    VStack {
-                        let npcs = DM.getAllCharacters(.hidden)
-                        let living = npcs.filter({ $0.isAlive })
-                        let dead = npcs.filter({ !$0.isAlive })
-
-                        globalCreateTitleView("Hidden NPCs", DM: DM)
-                        Divider().padding(.horizontal, 16).padding(.bottom, 8)
-
-                        KeyValueView(key: "Total Living Hidden NPCs", value: "\(living.count)", showDivider: false)
-
-                        LazyVStack(spacing: 8) {
-                            ForEach(living.alphabetized) { npc in
-                                NavArrowView(title: npc.fullName) { _ in
-                                    switch destination {
-                                    case .view:
-                                        ViewNPCStuffView(npc: npc)
-                                    case .manage:
-                                        ManageNPCView(character: npc)
-                                    }
-                                }
-                            }
-                            ForEach(dead.alphabetized) { npc in
-                                NavArrowViewRed(title: "\(npc.fullName) (Dead)") {
-                                    switch destination {
-                                    case .view:
-                                        ViewNPCStuffView(npc: npc)
-                                    case .manage:
-                                        ManageNPCView(character: npc)
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .padding(16)
-        .background(Color.lightGray)
+    private func validateFields() -> ValidationResult {
+        return Validator.validateMultiple([
+            ValidationGroup(text: fullName, validationType: .fullName)])
     }
 }

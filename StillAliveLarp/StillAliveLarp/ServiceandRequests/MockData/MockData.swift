@@ -617,7 +617,7 @@ fileprivate struct MockData1: MockData {
         ResearchProjectModel(id: 2, name: "Curing the Infection", description: "This probably won't happen. No one is even working on it.", milestones: 0, complete: "FALSE", milestoneDescs: "{\"milestoneDescs\":[]}")
     ])
     
-    var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])])
+    var campStatus = CampStatusModel(id: 0, campFortifications: [CampFortification(ring: 1, fortifications: [Fortification(type: "MEDIUM", health: 10)])], npcSlots: 10)
 
     var craftingRecipes = CraftingRecipeListModel(craftingRecipes: [
         // Ammunition

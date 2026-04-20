@@ -97,9 +97,6 @@ struct PlayerCharacterManagementView: View {
                 NavArrowView(title: "Manage Hidden NPCs") { _ in
                     HiddenNPCListView(destination: .manage)
                 }
-                NavArrowView(title: "Create NPC") { _ in
-                    CreateNPCView()
-                }
                 NavArrowView(title: "Award Player") { _ in
                     PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
                 }

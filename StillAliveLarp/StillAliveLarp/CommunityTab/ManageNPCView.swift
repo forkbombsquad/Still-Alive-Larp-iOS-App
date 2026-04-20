@@ -78,9 +78,7 @@ struct ManageNPCView: View {
                                 SkillsListView(character: $character, allowDelete: true)
                             }
                             NavArrowView(title: "Manage Skills Tree", loading: $loading) { _ in
-                                if let character = character {
-                                    NativeSkillTree.initAsNPCEditPersonal(currentPlayer: DM.getCurrentPlayer()!, npc: character)
-                                }
+                                NativeSkillTree.initAsNPCEditPersonal(currentPlayer: DM.getCurrentPlayer()!, npc: character)
                             }
                         }
                     }

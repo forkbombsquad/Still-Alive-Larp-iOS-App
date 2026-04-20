@@ -184,6 +184,8 @@
 		CRAFTING014 /* CraftingRecipesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING011 /* CraftingRecipesListView.swift */; };
 		CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING012 /* CraftingRecipesCategoriesView.swift */; };
 		MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = MILESTONE02 /* ViewResearchProjectMilestonesView.swift */; };
+		NPC001 /* CreateNPCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NPC002 /* CreateNPCView.swift */; };
+		NPC004 /* HiddenNPCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NPC003 /* HiddenNPCListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -381,6 +383,8 @@
 		CRAFTING011 /* CraftingRecipesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesListView.swift; sourceTree = "<group>"; };
 		CRAFTING012 /* CraftingRecipesCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesCategoriesView.swift; sourceTree = "<group>"; };
 		MILESTONE02 /* ViewResearchProjectMilestonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewResearchProjectMilestonesView.swift; sourceTree = "<group>"; };
+		NPC002 /* CreateNPCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNPCView.swift; sourceTree = "<group>"; };
+		NPC003 /* HiddenNPCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenNPCListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -578,6 +582,8 @@
 				B2F9837829F07C7200512839 /* CreateEditEventView.swift */,
 				B2F9837A29F0833800512839 /* ManageEventView.swift */,
 				B2F9838729F1747D00512839 /* CheckInPlayerView.swift */,
+				NPC002 /* CreateNPCView.swift */,
+				NPC003 /* HiddenNPCListView.swift */,
 				B2750B4029F97D1400AA5F5B /* ContactListView.swift */,
 				B2750B4229F97E3000AA5F5B /* ContactDetailsView.swift */,
 				B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */,
@@ -932,6 +938,8 @@
 			files = (
 				B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */,
 				MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */,
+				NPC001 /* CreateNPCView.swift in Sources */,
+				NPC004 /* HiddenNPCListView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */,
 				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,
@@ -1257,7 +1265,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
@@ -1298,7 +1306,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
