@@ -285,7 +285,7 @@ struct CheckInPlayerView: View {
     }
     
     func getSelectedNpc() -> FullCharacterModel? {
-        return DM.getAllCharacters(.npc).first(where: { $0.fullName == selectedNpc })
+        return DM.getAllCharacters([.npc, .hidden]).first(where: { $0.fullName == selectedNpc })
     }
     
     func getRelevantSkills() -> [FullCharacterModifiedSkillModel] {

@@ -108,9 +108,8 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
     func getPostText() -> String {
         switch characterType() {
         case .standard: return isAlive ? "Active" : "Inactive"
-        case .npc: return isAlive ? "NPC" : "NPC - Deceased"
+        case .npc, .hidden: return isAlive ? "NPC" : "NPC - Deceased"
         case .planner: return "Planned"
-        case .hidden: return ""
         }
     }
     
@@ -155,7 +154,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
                             completion(false)
                         }
 
-                    case .npc, .planner:
+                    case .npc, .planner, .hidden:
                         CharacterSkillService.takePlannedCharacterSkill(charSkillCreateModel) { _ in
                             AlertManager.shared.showOkAlert("Skill Successfully \(characterType() == .planner ? "Planned!" : "Added To NPC!")", message: "\(fullName) now possesses the skill \(skill.name)") {
                                 completion(true)
@@ -163,9 +162,6 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
                         } failureCase: { error in
                             completion(false)
                         }
-
-                    case .hidden:
-                        completion(false)
                     }
                 } else {
                     completion(false)
@@ -186,7 +182,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
             freeSkillPrompt = "Use 1 Free Tier-1 Skill?"
             purchaseText = "Purchase \(skill.name)?"
             purchaseTitle = "Confirm Purchase?"
-        case .npc:
+        case .npc, .hidden:
             freeSkillPrompt = "Use NPC 1 Free Tier-1 Skill?"
             purchaseText = "Purchase \(skill.name) For NPC?"
             purchaseTitle = "Confirm NPC Purchase?"
@@ -194,9 +190,6 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
             freeSkillPrompt = "Plan to use 1 Free Tier-1 Skill?"
             purchaseText = "Plan to purchase \(skill.name)?"
             purchaseTitle = "Confirm Planned Purchase?"
-        case .hidden:
-            completion(nil)
-            return
         }
         if skill.canUseFreeSkill() {
             promptTOUseFt1s(title: freeSkillPrompt) { useFt1s in
@@ -243,7 +236,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         }
         
         // Planned and NPC charactesr don't require prestige points
-        if characterType() != .planner && characterType() != .npc {
+        if characterType() != .planner && characterType() != .npc, characterType() != .hidden {
             newSkillList = newSkillList.filter { skillToKeep in
                 skillToKeep.prestigeCost() <= player.prestigePoints
             }
@@ -285,7 +278,7 @@ struct FullCharacterModel: CustomCodeable, Identifiable {
         }
         
         // Planned and NPC characters don't requrie xp, free skills, or infection
-        if characterType() != .npc && characterType() != .planner {
+        if characterType() != .npc && characterType() != .planner && characterType() != .hidden {
             // Filter out skills you don't have enough xp, fs or int for
             newSkillList = newSkillList.filter { skillToKeep in
                 var keep = true

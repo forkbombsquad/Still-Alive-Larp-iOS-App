@@ -89,7 +89,6 @@ struct ManageEventView: View {
         """
 
         alertManager.showOkAlert("Materials For Sale!", message: materialsMessage, onOkAction: {
-            DM.load()
             alertManager.showOkAlert("Event Started", onOkAction: {
                 runOnMainThread {
                     self.loading = false
@@ -105,11 +104,11 @@ struct ManageEventView: View {
                 self.finishEventFlowPromptForFood()
             }),
             AlertButton(title: "Character", onPress: {
-                // TODO: Launch character award selection
+                // TODO: Launch character award selection someday
                 self.finishEventFlowPromptForFood()
             }),
             AlertButton(title: "Player", onPress: {
-                // TODO: Launch player award selection
+                // TODO: Launch player award selection someday
                 self.finishEventFlowPromptForFood()
             })
         ]))
