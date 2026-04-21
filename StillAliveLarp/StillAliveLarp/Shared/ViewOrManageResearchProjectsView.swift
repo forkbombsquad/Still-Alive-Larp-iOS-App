@@ -21,6 +21,7 @@ struct ViewOrManageResearchProjectsView: View {
     @State var projectDesc: String = ""
     @State var projectMilestones: String = ""
     @State var projectComplete: Bool = false
+    @State var projectMilestoneDescs: String = "{\"milestoneDescs\":[]}"
     
     var body: some View {
         VStack {
@@ -90,11 +91,13 @@ struct ViewOrManageResearchProjectsView: View {
                 self.projectDesc = rp.description
                 self.projectMilestones = rp.milestones.stringValue
                 self.projectComplete = rp.complete.boolValueDefaultFalse
+                self.projectMilestoneDescs = rp.milestoneDescs
             } else {
                 self.projectName = ""
                 self.projectDesc = ""
                 self.projectMilestones = ""
                 self.projectComplete = false
+                self.projectMilestoneDescs = "{\"milestoneDescs\":[]}"
             }
             let rpIsNil = rp == nil
             alertManager.showDynamicAlert(model: CustomAlertModel(
@@ -112,7 +115,7 @@ struct ViewOrManageResearchProjectsView: View {
                     AlertButton(title: rpIsNil ? "Create" : "Update", onPress: {
                         if let rp = rp {
                             // Edit
-                            let editedRp = ResearchProjectModel(id: rp.id, name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased())
+                            let editedRp = ResearchProjectModel(id: rp.id, name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased(), milestoneDescs: self.projectMilestoneDescs)
                             AdminService.updateResearchProject(editedRp) { researchProjectModel in
                                 runOnMainThread {
                                     self.loading = false
@@ -126,7 +129,7 @@ struct ViewOrManageResearchProjectsView: View {
 
                         } else {
                             // Create
-                            let newRP = ResearchProjectCreateModel(name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased())
+                            let newRP = ResearchProjectCreateModel(name: self.projectName, description: self.projectDesc, milestones: self.projectMilestones.intValueDefaultZero, complete: self.projectComplete.stringValue.uppercased(), milestoneDescs: self.projectMilestoneDescs)
                             AdminService.createResearchProject(newRP) { researchProjectModel in
                                 runOnMainThread {
                                     self.loading = false

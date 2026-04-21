@@ -13,6 +13,12 @@ struct ResearchProjectModel: CustomCodeable, Identifiable {
     let description: String
     let milestones: Int
     let complete: String
+    let milestoneDescs: String
+
+    var milestoneJsonModels: [ResearchProjectMilestoneJsonModel] {
+        let listModel: ResearchProjectMilestoneJsonListModel? = milestoneDescs.data(using: .utf8)?.toJsonObject()
+        return listModel?.milestoneDescs ?? []
+    }
 
 }
 
@@ -25,4 +31,14 @@ struct ResearchProjectCreateModel: CustomCodeable {
     let description: String
     let milestones: Int
     let complete: String
+    let milestoneDescs: String
+}
+
+struct ResearchProjectMilestoneJsonModel: CustomCodeable {
+    let id: String
+    let text: String
+}
+
+struct ResearchProjectMilestoneJsonListModel: CustomCodeable {
+    let milestoneDescs: [ResearchProjectMilestoneJsonModel]
 }

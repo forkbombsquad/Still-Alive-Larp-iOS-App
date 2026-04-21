@@ -41,6 +41,10 @@
 		B22324C72E40092B0087786E /* FontExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C62E4009270087786E /* FontExtensions.swift */; };
 		B22324C92E40F0460087786E /* CharacterPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324C82E40F0460087786E /* CharacterPanel.swift */; };
 		B22324CB2E43B0F30087786E /* AttributedStringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */; };
+		B223FAAE2F947981003CD33D /* CharacterModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAB2F947981003CD33D /* CharacterModelTests.swift */; };
+		B223FAAF2F947981003CD33D /* BaseTestClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAA2F947981003CD33D /* BaseTestClass.swift */; };
+		B223FAB02F947981003CD33D /* ExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAC2F947981003CD33D /* ExtensionTests.swift */; };
+		B223FAB12F947981003CD33D /* PlayerModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B223FAAD2F947981003CD33D /* PlayerModelTests.swift */; };
 		B22784C52DDCDFF100F08902 /* CharacterPlannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */; };
 		B22793E32E9954D0007480AB /* ViewCharacterStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */; };
 		B22793E52E9974D5007480AB /* EventsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22793E42E9974D2007480AB /* EventsListView.swift */; };
@@ -174,6 +178,14 @@
 		B2F9838C29F18F4500512839 /* GenerateCheckInBarcodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838B29F18F4500512839 /* GenerateCheckInBarcodeView.swift */; };
 		B2F9838E29F1906300512839 /* BarcodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838D29F1906300512839 /* BarcodeGenerator.swift */; };
 		B2F9839029F2F09D00512839 /* EventAttendeeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */; };
+		CRAFTING002 /* CraftingRecipeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING001 /* CraftingRecipeModel.swift */; };
+		CRAFTING004 /* CraftingRecipeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING003 /* CraftingRecipeService.swift */; };
+		CRAFTING013 /* CraftingRecipeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING010 /* CraftingRecipeCell.swift */; };
+		CRAFTING014 /* CraftingRecipesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING011 /* CraftingRecipesListView.swift */; };
+		CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CRAFTING012 /* CraftingRecipesCategoriesView.swift */; };
+		MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = MILESTONE02 /* ViewResearchProjectMilestonesView.swift */; };
+		NPC001 /* CreateNPCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NPC002 /* CreateNPCView.swift */; };
+		NPC004 /* HiddenNPCListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = NPC003 /* HiddenNPCListView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -231,6 +243,10 @@
 		B22324C62E4009270087786E /* FontExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontExtensions.swift; sourceTree = "<group>"; };
 		B22324C82E40F0460087786E /* CharacterPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPanel.swift; sourceTree = "<group>"; };
 		B22324CA2E43B0EE0087786E /* AttributedStringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringExtensions.swift; sourceTree = "<group>"; };
+		B223FAAA2F947981003CD33D /* BaseTestClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTestClass.swift; sourceTree = "<group>"; };
+		B223FAAB2F947981003CD33D /* CharacterModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterModelTests.swift; sourceTree = "<group>"; };
+		B223FAAC2F947981003CD33D /* ExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionTests.swift; sourceTree = "<group>"; };
+		B223FAAD2F947981003CD33D /* PlayerModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModelTests.swift; sourceTree = "<group>"; };
 		B22784C42DDCDFF000F08902 /* CharacterPlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterPlannerView.swift; sourceTree = "<group>"; };
 		B22793E22E9954CB007480AB /* ViewCharacterStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewCharacterStatsView.swift; sourceTree = "<group>"; };
 		B22793E42E9974D2007480AB /* EventsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsListView.swift; sourceTree = "<group>"; };
@@ -361,6 +377,14 @@
 		B2F9838B29F18F4500512839 /* GenerateCheckInBarcodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateCheckInBarcodeView.swift; sourceTree = "<group>"; };
 		B2F9838D29F1906300512839 /* BarcodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarcodeGenerator.swift; sourceTree = "<group>"; };
 		B2F9838F29F2F09D00512839 /* EventAttendeeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventAttendeeModel.swift; sourceTree = "<group>"; };
+		CRAFTING001 /* CraftingRecipeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeModel.swift; sourceTree = "<group>"; };
+		CRAFTING003 /* CraftingRecipeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeService.swift; sourceTree = "<group>"; };
+		CRAFTING010 /* CraftingRecipeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipeCell.swift; sourceTree = "<group>"; };
+		CRAFTING011 /* CraftingRecipesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesListView.swift; sourceTree = "<group>"; };
+		CRAFTING012 /* CraftingRecipesCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftingRecipesCategoriesView.swift; sourceTree = "<group>"; };
+		MILESTONE02 /* ViewResearchProjectMilestonesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewResearchProjectMilestonesView.swift; sourceTree = "<group>"; };
+		NPC002 /* CreateNPCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNPCView.swift; sourceTree = "<group>"; };
+		NPC003 /* HiddenNPCListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HiddenNPCListView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -448,6 +472,10 @@
 		B21691CC28FDDC60006AA921 /* Still Alive LarpTests */ = {
 			isa = PBXGroup;
 			children = (
+				B223FAAA2F947981003CD33D /* BaseTestClass.swift */,
+				B223FAAB2F947981003CD33D /* CharacterModelTests.swift */,
+				B223FAAC2F947981003CD33D /* ExtensionTests.swift */,
+				B223FAAD2F947981003CD33D /* PlayerModelTests.swift */,
 				B21691CD28FDDC60006AA921 /* Still_Alive_LarpTests.swift */,
 			);
 			path = "Still Alive LarpTests";
@@ -521,8 +549,12 @@
 				B2B712362E44E84900B2AA3F /* NPCListView.swift */,
 				B2A0D4EB29E5D50F00A235B4 /* SkillListView.swift */,
 				B235A4EC2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift */,
+				MILESTONE02 /* ViewResearchProjectMilestonesView.swift */,
 				B2D682362968879C005FDCCE /* ViewPlayerStatsView.swift */,
 				B2E135BF29FD8F7E0038DE31 /* XpReductionsListView.swift */,
+				CRAFTING010 /* CraftingRecipeCell.swift */,
+				CRAFTING011 /* CraftingRecipesListView.swift */,
+				CRAFTING012 /* CraftingRecipesCategoriesView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -550,6 +582,8 @@
 				B2F9837829F07C7200512839 /* CreateEditEventView.swift */,
 				B2F9837A29F0833800512839 /* ManageEventView.swift */,
 				B2F9838729F1747D00512839 /* CheckInPlayerView.swift */,
+				NPC002 /* CreateNPCView.swift */,
+				NPC003 /* HiddenNPCListView.swift */,
 				B2750B4029F97D1400AA5F5B /* ContactListView.swift */,
 				B2750B4229F97E3000AA5F5B /* ContactDetailsView.swift */,
 				B2750B4A29F9904300AA5F5B /* ChangePlayerPasswordView.swift */,
@@ -634,6 +668,7 @@
 				B233D76D2A1D4E1C002B9BBA /* AppVersionModel.swift */,
 				B23728B32DC1CCBC00495777 /* ReserachProject.swift */,
 				B2F29FAF2A420D0F00E07108 /* GearModel.swift */,
+				CRAFTING001 /* CraftingRecipeModel.swift */,
 				B251B0642BD1A08D00915F01 /* FeatureFlagModel.swift */,
 				B251B0682BD1A58E00915F01 /* ProfileImageModel.swift */,
 			);
@@ -678,6 +713,7 @@
 				B21F1C132DD5247A0004B391 /* ResearchProjectService.swift */,
 				B233D76F2A1D4E8F002B9BBA /* VersionService.swift */,
 				B2F29FAD2A420AD900E07108 /* GearService.swift */,
+				CRAFTING003 /* CraftingRecipeService.swift */,
 				B251B0662BD1A25800915F01 /* FeatureFlagService.swift */,
 				B251B06A2BD1A5ED00915F01 /* ProfileImageService.swift */,
 				B23728B12DC1C10600495777 /* ServiceEndpoints.swift */,
@@ -901,6 +937,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B235A4ED2DD785D000AF96DC /* ViewOrManageResearchProjectsView.swift in Sources */,
+				MILESTONE01 /* ViewResearchProjectMilestonesView.swift in Sources */,
+				NPC001 /* CreateNPCView.swift in Sources */,
+				NPC004 /* HiddenNPCListView.swift in Sources */,
 				B235529829E85F7600183748 /* DateExtensions.swift in Sources */,
 				B2E5F2DB2AD0807C004D61F5 /* RulebookUtils.swift in Sources */,
 				B22324B32E33C5CA0087786E /* UpdateTrackerModel.swift in Sources */,
@@ -916,6 +955,7 @@
 				B2DFB0BA2955FCEB00132B08 /* RequestBuilder.swift in Sources */,
 				B2750B5729FAD69200AA5F5B /* EventAttendeeService.swift in Sources */,
 				B2F29FB02A420D0F00E07108 /* GearModel.swift in Sources */,
+				CRAFTING002 /* CraftingRecipeModel.swift in Sources */,
 				B2750B4329F97E3000AA5F5B /* ContactDetailsView.swift in Sources */,
 				B21691F028FF2184006AA921 /* PasswordField.swift in Sources */,
 				B293AEFE291588EE00D2447C /* HomeTabBarView.swift in Sources */,
@@ -974,6 +1014,9 @@
 				B23552C029E9EA0E00183748 /* AddSkillView.swift in Sources */,
 				B293AEF829155D7000D2447C /* OAuthToken.swift in Sources */,
 				B235A4EF2DD7861F00AF96DC /* ResearchProjectCell.swift in Sources */,
+				CRAFTING013 /* CraftingRecipeCell.swift in Sources */,
+				CRAFTING014 /* CraftingRecipesListView.swift in Sources */,
+				CRAFTING015 /* CraftingRecipesCategoriesView.swift in Sources */,
 				B21691EA28FDE6DB006AA921 /* ColorExtensions.swift in Sources */,
 				B21F1C162DD57C040004B391 /* ViewEventAttendeesView.swift in Sources */,
 				B235528C29E83A0E00183748 /* AdminView.swift in Sources */,
@@ -1056,6 +1099,7 @@
 				B2A0D4F029E7177300A235B4 /* SkillPrereqModel.swift in Sources */,
 				B2F9838A29F176EB00512839 /* CheckInOutBarcodeModel.swift in Sources */,
 				B2F29FAE2A420AD900E07108 /* GearService.swift in Sources */,
+				CRAFTING004 /* CraftingRecipeService.swift in Sources */,
 				B2E135B629FC029F0038DE31 /* UIApplicationExtensions.swift in Sources */,
 				B2B7123D2E44EE8700B2AA3F /* FortificationCell.swift in Sources */,
 			);
@@ -1066,6 +1110,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B21691CE28FDDC60006AA921 /* Still_Alive_LarpTests.swift in Sources */,
+				B223FAAE2F947981003CD33D /* CharacterModelTests.swift in Sources */,
+				B223FAAF2F947981003CD33D /* BaseTestClass.swift in Sources */,
+				B223FAB02F947981003CD33D /* ExtensionTests.swift in Sources */,
+				B223FAB12F947981003CD33D /* PlayerModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1217,7 +1265,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
@@ -1239,7 +1287,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
+				MARKETING_VERSION = 2.2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stillalivelarp.stillalivelarp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1258,7 +1306,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"StillAliveLarp/Preview Content\"";
 				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				ENABLE_PREVIEWS = YES;
@@ -1280,7 +1328,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
+				MARKETING_VERSION = 2.2.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.stillalivelarp.stillalivelarp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1298,9 +1346,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1317,9 +1365,9 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1335,7 +1383,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpUITests";
@@ -1352,7 +1400,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 2JSUR3RP97;
+				DEVELOPMENT_TEAM = 5P2LQT95W5;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "RydgeCraker.Still-Alive-LarpUITests";

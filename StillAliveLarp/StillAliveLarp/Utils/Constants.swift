@@ -12,8 +12,8 @@ struct Constants {
     struct Versioning {
         // TODO ALWAYS
         // use this instead of the built-in to prevent issues. Make sure to change both
-        static let appBuildNumber = "27"
-        static let appVersion = "2.2.2.0"
+        static let appBuildNumber = "30"
+        static let appVersion = "2.2.3.0"
     }
     
     struct Logging {
@@ -47,6 +47,10 @@ struct Constants {
         static let NPC = 2
         static let planner = 3
         static let hidden = 4
+    }
+
+    struct SpecificCharacterIds {
+        static let commanderDavis = 1
     }
 
     struct urls {

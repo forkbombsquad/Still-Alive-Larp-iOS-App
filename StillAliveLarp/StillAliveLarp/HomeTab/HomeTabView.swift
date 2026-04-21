@@ -65,7 +65,7 @@ struct HomeTabView: View {
     }
 
     func showCheckoutSection() -> Bool {
-        return DM.getOngoingEvent() != nil && DM.getCurrentPlayer()?.isCheckedIn ?? false
+        return DM.getOngoingEvent() == nil && DM.getCurrentPlayer()?.isCheckedIn ?? false
     }
 
     func showCurrentCharSection() -> Bool {

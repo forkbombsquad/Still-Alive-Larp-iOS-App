@@ -10,17 +10,26 @@ import Foundation
 struct CampStatusModel: CustomCodeable {
     let id: Int
     let campFortificationJson: String
-    
-    init(id: Int, campFortificationJson: String) {
+    let npcSlots: Int
+    let medicalCots: Int
+    let teachingChairs: Int
+
+    init(id: Int, campFortificationJson: String, npcSlots: Int = 10, medicalCots: Int = 0, teachingChairs: Int = 0) {
         self.id = id
         self.campFortificationJson = campFortificationJson
+        self.npcSlots = npcSlots
+        self.medicalCots = medicalCots
+        self.teachingChairs = teachingChairs
     }
-    
-    init(id: Int, campFortifications: [CampFortification]) {
+
+    init(id: Int, campFortifications: [CampFortification], npcSlots: Int = 10, medicalCots: Int = 0, teachingChairs: Int = 0) {
         self.id = id
         self.campFortificationJson = CampFortifications(campFortifications: campFortifications).toJsonString() ?? ""
+        self.npcSlots = npcSlots
+        self.medicalCots = medicalCots
+        self.teachingChairs = teachingChairs
     }
-    
+
     var campFortifications: [CampFortification] {
         let cf: CampFortifications? = campFortificationJson.data(using: .utf8)?.toJsonObject()
         return cf?.campFortifications ?? []

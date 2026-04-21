@@ -52,6 +52,14 @@ struct ResearchProjectCell: View {
                             .padding([.horizontal], 16)
                             .padding(.top, 8)
                         
+                        if !researchProject.milestoneJsonModels.isEmpty {
+                            NavArrowView(title: "View Milestones", loading: $loading) { _ in
+                                ViewResearchProjectMilestonesView(researchProject: researchProject)
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.top, 16)
+                        }
+                        
                     }
                 }
             }

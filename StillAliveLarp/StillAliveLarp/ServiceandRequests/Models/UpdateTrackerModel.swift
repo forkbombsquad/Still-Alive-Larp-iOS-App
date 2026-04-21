@@ -27,11 +27,12 @@ struct UpdateTrackerModel: CustomCodeable, Identifiable {
     private(set) var skillPrereqs: Int
     private(set) var xpReductions: Int
     private(set) var campStatus: Int
+    private(set) var craftingRecipes: Int
     private(set) var rulebookVersion: String
     private(set) var treatingWoundsVersion: String
-    
+
     static func empty() -> UpdateTrackerModel {
-        UpdateTrackerModel(id: -1, announcements: -1, awards: -1, characters: -1, gear: -1, characterSkills: -1, contactRequests: -1, events: -1, eventAttendees: -1, preregs: -1, featureFlags: -1, intrigues: -1, players: -1, profileImages: -1, researchProjects: -1, skills: -1, skillCategories: -1, skillPrereqs: -1, xpReductions: -1, campStatus: -1, rulebookVersion: "", treatingWoundsVersion: "")
+        UpdateTrackerModel(id: -1, announcements: -1, awards: -1, characters: -1, gear: -1, characterSkills: -1, contactRequests: -1, events: -1, eventAttendees: -1, preregs: -1, featureFlags: -1, intrigues: -1, players: -1, profileImages: -1, researchProjects: -1, skills: -1, skillCategories: -1, skillPrereqs: -1, xpReductions: -1, campStatus: -1, craftingRecipes: -1, rulebookVersion: "", treatingWoundsVersion: "")
     }
     
     func getDifferences(_ other: UpdateTrackerModel) -> [DataManager.DataManagerType] {
@@ -93,6 +94,9 @@ struct UpdateTrackerModel: CustomCodeable, Identifiable {
         if other.campStatus != self.campStatus {
             updates.append(.campStatus)
         }
+        if other.craftingRecipes != self.craftingRecipes {
+            updates.append(.craftingRecipes)
+        }
         if other.rulebookVersion != self.rulebookVersion {
             updates.append(.rulebook)
         }
@@ -149,6 +153,8 @@ struct UpdateTrackerModel: CustomCodeable, Identifiable {
                 self.treatingWoundsVersion = newTracker.treatingWoundsVersion
             case .campStatus:
                 self.campStatus = newTracker.campStatus
+            case .craftingRecipes:
+                self.craftingRecipes = newTracker.craftingRecipes
             }
         }
     }

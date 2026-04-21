@@ -30,15 +30,16 @@ class LocalDataManager {
         static let fullEventsKey = "fullevents\(ldmkeysPostfix)"
         static let fullCharactersKey = "fullcharacters\(ldmkeysPostfix)"
         static let fullPlayersKey = "fullplayers\(ldmkeysPostfix)"
+        static let fullCraftingRecipesKey = "fullcraftingrecipes\(ldmkeysPostfix)"
         static let playerIdKey = "playerid\(ldmkeysPostfix)"
-        
-        static let allKeys = [fullSkillsKey, fullEventsKey, fullCharactersKey, fullPlayersKey, playerIdKey]
+
+        static let allKeys = [fullSkillsKey, fullEventsKey, fullCharactersKey, fullPlayersKey, fullCraftingRecipesKey, playerIdKey]
     }
     
     static let shared = LocalDataManager()
     
     // TODO ROUTINE - update this number if any of the models change between releases
-    static let localDataVersion = "1.0.0.0"
+    static let localDataVersion = "1.0.0.3"
     
     static func clearAllLocalData() {
         UserAndPassManager.shared.clearAll()
@@ -392,11 +393,27 @@ class LocalDataManager {
     func storeCampStatus(_ campStatus: CampStatusModel) {
         store(campStatus, key: DMT.campStatus)
     }
-    
+
     func getCampStatus() -> CampStatusModel? {
         return get(DMT.campStatus)
     }
-    
+
+    func storeCraftingRecipes(_ recipes: [CraftingRecipeModel]) {
+        store(recipes, key: DMT.craftingRecipes)
+    }
+
+    func getCraftingRecipes() -> [CraftingRecipeModel] {
+        return get(DMT.craftingRecipes) ?? []
+    }
+
+    func storeFullCraftingRecipes(_ recipes: [FullCraftingRecipeModel]) {
+        store(recipes, key: LDMKeys.fullCraftingRecipesKey)
+    }
+
+    func getFullCraftingRecipes() -> [FullCraftingRecipeModel] {
+        return get(LDMKeys.fullCraftingRecipesKey) ?? []
+    }
+
     func storeTreatingWounds(_ treatingWounds: Data) {
         store(LDImageDataModel(imageData: treatingWounds), key: DMT.treatingWounds)
     }
@@ -485,6 +502,13 @@ class LocalDataManager {
                 profileImages: getProfileImages()
             )
         }
+
+        // Full Crafting Recipes
+        if neededUpdates.doesNotContainAnyOf([.craftingRecipes, .skills]) {
+            buildAndStoreFullCraftingRecipes(getCraftingRecipes(), fullSkills: getFullSkills())
+        } else if getFullCraftingRecipes().isEmpty && !getCraftingRecipes().isEmpty {
+            buildAndStoreFullCraftingRecipes(getCraftingRecipes(), fullSkills: getFullSkills())
+        }
     }
     
     private func buildAndStoreFullSkills(_ skills: [SkillModel], _ skillCategories: [SkillCategoryModel], _ skillPrereqs: LDSkillPrereqModels) {
@@ -558,5 +582,50 @@ class LocalDataManager {
     func getFullPlayers() -> [FullPlayerModel] {
         return get(LDMKeys.fullPlayersKey) ?? []
     }
-    
+
+    private func buildAndStoreFullCraftingRecipes(_ recipes: [CraftingRecipeModel], fullSkills: [FullSkillModel]) {
+        var fullRecipes = [FullCraftingRecipeModel]()
+
+        // First pass: create all base recipes
+        for recipe in recipes where recipe.baseRecipeId == -1 || recipe.baseRecipeId == nil {
+            let requiredSkill = fullSkills.first { $0.id == recipe.skillId }
+
+            var otherRefs = [FullCraftingRecipeModel]()
+            for refId in recipe.getOtherRecipeIds() {
+                if let ref = fullRecipes.first(where: { $0.id == refId }) {
+                    otherRefs.append(ref)
+                }
+            }
+
+            fullRecipes.append(FullCraftingRecipeModel(
+                craftingRecipe: recipe,
+                requiredSkill: requiredSkill,
+                baseRecipe: nil,
+                otherRecipeReferences: otherRefs
+            ))
+        }
+
+        // Second pass: create alternate recipes (with base recipe reference)
+        for recipe in recipes where recipe.baseRecipeId != nil && recipe.baseRecipeId != -1 {
+            let requiredSkill = fullSkills.first { $0.id == recipe.skillId }
+            let baseRecipe = recipe.baseRecipeId != nil ? fullRecipes.first { $0.id == recipe.baseRecipeId }?.craftingRecipe : nil
+
+            var otherRefs = [FullCraftingRecipeModel]()
+            for refId in recipe.getOtherRecipeIds() {
+                if let ref = fullRecipes.first(where: { $0.id == refId }) {
+                    otherRefs.append(ref)
+                }
+            }
+
+            fullRecipes.append(FullCraftingRecipeModel(
+                craftingRecipe: recipe,
+                requiredSkill: requiredSkill,
+                baseRecipe: baseRecipe,
+                otherRecipeReferences: otherRefs
+            ))
+        }
+
+        storeFullCraftingRecipes(fullRecipes)
+    }
+
 }

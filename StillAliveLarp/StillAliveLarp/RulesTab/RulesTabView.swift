@@ -37,6 +37,9 @@ struct RulesTabView: View {
                                             DownloadedImageView(image: image)
                                         }
                                     }
+                                    NavArrowView(title: "Crafting Recipes") { _ in
+                                        return CraftingRecipesCategoriesView()
+                                    }
                                 }
                             }
                         }

@@ -27,6 +27,7 @@ struct CheckInPlayerView: View {
     @State var character: FullCharacterModel? = nil
     @State var event: FullEventModel? = nil
     @State var isNpc = false
+    @State var assignAsHiddenNpc = false
     
     @State var npcChoices: [String] = []
     @State var selectedNpc: String = ""
@@ -88,13 +89,24 @@ struct CheckInPlayerView: View {
                                             .padding(.vertical, 8)
                                         if let character = character {
                                             CharacterBarcodeView(character: character, relevantSkills: getRelevantSkills(), isNpc: false)
-                                        } else if let npc = getSelectedNpc() {
-                                            StyledPickerView(title: "NPC", selection: $selectedNpc, options: npcChoices) { _ in }
-                                            KeyValueView(key: "Name", value: "NPC")
-                                            KeyValueView(key: "BONUS RAFFLE TICKETS", value: "+1", showDivider: false)
-                                            CharacterBarcodeView(character: npc, relevantSkills: getRelevantSkills(), isNpc: true)
-                                        } else {
-                                            StyledPickerView(title: "NPC", selection: $selectedNpc, options: npcChoices) { _ in }
+                                        } else if isNpc {
+                                            Toggle(isOn: $assignAsHiddenNpc) {
+                                                Text("Assign as Hidden NPC")
+                                                    .font(.system(size: 16, weight: .bold))
+                                            }
+                                            .onChange(of: assignAsHiddenNpc) { _ in
+                                                recalculateModels()
+                                            }
+                                            .padding(.bottom, 8)
+                                            .padding(.top, 8)
+
+                                            let npcLabel = assignAsHiddenNpc ? "Select Hidden NPC" : "Select NPC"
+                                            StyledPickerView(title: npcLabel, selection: $selectedNpc, options: npcChoices) { _ in }
+                                            if let npc = getSelectedNpc() {
+                                                KeyValueView(key: "Name", value: assignAsHiddenNpc ? "\(npc.fullName) - Hidden NPC" : npc.fullName)
+                                                KeyValueView(key: "BONUS RAFFLE TICKETS", value: "+1", showDivider: false)
+                                                CharacterBarcodeView(character: npc, relevantSkills: getRelevantSkills(), isNpc: true)
+                                            }
                                         }
                                         
                                         Spacer().frame(height: 16)
@@ -172,7 +184,11 @@ struct CheckInPlayerView: View {
                         isNpc = true
                     }
                     event = DM.events.first(where: { $0.id == bar.eventId })
-                    npcChoices = DM.getAllCharacters(.npc).filter { npc in npc.isAlive && npc.isNpcAndNotAttendingEvent(eventId: bar.eventId) }.map { $0.fullName }.sorted()
+                    if assignAsHiddenNpc {
+                        npcChoices = DM.getAllCharacters(.hidden).filter { npc in npc.isAlive && npc.isNpcAndNotAttendingEvent(eventId: bar.eventId) }.map { $0.fullName }.sorted()
+                    } else {
+                        npcChoices = DM.getAllCharacters(.npc).filter { npc in npc.isAlive && npc.isNpcAndNotAttendingEvent(eventId: bar.eventId) }.map { $0.fullName }.sorted()
+                    }
                     selectedNpc = npcChoices.first ?? ""
                 } else {
                     gearModified = false
@@ -269,7 +285,7 @@ struct CheckInPlayerView: View {
     }
     
     func getSelectedNpc() -> FullCharacterModel? {
-        return DM.getAllCharacters(.npc).first(where: { $0.fullName == selectedNpc })
+        return DM.getAllCharacters([.npc, .hidden]).first(where: { $0.fullName == selectedNpc })
     }
     
     func getRelevantSkills() -> [FullCharacterModifiedSkillModel] {

@@ -8,406 +8,603 @@
 import SwiftUI
 import CodeScanner
 
-// TODO redo this view someday
-
 struct CheckOutPlayerView: View {
-//    @EnvironmentObject var alertManager: AlertManager
-//    @EnvironmentObject var DM: DataManager
-//
-//    @State var loadingText = ""
-//
-//    @State var isScanning: Bool = true
-//    @State var playerCheckOutModel: PlayerCheckOutBarcodeModel?
-//
-//    @State var loading: Bool = false
-//
-//    @State var infection: String = "0"
-//    @State var bullets: String = "0"
-//    @State var megas: String = "0"
-//    @State var rivals: String = "0"
-//    @State var rockets: String = "0"
-//    @State var bulletCasings: String = "0"
-//    @State var clothSupplies: String = "0"
-//    @State var woodSupplies: String = "0"
-//    @State var metalSupplies: String = "0"
-//    @State var techSupplies: String = "0"
-//    @State var medicalSupplies: String = "0"
-//    @State var unshakableResolveUses: String = "0"
-//    @State var mysteriousStrangerUses: String = "0"
-//
-//    @State private var isAlive: String = "Alive"
-//    @State private var aliveOptions = ["Alive", "Dead"]
-//
-//    @State var armorType: String = CharacterModel.ArmorType.none.rawValue
-//    @State private var armorOptions = [CharacterModel.ArmorType.none.rawValue, CharacterModel.ArmorType.metal.rawValue, CharacterModel.ArmorType.bulletProof.rawValue]
-//
-//    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-
-    var body: some View {
-        EmptyView()
-//        if isScanning {
-//            VStack {
-//                Text("Scan Check Out Code")
-//                    .font(.system(size: 32, weight: .bold))
-//                    .multilineTextAlignment(.center)
-//                    .frame(alignment: .center)
-//                    .padding([.bottom], 16)
-//                CodeScannerView(codeTypes: [.qr]) { result in
-//                    self.isScanning = false
-//                    switch result {
-//                    case .success(let data):
-//                        guard let json = data.string.decompress() else {
-//                            self.scannerFailed("Unable to parse data")
-//                            return
-//                        }
-//                        guard let model: PlayerCheckOutBarcodeModel = json.toJsonObject() else {
-//                            self.scannerFailed("Unable to parse data")
-//                            return
-//                        }
-//                        self.playerCheckOutModel = model
-//                        self.updateFields()
-//                        self.isScanning = false
-//                    case .failure(let error):
-//                        self.scannerFailed(error.localizedDescription)
-//                    }
-//                }
-//            }
-//        } else if let model = playerCheckOutModel {
-//            VStack(alignment: .center) {
-//                GeometryReader { gr in
-//                    ScrollView {
-//                        VStack(alignment: .center) {
-//                            Text("Check Out Player")
-//                                .font(.system(size: 32, weight: .bold))
-//                                .multilineTextAlignment(.center)
-//                                .frame(alignment: .center)
-//                                .padding([.bottom], 16)
-//                            Divider()
-//
-//                            //  Player Section
-//                            PlayerBarcodeView(player: model.player, isCheckout: true, isNPC: model.character == nil)
-//                            Spacer().frame(height: 48)
-//
-//                            // Character/NPC Section
-//                            KeyValueView(key: "Character", value: "", showDivider: false)
-//                            if let character = model.character {
-//                                CharacterCheckoutBarcodeView(character: character, relevantSkills: model.relevantSkills, infection: $infection, bullets: $bullets, megas: $megas, rivals: $rivals, rockets: $rockets, bulletCasings: $bulletCasings, clothSupplies: $clothSupplies, woodSupplies: $woodSupplies, metalSupplies: $metalSupplies, techSupplies: $techSupplies, medicalSupplies: $medicalSupplies, armorType: $armorType, armorOptions: $armorOptions, isAlive: $isAlive, aliveOptions: $aliveOptions, unshakableResolveUses: $unshakableResolveUses, mysteriousStrangerUses: $mysteriousStrangerUses)
-//                            } else {
-//                                KeyValueView(key: "Name", value: "NPC")
-//                            }
-//
-//                            // Approve Section
-//                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, buttonText: "Check Out") {
-//                                let valResult = validateFields()
-//                                if !valResult.hasError {
-//                                    if let char = model.character, isPassedThreshold(char), self.isAlive.lowercased() == "alive" {
-//                                        runOnMainThread {
-//                                            alertManager.showAlert("Warning!", message: "\(char.fullName) has passed an infection threshold! Make sure to check and see if they're a zombie!\n\n\(getThresholdCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Check Passed!"), action: {
-//                                                self.checkoutStepOne(model)
-//                                            }), button2: Alert.Button.destructive(Text("Go Back"), action: { }))
-//                                        }
-//                                    } else {
-//                                        self.checkoutStepOne(model)
-//                                    }
-//                                } else {
-//                                    alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
-//                                }
-//
-//                            }.padding(.top, 48)
-//                        }
-//                    }
-//                }
-//            }
-//            .padding(16)
-//            .background(Color.lightGray)
-//            .onAppear {
-//                self.updateFields()
-//            }
-//        } else {
-//            VStack(alignment: .center) {
-//                Text("Something Went Wrong")
-//                    .font(.system(size: 32, weight: .bold))
-//                    .multilineTextAlignment(.center)
-//                    .frame(alignment: .center)
-//                    .padding([.bottom], 16)
-//            }
-//        }
-    }
-
-//    fileprivate func updateFields() {
-//        if let c = self.playerCheckOutModel?.character {
-//            self.infection = c.infection
-//            self.bullets = c.bullets
-//            self.megas = c.megas
-//            self.rivals = c.rivals
-//            self.rockets = c.rockets
-//            self.bulletCasings = c.bulletCasings
-//            self.clothSupplies = c.clothSupplies
-//            self.woodSupplies = c.woodSupplies
-//            self.metalSupplies = c.metalSupplies
-//            self.techSupplies = c.techSupplies
-//            self.medicalSupplies = c.medicalSupplies
-//            if let a = CharacterModel.ArmorType(rawValue: c.armor) {
-//                self.armorType = a.rawValue
-//            }
-//            self.isAlive = "Alive"
-//            self.unshakableResolveUses = c.unshakableResolveUses
-//            self.mysteriousStrangerUses = c.mysteriousStrangerUses
-//        }
-//    }
-    
-//    private func checkoutStepOne(_ model: PlayerCheckOutBarcodeModel) {
-//        if let char = model.character, isAlive.lowercased() == "dead" {
-//            runOnMainThread {
-//                alertManager.showAlert("Warning!", message: "\(char.fullName) has seeming perished, but they still have a chance! Make sure you roll 1d10 to see if they miraculously survive!\n\n\(getDeathCheckSkills(model.relevantSkills, char: char))", button1: Alert.Button.default(Text("Still Dead!"), action: {
-//                    self.checkoutStepTwo(model)
-//                }), button2: Alert.Button.cancel(Text("They Survived! Go Back"), action: { }))
-//            }
-//        } else {
-//            checkoutStepTwo(model)
-//        }
-//    }
-
-//    private func checkoutStepTwo(_ model: PlayerCheckOutBarcodeModel) {
-//        self.loading = true
-//        if let char = model.character {
-//            self.loadingText = "Loading Character"
-//            CharacterService.getCharacter(char.id) { cm in
-//                let editedChar = CharacterModel(id: cm.id, fullName: cm.fullName, startDate: cm.startDate, isAlive: self.isAlive.lowercased() == "alive" ? "TRUE" : "FALSE", deathDate: self.isAlive.lowercased() == "alive" ? "" : Date().yyyyMMddFormatted, infection: self.infection, bio: cm.bio, approvedBio: cm.approvedBio, bullets: self.bullets, megas: self.megas, rivals: self.rivals, rockets: self.rockets, bulletCasings: self.bulletCasings, clothSupplies: self.clothSupplies, woodSupplies: self.woodSupplies, metalSupplies: self.metalSupplies, techSupplies: self.techSupplies, medicalSupplies: self.medicalSupplies, armor: self.armorType, unshakableResolveUses: self.unshakableResolveUses, mysteriousStrangerUses: self.mysteriousStrangerUses, playerId: cm.playerId, characterTypeId: cm.characterTypeId)
-//                self.loadingText = "Updating Character"
-//                AdminService.updateCharacter(editedChar) { _ in
-//                    self.checkoutStepThree(model)
-//                } failureCase: { error in
-//                    self.loading = false
-//                    resetScanner()
-//                }
-//            } failureCase: { error in
-//                self.loading = false
-//                resetScanner()
-//            }
-//
-//        } else {
-//            checkoutStepThree(model)
-//        }
-//    }
-
-//    private func checkoutStepThree(_ model: PlayerCheckOutBarcodeModel) {
-//        var needToAwardExtraXp = false
-//        var xpAmount = 0
-//        if model.character != nil {
-//            xpAmount = 1
-//            if self.isAlive.lowercased() == "dead" {
-//                needToAwardExtraXp = true
-//            }
-//        } else {
-//            xpAmount = 2
-//        }
-//
-//        self.loadingText = "Loading Player"
-//        PlayerService.getPlayer(model.player.id) { player in
-//            let xp = player.experience.intValueDefaultZero + xpAmount
-//            let events = player.numEventsAttended.intValueDefaultZero + 1
-//            let npcEvents = player.numNpcEventsAttended.intValueDefaultZero + (model.character == nil ? 1 : 0)
-//
-//            let playerUpdate = PlayerModel(id: player.id, username: player.username, fullName: player.fullName, startDate: player.startDate, experience: "\(xp)", freeTier1Skills: player.freeTier1Skills, prestigePoints: player.prestigePoints, isCheckedIn: "FALSE", isCheckedInAsNpc: "FALSE", lastCheckIn: Date().yyyyMMddFormatted, numEventsAttended: "\(events)", numNpcEventsAttended: "\(npcEvents)", isAdmin: player.isAdmin)
-//            self.loadingText = "Updating Player"
-//            AdminService.updatePlayer(playerUpdate) { _ in
-//                self.checkoutStepFour(model, awardExtraXp: needToAwardExtraXp)
-//            } failureCase: { error in
-//                self.loading = false
-//                resetScanner()
-//            }
-//
-//        } failureCase: { error in
-//            self.loading = false
-//            resetScanner()
-//        }
-//    }
-
-//    private func checkoutStepFour(_ model: PlayerCheckOutBarcodeModel, awardExtraXp: Bool) {
-//        let ea = EventAttendeeModel(id: model.eventAttendeeId, playerId: model.player.id, characterId: model.character?.id, eventId: model.eventId, isCheckedIn: "FALSE", asNpc: model.character == nil ? "TRUE" : "FALSE")
-//        self.loadingText = "Updating Records"
-//        AdminService.updateEventAttendee(ea) { eventAttendee in
-//            if awardExtraXp, let char = model.character {
-//                self.loadingText = "Loading Character For\nDeath XP Bonus"
-//                CharacterService.getCharacter(char.id) { characterModel in
-//                    self.loadingText = "Loading Skills For\nDeath XP Bonus"
-//                    characterModel.getAllXpSpent { xp in
-//
-//                        var adjustedXp = xp / 2
-//
-//                        var max = model.player.numEventsAttended.intValueDefaultZero
-//                        max += model.player.numNpcEventsAttended.intValueDefaultZero
-//
-//                        adjustedXp = min(max, adjustedXp)
-//
-//                        self.loadingText = "Refunding Death Xp"
-//                        let award = AwardCreateModel(playerId: model.player.id, characterId: nil, awardType: AdminService.PlayerAwardType.xp.rawValue, reason: "Death of character: \(model.character?.fullName ?? "")", date: Date().yyyyMMddFormatted, amount: "\(adjustedXp)")
-//
-//                        AdminService.awardPlayer(award) { _ in
-//
-//                            characterModel.getAllSpentPrestige { pp in
-//
-//                                if pp > 0 {
-//                                    self.loadingText = "Refunding Death Pp"
-//                                    let awd = AwardCreateModel(playerId: model.player.id, characterId: nil, awardType: AdminService.PlayerAwardType.prestigePoints.rawValue, reason: "Death of character: \(model.character?.fullName ?? "")", date: Date().yyyyMMddFormatted, amount: "\(pp)")
-//
-//                                    AdminService.awardPlayer(awd) { updatedPlayer in
-//                                        self.loading = false
-//                                        showSuccessAlertAllowingRescan("Successfully Checked Out!")
-//                                    } failureCase: { error in
-//                                        self.loading = false
-//                                        showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death pp!")
-//                                    }
-//
-//                                } else {
-//                                    self.loading = false
-//                                    showSuccessAlertAllowingRescan("Successfully Checked Out!")
-//                                }
-//
-//
-//                            } failureCase: { error in
-//                                self.loading = false
-//                                showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death xp!")
-//                            }
-//
-//                            self.loading = false
-//                            showSuccessAlertAllowingRescan("Successfully Checked Out!")
-//                        } failureCase: { error in
-//                            self.loading = false
-//                            showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death xp!")
-//                        }
-//
-//                    } failureCase: { error in
-//                        self.loading = false
-//                        showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death xp!")
-//                    }
-//                } failureCase: { error in
-//                    self.loading = false
-//                    showSuccessAlertAllowingRescan("Successfully Checked Out but unable to award death xp!")
-//                }
-//
-//            } else {
-//                self.loading = false
-//                showSuccessAlertAllowingRescan("Successfully Checked Out!")
-//            }
-//        } failureCase: { error in
-//            self.loading = false
-//            resetScanner()
-//        }
-//    }
-
-//    private func getDeathCheckSkills(_ skills: [SkillBarcodeModel], char: CharacterBarcodeModel) -> String {
-//        typealias skl = Constants.SpecificSkillIds
-//        var string = ""
-//        var gamblerAmount = 0
-//        for skill in skills {
-//            if skill.id.equalsAnyOf(skl.gamblerTypeSkills) {
-//                gamblerAmount += 1
-//                continue
-//            }
-//        }
-//        if gamblerAmount > 0 {
-//            string = "\n\(gamblerAmount) level(s) of gambler skills, allowing them to reroll dice or reflip coins and take the better result, once for each level."
-//        }
-//        if !string.isEmpty {
-//            string = "Relevant Skills:\(string)"
-//        }
-//        return string
-//    }
-
-//    private func getThresholdCheckSkills(_ skills: [SkillBarcodeModel], char: CharacterBarcodeModel) -> String {
-//        typealias skl = Constants.SpecificSkillIds
-//        var string = ""
-//        var gamblerAmount = 0
-//        for skill in skills {
-//            if skill.id.equalsAnyOf(skl.gamblerTypeSkills) {
-//                gamblerAmount += 1
-//                continue
-//            }
-//            if skill.id == skl.willToLive {
-//                string  = "\(string)\nWill To Live skill - They may flip a coin instead of rolling. If heads, the roll was a success."
-//            }
-//            if skill.id == skl.unshakableResolve && char.unshakableResolveUses.intValueDefaultZero == 0 {
-//                string  = "\(string)\nUnshakable Resolve skill - If all rolls an flips fail, you can choose to survive once per character. Make sure to adjust the value above if you use this skill."
-//            }
-//        }
-//        if gamblerAmount > 0 {
-//            string = "\(string)\n\(gamblerAmount) level(s) of gambler skills, allowing them to reroll dice or reflip coins and take the better result, once for each level."
-//        }
-//        if !string.isEmpty {
-//            string = "Relevant Skills:\(string)"
-//        }
-//        return string
-//    }
-
-//    private func validateFields() -> ValidationResult {
-//        return Validator.validateMultiple([
-//            ValidationGroup(text: infection, validationType: .infection),
-//            ValidationGroup(text: bullets, validationType: .bullets),
-//            ValidationGroup(text: megas, validationType: .megas),
-//            ValidationGroup(text: rivals, validationType: .rivals),
-//            ValidationGroup(text: rockets, validationType: .rockets),
-//            ValidationGroup(text: bulletCasings, validationType: .bulletCasings),
-//            ValidationGroup(text: clothSupplies, validationType: .clothSupplies),
-//            ValidationGroup(text: woodSupplies, validationType: .woodSupplies),
-//            ValidationGroup(text: metalSupplies, validationType: .metalSupplies),
-//            ValidationGroup(text: techSupplies, validationType: .techSupplies),
-//            ValidationGroup(text: medicalSupplies, validationType: .medicalSupplies)
-//        ])
-//    }
-
-//    func scannerFailed(_ errorMessage: String) {
-//        runOnMainThread {
-//            alertManager.showOkAlert("Scanning Failed", message: errorMessage) {
-//                runOnMainThread {
-//                    self.mode.wrappedValue.dismiss()
-//                }
-//            }
-//        }
-//    }
-
-//    func resetScanner() {
-//        self.isScanning = true
-//        self.playerCheckOutModel = nil
-//    }
-
-//    func showSuccessAlertAllowingRescan(_ message: String) {
-//        runOnMainThread {
-//            alertManager.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
-//                self.resetScanner()
-//            }), button2: Alert.Button.cancel(Text("Finished"), action: {
-//                runOnMainThread {
-//                    self.mode.wrappedValue.dismiss()
-//                }
-//            }))
-//        }
-//    }
-
-//    func isPassedThreshold(_ char: CharacterBarcodeModel) -> Bool {
-//        let prev = char.infection.intValueDefaultZero
-//        let cur = self.infection.intValueDefaultZero
-//
-//        if prev < 25 && cur >= 25 {
-//            return true
-//        } else if prev < 50 && cur >= 50 {
-//            return true
-//        } else if cur >= 75 {
-//            return true
-//        } else {
-//            return false
-//        }
-//
-//    }
-
-}
-
-struct CharacterCheckoutBarcodeView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    let character: FullCharacterModel
-    let relevantSkills: [FullCharacterModifiedSkillModel]
+    @State var isScanning: Bool = true
+    @State var barcodeModel: CheckInOutBarcodeModel?
+
+    @State var loading: Bool = false
+    @State var loadingText = ""
+
+    @State var player: FullPlayerModel? = nil
+    @State var character: FullCharacterModel? = nil
+    @State var npc: FullCharacterModel? = nil
+    @State var event: FullEventModel? = nil
+    @State var eventAttendee: EventAttendeeModel? = nil
+    @State var isNpc: Bool = false
+
+    // Editable character fields
+    @State var infection: String = "0"
+    @State var bullets: String = "0"
+    @State var megas: String = "0"
+    @State var rivals: String = "0"
+    @State var rockets: String = "0"
+    @State var bulletCasings: String = "0"
+    @State var clothSupplies: String = "0"
+    @State var woodSupplies: String = "0"
+    @State var metalSupplies: String = "0"
+    @State var techSupplies: String = "0"
+    @State var medicalSupplies: String = "0"
+    @State var mysteriousStrangerUses: String = "0"
+    @State var unshakableResolveUses: String = "0"
+    @State var armorType: String = "None"
+    @State var isAlive: String = "Alive"
+
+    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
+
+    var body: some View {
+        if isScanning {
+            VStack {
+                Text("Scan Check Out Code")
+                    .font(.system(size: 32, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .frame(alignment: .center)
+                    .padding([.bottom], 16)
+                CodeScannerView(codeTypes: [.qr]) { result in
+                    self.isScanning = false
+                    switch result {
+                    case .success(let data):
+                        guard let json = data.string.data(using: .utf8) else {
+                            self.scannerFailed("Unable to read data")
+                            return
+                        }
+                        guard let model: CheckInOutBarcodeModel = json.toJsonObject() else {
+                            self.scannerFailed("Unable to parse data")
+                            return
+                        }
+                        self.barcodeModel = model
+                        recalculateModels()
+                        self.isScanning = false
+                    case .failure(let error):
+                        self.scannerFailed(error.localizedDescription)
+                    }
+                }
+            }
+        } else if barcodeModel != nil {
+            VStack(alignment: .center) {
+                GeometryReader { gr in
+                    ScrollView {
+                        VStack(alignment: .center) {
+                            globalCreateTitleView("Check Out Player", DM: DM)
+                            LoadingLayoutView {
+                                VStack {
+                                    if let player = player, let event = event {
+                                        Divider().frame(height: 2).overlay(Color.black)
+                                        Text("Player")
+                                            .font(.system(size: 24, weight: .bold))
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                            .padding(.vertical, 8)
+
+                                        PlayerCheckoutSection(player: player, isNpc: isNpc)
+
+                                        Spacer().frame(height: 16)
+                                        Divider().frame(height: 2).overlay(Color.black)
+                                        Text("Character")
+                                            .font(.system(size: 24, weight: .bold))
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                            .padding(.vertical, 8)
+
+                                        CharacterCheckoutSection(
+                                            character: character,
+                                            npc: npc,
+                                            isNpc: isNpc,
+                                            infection: $infection,
+                                            bullets: $bullets,
+                                            megas: $megas,
+                                            rivals: $rivals,
+                                            rockets: $rockets,
+                                            bulletCasings: $bulletCasings,
+                                            clothSupplies: $clothSupplies,
+                                            woodSupplies: $woodSupplies,
+                                            metalSupplies: $metalSupplies,
+                                            techSupplies: $techSupplies,
+                                            medicalSupplies: $medicalSupplies,
+                                            mysteriousStrangerUses: $mysteriousStrangerUses,
+                                            unshakableResolveUses: $unshakableResolveUses,
+                                            armorType: $armorType,
+                                            isAlive: $isAlive
+                                        )
+
+                                        LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, buttonText: "Check Out") {
+                                            let valResult = validateFields()
+                                            if !valResult.hasError {
+                                                if let char = character ?? npc, isAlive == "Alive" && isPassedThreshold(char: char) {
+                                                    showThresholdWarning(char: char)
+                                                } else if isAlive == "Dead", let char = character ?? npc {
+                                                    showDeathCheck(char: char)
+                                                } else {
+                                                    checkoutStepOne()
+                                                }
+                                            } else {
+                                                alertManager.showOkAlert("Validation Error", message: valResult.getErrorMessages(), onOkAction: {})
+                                            }
+                                        }.padding(.top, 48)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }.padding(16)
+            .background(Color.lightGray)
+        } else {
+            VStack(alignment: .center) {
+                Text("Something Went Wrong")
+                    .font(.system(size: 32, weight: .bold))
+                    .multilineTextAlignment(.center)
+                    .frame(alignment: .center)
+                    .padding([.bottom], 16)
+            }
+        }
+    }
+
+    private func recalculateModels() {
+        DM.load(finished: {
+            runOnMainThread {
+                if let bar = barcodeModel {
+                    player = DM.players.first(where: { $0.id == bar.playerId })
+
+                    if let charId = bar.characterId, let char = DM.getCharacter(charId) {
+                        character = char
+                        npc = nil
+                        isNpc = false
+                    } else {
+                        character = nil
+                        isNpc = true
+                    }
+
+                    event = DM.events.first(where: { $0.id == bar.eventId })
+
+                    if let evt = event {
+                        eventAttendee = evt.attendees.first(where: { $0.playerId == bar.playerId && $0.isCheckedIn.boolValueDefaultFalse == true })
+                    }
+
+                    updateFieldsFromCharacter()
+                }
+            }
+        })
+    }
+
+    private func updateFieldsFromCharacter() {
+        let charOrNpc = character ?? npc
+        if let char = charOrNpc {
+            infection = char.infection.stringValue
+            bullets = char.bullets.stringValue
+            megas = char.megas.stringValue
+            rivals = char.rivals.stringValue
+            rockets = char.rockets.stringValue
+            bulletCasings = char.bulletCasings.stringValue
+            clothSupplies = char.clothSupplies.stringValue
+            woodSupplies = char.woodSupplies.stringValue
+            metalSupplies = char.metalSupplies.stringValue
+            techSupplies = char.techSupplies.stringValue
+            medicalSupplies = char.medicalSupplies.stringValue
+            armorType = char.armor
+            mysteriousStrangerUses = char.mysteriousStrangerUses.stringValue
+            unshakableResolveUses = char.unshakableResolveUses.stringValue
+            isAlive = char.isAlive ? "Alive" : "Dead"
+        } else {
+            infection = "0"
+            bullets = "0"
+            megas = "0"
+            rivals = "0"
+            rockets = "0"
+            bulletCasings = "0"
+            clothSupplies = "0"
+            woodSupplies = "0"
+            metalSupplies = "0"
+            techSupplies = "0"
+            medicalSupplies = "0"
+            armorType = "None"
+            mysteriousStrangerUses = "0"
+            unshakableResolveUses = "0"
+            isAlive = "Alive"
+        }
+    }
+
+    private func getRelevantSkills() -> [FullCharacterModifiedSkillModel] {
+        return (character ?? npc)?.getRelevantBarcodeSkills() ?? []
+    }
+
+    private func hasRegressionOrRemission() -> Bool {
+        let skills = getRelevantSkills()
+        for skill in skills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.regressionTypeSkills) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func hasRegression() -> Bool {
+        let skills = getRelevantSkills()
+        for skill in skills {
+            if skill.id == Constants.SpecificSkillIds.regression {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func hasRemission() -> Bool {
+        let skills = getRelevantSkills()
+        for skill in skills {
+            if skill.id == Constants.SpecificSkillIds.remission {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func getReductionAmount() -> String {
+        if hasRemission() {
+            return "1d4"
+        }
+        if hasRegression() {
+            return "1"
+        }
+        return ""
+    }
+
+    private func hasMysteriousStrangerSkills() -> Bool {
+        let skills = getRelevantSkills()
+        for skill in skills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func mysteriousStrangerTotal() -> Int {
+        let skills = getRelevantSkills()
+        var count = 0
+        for skill in skills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) {
+                count += 1
+            }
+        }
+        return count
+    }
+
+    private func hasUnshakableResolve() -> Bool {
+        let skills = getRelevantSkills()
+        for skill in skills {
+            if skill.id == Constants.SpecificSkillIds.unshakableResolve {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func isPassedThreshold(char: FullCharacterModel) -> Bool {
+        let prev = char.infection
+        let cur = infection.intValueDefaultZero
+        return (prev < 25 && cur >= 25) || (prev < 50 && cur >= 50) || (cur >= 75)
+    }
+
+    private func showThresholdWarning(char: FullCharacterModel) {
+        let skills = getRelevantSkills()
+        let skillsText = getThresholdCheckSkillsList(skills: skills, char: char)
+        alertManager.showAlert(
+            "Warning!",
+            message: "\(char.fullName) has passed an infection threshold! Make sure to check and see if they're a zombie!\n\n\(skillsText)",
+            button1: Alert.Button.default(Text("Check Passed!"), action: {
+                self.checkoutStepOne()
+            }),
+            button2: Alert.Button.destructive(Text("Go Back"), action: {
+                self.resetScanner()
+            })
+        )
+    }
+
+    private func showDeathCheck(char: FullCharacterModel) {
+        let skills = getRelevantSkills()
+        let skillsText = getDeathCheckSkillsList(skills: skills)
+        alertManager.showAlert(
+            "Warning!",
+            message: "\(char.fullName) has seemingly perished, but they still have a chance! Make sure you roll 1d10 to see if they miraculously survive (by rolling a 10)!\n\n\(skillsText)",
+            button1: Alert.Button.default(Text("Still Dead!"), action: {
+                self.checkoutStepOne()
+            }),
+            button2: Alert.Button.cancel(Text("They Survived! Go Back"), action: {
+                self.resetScanner()
+            })
+        )
+    }
+
+    private func getThresholdCheckSkillsList(skills: [FullCharacterModifiedSkillModel], char: FullCharacterModel) -> String {
+        var skillsText = ""
+        var gamblerCount = 0
+        for skill in skills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.gamblerTypeSkills) {
+                gamblerCount += 1
+            }
+            if skill.id == Constants.SpecificSkillIds.willToLive {
+                skillsText += "\nWill To Live skill - They may flip a coin instead of rolling. If heads, the roll was a success."
+            }
+            if skill.id == Constants.SpecificSkillIds.unshakableResolve && char.unshakableResolveUses == 0 {
+                skillsText += "\nUnshakable Resolve skill - if all rolls (or flips) fail, you can choose to survive once per character. Make sure to adjust the value above if you use this skill."
+            }
+        }
+        if gamblerCount > 0 {
+            skillsText += "\n\(gamblerCount) level(s) of gambler skills, allowing them to reroll dice or reflip coins and take the best result - once for each level of the skill."
+        }
+        if !skillsText.isEmpty {
+            skillsText = "Relevant Skills:\(skillsText)"
+        }
+        return skillsText
+    }
+
+    private func getDeathCheckSkillsList(skills: [FullCharacterModifiedSkillModel]) -> String {
+        var skillsText = ""
+        var gamblerCount = 0
+        for skill in skills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.gamblerTypeSkills) {
+                gamblerCount += 1
+            }
+        }
+        if gamblerCount > 0 {
+            skillsText = "\n\(gamblerCount) level(s) of gambler skills, allowing them to reroll dice or reflip coins and take the best result - once for each level of the skill."
+        }
+        if !skillsText.isEmpty {
+            skillsText = "Relevant Skills:\(skillsText)"
+        }
+        return skillsText
+    }
+
+    private func validateFields() -> ValidationResult {
+        return Validator.validateMultiple([
+            ValidationGroup(text: infection, validationType: .infection),
+            ValidationGroup(text: bullets, validationType: .bullets),
+            ValidationGroup(text: megas, validationType: .megas),
+            ValidationGroup(text: rivals, validationType: .rivals),
+            ValidationGroup(text: rockets, validationType: .rockets),
+            ValidationGroup(text: bulletCasings, validationType: .bulletCasings),
+            ValidationGroup(text: clothSupplies, validationType: .clothSupplies),
+            ValidationGroup(text: woodSupplies, validationType: .woodSupplies),
+            ValidationGroup(text: metalSupplies, validationType: .metalSupplies),
+            ValidationGroup(text: techSupplies, validationType: .techSupplies),
+            ValidationGroup(text: medicalSupplies, validationType: .medicalSupplies)
+        ])
+    }
+
+    private func checkoutStepOne() {
+        let charOrNpc = character ?? npc
+        if let char = charOrNpc {
+            self.loading = true
+            self.loadingText = isNpc ? "Updating NPC" : "Updating Character"
+
+            let isAliveBool = isAlive == "Alive"
+
+            let editedChar = CharacterModel(
+                id: char.id,
+                fullName: char.fullName,
+                startDate: char.startDate,
+                isAlive: isAliveBool ? "TRUE" : "FALSE",
+                deathDate: isAliveBool ? "" : Date().yyyyMMddFormatted,
+                infection: infection,
+                bio: char.bio,
+                approvedBio: char.approvedBio ? "TRUE" : "FALSE",
+                bullets: bullets,
+                megas: megas,
+                rivals: rivals,
+                rockets: rockets,
+                bulletCasings: bulletCasings,
+                clothSupplies: clothSupplies,
+                woodSupplies: woodSupplies,
+                metalSupplies: metalSupplies,
+                techSupplies: techSupplies,
+                medicalSupplies: medicalSupplies,
+                armor: isNpc ? char.armor : armorType,
+                unshakableResolveUses: unshakableResolveUses,
+                mysteriousStrangerUses: mysteriousStrangerUses,
+                playerId: char.playerId,
+                characterTypeId: char.characterTypeId
+            )
+
+            AdminService.updateCharacter(editedChar) { updatedChar in
+                self.checkoutStepTwo(needExtraXp: !self.isNpc && !isAliveBool)
+            } failureCase: { error in
+                self.loading = false
+                self.resetScanner()
+            }
+        } else {
+            checkoutStepTwo(needExtraXp: false)
+        }
+    }
+
+    private func checkoutStepTwo(needExtraXp: Bool) {
+        guard let player = player else {
+            loading = false
+            resetScanner()
+            return
+        }
+
+        self.loadingText = "Updating Player"
+
+        let xpAmount = isNpc ? 2 : 1
+        let xp = player.experience + xpAmount
+        let events = player.numEventsAttended + 1
+        let npcEvents = player.numNpcEventsAttended + (isNpc ? 1 : 0)
+
+        let playerUpdate = PlayerModel(
+            id: player.id,
+            username: player.username,
+            fullName: player.fullName,
+            startDate: player.startDate,
+            experience: xp.stringValue,
+            freeTier1Skills: player.freeTier1Skills.stringValue,
+            prestigePoints: player.prestigePoints.stringValue,
+            isCheckedIn: "FALSE",
+            isCheckedInAsNpc: "FALSE",
+            lastCheckIn: Date().yyyyMMddFormatted,
+            numEventsAttended: events.stringValue,
+            numNpcEventsAttended: npcEvents.stringValue,
+            isAdmin: player.isAdmin.stringValue
+        )
+
+        AdminService.updatePlayer(playerUpdate) { updatedPlayer in
+            self.checkoutStepThree(needExtraXp: needExtraXp)
+        } failureCase: { error in
+            self.loading = false
+            self.resetScanner()
+        }
+    }
+
+    private func checkoutStepThree(needExtraXp: Bool) {
+        guard let attendee = eventAttendee else {
+            loading = false
+            resetScanner()
+            return
+        }
+
+        self.loadingText = "Updating Records"
+
+        let attendeeUpdate = EventAttendeeModel(
+            id: attendee.id,
+            playerId: attendee.playerId,
+            characterId: attendee.characterId,
+            eventId: attendee.eventId,
+            isCheckedIn: "FALSE",
+            asNpc: isNpc ? "TRUE" : "FALSE",
+            npcId: attendee.npcId
+        )
+
+        AdminService.updateEventAttendee(attendeeUpdate) { updatedAttendee in
+            if needExtraXp, let char = self.character {
+                self.checkoutStepFourAwardDeathXp(character: char)
+            } else {
+                self.loading = false
+                self.showSuccessAlertAllowingRescan("Successfully Checked Out \(self.player?.fullName ?? "Player")!")
+            }
+        } failureCase: { error in
+            self.loading = false
+            resetScanner()
+        }
+    }
+
+    private func checkoutStepFourAwardDeathXp(character: FullCharacterModel) {
+        guard let player = player else {
+            loading = false
+            showSuccessAlertAllowingRescan("Successfully Checked Out \(self.player?.fullName ?? "Player")!")
+            return
+        }
+
+        self.loadingText = "Calculating Death Xp Bonus"
+
+        let spentXp = character.getAllXpSpent()
+        let spentPp = character.getAllSpentPrestigePoints()
+        var adjustedXp = spentXp / 2
+
+        var max = player.numEventsAttended
+        max += player.numNpcEventsAttended
+        adjustedXp = min(max, adjustedXp)
+
+        self.loadingText = "Refunding Xp"
+
+        let award = AwardCreateModel(
+            playerId: player.id,
+            characterId: nil,
+            awardType: "xp",
+            reason: "Death of Character: \(character.fullName)",
+            date: Date().yyyyMMddFormatted,
+            amount: adjustedXp.stringValue
+        )
+
+        AdminService.awardPlayer(award) { updatedPlayer in
+            if spentPp > 0 {
+                self.loadingText = "Refunding Prestige Points"
+
+                let ppAward = AwardCreateModel(
+                    playerId: player.id,
+                    characterId: nil,
+                    awardType: "prestige_points",
+                    reason: "Death of Character: \(character.fullName)",
+                    date: Date().yyyyMMddFormatted,
+                    amount: spentPp.stringValue
+                )
+
+                AdminService.awardPlayer(ppAward) { updatedPlayer2 in
+                    self.loading = false
+                    self.showSuccessAlertAllowingRescan("Successfully Checked Out \(player.fullName)!")
+                } failureCase: { error in
+                    self.loading = false
+                    self.showSuccessAlertAllowingRescan("Successfully Checked Out \(player.fullName)!\nBut unable to award death pp!")
+                }
+            } else {
+                self.loading = false
+                self.showSuccessAlertAllowingRescan("Successfully Checked Out \(player.fullName)!")
+            }
+        } failureCase: { error in
+            self.loading = false
+            self.showSuccessAlertAllowingRescan("Successfully Checked Out \(player.fullName)!\nBut unable to award death xp!")
+        }
+    }
+
+    func scannerFailed(_ errorMessage: String) {
+        runOnMainThread {
+            alertManager.showOkAlert("Scanning Failed", message: errorMessage) {
+                runOnMainThread {
+                    self.mode.wrappedValue.dismiss()
+                }
+            }
+        }
+    }
+
+    func resetScanner() {
+        self.isScanning = true
+        self.barcodeModel = nil
+        self.character = nil
+        self.npc = nil
+        self.player = nil
+        self.event = nil
+        self.eventAttendee = nil
+    }
+
+    func showSuccessAlertAllowingRescan(_ message: String) {
+        runOnMainThread {
+            alertManager.showAlert("Success", message: message, button1: Alert.Button.default(Text("Keep Scanning"), action: {
+                self.resetScanner()
+            }), button2: Alert.Button.cancel(Text("Finished"), action: {
+                runOnMainThread {
+                    self.mode.wrappedValue.dismiss()
+                }
+            }))
+        }
+    }
+}
+
+struct PlayerCheckoutSection: View {
+    let player: FullPlayerModel
+    let isNpc: Bool
+
+    var body: some View {
+        VStack {
+            KeyValueView(key: "Name", value: player.fullName)
+            KeyValueView(key: "Total Events Attended", value: "\(player.numEventsAttended)+1")
+            KeyValueView(key: "Total NPC Events Attended", value: "\(player.numNpcEventsAttended)\(isNpc ? "+1" : "")")
+            KeyValueView(key: "Last Event Attended", value: player.lastCheckIn.yyyyMMddToMonthDayYear(), showDivider: false)
+        }
+    }
+}
+
+struct CharacterCheckoutSection: View {
+    let character: FullCharacterModel?
+    let npc: FullCharacterModel?
+    let isNpc: Bool
 
     @Binding var infection: String
     @Binding var bullets: String
@@ -420,98 +617,125 @@ struct CharacterCheckoutBarcodeView: View {
     @Binding var metalSupplies: String
     @Binding var techSupplies: String
     @Binding var medicalSupplies: String
-    @Binding var armorType: String
-    @Binding var armorOptions: [String]
-    @Binding var isAlive: String
-    @Binding var aliveOptions: [String]
-    @Binding var unshakableResolveUses: String
     @Binding var mysteriousStrangerUses: String
+    @Binding var unshakableResolveUses: String
+    @Binding var armorType: String
+    @Binding var isAlive: String
 
-    var body: some View {
-        VStack {
-            KeyValueView(key: "Name", value: character.fullName)
-            if hasRegressionOrRemission() {
-                KeyValueView(key: "REDUCE INFECTION BY", value: getReductionAmount(), showDivider: false)
-            }
-            TextFieldWithKey(text: $infection, key: "Infection")
-            CharacterAmmoCheckoutView(bullets: $bullets, megas: $megas, rivals: $rivals, rockets: $rockets)
-            CharacterSuppliesCheckoutView(bulletCasings: $bulletCasings, clothSupplies: $clothSupplies, woodSupplies: $woodSupplies, metalSupplies: $metalSupplies, techSupplies: $techSupplies, medicalSupplies: $medicalSupplies)
-            if hasMysteriousStrangerSkills() {
-                TextFieldWithKey(text: $mysteriousStrangerUses, key: "Mysterious Stranger Uses (out of \(mysteriousStrangerTotal()))")
-            }
-            if hasUnshakableResolve() {
-                TextFieldWithKey(text: $unshakableResolveUses, key: "Unshakable Resolve Uses (out of 1)")
-            }
-            PickerViewWithKey(key: "Armor", selectedOption: $armorType, options: $armorOptions)
-            PickerViewWithKey(key: "Is Alive?", selectedOption: $isAlive, options: $aliveOptions)
-        }
+    private var charOrNpc: FullCharacterModel? {
+        character ?? npc
     }
 
-    func hasUnshakableResolve() -> Bool {
+    private var relevantSkills: [FullCharacterModifiedSkillModel] {
+        charOrNpc?.getRelevantBarcodeSkills() ?? []
+    }
+
+    private func hasRegressionOrRemission() -> Bool {
         for skill in relevantSkills {
-            guard  skill.id == Constants.SpecificSkillIds.unshakableResolve else { continue }
-            return true
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.regressionTypeSkills) {
+                return true
+            }
         }
         return false
     }
 
-    func hasMysteriousStrangerSkills() -> Bool {
+    private func hasRegression() -> Bool {
         for skill in relevantSkills {
-            guard  skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) else { continue }
-            return true
+            if skill.id == Constants.SpecificSkillIds.regression {
+                return true
+            }
         }
         return false
     }
 
-    func mysteriousStrangerTotal() -> String {
-        var count = 0
+    private func hasRemission() -> Bool {
         for skill in relevantSkills {
-            guard  skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) else { continue }
-            count += 1
-        }
-        return "\(count)"
-    }
-
-    func hasRegressionOrRemission() -> Bool {
-        for sk in relevantSkills {
-            guard sk.id.equalsAnyOf(Constants.SpecificSkillIds.regressionTypeSkills) else { continue }
-            return true
+            if skill.id == Constants.SpecificSkillIds.remission {
+                return true
+            }
         }
         return false
     }
 
-    func hasRegressionSkill() -> Bool {
-        for sk in relevantSkills {
-            guard sk.id == Constants.SpecificSkillIds.regression else { continue }
-            return true
-        }
-        return false
-    }
-
-    func hasRemissionSkill() -> Bool {
-        for sk in relevantSkills {
-            guard sk.id == Constants.SpecificSkillIds.remission else { continue }
-            return true
-        }
-        return false
-    }
-
-    func getReductionAmount() -> String {
-        if hasRemissionSkill() {
+    private func getReductionAmount() -> String {
+        if hasRemission() {
             return "1d4"
         }
-        if hasRegressionSkill() {
+        if hasRegression() {
             return "1"
         }
         return ""
     }
 
+    private func hasMysteriousStrangerSkills() -> Bool {
+        for skill in relevantSkills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func mysteriousStrangerTotal() -> Int {
+        var count = 0
+        for skill in relevantSkills {
+            if skill.id.equalsAnyOf(Constants.SpecificSkillIds.mysteriousStrangerTypeSkills) {
+                count += 1
+            }
+        }
+        return count
+    }
+
+    private func hasUnshakableResolve() -> Bool {
+        for skill in relevantSkills {
+            if skill.id == Constants.SpecificSkillIds.unshakableResolve {
+                return true
+            }
+        }
+        return false
+    }
+
+    var body: some View {
+        VStack {
+            if let char = charOrNpc {
+                KeyValueView(key: "Name", value: isNpc ? "\(char.fullName) - NPC" : char.fullName, showDivider: false)
+
+                if hasRegressionOrRemission() {
+                    KeyValueView(key: "REDUCE INFECTION BY", value: getReductionAmount(), showDivider: true)
+                }
+
+                TextFieldWithKey(text: $infection, key: "Infection")
+
+                if !isNpc {
+                    CharacterAmmoCheckoutView(bullets: $bullets, megas: $megas, rivals: $rivals, rockets: $rockets)
+                    CharacterSuppliesCheckoutView(bulletCasings: $bulletCasings, clothSupplies: $clothSupplies, woodSupplies: $woodSupplies, metalSupplies: $metalSupplies, techSupplies: $techSupplies, medicalSupplies: $medicalSupplies)
+                } else {
+                    TextFieldWithKey(text: $bullets, key: "Bullets")
+                }
+
+                if hasMysteriousStrangerSkills() {
+                    TextFieldWithKey(text: $mysteriousStrangerUses, key: "Mysterious Stranger Uses (out of \(mysteriousStrangerTotal()))")
+                }
+
+                if hasUnshakableResolve() {
+                    TextFieldWithKey(text: $unshakableResolveUses, key: "Unshakable Resolve Uses (out of 1)")
+                }
+
+                if !isNpc {
+                    let armorOptions = ["None", "Metal", "Bullet Proof"]
+                    PickerViewWithKey(key: "Armor", selectedOption: $armorType, options: armorOptions)
+                }
+
+                let aliveOptions = ["Alive", "Dead"]
+                PickerViewWithKey(key: "Is Alive?", selectedOption: $isAlive, options: aliveOptions)
+            } else {
+                KeyValueView(key: "Name", value: "NPC", showDivider: false)
+            }
+        }
+    }
 }
 
 struct CharacterAmmoCheckoutView: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
     @Binding var bullets: String
     @Binding var megas: String
     @Binding var rivals: String
@@ -525,13 +749,9 @@ struct CharacterAmmoCheckoutView: View {
             TextFieldWithKey(text: $rockets, key: "Rockets")
         }
     }
-
 }
 
 struct CharacterSuppliesCheckoutView: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
     @Binding var bulletCasings: String
     @Binding var clothSupplies: String
     @Binding var woodSupplies: String
@@ -549,70 +769,42 @@ struct CharacterSuppliesCheckoutView: View {
             TextFieldWithKey(text: $medicalSupplies, key: "Medical Supplies")
         }
     }
-
 }
 
 struct TextFieldWithKey: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
     @Binding var text: String
     let key: String
 
     var body: some View {
         VStack {
             KeyValueView(key: key, value: "", showDivider: false)
-            CustomTextField(text: $text, placeholder: key)
+            TextField("", text: $text)
+                .padding(.trailing, 0)
+                .textFieldStyle(.roundedBorder)
+                .placeholder(when: text.isEmpty) {
+                    Text(key).foregroundColor(.gray).padding().padding(.top, 4)
+                }
             Divider()
         }
-
-
     }
-
 }
 
-struct CustomTextField: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
-    @Binding var text: String
-    let placeholder: String
-
-    var body: some View {
-        TextField("", text: $text)
-            .padding(.trailing, 0)
-            .textFieldStyle(.roundedBorder)
-            .placeholder(when: text.isEmpty) {
-                Text(placeholder).foregroundColor(.gray).padding().padding(.top, 4)
-            }
-    }
-
-}
-
-fileprivate struct PickerViewWithKey: View {
-    @EnvironmentObject var alertManager: AlertManager
-    @EnvironmentObject var DM: DataManager
-
+struct PickerViewWithKey: View {
     let key: String
     @Binding var selectedOption: String
-    @Binding var options: [String]
+    let options: [String]
 
     var body: some View {
-        KeyValueView(key: key, value: "", showDivider: false)
-        Picker(selection: $selectedOption, label: Text("Choose Armor")) {
-            ForEach(options, id: \.self) { type in
-                Text(type)
+        VStack {
+            KeyValueView(key: key, value: "", showDivider: false)
+            Picker(selection: $selectedOption, label: Text("Choose \(key)")) {
+                ForEach(options, id: \.self) { type in
+                    Text(type)
+                }
             }
+            .pickerStyle(.segmented)
+            .padding(.trailing, 0)
+            Divider()
         }
-        .pickerStyle(.segmented)
-        .padding(.trailing, 0)
-        Divider()
     }
-
 }
-
-//#Preview {
-//    DataManager.shared.setDebugMode(true)
-//    let md = getMockData()
-//    return CheckOutPlayerView(isScanning: false, playerCheckOutModel: md.playerCheckOutBarcodeModel(playerId: 3, characterId: 3, eventAttendeeId: 3, eventId: 1))
-//}

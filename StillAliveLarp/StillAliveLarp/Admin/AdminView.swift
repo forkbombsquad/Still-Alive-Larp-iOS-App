@@ -94,6 +94,9 @@ struct PlayerCharacterManagementView: View {
                 NavArrowView(title: "Manage NPCs") { _ in
                     NPCListView(npcs: DM.getAllCharacters(.npc), title: "Select NPC To Manage", destination: .manage)
                 }
+                NavArrowView(title: "Manage Hidden NPCs") { _ in
+                    HiddenNPCListView(destination: .manage)
+                }
                 NavArrowView(title: "Award Player") { _ in
                     PlayersListView(title: "Select Player To Award", destination: .awardPlayer, players: DM.players)
                 }

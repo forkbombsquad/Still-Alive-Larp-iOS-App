@@ -59,7 +59,8 @@ class DataManager: ObservableObject {
         case rulebook = "rulebook_dm_ud_key"
         case treatingWounds = "treatingWounds_dm_ud_key"
         case campStatus = "campStatus_dm_ud_key"
-        
+        case craftingRecipes = "craftingRecipes_dm_ud_key"
+
         func getLocalDataKey() -> String {
             return rawValue
         }
@@ -110,6 +111,8 @@ class DataManager: ObservableObject {
                 return "Treating Wounds Flowchart"
             case .campStatus:
                 return "Camp Status"
+            case .craftingRecipes:
+                return "Crafting Recipes"
             }
         }
     }
@@ -274,6 +277,7 @@ class DataManager: ObservableObject {
     @Published var intrigues: [Int: IntrigueModel] = [:]
     @Published var researchProjects: [ResearchProjectModel] = []
     @Published var campStatus: CampStatusModel? = nil
+    @Published var craftingRecipes: [FullCraftingRecipeModel] = []
     
     
     //
@@ -620,6 +624,18 @@ class DataManager: ObservableObject {
                             }
                         }
 
+                    case .craftingRecipes:
+                        CraftingRecipeService.getAllCraftingRecipes { listModel in
+                            LocalDataManager.shared.storeCraftingRecipes(listModel.craftingRecipes)
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: true, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        } failureCase: { error in
+                            Task {
+                                await self.serviceFinished(type: updateType, succeeded: false, localUpdatesNeeded: updatesNeededCopy)
+                            }
+                        }
+
                     }
                 }
             }
@@ -704,7 +720,8 @@ class DataManager: ObservableObject {
                     self.intrigues = LocalDataManager.shared.getIntrigues()
                     self.researchProjects = LocalDataManager.shared.getResearchProjects()
                     self.campStatus = LocalDataManager.shared.getCampStatus()
-                    
+                    self.craftingRecipes = LocalDataManager.shared.getFullCraftingRecipes()
+
                     // Built Models
                     self.skills = LocalDataManager.shared.getFullSkills()
                     self.events = LocalDataManager.shared.getFullEvents()
