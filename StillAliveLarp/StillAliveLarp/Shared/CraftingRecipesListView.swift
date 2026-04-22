@@ -99,9 +99,14 @@ struct CraftingRecipesListView: View {
             let activeCharacter = DM.getActiveCharacter()
             result = result.filter { recipe in
                 guard let character = activeCharacter else { return false }
-                // Check if character has required materials in gear
-                // This is a simplified version - full implementation would check actual inventory
-                return true // Placeholder - requires gear inventory check
+                let r = recipe.craftingRecipe
+                let hasEnoughWood = r.wood <= character.woodSupplies
+                let hasEnoughMetal = r.metal <= character.metalSupplies
+                let hasEnoughCloth = r.cloth <= character.clothSupplies
+                let hasEnoughTech = r.tech <= character.techSupplies
+                let hasEnoughMedical = r.medical <= character.medicalSupplies
+                let hasEnoughCasings = r.casing <= character.bulletCasings
+                return hasEnoughWood && hasEnoughMetal && hasEnoughCloth && hasEnoughTech && hasEnoughMedical && hasEnoughCasings
             }
         }
 

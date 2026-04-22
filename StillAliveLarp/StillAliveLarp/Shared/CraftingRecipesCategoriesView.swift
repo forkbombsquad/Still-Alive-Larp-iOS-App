@@ -20,7 +20,7 @@ struct CraftingRecipesCategoriesView: View {
                             VStack {
                                 globalCreateTitleView("Crafting Recipes", DM: DM)
                                 // Category buttons
-                                ForEach(getCategories(), id: \.self) { category in
+                                ForEach(getCategories().sorted { $0.caseInsensitiveCompare($1) == .orderedAscending }, id: \.self) { category in
                                     NavArrowView(title: category) { _ in
                                         CraftingRecipesListView(
                                             recipes: getRecipesForCategory(category).sorted { $0.getDisplayName().caseInsensitiveCompare($1.getDisplayName()) == .orderedAscending },

@@ -15,7 +15,7 @@ func runOnMainThread(_ code: @escaping () -> Void) {
 }
 
 func getBuildNumber() -> Int {
-    return (Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0").intValueDefaultZero
+    return Constants.Versioning.appBuildNumber.intValueDefaultZero
 }
 
 func forceResetAllPlayerData() {
