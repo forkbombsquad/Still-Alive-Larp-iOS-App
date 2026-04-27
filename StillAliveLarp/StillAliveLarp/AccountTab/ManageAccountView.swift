@@ -23,7 +23,9 @@ struct ManageAccountView: View {
                             .font(.system(size: 32, weight: .bold))
                             .frame(alignment: .center)
                         NavArrowView(title: "Change Password") { _ in
-                            ChangePasswordView(player: DM.getCurrentPlayer()!)
+                            if let player = DM.getCurrentPlayer() {
+                                ChangePasswordView(player: player)
+                            }
                         }
                         Spacer()
                         LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 16, buttonText: "Force Download Data") {

@@ -24,10 +24,14 @@ struct RulesTabView: View {
                             LoadingLayoutView {
                                 VStack {
                                     NavArrowView(title: "Skill List") { _ in
-                                        return SkillsListView(skills: DM.getSkillsAsFCMSM(), allowDelete: false, title: "All Skills")
+                                        SkillsListView(skills: DM.getSkillsAsFCMSM(), allowDelete: false, title: "All Skills")
                                     }
                                     NavArrowView(title: "Skill Tree Diagram") { _ in
-                                        NativeSkillTree.initAsBase(allSkills: DM.getSkillsAsFCMSM(), currentPlayer: DM.getCurrentPlayer()!)
+                                        if let player = DM.getCurrentPlayer() {
+                                            NativeSkillTree.initAsBase(allSkills: DM.getSkillsAsFCMSM(), currentPlayer: player)
+                                        } else {
+                                            Text("No player logged in")
+                                        }
                                     }
                                     NavArrowView(title: "Core Rulebook") { _ in
                                         ViewRulesView(rulebook: DM.rulebook)
@@ -38,7 +42,7 @@ struct RulesTabView: View {
                                         }
                                     }
                                     NavArrowView(title: "Crafting Recipes") { _ in
-                                        return CraftingRecipesCategoriesView()
+                                        CraftingRecipesCategoriesView()
                                     }
                                 }
                             }

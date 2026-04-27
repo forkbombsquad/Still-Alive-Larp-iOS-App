@@ -65,7 +65,12 @@ struct HomeTabView: View {
     }
 
     func showCheckoutSection() -> Bool {
-        return DM.getOngoingEvent() == nil && DM.getCurrentPlayer()?.isCheckedIn ?? false
+        guard let player = DM.getCurrentPlayer(),
+              DM.getOngoingEvent() == nil,
+              player.isCheckedIn else {
+            return false
+        }
+        return player.eventAttendees.first(where: { $0.isCheckedIn.boolValueDefaultFalse }) != nil
     }
 
     func showCurrentCharSection() -> Bool {
@@ -81,16 +86,17 @@ struct HomeTabView: View {
 struct AnnouncementsView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
-
+    
     @State private var currentAnnouncementIndex: Int = 0
-
+    
     var body: some View {
         CardWithTitleView(title: DM.getTitlePotentiallyOffline("Announcements")) {
             VStack {
                 if DM.announcements.isEmpty {
                     Text("No announcements found!")
                 } else {
-                    let announcement = DM.announcements[currentAnnouncementIndex]
+                    let safeIndex = min(currentAnnouncementIndex, DM.announcements.count - 1)
+                    let announcement = DM.announcements[safeIndex]
                     Text(announcement.title)
                         .font(.system(size: 16, weight: .bold))
                         .lineLimit(nil)
@@ -129,16 +135,25 @@ struct AnnouncementsView: View {
                 }
             }
         }
+        .onChange(of: DM.announcements.count) { _ in
+            self.clampAnnouncementIndex()
+        }
     }
 
     private func goToPreviousAnnouncement() {
         currentAnnouncementIndex -= 1
     }
-
+    
     private func goToNextAnnouncement() {
         currentAnnouncementIndex += 1
     }
-
+    
+    private func clampAnnouncementIndex() {
+        if currentAnnouncementIndex >= DM.announcements.count {
+            currentAnnouncementIndex = max(0, DM.announcements.count - 1)
+        }
+    }
+    
 }
 
 struct IntrigueView: View {
@@ -190,11 +205,13 @@ struct CheckoutView: View {
     
     var body: some View {
         VStack {
-            CardWithTitleView(title: DM.getTitlePotentiallyOffline("Checkout")) {
-                let player = DM.getCurrentPlayer()!
-                let attendee = player.eventAttendees.first(where: { attendee in attendee.isCheckedIn.boolValueDefaultFalse })!
-                NavArrowViewRed(title: "Checkout From Event:\n\(DM.events.first(where: { event in event.id == attendee.eventId })?.title ?? "")") {
-                    GenerateCheckoutBarcodeView(player: DM.getCurrentPlayer()!, attendee: attendee)
+            if let player = DM.getCurrentPlayer(),
+               let attendee = player.eventAttendees.first(where: { $0.isCheckedIn.boolValueDefaultFalse }),
+               let event = DM.events.first(where: { $0.id == attendee.eventId }) {
+                CardWithTitleView(title: DM.getTitlePotentiallyOffline("Checkout")) {
+                    NavArrowViewRed(title: "Checkout From Event:\n\(event.title)") {
+                        GenerateCheckoutBarcodeView(player: player, attendee: attendee)
+                    }
                 }
             }
         }
