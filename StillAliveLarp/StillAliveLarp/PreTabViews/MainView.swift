@@ -7,6 +7,11 @@
 
 import SwiftUI
 
+enum MainViewDestination: Hashable {
+    case createAccount
+    case contact
+}
+
 struct MainView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
@@ -15,18 +20,28 @@ struct MainView: View {
     @State private var password: String = ""
     @State private var rememberMe: Bool = true
     @State private var navigateToCreateAccount = false
+    @State private var navigationPath = NavigationPath()
+    @State private var showHome: Bool = false
 
     @State var loading = false
     @State var loadingText = ""
 
-    var body: some View {
-        NavigationView {
+var body: some View {
+        ZStack {
+            loginContent
+            
+            if DM.currentPlayerId > 0 {
+                HomeTabBarView()
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: DM.currentPlayerId)
+    }
+
+    private var loginContent: some View {
+        NavigationStack(path: $navigationPath) {
             VStack {
                 ScrollView {
-                    NavigationLink(destination: HomeTabBarView(), tag: 1, selection: $DM.actionState) {
-                        EmptyView()
-                    }
-                    .allowsHitTesting(false)
                     Image("StillAliveLogo_Black")
                         .resizable()
                         .foregroundColor(.accentColor)
@@ -79,10 +94,8 @@ struct MainView: View {
                                                 runOnMainThread {
                                                     self.loading = false
                                                     DM.setCurrentPlayerId(player.id)
-                                                    DM.actionState = 1
+                                                    self.showHome = true
                                                 }
-
-
                                             } failureCase: { _ in
                                                 self.loading = false
                                             }
@@ -94,7 +107,7 @@ struct MainView: View {
                             }
                             .padding(.top, 32)
                             .padding(.horizontal, 3)
-                            NavigationLink(destination: CreateAccountView()) {
+                            NavigationLink(value: MainViewDestination.createAccount) {
                                 Text("Create Account")
                                     .font(.system(size: 20, weight: .bold))
                                     .frame(width: gr.size.width - 8, height: 90)
@@ -103,9 +116,9 @@ struct MainView: View {
                                     .foregroundColor(.white)
                                     .tint(.midRed)
                                     .controlSize(.large)
-                            }.navigationViewStyle(.stack)
+                            }
 
-                            NavigationLink(destination: ContactView()) {
+                            NavigationLink(value: MainViewDestination.contact) {
                                 Text("Contact Us")
                                     .font(.system(size: 20, weight: .bold))
                                     .frame(width: gr.size.width - 8, height: 90)
@@ -116,17 +129,19 @@ struct MainView: View {
                                     .controlSize(.large)
                             }
                             
-                            LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 20, weight: .bold)) {
-                                loading = true
-                                DM.setOfflineMode(true)
-                                DM.load(finished:  {
-                                    runOnMainThread {
-                                        if DM.getCurrentPlayer() != nil {
-                                            self.loading = false
-                                            DM.actionState = 1
+                            if LocalDataManager.shared.getPlayerId() > 0 {
+                                LoadingButtonView($loading, loadingText: $loadingText, width: gr.size.width - 32, height: 90, buttonText: "Offline Mode", progressViewOffset: 0, font: .system(size: 20, weight: .bold)) {
+                                    loading = true
+                                    DM.setOfflineMode(true)
+                                    DM.load(finished:  {
+                                        runOnMainThread {
+                                            if DM.getCurrentPlayer() != nil {
+                                                self.loading = false
+                                                self.showHome = true
+                                            }
                                         }
-                                    }
-                                })
+                                    })
+                                }
                             }
                         }
 
@@ -140,7 +155,15 @@ struct MainView: View {
                 self.username = getPrefilledUser()
                 self.password = getPrefilledPass()
             }
-        }.navigationViewStyle(.stack)
+            .navigationDestination(for: MainViewDestination.self) { destination in
+                switch destination {
+                case .createAccount:
+                    CreateAccountView()
+                case .contact:
+                    ContactView()
+                }
+            }
+        }
     }
 
     private func getPrefilledUser() -> String {

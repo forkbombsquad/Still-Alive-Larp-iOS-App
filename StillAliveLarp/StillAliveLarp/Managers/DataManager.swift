@@ -325,7 +325,7 @@ class DataManager: ObservableObject {
     }
     
     private func loadOffline() {
-        populateLocalData(false)
+        populateLocalData(currentPlayerId == -1)
     }
     
     private func loadForceDownload() {
@@ -731,6 +731,7 @@ class DataManager: ObservableObject {
                     self.treatingWounds = UIImage(data: LocalDataManager.shared.getTreatingWounds() ?? Data())
                     self.currentPlayerId = LocalDataManager.shared.getPlayerId()
                 }
+                
                 updateLoadingText("")
                 await loadingActor.callStepCallbacks()
                 await loadingActor.callCallbacks()
@@ -818,6 +819,15 @@ class DataManager: ObservableObject {
     func popToRoot() {
         runOnMainThread {
             self.actionState = 0
+            self.currentPlayerId = -1
+        }
+    }
+    
+    @Published var showLoginScreen: Bool = true
+    
+    func navigateToLogin() {
+        runOnMainThread {
+            self.showLoginScreen = true
         }
     }
     
