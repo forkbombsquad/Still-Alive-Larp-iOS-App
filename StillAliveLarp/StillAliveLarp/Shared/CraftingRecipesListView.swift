@@ -40,9 +40,8 @@ struct CraftingRecipesListView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Toggle("Only Show Recipes I Can Craft", isOn: $showCanCraft)
                     .padding(.horizontal, 16)
-                    .onChange(of: showCanCraft) { _ in
-                        // When unchecking "Can Craft", also uncheck "Have Materials"
-                        if !showCanCraft {
+                    .onChange(of: showCanCraft) { oldValue, newValue in
+                        if !newValue {
                             showHaveMaterials = false
                         }
                     }

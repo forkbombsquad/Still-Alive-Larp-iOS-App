@@ -73,7 +73,7 @@ class ImageDownloader {
             onCompletion(nil)
             return
         }
-        guard let html = try? String(contentsOf: url) else {
+        guard let html = try? String(contentsOf: url, encoding: .utf8) else {
             onCompletion(nil)
             return
         }

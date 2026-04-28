@@ -135,7 +135,7 @@ struct AnnouncementsView: View {
                 }
             }
         }
-        .onChange(of: DM.announcements.count) { _ in
+        .onChange(of: DM.announcements.count) { _, _ in
             self.clampAnnouncementIndex()
         }
     }
@@ -347,7 +347,6 @@ struct EventsView: View {
                             }
                             if let prereg = prereg {
                                 let char = player.characters.first(where: { $0.id == prereg.getCharId() })
-                                let regType = prereg.eventRegType.getAttendingText()
                                 Text("You are pre-registered for this event as:\n\n\(prereg.getCharId() == nil ? "NPC" : char?.fullName ?? "") - \(prereg.regType)")
                                     .multilineTextAlignment(.center)
                                     .frame(alignment: .center)

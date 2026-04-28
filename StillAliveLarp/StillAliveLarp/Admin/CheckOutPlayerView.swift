@@ -80,7 +80,7 @@ struct CheckOutPlayerView: View {
                             globalCreateTitleView("Check Out Player", DM: DM)
                             LoadingLayoutView {
                                 VStack {
-                                    if let player = player, let event = event {
+                                    if let player = player, let _ = event {
                                         Divider().frame(height: 2).overlay(Color.black)
                                         Text("Player")
                                             .font(.system(size: 24, weight: .bold))

@@ -588,7 +588,7 @@ class DataManager: ObservableObject {
                             continue
                         }
                         do {
-                            let html = try String(contentsOf: url)
+                            let html = try String(contentsOf: url, encoding: .utf8)
                             let rb = RulebookUtils.parseDocAsRulebook(document: try SwiftSoup.parse(html), version: updateTracker.rulebookVersion)
                             LocalDataManager.shared.storeRulebook(rb)
                             Task {

@@ -94,7 +94,7 @@ struct CheckInPlayerView: View {
                                                 Text("Assign as Hidden NPC")
                                                     .font(.system(size: 16, weight: .bold))
                                             }
-                                            .onChange(of: assignAsHiddenNpc) { _ in
+                                            .onChange(of: assignAsHiddenNpc) { _, _ in
                                                 recalculateModels()
                                             }
                                             .padding(.bottom, 8)
