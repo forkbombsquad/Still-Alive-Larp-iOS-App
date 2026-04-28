@@ -12,7 +12,7 @@ struct RulesTabView: View {
     @EnvironmentObject var DM: DataManager
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 GeometryReader { gr in
                     ScrollView {
@@ -52,7 +52,7 @@ struct RulesTabView: View {
             }
             .padding(16)
             .background(Color.lightGray)
-        }.navigationViewStyle(.stack)
+        }
     }
 }
 

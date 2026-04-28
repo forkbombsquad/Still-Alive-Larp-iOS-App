@@ -14,7 +14,7 @@ struct HomeTabView: View {
     @State var showAllEvents = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
             GeometryReader { gr in
                     ScrollView(showsIndicators: false) {
@@ -47,7 +47,7 @@ struct HomeTabView: View {
             }
             .padding(16)
             .background(Color.lightGray)
-        }.navigationViewStyle(.stack)
+        }
     }
 
     func showIntrigueSection() -> Bool {

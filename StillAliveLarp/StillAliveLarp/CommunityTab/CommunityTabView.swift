@@ -12,7 +12,7 @@ struct CommunityTabView: View {
     @EnvironmentObject var DM: DataManager
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 ScrollView {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh_CommunityTab", spinnerOffsetY: -100, pullDownDistance: 150) {
@@ -41,7 +41,7 @@ struct CommunityTabView: View {
                 }.coordinateSpace(name: "pullToRefresh_CommunityTab")
             }.padding(16)
             .background(Color.lightGray)
-        }.navigationViewStyle(.stack)
+        }
     }
 }
 

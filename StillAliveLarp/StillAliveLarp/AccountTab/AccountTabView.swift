@@ -12,10 +12,8 @@ struct AccountTabView: View {
     @EnvironmentObject var alertManager: AlertManager
     @EnvironmentObject var DM: DataManager
 
-    @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 GeometryReader { gr in
                     let imgWidth = gr.size.width * 0.75
@@ -89,7 +87,7 @@ struct AccountTabView: View {
             }
             .padding(16)
             .background(Color.lightGray)
-        }.navigationViewStyle(.stack)
+        }
     }
 }
 

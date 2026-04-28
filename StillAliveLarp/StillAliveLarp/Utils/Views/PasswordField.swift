@@ -36,6 +36,7 @@ struct PasswordField: View {
                         .accentColor(.gray)
             }
         }
+        .compositingGroup()
     }
 }
 

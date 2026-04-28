@@ -26,6 +26,7 @@ struct MainView: View {
                     NavigationLink(destination: HomeTabBarView(), tag: 1, selection: $DM.actionState) {
                         EmptyView()
                     }
+                    .allowsHitTesting(false)
                     Image("StillAliveLogo_Black")
                         .resizable()
                         .foregroundColor(.accentColor)
